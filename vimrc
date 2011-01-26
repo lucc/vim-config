@@ -10,9 +10,9 @@
 "+ This must be first, because it changes other options as a side effect.
 set nocompatible
 
-"""""""""""""""""
-" TODO LIST:    "
-"""""""""""""""""
+""""""""""""""
+" TODO LIST: "
+""""""""""""""
 "set transparency=15
 "set enc=utf-8
 
@@ -22,9 +22,9 @@ set nocompatible
 "set textwidth=78 	"brake lines after 78 chars (more fancy below)
 "set formatoptions=tc 	"brake text and comments but do not reformat lines where no input occures
 set autoindent 		"usfull for coding (see below for more fancy alternative)
-syntax on 		"higlight syntax automatically
 set number 		"line numbers
 set ruler 		"show the cursor position all the time (at bottom right)
+set scrolloff=10	"spcroll the screen when the courser is 10 lines away from the border line
 
 if version >= 703 	" NEW in VIM 7.3
   set colorcolumn=79 	"highlight the background of the 79th column
@@ -39,13 +39,13 @@ else
   augroup END
 endif
 
-if &t_Co > 2 || has("gui_running")
+if &t_Co > 2 || has("gui_running") "check for colours in terminal (echo &t_Co)
   syntax on 		"Switch syntax highlighting on, when the terminal has colors
   set hlsearch 		"Also switch on highlighting the last used search pattern.
 endif
 
 if has('folding')
-  set foldmethod=syntax " fold code
+  set foldmethod=syntax " fold code by syntax
   set foldlevelstart=20 " but open all (20) folds on startup
 endif
 
@@ -56,16 +56,14 @@ endif
 set history=50 		"keep 50 lines of command line history
 set showcmd 		"display incomplete commands
 set incsearch 		"do incremental searching
+set backspace=indent,eol,start " allow backspacing over everything in insert mode
 
 if has('mouse')
   set mouse=a 		"In many terminal emulators the mouse works just fine, thus enable it.
 endif
 "start 			"go to ``insert'' mode
 
-""""""""""""""""""""""""""" start of tthe resst of example file """"""""""""""
-
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
+""""""""""""""""""""""""""" start of the rest of example file """"""""""""""
 
 if has("vms")
   set nobackup		" do not keep a backup file, use versions instead
@@ -76,14 +74,9 @@ endif
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, "t", "", "g")
 
-" Don't use Ex mode, use Q for formatting
-map Q gq
-
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
-
-
 
 " FIXME I don't understand this |  (luc 2010-12)
 "                               v
