@@ -53,6 +53,15 @@ if has('folding')
   autocmd BufNewFile,BufRead *.c,*.cpp,*.c++,*.h setlocal foldmethod=syntax
 endif
 
+"""""""""""
+" Coding: "
+"""""""""""
+map € :!~/bin/all-latex -b "%"
+map ∑ :!~/bin/all-latex  -o "%"
+map « :!~/bin/all-latex "%"
+"map  :!pdflatex "%" && open -aPreview "$(if \! lsof `echo "%"\|sed 's/tex$/pdf/'`>/dev/null;then echo "%"\|sed 's/tex$/pdf/';fi)"
+"map ∫ :!bibtex `echo %\|sed s/tex$/aux/`
+autocmd BufNewFile,BufRead *.tex setlocal makeprg=pdflatex\ %\ &&\ open\ -apreview textwidth=79
 
 """""""""""""""""""""""""""
 " Behavior of the editor: "
