@@ -19,9 +19,8 @@ set nocompatible
 """"""""""""""
 " APPEARANCE "
 """"""""""""""
-"set textwidth=78 	"brake lines after 78 chars (more fancy below)
+"set textwidth=79 	"brake lines after 79 chars (more fancy below)
 "set formatoptions=tc 	"brake text and comments but do not reformat lines where no input occures
-set autoindent 		"usfull for coding (see below for more fancy alternative)
 set number 		"line numbers
 set ruler 		"show the cursor position all the time (at bottom right)
 set scrolloff=10	"spcroll the screen when the courser is 10 lines away from the border line
@@ -45,8 +44,9 @@ if &t_Co > 2 || has("gui_running") "check for colours in terminal (echo &t_Co)
 endif
 
 if has('folding')
-  set foldmethod=syntax " fold code by syntax
+  set foldmethod=indent " fold code by indent
   set foldlevelstart=20 " but open all (20) folds on startup
+  autocmd BufNewFile,BufRead *.c,*.cpp,*.c++,*.h setlocal foldmethod=syntax
 endif
 
 
@@ -57,11 +57,20 @@ set history=50 		"keep 50 lines of command line history
 set showcmd 		"display incomplete commands
 set incsearch 		"do incremental searching
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
+set autoindent 		"usfull for coding (see below for more fancy alternative)
+set shiftwidth=2
+set splitright
 
 if has('mouse')
   set mouse=a 		"In many terminal emulators the mouse works just fine, thus enable it.
 endif
-"start 			"go to ``insert'' mode
+
+""""""""""""""""""
+" Spellchecking: "
+""""""""""""""""""
+" on Mac OS X the spellchecking files are in: /Applications/editoren/Vim.app/Contents/Resources/vim/runtime/spell
+set spelllang=de_DE
+set nospell
 
 """"""""""""""""""""""""""" start of the rest of example file """"""""""""""
 
