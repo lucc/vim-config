@@ -21,9 +21,13 @@ set nocompatible
 """"""""""""""
 "set textwidth=79 	"brake lines after 79 chars (more fancy below)
 "set formatoptions=tc 	"brake text and comments but do not reformat lines where no input occures
+set laststatus=2
 set number 		"line numbers
 set ruler 		"show the cursor position all the time (at bottom right)
 set scrolloff=10	"spcroll the screen when the courser is 10 lines away from the border line
+set statusline=%t%m%r[%{&ff}][%{&fenc}]%y[ASCII=\%03.3b][POS=%04l/%L,%c%V][%p%%]
+set laststatus=1	"display statusline only with multible windows
+set diffopt=filler,vertical
 
 if version >= 703 	" NEW in VIM 7.3
   set colorcolumn=79 	"highlight the background of the 79th column
