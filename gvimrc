@@ -10,7 +10,7 @@ set guioptions-=T
 
 
 if has("gui_macvim")
-  set set tabpagemax=30
+  set tabpagemax=30
   set fuoptions=maxvert,maxhorz
 endif
 
