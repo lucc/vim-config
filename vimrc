@@ -24,10 +24,11 @@ set nocompatible
 set laststatus=2
 set number 		"line numbers
 set ruler 		"show the cursor position all the time (at bottom right)
-set scrolloff=10	"spcroll the screen when the courser is 10 lines away from the border line
+set scrolloff=5		"spcroll the screen when the courser is 10 lines away from the border line
 set statusline=%t%m%r[%{&ff}][%{&fenc}]%y[ASCII=\%03.3b][POS=%04l/%L,%c%V][%p%%]
 set laststatus=1	"display statusline only with multible windows
 set diffopt=filler,vertical
+"set foldcolumn=2
 
 if version >= 703 	" NEW in VIM 7.3
   set colorcolumn=79 	"highlight the background of the 79th column
@@ -43,14 +44,18 @@ else
 endif
 
 if &t_Co > 2 || has("gui_running") "check for colours in terminal (echo &t_Co)
-  syntax on 		"Switch syntax highlighting on, when the terminal has colors
-  set hlsearch 		"Also switch on highlighting the last used search pattern.
+  "Switch syntax highlighting on, when the terminal has colors
+  syntax on
+  "highlight the last used search pattern.
+  set hlsearch 		
 endif
 
 if has('folding')
-  set foldmethod=indent " fold code by indent
+  "set foldmethod=indent " fold code by indent
+  set foldmethod=syntax
   set foldlevelstart=20 " but open all (20) folds on startup
-  autocmd BufNewFile,BufRead *.c,*.cpp,*.c++,*.h setlocal foldmethod=syntax
+  "enable folding for functions, heredocs and if-then-else stuff.
+  let g:sh_fold_enabled=7
 endif
 
 """""""""""
@@ -154,7 +159,7 @@ inoremap <C-U> <C-G>u<C-U>
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
 " Only define it when not defined already.
-"if !exists(":DiffOrig")
-"  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
-"		  \ | wincmd p | diffthis
-"endif
+if !exists(":DiffOrig")
+  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+		  \ | wincmd p | diffthis
+endif
