@@ -14,4 +14,6 @@ if has("gui_macvim")
   set fuoptions=maxvert,maxhorz
 endif
 
-
+if ! ($PATH =~ expand($HOME) . '/bin')
+  let $PATH .= ':' . expand($HOME) . '/bin'
+endif
