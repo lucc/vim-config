@@ -14,11 +14,63 @@ set nocompatible
 " {{{ TODO LIST:
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "set transparency=15
-"set enc=utf-8
 
-""""""""""""""
-" APPEARANCE "
-""""""""""""""
+" {{{ open url from vim
+" thanks to
+"http://vim.wikia.com/wiki/Open_a_web-browser_with_the_URL_in_the_current_line
+function! Browser ()
+  let line = getline (".")
+  let line = matchstr (line, "\(http://\|www\.\)[^ ,;\t]*")
+  "exec "!$BROWSER \"".line."\""
+endfunction
+map <Leader>w :call Browser ()<CR>
+function! HandleURI()
+  let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;:]*')
+  echo s:uri
+  if s:uri != ""
+	  exec "!open \"" . s:uri . "\""
+  else
+	  echo "No URI found in line."
+  endif
+endfunction
+map <Leader>w :call HandleURI()<CR>
+"}}}
+
+" }}} TODO LIST:
+
+" {{{ Behavior of the editor:
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set backspace=indent,eol,start " allow backspacing over everything in insert mode
+set hidden
+set history=100
+set incsearch
+set showcmd
+set splitright
+set virtualedit=block
+set wim=longest:full,full
+
+map Y y$
+
+"In many terminal emulators the mouse works just fine, thus enable it.
+if has('mouse') | set mouse=a | endif
+" }}} Behavior
+
+" {{{ Spellchecking:
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" on Mac OS X the spellchecking files are in:
+" /Applications/editoren/Vim.app/Contents/Resources/vim/runtime/spell
+set spelllang=de_DE
+set nospell
+" }}} Spellchecking
+
+" }}} GENERAL
+
+" {{{ APPEARANCE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"colorscheme luc_dark
+colo macvim
+set bg=light
+" {{{ general """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "set textwidth=79 	"brake lines after 79 chars (more fancy below)
 "set formatoptions=tc 	"brake text and comments but do not reformat lines where no input occures
 set number 		"line numbers
@@ -63,9 +115,9 @@ highlight statusline guibg=DarkBlue ctermbg=DarkBlue term=reverse
 set wildmenu
 " }}} statusline
 
+" {{{ colorcolumn """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if version >= 703 	" NEW in VIM 7.3
   set colorcolumn=79 	"highlight the background of the 79th column
-  highlight ColorColomn ctermbg=lightgrey guibg=lightgrey
 else
   "  i dont understand how but this highlights the part of the line which is 
   "+ longer then 78 char in grey (blue in a terminal).
@@ -94,68 +146,103 @@ if has('folding')
   "enable folding for functions, heredocs and if-then-else stuff.
   let g:sh_fold_enabled=7
 endif
+" }}}
 
-"""""""""""
-" Coding: "
-"""""""""""
-autocmd BufNewFile,BufRead *.tex,*.bib setlocal textwidth=79
-autocmd BufNewFile,BufRead *.c,*.cpp,*.c++,*.h,*.hpp,*.cc setlocal textwidth=79
+" }}} APPEARANCE
 
-"map € :!~/bin/all-latex -b "%"
-"map ∑ :!~/bin/all-latex  -o "%"
-"map « :!~/bin/all-latex "%"
-"map  :!pdflatex "%" && open -aPreview "$(if \! lsof `echo "%"\|sed 's/tex$/pdf/'`>/dev/null;then echo "%"\|sed 's/tex$/pdf/';fi)"
-"map ∫ :!bibtex `echo %\|sed s/tex$/aux/`
+" {{{ CODING
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if has("autocmd")
+  " Enable file type detection and language-dependent indenting.
+  filetype plugin indent on
+  " Put these in an autocmd group, so that we can delete them easily.
+  augroup vimrcEx
+    au!
+    " For all text files set 'textwidth' to 78 characters.
+    autocmd FileType text setlocal textwidth=78
+    autocmd FileType tex,bib,c,cpp,h,hpp setlocal textwidth=78
+    set autoindent
+    set shiftwidth=2
+  augroup END
+else
+  " always set autoindenting on
+  set autoindent
+  set shiftwidth=2
+endif
+
+au FileType python setlocal tabstop=8 expandtab shiftwidth=4 softtabstop=4
+
+"{{{ LaTeX stuff (several plugins)
+
+"{{{ old latex bindings
+"map € :!~/bin/all-latex -b "%"<CR>
+"map ∑ :!~/bin/all-latex  -o "%"<CR>
+"map « :!~/bin/all-latex "%"<CR>
+"map <C-l> :!pdflatex "%" && open -aPreview "$(if \! lsof `echo "%"\|sed 's/tex$/pdf/'`>/dev/null;then echo "%"\|sed 's/tex$/pdf/';fi)"<CR>
+"map ∫ :!bibtex `echo %\|sed s/tex$/aux/`<CR>
 "autocmd BufNewFile,BufRead *.tex setlocal makeprg=latexscript\ -af\ % textwidth=79
 "autocmd BufNewFile,BufRead *.tex setlocal makeprg=latexscript\ -af\ \"%\" textwidth=79
 "autocmd BufNewFile,BufRead *.tex setlocal makeprg=pdflatex\ %\ &&\ open\ -apreview textwidth=79
+"}}}
 
-""""""""""""""""
-" LaTeX-Suite: "
-""""""""""""""""
-" REQUIRED: This makes vim invoke Latex-Suite when you open a tex file.
-filetype plugin on
-
+" {{{ PLUGIN LaTeX-Suite: 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" REQUIRED: filetype plugin on
+" OPTIONAL: filetype indent on
 " IMPORTANT: win32 users will need to have 'shellslash' set so that latex
 " can be called correctly.
 "set shellslash
-
-" IMPORTANT: grep will sometimes skip displaying the file name if you
-" search in a singe file. This will confuse Latex-Suite. Set your grep
-" program to always generate a file-name.
+" IMPORTANT: force grep to display filename.
 set grepprg=grep\ -nH\ $*
-
-" OPTIONAL: This enables automatic indentation as you type.
-filetype indent on
-
-" OPTIONAL: Starting with Vim 7, the filetype of empty .tex files defaults to
-" 'plaintex' instead of 'tex', which results in vim-latex not being loaded.
-" The following changes the default filetype back to 'tex':
+" OPTIONAL: Handle empty .tex files as LaTeX.
 let g:tex_flavor='latex'
+" Folding:
+"let Tex_FoldedEnvironments='*'
+"let Tex_FoldedEnvironments+=','
+let Tex_FoldedEnvironments='document,minipage,'
+let Tex_FoldedEnvironments.='di,lem,ivt,dc,'
+let Tex_FoldedEnvironments.='verbatim,comment,proof,eq,gather,'
+let Tex_FoldedEnvironments.='align,figure,table,thebibliography,'
+let Tex_FoldedEnvironments.='keywords,abstract,titlepage'
+let Tex_FoldedEnvironments.='item,enum,display'
+let Tex_FoldedMisc='comments,item,preamble,<<<'
 
-"""""""""""""""""""""""""""
-" Behavior of the editor: "
-"""""""""""""""""""""""""""
-set history=50 		"keep 50 lines of command line history
-set showcmd 		"display incomplete commands
-set incsearch 		"do incremental searching
-set backspace=indent,eol,start " allow backspacing over everything in insert mode
-set autoindent 		"usfull for coding (see below for more fancy alternative)
-set shiftwidth=2
-set splitright
+" compiling with \ll
+let g:Tex_CompileRule_pdf='latexmk -silent -pv -pdf $*'
+let g:Tex_ViewRule_pdf='open -a Preview'
 
-if has('mouse')
-  set mouse=a 		"In many terminal emulators the mouse works just fine, thus enable it.
-endif
+"dont use latexsuite folding
+let Tex_FoldedEnvironments=''
+let Tex_FoldedMisc=''
+let Tex_FoldedSections=''
+" }}} LaTeX-Suite
 
-""""""""""""""""""
-" Spellchecking: "
-""""""""""""""""""
-" on Mac OS X the spellchecking files are in: /Applications/editoren/Vim.app/Contents/Resources/vim/runtime/spell
-set spelllang=de_DE
-set nospell
+"{{{ PLUGIN AutomaticLaTexPlugin: http://www.vim.org/scripts/script.php?script_id=2945
+"}}}
 
-""""""""""""""""""""""""""" start of the rest of example file """"""""""""""
+"{{{ PLUGIN auctex.vim: http://www.vim.org/scripts/script.php?script_id=162
+"}}}
+
+"{{{ PLUGIN tex_autoclose: http://www.vim.org/scripts/script.php?script_id=920
+"}}}
+
+"{{{ PLUGIN tex9: http://www.vim.org/scripts/script.php?script_id=3508
+"}}}
+
+"{{{ PLUGIN 
+"}}}
+
+"}}} LaTeX stuff
+
+" {{{ PLUGIN winmanager: http://www.vim.org/scripts/script.php?script_id=95
+map <C-w><C-t> :WMToggle<CR> 
+" }}}
+
+" }}} CODING
+
+" {{{ start of the rest of example file 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: merge with all the rest.
 
 if has("vms")
   set nobackup		" do not keep a backup file, use versions instead
@@ -200,3 +287,4 @@ if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
 		  \ | wincmd p | diffthis
 endif
+" }}} end of the rest of the exaple file
