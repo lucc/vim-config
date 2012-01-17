@@ -371,33 +371,10 @@ else
   set backup		" keep a backup file
 endif
 
-" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
-" let &guioptions = substitute(&guioptions, "t", "", "g")
-
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
 
-" FIXME I don't understand this |  (luc 2010-12)
-"                               v
-" Only do this part when compiled with support for autocommands.
-"if has("autocmd")
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-"  filetype plugin indent on
-  " Put these in an autocmd group, so that we can delete them easily.
-"  augroup vimrcEx
-"  au!
-  " For all text files set 'textwidth' to 78 characters.
-"  autocmd FileType text setlocal textwidth=78
-"  augroup END
-"                               ^  
-" FIXME I don't understand this |  (luc 2010-12)
-"else
-"  set autoindent		" always set autoindenting on
-"endif " has("autocmd")
 
 "" FIXME don't understand | this (luc 2010-12)
 "                         v
