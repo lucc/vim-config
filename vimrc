@@ -1,18 +1,18 @@
-"  vimrc file by luc
+"  vimrc file by luc {{{
 "+ many thanks to 
 "+ Bram Moolenaar <Bram@vim.org> for the exelent example vimrc
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vi:fdm=marker:fdl=0
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
-"""""""""""
-" GENERAL "
-"""""""""""
+" {{{ GENERAL
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "  Use Vim settings, rather then Vi settings (much better!).
 "+ This must be first, because it changes other options as a side effect.
 set nocompatible
 
-""""""""""""""
-" TODO LIST: "
-""""""""""""""
+" {{{ TODO LIST:
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "set transparency=15
 "set enc=utf-8
 
@@ -21,14 +21,47 @@ set nocompatible
 """"""""""""""
 "set textwidth=79 	"brake lines after 79 chars (more fancy below)
 "set formatoptions=tc 	"brake text and comments but do not reformat lines where no input occures
-set laststatus=2
 set number 		"line numbers
 set ruler 		"show the cursor position all the time (at bottom right)
 set scrolloff=5		"spcroll the screen when the courser is 10 lines away from the border line
-set statusline=%t%m%r[%{&ff}][%{&fenc}]%y[ASCII=\%03.3b][POS=%04l/%L,%c%V][%p%%]
-set laststatus=1	"display statusline only with multible windows
 set diffopt=filler,vertical
 "set foldcolumn=2
+" }}}
+
+" {{{ satusline """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" many thanks to
+"   http://vim.wikia.com/wiki/Writing_a_valid_statusline
+"   https://wincent.com/wiki/Set_the_Vim_statusline
+"   http://winterdom.com/2007/06/vimstatusline
+"   http://got-ravings.blogspot.com/2008/08/vim-pr0n-making-statuslines-that-own.html
+" My old versions:
+"set statusline=%t%m%r[%{&ff}][%{&fenc}]%y[ASCII=\%03.3b]%=[%c%V,%l/%L][%p%%]
+"set statusline=%t%m%r[%{&fenc},%{&ff}%Y][ASCII=x%02.2B]%=[%c%V,%l/%L][%P]
+"set statusline=%t[%M%R%H][%{strlen(&fenc)?&fenc:'none'},%{&ff}%Y][ASCII=x%02.2B]%=%{strftime(\"%Y-%m-%d\ %H:%M\")}\ [%c%V,%l/%L][%P]
+set statusline=%t\ %([%M%R%H]\ %)[%{strlen(&fenc)?&fenc:'none'},%{&ff}%Y]\ [ASCII=x%02.2B]%=[%{strftime('%F\ %R')}]\ [%c%V,%l/%L]\ [%P]
+set laststatus=2
+" some examples copied from the above sites:
+"set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]
+"set statusline=%=\ col:%c%V\ ascii:%b\ pos:%o\ lin:%l\,%L\ %P
+"set statusline=%{strftime(\"%c\",getftime(expand(\"%:p\")))}
+"set statusline=changed\ %{strftime('%F\ %T',getftime(expand('%:p')))}\ now\ %{strftime('%Y-%m-%d\ %T')}
+
+"this color version is from
+"   http://vim.wikia.com/wiki/Change_statusline_color_to_show_insert_or_normal_mode
+function! InsertStatuslineColor(mode)
+  if a:mode == 'i'     | hi statusline guibg=DarkGreen   ctermbg=DarkGreen
+  elseif a:mode == 'r' | hi statusline guibg=DarkMagenta ctermbg=DarkMagenta
+  else                 | hi statusline guibg=DarkRed     ctermbg=DarkRed
+  endif
+endfunction
+" change highlighting when mode changes
+au InsertEnter * call InsertStatuslineColor(v:insertmode)
+au InsertLeave * hi statusline guibg=DarkBlue ctermbg=DarkBlue term=reverse
+" default the statusline to green when entering Vim
+highlight statusline guibg=DarkBlue ctermbg=DarkBlue term=reverse
+
+set wildmenu
+" }}} statusline
 
 if version >= 703 	" NEW in VIM 7.3
   set colorcolumn=79 	"highlight the background of the 79th column
@@ -42,14 +75,18 @@ else
     autocmd BufRead * match OverLength /\%79v.*/
   augroup END
 endif
+" }}}
 
+" {{{ syntax """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if &t_Co > 2 || has("gui_running") "check for colours in terminal (echo &t_Co)
   "Switch syntax highlighting on, when the terminal has colors
   syntax on
   "highlight the last used search pattern.
-  set hlsearch 		
+  set hlsearch
 endif
+" }}}
 
+" {{{ folding """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has('folding')
   "set foldmethod=indent " fold code by indent
   set foldmethod=syntax
