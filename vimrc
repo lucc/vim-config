@@ -172,6 +172,10 @@ endif
 
 au FileType python setlocal tabstop=8 expandtab shiftwidth=4 softtabstop=4
 
+inoremap ( ()<++><ESC>F)i
+inoremap [ []<++><ESC>F]i
+inoremap { {}<++><ESC>F}i
+
 "{{{ PLUGIN hints_man: http://www.vim.org/scripts/script.php?script_id=1825
 "                      http://www.vim.org/scripts/script.php?script_id=1826
 autocmd FileType c,cpp setlocal cmdheight=2
