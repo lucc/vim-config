@@ -44,10 +44,13 @@ set backspace=indent,eol,start " allow backspacing over everything in insert mod
 set hidden
 set history=100
 set incsearch
+set ignorecase
+set confirm
+set smartcase
 set showcmd
 set splitright
 set virtualedit=block
-set wim=longest:full,full
+set wildmode=longest:full,full
 
 map Y y$
 
@@ -67,12 +70,13 @@ set nospell
 
 " {{{ APPEARANCE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" {{{ general """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "colorscheme luc_dark
 colo macvim
-set bg=light
-" {{{ general """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"set textwidth=79 	"brake lines after 79 chars (more fancy below)
-"set formatoptions=tc 	"brake text and comments but do not reformat lines where no input occures
+set textwidth=78 	"brake lines after 79 chars (more fancy below)
+set background=light
+set formatoptions+=nr 	"brake text and comments but do not reformat lines where no input occures
 set number 		"line numbers
 set ruler 		"show the cursor position all the time (at bottom right)
 set scrolloff=5		"spcroll the screen when the courser is 10 lines away from the border line
