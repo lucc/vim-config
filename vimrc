@@ -295,17 +295,6 @@ map <silent> <F4> :TlistToggle<CR>
 
 "{{{ LaTeX stuff (several plugins)
 
-"{{{ old latex bindings
-"map € :!~/bin/all-latex -b "%"<CR>
-"map ∑ :!~/bin/all-latex  -o "%"<CR>
-"map « :!~/bin/all-latex "%"<CR>
-"map <C-l> :!pdflatex "%" && open -aPreview "$(if \! lsof `echo "%"\|sed 's/tex$/pdf/'`>/dev/null;then echo "%"\|sed 's/tex$/pdf/';fi)"<CR>
-"map ∫ :!bibtex `echo %\|sed s/tex$/aux/`<CR>
-"autocmd BufNewFile,BufRead *.tex setlocal makeprg=latexscript\ -af\ % textwidth=79
-"autocmd BufNewFile,BufRead *.tex setlocal makeprg=latexscript\ -af\ \"%\" textwidth=79
-"autocmd BufNewFile,BufRead *.tex setlocal makeprg=pdflatex\ %\ &&\ open\ -apreview textwidth=79
-"}}}
-
 " {{{ PLUGIN LaTeX-Suite: 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " REQUIRED: filetype plugin on
@@ -329,7 +318,7 @@ let Tex_FoldedEnvironments.='item,enum,display'
 let Tex_FoldedMisc='comments,item,preamble,<<<'
 
 " compiling with \ll
-let g:Tex_CompileRule_pdf='latexmk -silent -pv -pdf $*'
+"let g:Tex_CompileRule_pdf='latexmk -silent -pv -pdf $*'
 let g:Tex_ViewRule_pdf='open -a Preview'
 
 "dont use latexsuite folding
