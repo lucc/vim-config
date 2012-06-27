@@ -341,15 +341,18 @@ if has('statusline')
   " my old versions:
   "set statusline=%t%m%r[%{&ff}][%{&fenc}]%y[ASCII=\%03.3b]%=[%c%V,%l/%L][%p%%]
   "set statusline=%t%m%r[%{&fenc},%{&ff}%Y][ASCII=x%02.2B]%=[%c%V,%l/%L][%P]
-  "set statusline=%t[%M%R%H][%{strlen(&fenc)?&fenc:'none'},%{&ff}%Y][ASCII=x%02.2B]%=%{strftime(\"%Y-%m-%d\ %H:%M\")}\ [%c%V,%l/%L][%P]
+  "set statusline=%t[%M%R%H][%{strlen(&fenc)?&fenc:'none'},%{&ff}%Y]
+  "set statusline+=[ASCII=x%02.2B]%=%{strftime(\"%Y-%m-%d\ %H:%M\")}
+  "set statusline+=\ [%c%V,%l/%L][%P]
 
   " current version
-  set statusline=%t                               " tail of the filenam
-  set statusline+=\ %([%M%R%H]\ %)                " group with modified, readonly and help indicator
+  set statusline=%t                               " tail of the filename
+  set statusline+=\ %([%M%R%H]\ %)                " group for mod., reado. & help
   set statusline+=[%{strlen(&fenc)?&fenc:'none'}, " display fileencoding
   set statusline+=%{&ff}                          " filetype (unix/windows)
   set statusline+=%Y]                             " filetype (c/sh/vim/...)
-  set statusline+=\ [ASCII=x%02.2B]               " ASCII code of char
+  set statusline+=\ [ASCII=x%03B]               " ASCII code of char
+  "set statusline+=\ [ASCII=x%02.2B]               " ASCII code of char
   set statusline+=%=                              " rubber space
   set statusline+=[%{strftime('%a\ %F\ %R')}]     " clock
   set statusline+=\ [%c%V,%l/%L]                  " position in file
@@ -360,10 +363,21 @@ if has('statusline')
 
   if has('autocmd')
     " change highlighting when mode changes
-    au InsertEnter * call InsertStatuslineColor(v:insertmode)
-    au InsertLeave * hi statusline guibg=DarkBlue ctermbg=DarkBlue term=reverse
-    " default the statusline to green when entering Vim
-    highlight statusline guibg=DarkBlue ctermbg=DarkBlue term=reverse
+    augroup LucStatusLine
+      autocmd!
+      autocmd InsertEnter * call InsertStatuslineColor(v:insertmode)
+      autocmd InsertLeave * call InsertStatuslineColor('n')
+    augroup END
+    " now we set the colors for the statusline
+    " in the most simple case
+    highlight StatusLine term=reverse
+    " for color terminal
+    highlight StatusLine cterm=bold,reverse
+    highlight StatusLine ctermbg=1
+    " for the gui
+    "highlight StatusLine gui=bold
+    highlight StatusLine guibg=DarkBlue
+    highlight StatusLine guifg=background
   endif
 
   if has('wildmenu')
@@ -378,7 +392,7 @@ if has('statusline')
     set wildignore+=*.sw?                          " Vim swap files
     set wildignore+=*.DS_Store                     " OSX bullshit
     "set wildignore+=*.o,*.obj,*.exe,*.dll,        " compiled object files
-    "set wildignore+=*.spl                         " compiled spelling word lists
+    "set wildignore+=*.spl                         " compiled spell word lists
     "set wildignore+=*.luac                        " Lua byte code
     "set wildignore+=migrations                    " Django migrations
     "set wildignore+=*.pyc                         " Python byte code
