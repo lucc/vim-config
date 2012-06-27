@@ -1,61 +1,74 @@
 ScriptID SourceID Filename
 --------------------------
+# vim: foldmethod=marker
 
 # use '\v' on the id of a script to open the home page in a browser
 
-# nice
+# nice {{{1
 39 8196 :AutoInstall: matchit.zip
 475 2535 :AutoInstall: latexSuite.zip
 489 16670 :AutoInstall: Manpageview.vim
 642 15781 :AutoInstall: GetLatestVimScripts.vim
 
-# conflicting usecases group "explorer"
+# conflicting usecases group "explorer" {{{1
 42 14208 :AutoInstall: bufexplorer.zip
 95 754 :AutoInstall: winmanager.zip
 685 2110 :AutoInstall: incbufswitch.vim
 1011 5371 :AutoInstall: buflist.vim
 1325 4544 :AutoInstall: bufferlist.vim
+1440 11032 :AutoInstall: winmanager
 1658 17123 :AutoInstall: nerdtree.zip
 1664 15439 :AutoInstall: buftabs.vim
 1866 13974 :AutoInstall: tselectbuffer.vba
-1890 16964 :AutoInstall: lusty-explorer.vim
+# tselectbuffer needs tlib
+1863 17284 :AutoInstall: tlib
+1890 17529 :AutoInstall: lusty-explorer.vim
 1910 9909 :AutoInstall: qbuf.vim
 1984 13961 :AutoInstall: vim-fuzzyfinder.zip
+2050 17547 :AutoInstall: lusty-juggler.vim
 2346 10574 :AutoInstall: bufmru.vim
-2050 16965 :AutoInstall: lusty-juggler.vim
-3025 17084 :AutoInstall: command-t.vba
+3025 18167 :AutoInstall: command-t.vba
 3217 15680 :AutoInstall: qnamebuf.zip
 3619 16816 :AutoInstall: vim-buffergator.tar.gz
 3896 17418 :AutoInstall: buffet.vim
 
-# testing
+# testing {{{1
+52 14880 :AutoInstall: calendar.vim
 273 7701 :AutoInstall: taglist.zip
-508 9865 :AutoInstall: ZoomWin.vim
+508 18151 :AutoInstall: ZoomWin.vim
+1736 12658 :AutoInstall: applescript.vim
+#1825 6877 :AutoInstall: hints_man2 #conflicting with AutoComplPop
+#1826 6878 :AutoInstall: hints_man3 #conflicting with AutoComplPop
+1879 11894 :AutoInstall: AutoComplPop
 3412 15556 :AutoInstall: xterm-color-table.vim.tar.gz
+# 2540 1 :AutoInstall: snipMate
+2369 9222 :AutoInstall: vmmp
+2856 11762 :AutoInstall: vmmpc
 
-# dependencies?
+
+# dependencies? {{{1
 3252 13948 :AutoInstall: vim-l9.zip
 
-# maybe not interesting
+# maybe not interesting {{{1
 877 7775 :AutoInstall: gvcolor.vim
-1283 17119 :AutoInstall: tbe.vim
+1283 17954 :AutoInstall: tbe.vim
 
-# why is this installed?
+# why is this installed? {{{1
 1066 7618 :AutoInstall: cecutil.vim
 
-# to be tested (shell in gvim)
-#http://www.vim.org/scripts/script.php?script_id=2771
-#http://www.vim.org/scripts/script.php?script_id=2620
-#http://www.vim.org/scripts/script.php?script_id=165
-#http://www.vim.org/scripts/script.php?script_id=3123
+# to be tested (shell in gvim) {{{1
 #http://www.vim.org/scripts/script.php?script_id=118
-#http://www.vim.org/scripts/script.php?script_id=2711
-#http://www.vim.org/scripts/script.php?script_id=3431
+#http://www.vim.org/scripts/script.php?script_id=165
 #http://www.vim.org/scripts/script.php?script_id=1788
-#http://www.vim.org/scripts/script.php?script_id=3554
+#http://www.vim.org/scripts/script.php?script_id=2620
+#http://www.vim.org/scripts/script.php?script_id=2711
+#http://www.vim.org/scripts/script.php?script_id=2771
 #http://www.vim.org/scripts/script.php?script_id=3040
+#http://www.vim.org/scripts/script.php?script_id=3123
+#http://www.vim.org/scripts/script.php?script_id=3431
+#http://www.vim.org/scripts/script.php?script_id=3554
 
-# other default
+# other default {{{1
 #40 1 :AutoInstall: DrawIt.tar.gz
 #104 3201 :AutoInstall: blockhl.vim 
 #120 1 :AutoInstall: decho.vim
@@ -69,7 +82,7 @@ ScriptID SourceID Filename
 #628 1 :AutoInstall: SeeTab.vim
 #670 1 :AutoInstall: visincr.vim
 
-# added on 2012-02-14 (bookmarks)
+# added on 2012-02-14 (bookmarks) {{{1
 #162 1 :AutoInstall: auctex.vim
 #920 1 :AutoInstall: tex_autoclose.vim
 #1048 1 :AutoInstall: R_with_vim.tar.gz
@@ -83,7 +96,7 @@ ScriptID SourceID Filename
 #3508 1 :AutoInstall: tex_nine.tar.gz
 #3931 1 :AutoInstall: vim-support.zip
 
-# This stuff was in my old ~/.vim dir.
+# This stuff was in my old ~/.vim dir. {{{1
 # AutoAlign.vba.gz
 # auto.vim.gz
 # bash-support.zip
