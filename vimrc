@@ -1,6 +1,10 @@
 " ~/.vimrc file by luc. {{{1
-" Many thanks to Bram Moolenaar <Bram@vim.org> for the exelent example vimrc
-" vi:fdm=marker:fdl=0
+" Many thanks to Bram Moolenaar <Bram@Vim.org> for the excellent example vimrc
+" vi: set foldmethod=marker spelllang=en:
+
+" TODO: I can not complete user defined function names with <tab> on the
+" command line unless I start Vim with --noplugin.  There seems to be a plugin
+" interfering here.
 
 " start (things to do first) {{{1
 
@@ -8,9 +12,13 @@
 " first, because it changes other options as a side effect.
 set nocompatible
 
-" syntax and filetype {{{
+" Do not load many of the GUI menus.  This has to happen before 'syntax on'
+" and 'filetype ...'
+set guioptions+=M
 
+" syntax and filetype {{{
 if has('syntax')
+
   " Switch syntax highlighting on, when the terminal has colors
   " check for colours in terminal (echo &t_Co)
   if &t_Co > 2 || has("gui_running")
@@ -18,7 +26,7 @@ if has('syntax')
   endif
 
   " Enable file type detection and language-dependent indenting.
-  if has("autocmd")
+  if has('autocmd')
     filetype plugin indent on
   endif
 
@@ -26,7 +34,8 @@ endif
 
 " user defined variables {{{1
 
-let luc_notes_file = '~/.vim/notes'
+let s:notes = '~/.vim/notes'
+let mapleader = ','
 
 " user defined functions {{{1
 
@@ -34,56 +43,59 @@ function! SearchStringForURI(string) "{{{2
   " function to find an URI in a string
   " thanks to
   " http://vim.wikia.com/wiki/Open_a_web-browser_with_the_URL_in_the_current_line
+  return matchstr(a:string, '[a-z]\+:\/\/[^ >,;:]\+')
   " alternatives:
   "return matchstr(a:string, '\(http://\|www\.\)[^ ,;\t]*')
   "return matchstr(a:string, '[a-z]*:\/\/[^ >,;:]*')
-  return matchstr(a:string, '[a-z]\+:\/\/[^ >,;:]\+')
 endfunction
 
 function! HandleURI(uri) "{{{2
   " function to find an URI on the current line and open it.
-  if a:uri == ''
-    echo 'No URI given.'
-  elseif has('gui_macvim')
+  
+  " first find a browser
+  let browser = ''
+  let choises = [expand($BROWSER), 'elinks', 'links', 'w3m', 'lynx', 'wget', 'curl', '']
+  if has('gui_macvim')
     " this only works on Mac OS X
-    exec '!open "' . a:uri . '"'
+    let browser = 'open'
   else
-    " I was lasy one could do something like:
-    "exec '!$BROWSER "' . a:uri . '"'
-    echo 'Unknown system.'
+    for browser in choises
+      if executable(browser) | break | endif
+    endfor
   endif
+
+  " without browser or uri, bail out
+  if browser == '' || a:uri == ''
+    echoerr "Can't find a suitable browser or URI."
+    return
+  endif
+
+  " everything set: open the uri
+  echo 'Visiting' a:uri '...'
+  silent execute '!' browser shellescape(a:uri)
 endfunction
 
 function! InsertStatuslineColor(mode) "{{{2
   " function to change the color of the statusline depending on the mode
   " this version is from
   " http://vim.wikia.com/wiki/Change_statusline_color_to_show_insert_or_normal_mode
-  if a:mode == 'i'
-    highlight statusline guibg=DarkGreen   ctermbg=DarkGreen
+  if     a:mode == 'i'
+    highlight StatusLine guibg=DarkGreen   ctermbg=DarkGreen
   elseif a:mode == 'r'
-    highlight statusline guibg=DarkMagenta ctermbg=DarkMagenta
+    highlight StatusLine guibg=DarkMagenta ctermbg=DarkMagenta
+  elseif a:mode == 'n'
+    highlight StatusLine guibg=DarkBlue    ctermbg=DarkBlue
   else
     highlight statusline guibg=DarkRed     ctermbg=DarkRed
   endif
 endfunction
 
-function! FindNextSpellErrorAndDisplayCorrections(mode) "{{{2
-  " A function to jump to the next spelling error and imediatly display
-  " possible corrections. In insert mode the Pmenu is used, in normal mode the
-  " listoing from z= is used.
-  let oldspell = &spell
-  if &spell == 0
-    set spell
-  endif
-  if spellbadword(expand('<cword>')) != ['', '']
-    if a:mode == 'insert' | <C-x><C-S> | else | z= | endif
-  else
+function! FindNextSpellError() "{{{2
+  " A function to jump to the next spelling error
+  setlocal spell
+  "if spellbadword(expand('<cword>')) == ['', '']
     normal ]s
-    if a:mode == 'insert' | <C-x><C-S> | else | z= | endif
-  endif
-  if oldspell == 0
-    set nospell
-  endif
+  "endif
 endfunction
 
 function! VisitBufferOrEditFile(name) "{{{2
@@ -93,18 +105,97 @@ function! VisitBufferOrEditFile(name) "{{{2
   if match(expand(a:name), '/') == -1
     let a:name = getcwd() . '/' . a:name
   endif
-  " this is a short version of the lines below:
-  "execute (bufexists(expand(a:name)) ? 'buffer ' : 'edit ') . expand(a:name)
-  if bufexists(expand(a:name))
-    execute 'buffer ' . expand(a:name)
-  else
-    execute 'edit ' . expand(a:name)
+  execute (bufexists(expand(a:name)) ? 'buffer ' : 'edit ') . expand(a:name)
+endfunction
+
+function! LucInitiateSession(load_old_session) "{{{2
+  " A function to source a session file and set up an autocommand which will
+  " automatically save the session again, when vim is quit.
+  let l:session = '~/.vim/Session.vim'
+  if a:load_old_session
+    execute 'source' l:session
+    silent execute '!rm -f' l:session
   endif
+  augroup LucSession
+    autocmd!
+    execute 'autocmd VimLeave * mksession!' l:session
+  augroup END
+  if argc() | argdelete * | endif
+  redraw!
+endfunction
+
+function! LucQuickMake(target, override) "{{{2
+  " Try to build stuff depending on some parameters.  What will be built is
+  " decided by a:target and if absent the current file.  First a makefile is
+  " searched for in the directory %:h and above.  If one is found it is used
+  " to make a:target.  If no makefile is found and filetype=tex, the current
+  " file will be compiled with latexmk.  If a:override is non zero only
+  " latexmk will be executed and no makefile will be searched.
+
+  " local variables
+  let cmd   = ''
+  let error = 0
+  let path  = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
+  let dir   = ''
+
+  " try to find a makefile and set dir and cmd
+  while ! empty(path)
+    let dir = '/' . join(path, '/')
+    if filereadable(dir . '/makefile') || filereadable(dir . '/Makefile')
+      let cmd = 'make' . (a:target == '' ? '' : ' ' . a:target)
+      let path = []
+    else
+      unlet path[-1]
+    endif
+  endwhile
+
+  " if no makefile was found or override was asked for try to use latex
+  if a:override || cmd == '' && &filetype == 'tex' && a:target == ''
+    let dir = expand('%:h')
+    let cmd = 'latexmk -silent ' . expand('%:t')
+  endif
+
+  " execute the command in the proper directory
+  if cmd == ''
+    echoerr 'No makefile found.'
+  else
+    execute 'cd' dir
+    echo 'Executing' cmd 'in' fnamemodify(getcwd(), ':~') '...'
+    silent execute '!' cmd '&'
+    cd -
+    if v:shell_error
+      echoerr 'Make returned ' . v:shell_error . '.'
+    endif
+    let error = ! v:shell_error
+  endif
+
+  " return shell errors
+  return error
+endfunction
+
+function! LucCheckIfBufferIsNew(...)
+  " check if the buffer with number a:1 is new.  That is to say, if it as
+  " no name and is empty.  If a:1 is not supplied 1 is used.
+  " find the buffer nr to check
+  let number = a:0 ? a:1 : 1
+  " save current and alternative buffer
+  let current = bufnr('%')
+  let alternative = bufnr('#')
+  let value = 0
+  " check buffer name
+  if bufexists(number) && bufname(number) == ''
+    silent! execute 'buffer' number
+    let value = line('$') == 1 && getline(1) == '' ? 1 : 0
+    silent! execute 'buffer' alternative
+    silent! execute 'buffer' current
+  endif
+  return value
 endfunction
 
 " user defined commands and mappings {{{1
 
-" edit {{{2
+" editing {{{2
+
 " make Y behave like D,S,C ...
 map Y y$
 
@@ -113,63 +204,79 @@ map Y y$
 inoremap <C-U> <C-G>u<C-U>
 
 " easy spell checking
-"imap <C-s> <C-o>:call FindNextSpellErrorAndDisplayCorrections('insert')<CR>
-"nmap <C-s>      :call FindNextSpellErrorAndDisplayCorrections('normal')<CR>
-"imap <C-s> <C-o>]s
-"nmap <C-s> ]s
+inoremap <C-s> <C-o>:call FindNextSpellError()<CR><C-x><C-s>
+nnoremap <C-s>      :call FindNextSpellError()<CR>z=
 
 " TODO: is this usefull?
 "inoremap ( ()<++><ESC>F)i
 "inoremap [ []<++><ESC>F]i
 "inoremap { {}<++><ESC>F}i
 
-" web {{{2
+" web {{{2 1
 " functions to open URLs
-nmap <Leader>w :call HandleURI(SearchStringForURI(getline('.')))<CR><CR>
+nmap <Leader>w :call HandleURI(SearchStringForURI(getline('.')))<CR>
 
 " find a script on vim.org by id or name
-nmap <Leader>v :call HandleURI('http://www.vim.org/scripts/script.php?script_id=' . expand('<cword>'))<CR><CR>
+nmap <Leader>v :call HandleURI('http://www.vim.org/scripts/script.php?script_id=' . matchstr(matchstr(expand('<cword>'), '[0-9]\+[^0-9]*$'), '^[0-9]*'))<CR>
 
 " misc {{{2
-" use ß to clear the screen if you wnat privacy for a moment
+
+" use ß to clear the screen if you want privacy for a moment
 nmap ß :!clear<CR>
 
-" for the IncBufSwitch plugin (the plugin does only match buffers against the
-" start of the buffer name ... (not so nice)
-nmap <f2> :IncBufSwitch<CR>
+" easy compilation
+nmap <D-F1> :silent update <BAR> call LucQuickMake('', 0)<CR>
+imap <D-F1> <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
+nmap <D-F2> :silent update <BAR> call LucQuickMake('', 1)<CR>
+imap <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
 
 " load a notes/scratch buffer which will be saved automatically.
-call bufnr(luc_notes_file, 99)
-" use the variable in the autocommands
-autocmd BufEnter ~/.vim/notes setlocal nobuflisted bufhidden=hide
-autocmd BufDelete,BufHidden,BufLeave,BufUnload,FocusLost ~/.vim/notes update
+augroup LucNotesFile
+  autocmd!
+  " use the variable in the autocommands
+  execute 'au BufEnter' s:notes 'setlocal nobuflisted bufhidden=hide'
+  execute 'au BufDelete,BufHidden,BufLeave,BufUnload,FocusLost' s:notes 'up'
+augroup END
+execute 'nmap <C-w># :call VisitBufferOrEditFile("' . s:notes . '")<CR>'
 
-" commands and mappings to switch to important files fast.
-command NO call VisitBufferOrEditFile(luc_notes_file)
-command GLF call VisitBufferOrEditFile('~/.vim/GetLatest/GetLatestVimScripts.dat')
-" quickly open ~/.vimrc and ~/.gvimrc
-command RC  call VisitBufferOrEditFile('~/.vimrc')
-command GRC call VisitBufferOrEditFile('~/.gvimrc')
-nmap <C-w># :NO<CR>
+command! -bar -bang Session silent call LucInitiateSession('<bang>' == '!' ? 0 : 1)
+function! LucEditAllBuffers()
+  let current = bufnr('%')
+  let alternative = bufnr('#')
+  bufdo edit
+  if bufexists(alternative)
+    execute 'buffer' alternative
+  endif
+  if bufexists(current)
+    execute 'buffer' current
+  endif
+endfunction
+augroup LucSession
+  autocmd!
+  "autocmd VimEnter * if bufname('%') == '' && bufnr('%') == 1 | bwipeout 1 | silent edit | silent redraw | endif
+  autocmd VimEnter * if LucCheckIfBufferIsNew(1) | bwipeout 1 | doautocmd BufRead,BufNewFile | endif
+augroup END
 
-au FileType python setlocal tabstop=8 expandtab shiftwidth=4 softtabstop=4
+augroup LucPython
+  autocmd!
+  autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
+augroup END
 
 " From the .vimrc example file:
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
 " Only define it when not defined already.
-if !exists(":DiffOrig")
-  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p
-	\ | diffthis
-endif
+command! DiffOrig vne | se bt=nofile | r # | 0d_ | difft | wincmd p | difft
 
-" options: ToDo {{{1
+" options: TODO {{{1
 
 "set transparency=15
 "set foldcolumn=2
 
 " options: basic {{{1
-set backspace=indent,eol,start " allow backspacing over everything in insert mode
+
+" allow backspacing over everything in insert mode
+set backspace=indent,eol,start
 set backup 
 set hidden
 set history=100
@@ -178,16 +285,20 @@ set path=.,~/files/**,~/,~/.vim/**,/usr/include/,/usr/local/include/
 set textwidth=78
 set shiftwidth=2
 set background=light
-set formatoptions+=nr 	"brake text and comments but do not reformat lines where no input occures
+" break text and comments but do not reformat lines where no input occures
+set formatoptions+=nr
 set number
-set scrolloff=5		"scroll when the courser is 5 lines from the border line
+" scroll when the courser is 5 lines from the border line
+set scrolloff=5
 set shortmess=
 set nostartofline
+set encoding=utf-8
+set switchbuf=useopen
 
 " options: searching {{{1
 set ignorecase
 set smartcase
-if has("extra_search")
+if has('extra_search')
   " highlight the last used search pattern.
   set hlsearch
   " incremental search
@@ -199,7 +310,7 @@ endif
 if has('syntax')
   " on Mac OS X the spellchecking files are in:
   " /Applications/editoren/Vim.app/Contents/Resources/vim/runtime/spell
-  set spelllang=de_DE
+  set spelllang=de
   set nospell
 endif
 
@@ -217,12 +328,12 @@ endif
 
 " options: satusline and wildmenu {{{1
 
-if has("statusline")
+if has('statusline')
   " many thanks to
   "   http://vim.wikia.com/wiki/Writing_a_valid_statusline
   "   https://wincent.com/wiki/Set_the_Vim_statusline
   "   http://winterdom.com/2007/06/vimstatusline
-  "   http://got-ravings.blogspot.com/2008/08/vim-pr0n-making-statuslines-that-own.html
+  "   http://got-ravings.blogspot.com/2008/08/
 
   " some examples
   "set statusline=last\ changed\ %{strftime(\"%c\",getftime(expand(\"%:p\")))}
@@ -247,7 +358,7 @@ if has("statusline")
   " always display the statusline
   set laststatus=2
 
-  if has("autocmd")
+  if has('autocmd')
     " change highlighting when mode changes
     au InsertEnter * call InsertStatuslineColor(v:insertmode)
     au InsertLeave * hi statusline guibg=DarkBlue ctermbg=DarkBlue term=reverse
@@ -255,11 +366,11 @@ if has("statusline")
     highlight statusline guibg=DarkBlue ctermbg=DarkBlue term=reverse
   endif
 
-  if has("wildmenu")
+  if has('wildmenu')
     set wildmenu
   endif
 
-  if has("wildignore")
+  if has('wildignore')
     set wildmode=longest:full,full
     set wildignore+=.hg,.git,.svn                  " Version control
     set wildignore+=*.aux,*.out,*.toc              " LaTeX intermediate files
@@ -275,7 +386,7 @@ if has("statusline")
   endif
 
 " We do not have the 'statusline' feature. Maybe we can still have a ruler?
-elseif has("cmdline_info")
+elseif has('cmdline_info')
   "show the cursor position all the time (at bottom right)
   set ruler
 endif
@@ -287,8 +398,8 @@ if version >= 703 	" NEW in VIM 7.3
 else
   " this highlights the part of the line which is longer then 78 char in grey
   " (blue in a terminal).
-  augroup vimrc_autocmds
-    au!
+  augroup LucOverlength
+    autocmd!
     autocmd BufRead * highlight OverLength ctermbg=blue ctermfg=white
     autocmd BufRead * match OverLength /\%79v.*/
   augroup END
@@ -301,6 +412,14 @@ if has('vertsplit')    | set splitright              | endif
 if has('virtualedit')  | set virtualedit=block       | endif
 if has('diff')         | set diffopt=filler,vertical | endif
 if has('vms')          | set nobackup                | endif
+if has('mksession')
+  " default: blank,buffers,curdir,folds, help,options,tabpages,winsize
+  set sessionoptions+=resize,winpos
+endif
+if has('viminfo')
+  " default: '100,<50,s10,h
+  set viminfo='100,<50,s10,h,%
+endif
 
 " set colors {{{1
 if has('syntax')
@@ -335,158 +454,164 @@ endif
 " - vimballPlugin.vim
 " - zipPlugin.vim
 
-" getscript {{{
-" Should ship with vim, else see
-" http://www.vim.org/scripts/script.php?script_id=642
-" The file ~/.vim/GetLatest/GetLatestVimScripts.dat contains the instructions
-" to load plugins.
-" }}}
-" netrw {{{
+" getscript 642 {{{2
+" Should ship with vim.  The file ~/.vim/GetLatest/GetLatestVimScripts.dat
+" contains the instructions to load plugins.
+
+" netrw {{{2
 " Should ship with vim.
 " TODO: configure with ssh passphrase and netrc file.
-" }}}
-" matchit {{{
+
+" matchit {{{2
 "runtime macros/matchit.vim
-" }}}
 
 " plugins: additional: file managing {{{1
 
 " nice {{{2
-" testing {{{2
-" {{{ winmanager
-" http://www.vim.org/scripts/script.php?script_id=95
-map <C-w><C-t> :WMToggle<CR> 
 
-" }}}
-
-" lusty-explorer.vim {{{
-" http://vim.org/scripts/script.php?script_id=1890
-" no help?
-" }}}
-
-" vim-fuzzyfinder.zip {{{
-" http://vim.org/scripts/script.php?script_id=1984
+" vim-fuzzyfinder.zip 1984 {{{3
 " requires l9lib (vimscript 3252)
 " I can not disable it?
 
-let g:fuf_coveragefile_globPatterns = ['~/.*', '~/*', '~/files/**/.*', '~/files/**/*', '~/.vim/**/.*', '~/.vim/**/*']
-nnoremap <C-f> :FufCoverageFile!<CR>
-nnoremap <C-b> :FufBuffer!<CR>
-nnoremap <C-S-f> :FufCoverageFile<CR>
-nnoremap <C-S-b> :FufBuffer<CR>
-inoremap <C-f> <ESC>:FufCoverageFile!<CR>
-inoremap <C-S-f> <ESC>:FufCoverageFile<CR>
-inoremap <C-b> <ESC>:FufBuffer!<CR>
-inoremap <C-S-b> <ESC>:FufBuffer<CR>
+let g:fuf_enumeratingLimit = 20
+let g:fuf_coveragefile_globPatterns = ['~/.*', '~/*']
+let g:fuf_dataDir = '~/.vim/fuf-data'
+cal extend(g:fuf_coveragefile_globPatterns, ['~/files/**/.*', '~/files/**/*'])
+cal extend(g:fuf_coveragefile_globPatterns, ['~/.vim/**/.*', '~/.vim/**/*'])
+nnoremap <silent> <C-f> :silent FufCoverageFile<CR>
+nnoremap <silent> <C-b> :silent FufBuffer<CR>
+nnoremap <silent> <C-h> :silent FufHelp<CR>
+inoremap <silent> <C-f> <ESC>:silent FufCoverageFile<CR>
+inoremap <silent> <C-b> <ESC>:silent FufBuffer<CR>
+inoremap <silent> <C-h> <ESC>:silent FufHelp<CR>
 
-" }}}
+" testing {{{2
 
-" disabled {{{2
-" nerdtree.zip {{{
-" http://vim.org/scripts/script.php?script_id=1658
-" disable loading for the moment
-let loaded_nerd_tree = 1
-" }}}
+" winmanager 95 {{{3
+" seems to be abondend since 2002 there is a patch at script_id=1440
+"map <C-w><C-t> :WMToggle<CR> 
+nmap <leader>a :WMToggle<cr>
 
-" tselectbuffer.vba {{{
-" http://vim.org/scripts/script.php?script_id=1866
+" lusty-explorer.vim 1890 {{{3
+" help inside script: ~/.vim/plugin/lusty-explorer.vim
+" disable mappings
+let g:LustyExplorerDefaultMappings = 0
+" available commands
+"   :LustyFilesystemExplorer [optional-path]
+"   :LustyFilesystemExplorerFromHere
+"   :LustyBufferExplorer
+"   :LustyBufferGrep
+" nice!!
+nmap <leader>b :LustyFilesystemExplorer<cr>
+" nearly the same as "WMToggle" but has preview option
+nmap <leader>c :LustyBufferExplorer<cr>
+
+" nerdtree.zip 1658 {{{3
+" is only checked for existenc
+"let loaded_nerd_tree = 1
+let NERDChristmasTree = 1
+let NERDTreeHijackNetrw = 1
+nmap <leader>d :NERDTreeToggle<cr>
+
+" tselectbuffer.vba 1866 {{{3
 " needs tlib >= 0.40
 " disable loading for the moment
-let loaded_tselectbuffer = 1
-" }}}
+"let loaded_tselectbuffer = 0
+nmap <leader>e :TSelectBuffer<cr>
 
-" command-t.vba {{{
-" http://vim.org/scripts/script.php?script_id=3025
-let g:command_t_loaded = 1
-" }}}
-
+" command-t.vba 3025 {{{3
+"let g:command_t_loaded = 0
+let g:CommandTMaxCachedDirectories = 1
+let g:CommandTScanDotDirectories = 1
+let g:CommandTMatchWindowReverse = 1
+" buggy ??
+nmap <leader>f :CommandT<cr>
 
 " plugins: additional: buffer managing {{{1
 
 " nice {{{2
 
-" buftabs.vim {{{
-" http://vim.org/scripts/script.php?script_id=1664
+" buftabs.vim 1664 {{{3
 " no help / can not disable it / quite nice
 let g:buftabs_marker_modified = '+'
 let g:buftabs_only_basename = 1
 "let g:buftabs_in_statusline=1
 "set statusline=%=buffers:\ %{buftabs#statusline()}
-" }}}
+" i moved this into ~/.vim/do_not_load/
 
 " testing {{{2
 
-" buffet.vim {{{
-" http://vim.org/scripts/script.php?script_id=3896
+" buffet.vim 3896 {{{3
 " no help?
 " I can not disable it!
-" }}}
+nmap <leader>g :Bufferlist<CR>
 
-" qbuf.vim {{{
-" http://vim.org/scripts/script.php?script_id=1910
+" qbuf.vim 1910 {{{3
 " no help
 " bad coding style -> can not dissable it.
 "buggy ? 
-let g:qb_hotkey = '<F3>'
+"but the htky does something interesting :)
+let g:qb_loaded = 0
+let g:qb_hotkey = '<leader>h'
 
-" }}}
+" qnamebuf.zip 3217 {{{3
+let g:qnamebuf_loaded = 0
+let g:qnamefile_loaded = 0
+" this will not help
+let qnamebuf_hotkey = '<leader>i'
+let qnamefile_hotkey = '<leader>j'
 
-" incbufswitch.vim {{{
-" http://vim.org/scripts/script.php?script_id=685
+" incbufswitch.vim 685 {{{3
 " no help
-" can not dissable it. 
 " the plugin does only match buffers against the start
 " of the buffer name ... (not so nice)
-" }}}
+" moved to ~/.vim/do_not_load/
 
-" buflist.vim {{{
-" http://vim.org/scripts/script.php?script_id=1011
+" buflist.vim 1011 {{{3
 " no help
-" can not dissable.
-" }}}
+" can not customize mapping. unconditionally maps <F4>
+" moved to ~/.vim/do_not_load/
 
-" bufexplorer.zip {{{
-" http://vim.org/scripts/script.php?script_id=42
+" bufexplorer.zip 42 {{{3
 " integrates with winmanager.vim
-" }}}
 
 " disabled {{{2
 
-" qnamebuf.zip {{{
-" http://vim.org/scripts/script.php?script_id=3217
-let g:qnamebuf_loaded = 1
-let g:qnamefile_loaded = 1
-" }}}
+" vim-buffergator.tar.gz 3619 {{{3
+" browse buffers with preview, switch to window containing this buffer or
+" display buffer in last window
+let g:did_buffergator = 0
+let g:buffergator_suppress_keymaps = 1
+map <Leader>k :BuffergatorToggle<CR>
 
-" vim-buffergator.tar.gz {{{
-" http://vim.org/scripts/script.php?script_id=3619
-let g:did_buffergator = 1
-" }}}
-
-" bufmru.vim {{{
-" http://vim.org/scripts/script.php?script_id=2346
+" bufmru.vim 2346 {{{3
 " no help
-let loaded_bufmru = 1
-" }}}
+" is only checked for existenc
+"let loaded_bufmru = 1
+let g:bufmru_switchkey = '<leader>l'
+" seems buggy
 
-" lusty-juggler.vim {{{
-" http://vim.org/scripts/script.php?script_id=2050
+" lusty-juggler.vim 2050 {{{3
 " no help
-let g:loaded_lustyjuggler = 1
-" }}}
+" is checked for existenc only
+"let g:loaded_lustyjuggler = 0
+let g:LustyJugglerDefaultMappings = 0
 
-" bufferlist.vim {{{
-" http://vim.org/scripts/script.php?script_id=1325
-let g:BufferListLoaded = 1
-" }}}
-
+" bufferlist.vim 1325 {{{3
+" is only checked for existenc
+"let g:BufferListLoaded = 0
+" does not need a mapping: 
+nmap <leader>m :call Bufferlist()<cr>
 
 " plugins: additional: LeTeX {{{1
 
 " my private enhencements
-autocmd BufNewFile,BufRead *.tex setlocal dictionary+=*.bib
+augroup LucLatex
+  autocmd!
+  autocmd BufNewFile,BufRead *.tex setlocal dictionary+=*.bib
+augroup END
 
-" {{{ PLUGIN LaTeX-Suite: 
+" {{{2 PLUGIN LaTeX-Suite: 
 
 " REQUIRED: filetype plugin on
 " OPTIONAL: filetype indent on
@@ -507,39 +632,35 @@ let Tex_FoldedEnvironments.='align,figure,table,thebibliography,'
 let Tex_FoldedEnvironments.='keywords,abstract,titlepage'
 let Tex_FoldedEnvironments.='item,enum,display'
 let Tex_FoldedMisc='comments,item,preamble,<<<'
+let Tex_FoldedEnvironments='*'
 
 " compiling with \ll
-"let g:Tex_CompileRule_pdf='latexmk -silent -pv -pdf $*'
-let g:Tex_CompileRule_pdf='pdflatex -interaction=nonstopmode $*'
+let g:Tex_CompileRule_pdf='latexmk -silent -pv -pdf $*'
+"let g:Tex_CompileRule_pdf='pdflatex -interaction=nonstopmode $*'
 let Tex_UseMakefile=1
 let g:Tex_ViewRule_pdf='open -a Preview'
 
 "dont use latexsuite folding
-let Tex_FoldedEnvironments=''
-let Tex_FoldedMisc=''
-let Tex_FoldedSections=''
+"let Tex_FoldedEnvironments=''
+"let Tex_FoldedMisc=''
+"let Tex_FoldedSections=''
 
-" }}} LaTeX-Suite
-" {{{ PLUGIN AutomaticLaTexPlugin
+" don't use LaTeX-Suite menus
+let g:Tex_Menus=0
+"let g:Tex_UseUtfMenus=1
+
+" {{{2 PLUGIN AutomaticLaTexPlugin
 " http://www.vim.org/scripts/script.php?script_id=2945
-
-" }}}
-" {{{ PLUGIN auctex.vim
+" {{{2 PLUGIN auctex.vim
 " http://www.vim.org/scripts/script.php?script_id=162
-
-" }}}
-" {{{ PLUGIN tex_autoclose
+" {{{2 PLUGIN tex_autoclose
 " http://www.vim.org/scripts/script.php?script_id=920
-
-" }}}
-" {{{ PLUGIN tex9
+" {{{2 PLUGIN tex9
 " http://www.vim.org/scripts/script.php?script_id=3508
-
-" }}}
 
 " plugins: additional: tags {{{1
 
-" taglist {{{
+" taglist {{{2
 " http://www.vim.org/scripts/script.php?script_id=273 
 let Tlist_Auto_Update = 0
 let Tlist_Close_On_Select = 1
@@ -549,11 +670,13 @@ let Tlist_Use_Right_Window = 1
 let Tlist_WinWidth = 75
 let Tlist_Show_Menu = 1
 map <silent> <F4> :TlistToggle<CR>
-au BufEnter *.tex let Tlist_Ctags_Cmd = expand('~/.vim/ltags')
-au BufLeave *.tex let Tlist_Ctags_Cmd = 'ctags'
-" }}}
+augroup LucTagList
+  autocmd!
+  autocmd BufEnter *.tex let Tlist_Ctags_Cmd = expand('~/.vim/ltags')
+  autocmd BufLeave *.tex let Tlist_Ctags_Cmd = 'ctags'
+augroup END
 
-" {{{ Ctags and Cscope
+" {{{2 Ctags and Cscope
 " always search for a tags file from $PWD down to '/'.
 set tags=./tags,tags;/
 
@@ -561,7 +684,8 @@ set tags=./tags,tags;/
 " found.
 function! s:ctag_fallback()
   " run ``ctags **/.*[ch]'' to produce the file ``tags''.
-  " these headers are used: http://www.vim.org/scripts/script.php?script_id=2358
+  " these headers are used: 
+  " http://www.vim.org/scripts/script.php?script_id=2358
   set tags+=~/.vim/tags/usr_include.tags
   set tags+=~/.vim/tags/usr_include_cpp.tags
   set tags+=~/.vim/tags/usr_local_include.tags
@@ -570,7 +694,7 @@ function! s:ctag_fallback()
 endfunction
 
 " try to use Cscope
-if has("cscope")
+if has('cscope')
   set nocsverb
   if has('quickfix') | set cscopequickfix=s-,c-,d-,i-,t-,e- | endif
   " search cscope database first (1 = ``tags first'')
@@ -638,7 +762,14 @@ endif
 " extend ctags to work with latex
 let tlist_tex_settings='latex;b:bibitem;c:command;l:label'
 
-" }}}
+" {{{1 music
+
+"if has('python')
+"  python import os, sys
+"  python sys.path.append(os.path.expanduser("~/.vim/vimmp"))
+"  pyfile ~/.vim/vimmp/main.py
+"endif
+"nmap <silent> <leader>x :py vimmp_toggle()<CR>
 
 " plugins: additional: misc {{{1
 
@@ -650,7 +781,10 @@ let g:manpageview_winopen = 'reuse'
 "{{{ hints_man
 " http://www.vim.org/scripts/script.php?script_id=1825
 " http://www.vim.org/scripts/script.php?script_id=1826
-autocmd FileType c,cpp setlocal cmdheight=2
+augroup LucManHints
+  autocmd!
+  autocmd FileType c,cpp set cmdheight=2
+augroup END
 "}}}
 "{{{ omnicppcomplete
 "http://www.vim.org/scripts/script.php?script_id=1520
@@ -666,7 +800,10 @@ if version >= 7
   let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
   let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
   " automatically open and close the popup menu / preview window
-  au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+  augroup LucOmniCppCompete
+    autocmd!
+    autocmd CursorMovedI,InsertLeave * if pumvisible() == 0|sil! pclose|endif
+  augroup END
   set completeopt=menu,longest,preview
   imap <C-TAB> <C-x><C-o>
 endif
