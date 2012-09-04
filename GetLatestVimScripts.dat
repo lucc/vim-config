@@ -16,12 +16,12 @@ ScriptID SourceID Filename
 685 2110 :AutoInstall: incbufswitch.vim
 1011 5371 :AutoInstall: buflist.vim
 1325 4544 :AutoInstall: bufferlist.vim
-1440 11032 :AutoInstall: winmanager
+1440 18243 :AutoInstall: winmanager
 1658 17123 :AutoInstall: nerdtree.zip
 1664 15439 :AutoInstall: buftabs.vim
 1866 13974 :AutoInstall: tselectbuffer.vba
 # tselectbuffer needs tlib
-1863 17284 :AutoInstall: tlib
+1863 18488 :AutoInstall: tlib
 1890 17529 :AutoInstall: lusty-explorer.vim
 1910 9909 :AutoInstall: qbuf.vim
 1984 13961 :AutoInstall: vim-fuzzyfinder.zip
@@ -33,6 +33,8 @@ ScriptID SourceID Filename
 3896 17418 :AutoInstall: buffet.vim
 
 # testing {{{1
+1213 17026 :AutoInstall: Vim JDE
+1785 14914 :AutoInstall: javacompete
 52 14880 :AutoInstall: calendar.vim
 273 7701 :AutoInstall: taglist.zip
 508 18151 :AutoInstall: ZoomWin.vim
@@ -45,6 +47,8 @@ ScriptID SourceID Filename
 2369 9222 :AutoInstall: vmmp
 2856 11762 :AutoInstall: vmmpc
 
+# list/scheme interaction
+2531 18425 :AutoInstall: slimv.vim
 
 # dependencies? {{{1
 3252 13948 :AutoInstall: vim-l9.zip
