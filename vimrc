@@ -159,6 +159,7 @@ function! LucQuickMake(target, override) "{{{2
   " execute the command in the proper directory
   if cmd == ''
     echoerr 'No makefile found.'
+    let error = 1
   else
     execute 'cd' dir
     echo 'Executing' cmd 'in' fnamemodify(getcwd(), ':~') '...'
@@ -186,7 +187,7 @@ function! LucCheckIfBufferIsNew(...)
   " check buffer name
   if bufexists(number) && bufname(number) == ''
     silent! execute 'buffer' number
-    let value = line('$') == 1 && getline(1) == '' ? 1 : 0
+    let value = line('$') == 1 && getline(1) == ''
     silent! execute 'buffer' alternative
     silent! execute 'buffer' current
   endif
@@ -225,7 +226,7 @@ endfunction
 " editing {{{2
 
 " make Y behave like D,S,C ...
-map Y y$
+nmap Y y$
 
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
@@ -262,16 +263,16 @@ nmap <Leader>v :call HandleURI('http://www.vim.org/scripts/script.php?script_id=
 nmap ß :!clear<CR>
 
 " easy compilation
-nmap <D-F1> :silent update <BAR> call LucQuickMake('', 0)<CR>
-imap <D-F1> <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
-nmap <D-F2> :silent update <BAR> call LucQuickMake('', 1)<CR>
-imap <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
+nmap <F2> :silent update <BAR> call LucQuickMake('', 0)<CR>
+imap <F2> <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
+nmap <silent> <D-F2> :silent update <BAR> sil call LucQuickMake('', 1)<CR>
+imap <silent> <D-F2> <C-O>:silent update <BAR> sil call LucQuickMake('', 1)<CR>
 
 " load a notes/scratch buffer which will be saved automatically.
 augroup LucNotesFile
   autocmd!
   " use the variable in the autocommands
-  execute 'au BufEnter' s:notes 'setlocal nobuflisted bufhidden=hide'
+  execute 'au BufEnter' s:notes 'setlocal bufhidden=hide'
   execute 'au BufDelete,BufHidden,BufLeave,BufUnload,FocusLost' s:notes 'up'
 augroup END
 execute 'nmap <C-w># :call VisitBufferOrEditFile("' . s:notes . '")<CR>'
@@ -633,7 +634,7 @@ let qnamefile_hotkey = '<leader>j'
 " display buffer in last window
 let g:did_buffergator = 0
 let g:buffergator_suppress_keymaps = 1
-map <Leader>k :BuffergatorToggle<CR>
+nmap <Leader>k :BuffergatorToggle<CR>
 
 " bufmru.vim 2346 {{{3
 " no help
@@ -713,36 +714,55 @@ let g:Tex_Menus=0
 
 " taglist {{{2
 " http://www.vim.org/scripts/script.php?script_id=273 
-let Tlist_Auto_Update = 0
-let Tlist_Close_On_Select = 1
-let Tlist_Display_Prototype = 1
-let Tlist_Exit_OnlyWindow = 1
-let Tlist_Use_Right_Window = 1
-let Tlist_WinWidth = 75
-let Tlist_Show_Menu = 1
-map <silent> <F4> :TlistToggle<CR>
-augroup LucTagList
-  autocmd!
-  autocmd BufEnter *.tex let Tlist_Ctags_Cmd = expand('~/.vim/ltags')
-  autocmd BufLeave *.tex let Tlist_Ctags_Cmd = 'ctags'
-augroup END
+"let Tlist_Auto_Highlight_Tag        = 
+"let Tlist_Auto_Open                 = 
+let Tlist_Auto_Update               = 1
+let Tlist_Close_On_Select           = 1
+let Tlist_Compact_Format            = 1
+"let Tlist_Ctags_Cmd                 = 
+let Tlist_Display_Prototype         = 1
+"let Tlist_Display_Tag_Scope         = 
+"let Tlist_Enable_Fold_Column        = 
+let Tlist_Exit_OnlyWindow           = 1
+let Tlist_File_Fold_Auto_Close      = 1
+let Tlist_GainFocus_On_ToggleOpen   = 1
+"let Tlist_Highlight_Tag_On_BufEnter = 
+"let Tlist_Inc_Winwidth              = 
+"let Tlist_Max_Submenu_Items         = 
+"let Tlist_Max_Tag_Length            = 
+"let Tlist_Process_File_Always       = 
+"let Tlist_Show_Menu                 = 1
+"let Tlist_Show_One_File             = 
+"let Tlist_Sort_Type                 = 
+"let Tlist_Use_Horiz_Window          = 
+let Tlist_Use_Right_Window          = 1
+"let Tlist_Use_SingleClick           = 
+"let Tlist_WinHeight                 = 
+let Tlist_WinWidth                  = 75
+
+" Extend ctags to work with latex
+"""""""""""""""""""""""""""""""""
+" This is strongly dependent on the file ~/.ctags and the definitions therein.
+" See ctags(1) for a description of the format.
+" The variable tlist_tex_settings is a semicolon separated list of key:val
+" pairs. The first item is no such pair but only the language name used by
+" ctags. The key is a single letter used by ctags as "kind" of the tag, the
+" val is a word used by tlist to categorice the tags in the tlist window.
+"let tlist_tex_settings='tex;b:bibitem;c:command;l:label;s:sections;t:subsections;u:subsubsections'
+"let tlist_tex_settings='tex;c:chapters;s:sections;u:subsections;b:subsubsections;p:parts;P:paragraphs;G:subparagraphs'
+let tlist_tex_settings='latex;s:structure;g:graphic+listing;l:label;r:ref;b:bib'
+
+
+nmap <silent> <F4> :TlistToggle<CR>
+"augroup LucTagList
+"  autocmd!
+"  autocmd BufEnter *.tex let Tlist_Ctags_Cmd = expand('~/.vim/ltags')
+"  autocmd BufLeave *.tex let Tlist_Ctags_Cmd = 'ctags'
+"augroup END
 
 " {{{2 Ctags and Cscope
 " always search for a tags file from $PWD down to '/'.
 set tags=./tags,tags;/
-
-" this function is used if no Cscope support is available or no database
-" found.
-function! s:ctag_fallback()
-  " run ``ctags **/.*[ch]'' to produce the file ``tags''.
-  " these headers are used: 
-  " http://www.vim.org/scripts/script.php?script_id=2358
-  set tags+=~/.vim/tags/usr_include.tags
-  set tags+=~/.vim/tags/usr_include_cpp.tags
-  set tags+=~/.vim/tags/usr_local_include.tags
-  set tags+=~/.vim/tags/usr_local_include_boost.tags
-  set tags+=~/.vim/tags/cpp.tags
-endfunction
 
 " try to use Cscope
 if has('cscope')
@@ -802,16 +822,20 @@ if has('cscope')
     cscope add $CSCOPE_DB
   else
     " no database so use Ctags instead (unset cscope options)
-    call s:ctag_fallback()
+    " run ``ctags **/.*[ch]'' to produce the file ``tags''.
+    " these headers are used: 
+    " http://www.vim.org/scripts/script.php?script_id=2358
+    set tags+=~/.vim/tags/usr_include.tags
+    set tags+=~/.vim/tags/usr_include_cpp.tags
+    set tags+=~/.vim/tags/usr_local_include.tags
+    set tags+=~/.vim/tags/usr_local_include_boost.tags
+    set tags+=~/.vim/tags/cpp.tags
     set nocscopetag
   endif
   set cscopeverbose
 else
   "call s:ctag_falback()
 endif
-
-" extend ctags to work with latex
-let tlist_tex_settings='latex;b:bibitem;c:command;l:label'
 
 " {{{1 music
 
@@ -858,4 +882,10 @@ if version >= 7
   set completeopt=menu,longest,preview
   imap <C-TAB> <C-x><C-o>
 endif
+"}}}
+"{{{ AutoComplPop
+" id 1879
+" do not start popup menu after curser moved.
+"let g:acp_mappingDriven = 1
+"let g:acp_behaviorKeywordCommand = '<tab>'
 "}}}
