@@ -36,6 +36,7 @@ endif
 
 let s:notes = '~/.vim/notes'
 let mapleader = ','
+let s:braces_stack = []
 
 " user defined functions {{{1
 
@@ -192,6 +193,33 @@ function! LucCheckIfBufferIsNew(...)
   return value
 endfunction
 
+" see:
+"http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
+"
+"function! LucManageBracesStack(typed)
+"  " This function handles the b:braces_stack variables. It is intendet to
+"  " mange the brackets for the user.
+"  if a:typed == ''
+"    return
+"  elseif a:typed =~ '[[({<]'
+"    let l:matching = (a:typed == '(' ? ')' : (a:typed == '[' ? ']' : (a:typed == '{' ? '}' : (a:typed == '<' ? '>' : ''))))
+"    if l:matching == ''
+"      " not good
+"    else
+"      call add(b:braces_stack, l:matching)
+"    endif
+"  elseif a:typed == '[])}>'
+"    if a:typed == b:braces_stack[-1]
+"      execute 'normal i<BS><ESC>x/' . a:typed . '<CR>a'
+"      unlet b:braces_stack[-1]
+"    else
+"      "not ok
+"    endif
+"  else
+"    "not good
+"  endif
+"endfunction
+  
 " user defined commands and mappings {{{1
 
 " editing {{{2
@@ -211,6 +239,15 @@ nnoremap <C-s>      :call FindNextSpellError()<CR>z=
 "inoremap ( ()<++><ESC>F)i
 "inoremap [ []<++><ESC>F]i
 "inoremap { {}<++><ESC>F}i
+"autocmd BufNew,BufNewFile,BufRead * let b:braces_stack = []
+"inoremap ( ()<esc>:call LucManageBracesStack('(')<cr>
+"inoremap [ []<esc>:call LucManageBracesStack('[')<cr>
+"inoremap { {}<esc>:call LucManageBracesStack('{')<cr>
+"inoremap < <><esc>:call LucManageBracesStack('<')<cr>
+"inoremap ) )<esc>:call LucManageBracesStack(')')<cr>
+"inoremap ] ]<esc>:call LucManageBracesStack(']')<cr>
+"inoremap } }<esc>:call LucManageBracesStack('}')<cr>
+"inoremap > ><esc>:call LucManageBracesStack('>')<cr>
 
 " web {{{2 1
 " functions to open URLs
