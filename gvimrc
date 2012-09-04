@@ -38,13 +38,16 @@ function! LucOpenPdfOrPreview (check, file, go_back) " {{{2
   " empty the stem of the current file is used with '.pdf' appended.
 
   " The command to switch to the pdf program or open a pdf file.
+  "let l:switch  = '!open -ga Preview'
   let l:switch  = '!open -a Preview'
   let l:open    = '!open -a Preview '
   let l:command = ''
   let l:msg     = ''
+  let l:go_back = a:go_back
 
   " find a suitable filename
-  let l:file = expand('%') =~ '.*\.tex' ? expand('%:r') . '.pdf' : ''
+  "let l:file = expand('%') =~ '.*\.tex' ? expand('%:r') . '.pdf' : ''
+  let l:file = &filetype == 'tex' ? expand('%:r') . '.pdf' : ''
   let l:file = a:file ? a:file : l:file
   if l:file == ''
     echoerr 'No suitable filename found.'
@@ -68,14 +71,15 @@ function! LucOpenPdfOrPreview (check, file, go_back) " {{{2
   else
     let l:command = l:switch
     let l:msg = 'Switching to viewer ...'
+    "let l:go_back = 0
   endif
   echo l:msg
   silent execute l:command
 
   " return to vim if desired
-  if a:go_back
+  if l:go_back
     " wait for the pdf-viewer to update its display
-    sleep 500m
+    sleep 1000m
     " bring vim to the foreground again
     call foreground()
   endif
@@ -88,10 +92,15 @@ nmap <D-F10> :call LucResizeFunction()<CR>
 nmap <D-F11> :call LucFullscreenFunction(0)<CR>
 nmap <D-F12> :call LucFullscreenFunction(1)<CR>
 if has("gui_macvim")
+  nmap <silent> <D-v> "*p
+  imap <silent> <D-v> <C-r>*
+  nmap <silent> <D-c> "*yy
+  imap <silent> <D-c> <C-o>"*yy
+  vmap <silent> <D-c> "*y
+  nmap <silent> <F3> :call LucOpenPdfOrPreview(0, '', 1)<CR>
+  imap <silent> <F3> <C-O>:call LucOpenPdfOrPreview(0, '', 1)<CR>
   nmap <silent> <D-F3> :call LucOpenPdfOrPreview(1, '', 1)<CR>
   imap <silent> <D-F3> <C-O>:call LucOpenPdfOrPreview(1, '', 1)<CR>
-  nmap <silent> <D-F4> :call LucOpenPdfOrPreview(0, '', 1)<CR>
-  imap <silent> <D-F4> <C-O>:call LucOpenPdfOrPreview(0, '', 1)<CR>
 endif
 
 " {{{1 options
