@@ -11,7 +11,7 @@ ScriptID SourceID Filename
 642 15781 :AutoInstall: GetLatestVimScripts.vim
 
 # conflicting usecases group "explorer" {{{1
-42 14208 :AutoInstall: bufexplorer.zip
+42 18766 :AutoInstall: bufexplorer.zip
 95 754 :AutoInstall: winmanager.zip
 685 2110 :AutoInstall: incbufswitch.vim
 1011 5371 :AutoInstall: buflist.vim
@@ -21,7 +21,7 @@ ScriptID SourceID Filename
 1664 15439 :AutoInstall: buftabs.vim
 1866 13974 :AutoInstall: tselectbuffer.vba
 # tselectbuffer needs tlib
-1863 18488 :AutoInstall: tlib
+1863 18844 :AutoInstall: tlib
 1890 17529 :AutoInstall: lusty-explorer.vim
 1910 9909 :AutoInstall: qbuf.vim
 1984 13961 :AutoInstall: vim-fuzzyfinder.zip
@@ -46,9 +46,10 @@ ScriptID SourceID Filename
 # 2540 1 :AutoInstall: snipMate
 2369 9222 :AutoInstall: vmmp
 2856 11762 :AutoInstall: vmmpc
+2227 8647 :AutoInstall: browser.vim
 
 # list/scheme interaction
-2531 18425 :AutoInstall: slimv.vim
+2531 19000 :AutoInstall: slimv.vim
 
 # dependencies? {{{1
 3252 13948 :AutoInstall: vim-l9.zip
