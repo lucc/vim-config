@@ -252,6 +252,80 @@ endfunction
 "  endif
 "endfunction
   
+function! LucRemoteEditor(mail) "{{{2
+  " a function to be called by a client who wishes to use a vim server as an
+  " non forking edior. One can also set the environment variable EDITOR with
+  " EDITOR='vim --remote-tab-wait-silent +call\ LucRemoteEditor()'
+  let abbreviate = 'cnoreabbrev <buffer>'
+  let quit = 'confirm bdelete'
+  let forcequit = 'bdelete!'
+  let hide = 'silent call system("osascript -e \"tell application \\\"Finder\\\" to set visible of process \\\"MacVim\\\" to false\"")'
+  let quitandhide = quit . '<bar>' . hide . '<bar> redraw'
+  let forcequitandhide = forcequit . '<bar>' . hide . '<bar> redraw'
+  let write = 'write'
+  let update = 'update'
+  execute abbreviate 'q'                          quitandhide
+  "execute abbreviate 'q!'                    forcequitandhide
+  execute abbreviate 'qu'                         quitandhide
+  "execute abbreviate 'qu!'                   forcequitandhide
+  execute abbreviate 'qui'                        quitandhide
+  "execute abbreviate 'qui!'                  forcequitandhide
+  execute abbreviate 'quit'                       quitandhide
+  "execute abbreviate 'quit!'                 forcequitandhide
+  execute abbreviate 'wq'   write  '<bar>'        quitandhide
+  execute abbreviate 'x'    update '<bar>'        quitandhide
+  execute abbreviate 'xi'   update '<bar>'        quitandhide
+  execute abbreviate 'xit'  update '<bar>'        quitandhide
+  execute abbreviate 'exi'  update '<bar>'        quitandhide
+  execute abbreviate 'exit' update '<bar>'        quitandhide
+  execute 'nnoremap <buffer> ZZ :update<bar>'     quitandhide
+  execute 'nnoremap <buffer> ZQ :bdelete!<bar>' hide
+  execute 'nnoremap <buffer> <c-w><c-q>' ':' . quitandhide
+  execute 'nnoremap <buffer> <c-w>q'     ':' . quitandhide
+  if a:mail == 1
+    /^$
+    redraw!
+  endif
+endfunction
+
+function! LucEditAllBuffers() "{{{2
+  let current = bufnr('%')
+  let alternative = bufnr('#')
+  bufdo edit
+  if bufexists(alternative)
+    execute 'buffer' alternative
+  endif
+  if bufexists(current)
+    execute 'buffer' current
+  endif
+endfunction
+
+" user defined autocommands {{{1
+
+" load a notes/scratch buffer which will be saved automatically.
+augroup LucNotesFile "{{{2
+  autocmd!
+  " use the variable in the autocommands
+  execute 'au BufEnter' s:notes 'setlocal bufhidden=hide'
+  execute 'au BufDelete,BufHidden,BufLeave,BufUnload,FocusLost' s:notes 'up'
+augroup END
+
+augroup LucSession "{{{2
+  autocmd!
+  "autocmd VimEnter * if bufname('%') == '' && bufnr('%') == 1 | bwipeout 1 | silent edit | silent redraw | endif
+  autocmd VimEnter * if LucCheckIfBufferIsNew(1) | bwipeout 1 | doautocmd BufRead,BufNewFile | endif
+augroup END
+
+augroup LucPython "{{{2
+  autocmd!
+  autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
+augroup END
+
+augroup LucJava "{{{2
+  autocmd Filetype java setlocal omnifunc=javacomplete#Complete
+  autocmd Filetype java setlocal makeprg=cd\ %:h\ &&\ javac\ %:t
+augroup END
+
 " user defined commands and mappings {{{1
 
 " editing {{{2
@@ -299,19 +373,8 @@ imap <F2> <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
 nmap <silent> <D-F2> :silent update <BAR> call LucQuickMake('', 1)<CR>
 imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
 
-" load a notes/scratch buffer which will be saved automatically.
-augroup LucNotesFile
-  autocmd!
-  " use the variable in the autocommands
-  execute 'au BufEnter' s:notes 'setlocal bufhidden=hide'
-  execute 'au BufDelete,BufHidden,BufLeave,BufUnload,FocusLost' s:notes 'up'
-augroup END
 execute 'nmap <C-w># :call VisitBufferOrEditFile("' . s:notes . '")<CR>'
 
-augroup LucPython
-  autocmd!
-  autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
-augroup END
 command! -bar -bang Session silent call LucInitiateSession(len('<bang>'))
 
 " From the .vimrc example file:
