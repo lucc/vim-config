@@ -13,6 +13,8 @@ let s:bigfontsize=25
 "let s:font="inconsolata"
 "let s:normalfontsize=14
 "let s:bigfontsize=30
+"
+"let s:font="bitstream vera sans mono"
 
 function! LucResizeFunction () " {{{2
   " function to put the gvim window on the left of the screen
@@ -29,8 +31,18 @@ function! LucFullscreenFunction (big) " {{{2
   " function to go to fullscreen mode with a spesific fontsize
   set fullscreen
   let &guifont=s:font . ":h" . (a:big ? s:bigfontsize : s:normalfontsize)
-  redraw!
+  "redraw!
 endfunction
+
+function! LucToggleFullscreenFunction (big) " {{{2
+  " function to toggle fullscreen mode with specific fontsize
+  if &fullscreen
+    call LucResizeFunction()
+  else
+    call LucFullscreenFunction(a:big)
+  endif
+endfunction
+
 
 function! LucOpenPdfOrPreview (check, file, go_back) " {{{2
   " function to check if a pdf file is open in Preview.app and bring it to the
@@ -88,8 +100,7 @@ endfunction
 " {{{1 user commands and mappings
 
 nmap ß :windo set rightleft!<CR>
-nmap <D-F10> :call LucResizeFunction()<CR>
-nmap <D-F11> :call LucFullscreenFunction(0)<CR>
+nmap <D-CR> :call LucToggleFullscreenFunction(0)<CR>
 nmap <D-F12> :call LucFullscreenFunction(1)<CR>
 if has("gui_macvim")
   nmap <silent> <D-v> "*p
