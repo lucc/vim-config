@@ -170,7 +170,6 @@ function! LucQuickMake(target, override) "{{{2
   let error = 0
   let path  = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
   let dir   = ''
-
   " try to find a makefile and set dir and cmd
   while ! empty(path)
     let dir = '/' . join(path, '/')
@@ -297,8 +296,8 @@ nmap ß :!clear<CR>
 " easy compilation
 nmap <F2> :silent update <BAR> call LucQuickMake('', 0)<CR>
 imap <F2> <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
-nmap <silent> <D-F2> :silent update <BAR> sil call LucQuickMake('', 1)<CR>
-imap <silent> <D-F2> <C-O>:silent update <BAR> sil call LucQuickMake('', 1)<CR>
+nmap <silent> <D-F2> :silent update <BAR> call LucQuickMake('', 1)<CR>
+imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
 
 " load a notes/scratch buffer which will be saved automatically.
 augroup LucNotesFile
@@ -309,28 +308,11 @@ augroup LucNotesFile
 augroup END
 execute 'nmap <C-w># :call VisitBufferOrEditFile("' . s:notes . '")<CR>'
 
-command! -bar -bang Session silent call LucInitiateSession('<bang>' == '!' ? 0 : 1)
-function! LucEditAllBuffers()
-  let current = bufnr('%')
-  let alternative = bufnr('#')
-  bufdo edit
-  if bufexists(alternative)
-    execute 'buffer' alternative
-  endif
-  if bufexists(current)
-    execute 'buffer' current
-  endif
-endfunction
-augroup LucSession
-  autocmd!
-  "autocmd VimEnter * if bufname('%') == '' && bufnr('%') == 1 | bwipeout 1 | silent edit | silent redraw | endif
-  autocmd VimEnter * if LucCheckIfBufferIsNew(1) | bwipeout 1 | doautocmd BufRead,BufNewFile | endif
-augroup END
-
 augroup LucPython
   autocmd!
   autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
 augroup END
+command! -bar -bang Session silent call LucInitiateSession(len('<bang>'))
 
 " From the .vimrc example file:
 " Convenient command to see the difference between the current buffer and the
@@ -463,6 +445,7 @@ if has('statusline')
     set wildmode=longest:full,full
     set wildignore+=.hg,.git,.svn                  " Version control
     set wildignore+=*.aux,*.out,*.toc              " LaTeX intermediate files
+    set wildignore+=*.fdb_latexmk                  " LaTeXmk files
     set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg " binary images
     set wildignore+=*.sw?                          " Vim swap files
     set wildignore+=*.DS_Store                     " OSX bullshit
@@ -508,6 +491,19 @@ endif
 if has('viminfo')
   " default: '100,<50,s10,h
   set viminfo='100,<50,s10,h,%
+  " the flag ' is for filenames for marks
+  set viminfo='100
+  " the flag < is the nummber of lines saved per register
+  set viminfo+=<50
+  " max size saved for registers in kb
+  set viminfo+=s10
+  " disable hlsearch
+  set viminfo+=h
+  " remember buffer list
+  set viminfo+=%
+  " name of the viminfo file
+  set viminfo+=n~/.vim/viminfo
+  rviminfo ~/.vim/default-buffer-list.viminfo
 endif
 
 " set colors {{{1
@@ -894,10 +890,10 @@ let g:manpageview_winopen = 'reuse'
 "{{{ hints_man
 " http://www.vim.org/scripts/script.php?script_id=1825
 " http://www.vim.org/scripts/script.php?script_id=1826
-augroup LucManHints
-  autocmd!
-  autocmd FileType c,cpp set cmdheight=2
-augroup END
+"augroup LucManHints
+"  autocmd!
+"  autocmd FileType c,cpp set cmdheight=2
+"augroup END
 "}}}
 "{{{ omnicppcomplete
 "http://www.vim.org/scripts/script.php?script_id=1520
