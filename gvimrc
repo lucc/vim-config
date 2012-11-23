@@ -103,13 +103,13 @@ nmap ß :windo set rightleft!<CR>
 nmap <D-CR> :call LucToggleFullscreenFunction(0)<CR>
 nmap <D-F12> :call LucFullscreenFunction(1)<CR>
 if has("gui_macvim")
-  nmap <silent> <D-v> "*p
-  imap <silent> <D-v> <C-r>*
-  nmap <silent> <D-c> "*yy
-  imap <silent> <D-c> <C-o>"*yy
-  vmap <silent> <D-c> "*y
-  nmap <silent> <F3> :call LucOpenPdfOrPreview(0, '', 1)<CR>
-  imap <silent> <F3> <C-O>:call LucOpenPdfOrPreview(0, '', 1)<CR>
+  nmap <silent> <D-v>  "*p
+  imap <silent> <D-v>  <C-r>*
+  nmap <silent> <D-c>  "*yy
+  imap <silent> <D-c>  <C-o>"*yy
+  vmap <silent> <D-c>  "*y
+  nmap <silent> <F3>   :call LucOpenPdfOrPreview(0, '', 1)<CR>
+  imap <silent> <F3>   <C-O>:call LucOpenPdfOrPreview(0, '', 1)<CR>
   nmap <silent> <D-F3> :call LucOpenPdfOrPreview(1, '', 1)<CR>
   imap <silent> <D-F3> <C-O>:call LucOpenPdfOrPreview(1, '', 1)<CR>
 endif
@@ -136,11 +136,26 @@ let &guifont=s:font . ":h" . s:normalfontsize
 
 " {{{1 other
 
+  "let path  = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
 " fix $PATH (may be necessary if not started from a terminal)
-if ! ($PATH =~ expand($HOME) . '/bin')
-  let $PATH .= ':' . expand($HOME) . '/bin'
-endif
-"if ! ($PATH =~ '/usr/local/bin')
-  let $PATH = '/usr/local/bin:' . substitute($PATH, ':\?/usr/local/bin:\?', ':', 'g')
-  let $PATH = substitute($PATH, '^:', '', '')
+"echoerr 1 $PATH
+"if ! ($PATH =~ expand($HOME) . '/bin')
+"echoerr 2 $PATH
+"  let $PATH .= ':' . expand($HOME) . '/bin'
+"echoerr 3 $PATH
 "endif
+"if ! ($PATH =~ '/usr/local/bin')
+"echoerr 4 $PATH
+"  "let $PATH = '/usr/local/bin:' . substitute($PATH, ':\?/usr/local/bin:\?', ':', 'g')
+"echoerr 5 $PATH
+"  "let $PATH = substitute($PATH, '^:', '', '')
+"  let $PATH = '/usr/local/bin:' . $PATH
+"echoerr 6 $PATH
+"endif
+"
+for item in readfile(expand('~/.env/PATH'))
+  let item = expand(item)
+  if !($PATH =~ item)
+    let $PATH = item . ':' . $PATH
+  endif
+endfor
