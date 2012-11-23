@@ -1,10 +1,9 @@
-" ~/.vimrc file by luc. {{{1
-" Many thanks to Bram Moolenaar <Bram@Vim.org> for the excellent example vimrc
+" file:    ~/.vimrc                                                       {{{1
+" author:  luc
+" credits: Many thanks to Bram Moolenaar <Bram@Vim.org> for the excellent
+"          example vimrc
 " vi: set foldmethod=marker spelllang=en:
-
-" TODO: I can not complete user defined function names with <tab> on the
-" command line unless I start Vim with --noplugin.  There seems to be a plugin
-" interfering here.
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " start (things to do first) {{{1
 
@@ -37,6 +36,39 @@ endif
 let s:notes = '~/.vim/notes'
 let mapleader = ','
 let s:braces_stack = []
+let s:path = [
+      \ '.abook',
+      \ '.config',
+      \ '.emacs.d',
+      \ '.env',
+      \ '.local',
+      \ '.mutt',
+      \ '.NetBeansProjects',
+      \ '.pentadactyl',
+      \ '.postfix',
+      \ '.shell',
+      \ '.ssh',
+      \ '.vim',
+      \ 'apply',
+      \ 'art',
+      \ 'bin',
+      \ 'cook',
+      \ 'dsa',
+      \ 'etc',
+      \ 'go',
+      \ 'leh',
+      \ 'lit',
+      \ 'log',
+      \ 'phon',
+      \ 'sammersee',
+      \ 'schule',
+      \ 'src',
+      \ 'uni',
+      \ 'zis',
+      \ ]
+let s:path = split(join(map(s:path, 'glob("~/" . v:val)')))
+call map(s:path, 'v:val . "/**"')
+
 
 " user defined functions {{{1
 
@@ -319,7 +351,12 @@ set backup
 set hidden
 set history=100
 set confirm
-set path=.,~/files/**,~/,~/.vim/**,/usr/include/,/usr/local/include/
+" set the path for file searching
+set path=.
+set path+=~/
+execute 'set path+=' . join(s:path, ',')
+set path+=/usr/include/
+set path+=/usr/local/include/
 set textwidth=78
 set shiftwidth=2
 set background=light
@@ -525,11 +562,12 @@ endif
 " requires l9lib (vimscript 3252)
 " I can not disable it?
 
+let g:fuf_modesDisable = [ 'directory', 'mrufile', 'mrucmd', 'bookmarkdir', 'taggedfile', 'jumplist', 'changelist', 'lines', 'givenfile', 'givendirectory', 'givencommand', 'callbackfile', 'callbackitem' ]
 let g:fuf_enumeratingLimit = 20
 let g:fuf_coveragefile_globPatterns = ['~/.*', '~/*']
 let g:fuf_dataDir = '~/.vim/fuf-data'
-cal extend(g:fuf_coveragefile_globPatterns, ['~/files/**/.*', '~/files/**/*'])
-cal extend(g:fuf_coveragefile_globPatterns, ['~/.vim/**/.*', '~/.vim/**/*'])
+let s:fuf_cov = extend(map(copy(s:path), 'v:val . "/.*"'), map(copy(s:path), 'v:val . "/*"'))
+call extend(g:fuf_coveragefile_globPatterns, s:fuf_cov)
 nnoremap <silent> <C-f> :silent FufCoverageFile<CR>
 nnoremap <silent> <C-b> :silent FufBuffer<CR>
 nnoremap <silent> <C-h> :silent FufHelp<CR>
