@@ -278,10 +278,10 @@ function! LucRemoteEditor(mail) "{{{2
   execute abbreviate 'xit'  update '<bar>'        quitandhide
   execute abbreviate 'exi'  update '<bar>'        quitandhide
   execute abbreviate 'exit' update '<bar>'        quitandhide
-  execute 'nnoremap <buffer> ZZ :update<bar>'     quitandhide
-  execute 'nnoremap <buffer> ZQ :bdelete!<bar>' hide
-  execute 'nnoremap <buffer> <c-w><c-q>' ':' . quitandhide
-  execute 'nnoremap <buffer> <c-w>q'     ':' . quitandhide
+  execute 'nnoremap <buffer> ZZ :update<bar>'     quitandhide . '<CR>'
+  execute 'nnoremap <buffer> ZQ :bdelete!<bar>' hide . '<CR>'
+  execute 'nnoremap <buffer> <c-w><c-q>' ':' . quitandhide . '<CR>'
+  execute 'nnoremap <buffer> <c-w>q'     ':' . quitandhide . '<CR>'
   if a:mail == 1
     /^$
     redraw!
