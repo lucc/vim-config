@@ -48,7 +48,7 @@ ScriptID SourceID Filename
 2856 11762 :AutoInstall: vmmpc
 2227 8647 :AutoInstall: browser.vim
 
-# list/scheme interaction
+# lisp/scheme interaction
 2531 19000 :AutoInstall: slimv.vim
 
 # dependencies? {{{1
