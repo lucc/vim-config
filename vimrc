@@ -300,6 +300,10 @@ function! LucEditAllBuffers() "{{{2
   endif
 endfunction
 
+function! LucTexDocFunction() "{{{2
+  let l:word = expand("<cword>")
+  silent execute '!texdoc' l:word
+endfunction
 " user defined autocommands {{{1
 
 " load a notes/scratch buffer which will be saved automatically.
@@ -758,6 +762,7 @@ nmap <leader>m :call Bufferlist()<cr>
 augroup LucLatex
   autocmd!
   autocmd BufNewFile,BufRead *.tex setlocal dictionary+=*.bib
+  autocmd BufNewFile,BufRead *.tex nmap <buffer> K :call LucTexDocFunction()<CR>
 augroup END
 
 " {{{2 PLUGIN LaTeX-Suite: 
