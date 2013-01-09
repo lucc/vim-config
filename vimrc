@@ -69,7 +69,6 @@ let s:path = [
 let s:path = split(join(map(s:path, 'glob("~/" . v:val)')))
 call map(s:path, 'v:val . "/**"')
 
-
 " user defined functions {{{1
 
 function! SearchStringForURI(string) "{{{2
@@ -206,7 +205,7 @@ function! LucQuickMake(target, override) "{{{2
   return error
 endfunction
 
-function! LucCheckIfBufferIsNew(...)
+function! LucCheckIfBufferIsNew(...) "{{{2
   " check if the buffer with number a:1 is new.  That is to say, if it as
   " no name and is empty.  If a:1 is not supplied 1 is used.
   " find the buffer nr to check
@@ -228,7 +227,7 @@ endfunction
 " see:
 "http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
 "
-"function! LucManageBracesStack(typed)
+"function! LucManageBracesStack(typed) "{{{2
 "  " This function handles the b:braces_stack variables. It is intendet to
 "  " mange the brackets for the user.
 "  if a:typed == ''
@@ -552,7 +551,7 @@ if has('virtualedit')  | set virtualedit=block       | endif
 if has('diff')         | set diffopt=filler,vertical | endif
 if has('vms')          | set nobackup                | endif
 if has('mksession')
-  " default: blank,buffers,curdir,folds, help,options,tabpages,winsize
+  " default: blank,buffers,curdir,folds,help,options,tabpages,winsize
   set sessionoptions+=resize,winpos
 endif
 if has('viminfo')
@@ -570,6 +569,7 @@ if has('viminfo')
   set viminfo+=%
   " name of the viminfo file
   set viminfo+=n~/.vim/viminfo
+  " load a static viminfo file with a file list
   rviminfo ~/.vim/default-buffer-list.viminfo
 endif
 
@@ -586,7 +586,7 @@ if has('syntax')
   "else
   endif
 
-  " always set the background of the line nummber
+  " always set the background of the line number
   highlight LineNr ctermbg=black ctermfg=DarkGrey
 endif
 
