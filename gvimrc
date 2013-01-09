@@ -153,7 +153,7 @@ let &guifont=s:font . ":h" . s:normalfontsize
 "echoerr 6 $PATH
 "endif
 "
-for item in readfile(expand('~/.env/PATH'))
+for item in readfile(expand('~/.config/env/PATH'))
   let item = expand(item)
   if !($PATH =~ item)
     let $PATH = item . ':' . $PATH
