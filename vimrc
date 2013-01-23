@@ -329,6 +329,10 @@ augroup LucJava "{{{2
   autocmd Filetype java setlocal makeprg=cd\ %:h\ &&\ javac\ %:t
 augroup END
 
+augroup LucMail "{{{2
+  autocmd FileType mail setlocal textwidth=72
+augroup END
+
 " user defined commands and mappings {{{1
 
 " editing {{{2
