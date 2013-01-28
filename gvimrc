@@ -100,7 +100,10 @@ endfunction
 " {{{1 user commands and mappings
 
 nmap ß :windo set rightleft!<CR>
+nmap <S-D-CR> <C-W>T
+imap <S-D-CR> <C-O><C-W>T
 nmap <D-CR> :call LucToggleFullscreenFunction(0)<CR>
+imap <D-CR> <C-O>:call LucToggleFullscreenFunction(0)<CR>
 nmap <D-F12> :call LucFullscreenFunction(1)<CR>
 if has("gui_macvim")
   nmap <silent> <D-v>  "*p
