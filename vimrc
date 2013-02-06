@@ -380,15 +380,22 @@ imap <F2> <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
 nmap <silent> <D-F2> :silent update <BAR> call LucQuickMake('', 1)<CR>
 imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
 
+" visit a hidden "notes" buffer
 execute 'nmap <C-w># :call VisitBufferOrEditFile("' . s:notes . '")<CR>'
 
-command! -bar -bang Session silent call LucInitiateSession(len('<bang>'))
+ "move between tabs
+nmap <C-Tab> gt
+imap <C-Tab> <C-O>gt
+nmap <C-S-Tab> gT
+imap <C-S-Tab> <C-O>gT
+
+"command! -bar -bang Session silent call LucInitiateSession(len('<bang>'))
 
 " From the .vimrc example file:
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
 " Only define it when not defined already.
-command! DiffOrig vne | se bt=nofile | r # | 0d_ | difft | wincmd p | difft
+"command! DiffOrig vne | se bt=nofile | r # | 0d_ | difft | wincmd p | difft
 
 " options: TODO {{{1
 
@@ -487,6 +494,7 @@ if has('statusline')
   set statusline+=[%{strftime('%a\ %F\ %R')}]     " clock
   set statusline+=\ [%c%V,%l/%L]                  " position in file
   set statusline+=\ [%P]                          " percent of above
+  set statusline+=\ %{SyntasticStatuslineFlag()}  " see :h syntastic
 
   " always display the statusline
   set laststatus=2
@@ -535,6 +543,10 @@ elseif has('cmdline_info')
   "show the cursor position all the time (at bottom right)
   set ruler
 endif
+
+" we could do something similar for tabs.
+" see :help 'tabline'
+"set tabline=Tabs:\ %{tabpagenr('$')}\ Buffers:\ %{len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))}%=%{strftime('%a\ %F\ %R')}
 
 " options: colorcolumn {{{1
 
@@ -644,6 +656,9 @@ nnoremap <silent> <C-h> :silent FufHelp<CR>
 inoremap <silent> <C-f> <ESC>:silent FufCoverageFile<CR>
 inoremap <silent> <C-b> <ESC>:silent FufBuffer<CR>
 inoremap <silent> <C-h> <ESC>:silent FufHelp<CR>
+augroup LucFufMaps
+  autocmd FileType fuf inoremap <buffer> <C-I> <C-N>
+augroup END
 
 " testing {{{2
 
