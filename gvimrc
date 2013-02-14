@@ -5,23 +5,31 @@
 
 " {{{2 fonts
 
-let s:font="menlo"
-let s:normalfontsize=12
-let s:bigfontsize=25
+let s:fonts = [
+      \ ['menlo',                       12, 25],
+      \ ['monospace',                   10, 25],
+      \ ['inconsolata',                 14, 30],
+      \ ['bitstream\ vera\ sans\ mono', 10, 20]
+      \ ]
 
-" other possibility
-"let s:font="inconsolata"
-"let s:normalfontsize=14
-"let s:bigfontsize=30
-"
-"let s:font="bitstream vera sans mono"
+let s:delim = ''
+if has('gui_macvim')
+  let s:delim = ':h'
+elseif has('gui_gtk2')
+  let s:delim = '\ '
+endif
+
+let s:normalfonts = join(map(copy(s:fonts), 
+      \ 'join(v:val[0:1], s:delim)'), '\,')
+let s:bigfonts = join(map(copy(s:fonts),
+      \ '(remove(v:val, 1) . join(v:val, s:delim))[2:-1]'), '\,')
 
 function! LucResizeFunction () " {{{2
   " function to put the gvim window on the left of the screen
   set nofullscreen
   set guioptions-=T
   winpos 0 0
-  let &guifont=s:font . ":h12"
+  let &guifont = s:normalfonts
   set lines=999
   set columns=85
   "redraw!
@@ -30,7 +38,7 @@ endfunction
 function! LucFullscreenFunction (big) " {{{2
   " function to go to fullscreen mode with a spesific fontsize
   set fullscreen
-  let &guifont=s:font . ":h" . (a:big ? s:bigfontsize : s:normalfontsize)
+  let &guifont = a:big ? s:bigfonts : s:normalfonts
   "redraw!
 endfunction
 
@@ -135,7 +143,7 @@ endif
 set guioptions+=cegv
 set guioptions-=rT
 "set fullscreen
-let &guifont=s:font . ":h" . s:normalfontsize
+let &guifont = s:normalfonts
 
 " {{{1 other
 
