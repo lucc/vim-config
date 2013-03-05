@@ -1,28 +1,35 @@
-"  gvimrc file by luc {{{1
+" gvimrc file by luc {{{1
 " vim: foldmethod=marker
 
 " {{{1 variables and functions
 
 " {{{2 fonts
 
+
+"set guifont=DejaVu\ Sans\ Mono\ 9
+
+" TODO
 let s:fonts = [
-      \ ['menlo',                       12, 25],
-      \ ['monospace',                   10, 25],
-      \ ['inconsolata',                 14, 30],
-      \ ['bitstream\ vera\ sans\ mono', 10, 20]
+      \ ['menlo',                    12, 25],
+      \ ['monospace',                10, 25],
+      \ ['inconsolata',              14, 30],
+      \ ['bitstream vera sans mono', 10, 20]
       \ ]
 
 let s:delim = ''
 if has('gui_macvim')
   let s:delim = ':h'
 elseif has('gui_gtk2')
-  let s:delim = '\ '
+  let s:delim = ' '
 endif
 
 let s:normalfonts = join(map(copy(s:fonts), 
-      \ 'join(v:val[0:1], s:delim)'), '\,')
+      \ 'join(v:val[0:1], s:delim)'), ',')
 let s:bigfonts = join(map(copy(s:fonts),
-      \ '(remove(v:val, 1) . join(v:val, s:delim))[2:-1]'), '\,')
+      \ '(remove(v:val, 1) . join(v:val, s:delim))[2:-1]'), ',')
+if system('uname') == 'Linux'
+  s:normalfonts = 'DejaVu Sans Mono 9'
+endif
 
 function! LucResizeFunction () " {{{2
   " function to put the gvim window on the left of the screen
