@@ -11,7 +11,7 @@ ScriptID SourceID Filename
 642 15781 :AutoInstall: GetLatestVimScripts.vim
 
 # conflicting usecases group "explorer" {{{1
-42 19446 :AutoInstall: bufexplorer.zip
+42 19481 :AutoInstall: bufexplorer.zip
 95 754 :AutoInstall: winmanager.zip
 685 2110 :AutoInstall: incbufswitch.vim
 1011 5371 :AutoInstall: buflist.vim
@@ -36,8 +36,97 @@ ScriptID SourceID Filename
 1213 17026 :AutoInstall: Vim JDE
 1785 14914 :AutoInstall: javacompete
 52 14880 :AutoInstall: calendar.vim
-273 7701 :AutoInstall: taglist.zip
+273 19574 :AutoInstall: taglist.zip
 508 18151 :AutoInstall: ZoomWin.vim
 1736 12658 :AutoInstall: applescript.vim
 #1825 6877 :AutoInstall: hints_man2 #conflicting with AutoComplPop
-#1826 687
+#1826 6878 :AutoInstall: hints_man3 #conflicting with AutoComplPop
+1879 11894 :AutoInstall: AutoComplPop
+3412 15556 :AutoInstall: xterm-color-table.vim.tar.gz
+# 2540 1 :AutoInstall: snipMate
+2369 9222 :AutoInstall: vmmp
+2856 11762 :AutoInstall: vmmpc
+2227 8647 :AutoInstall: browser.vim
+2736 17476 :AutoInstall: Syntastic
+
+# lisp/scheme interaction
+2531 19000 :AutoInstall: slimv.vim
+
+# dependencies? {{{1
+3252 13948 :AutoInstall: vim-l9.zip
+
+# maybe not interesting {{{1
+877 7775 :AutoInstall: gvcolor.vim
+1283 17954 :AutoInstall: tbe.vim
+
+# why is this installed? {{{1
+1066 7618 :AutoInstall: cecutil.vim
+
+# to be tested (shell in gvim) {{{1
+#http://www.vim.org/scripts/script.php?script_id=118
+#http://www.vim.org/scripts/script.php?script_id=165
+#http://www.vim.org/scripts/script.php?script_id=1788
+#http://www.vim.org/scripts/script.php?script_id=2620
+#http://www.vim.org/scripts/script.php?script_id=2711
+#http://www.vim.org/scripts/script.php?script_id=2771
+#http://www.vim.org/scripts/script.php?script_id=3040
+#http://www.vim.org/scripts/script.php?script_id=3123
+#http://www.vim.org/scripts/script.php?script_id=3431
+#http://www.vim.org/scripts/script.php?script_id=3554
+4011 18175 :AutoInstall: vimux
+
+# other default {{{1
+#40 1 :AutoInstall: DrawIt.tar.gz
+#104 3201 :AutoInstall: blockhl.vim 
+#120 1 :AutoInstall: decho.vim
+#122 16752 :AutoInstall: astronaut.vim
+#195 1 :AutoInstall: engspchk.vim
+#294 1 :AutoInstall: Align.vim
+#302 1 :AutoInstall: AnsiEsc.vim
+#451 1 :AutoInstall: EasyAccents.vim
+#514 1 :AutoInstall: mrswin.vim                   # wtf?
+#551 1 :AutoInstall: Mines.vim                    # wtf?
+#628 1 :AutoInstall: SeeTab.vim
+#670 1 :AutoInstall: visincr.vim
+
+# added on 2012-02-14 (bookmarks) {{{1
+#162 1 :AutoInstall: auctex.vim
+#920 1 :AutoInstall: tex_autoclose.vim
+#1048 1 :AutoInstall: R_with_vim.tar.gz
+#1520 1 :AutoInstall: omnicppcomplete.zip
+#1825 1 :AutoInstall: hints_man2.vba.gz
+#1826 1 :AutoInstall: hints_man3.vba.gz
+#2358 1 :AutoInstall: cpp_src.tar.bz2
+#2945 1 :AutoInstall: AutomaticTexPlugin.vmb
+#3109 1 :AutoInstall: LatexBox.vmb
+#3230 1 :AutoInstall: tex_pdf.tar.gz
+#3508 1 :AutoInstall: tex_nine.tar.gz
+#3931 1 :AutoInstall: vim-support.zip
+
+# This stuff was in my old ~/.vim dir. {{{1
+# AutoAlign.vba.gz
+# auto.vim.gz
+# bash-support.zip
+# cppcomplete.vim.gz
+# csv-0.22.vmb
+# cvim.zip
+# easytags.zip
+# ex_plugins_package-unix-8.05_b2.zip
+# hints_man2.vba.gz
+# hints_man3.vba.gz
+# icomplete-0.5.tar.bz2
+# info.vim.gz
+# lookupfile-1.8.zip
+# neocomplcache-6.1.zip
+# octave_with_vim_0.01-8.tar.gz
+# omnicppcomplete-0.41.zip
+# project-1.4.1.tar.gz
+# renamer.vim.gz
+# sessionman.vim.gz
+# snipMate.zip
+# snippy_plugin.vba.gz
+# supertab.vba.gz
+# taglist_45.zip
+# tskeleton.vba.gz
+# ttags.vba.gz
+# vim-latex-1.8.23-20110214.1049-git089726a.tar.gz
