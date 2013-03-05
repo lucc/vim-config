@@ -312,6 +312,13 @@ augroup LucNotesFile "{{{2
   execute 'au BufEnter' s:notes 'setlocal bufhidden=hide'
   execute 'au BufDelete,BufHidden,BufLeave,BufUnload,FocusLost' s:notes 'up'
 augroup END
+augroup LucTodoFile "{{{2
+  autocmd!
+  autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO normal zM
+  autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO nmap <buffer> <down> zj
+  autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO nmap <buffer> <up> zk
+  autocmd CursorMoved, ~/TODO normal zx
+augroup END
 
 augroup LucSession "{{{2
   autocmd!
