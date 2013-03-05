@@ -369,32 +369,32 @@ nnoremap <C-s>      :call FindNextSpellError()<CR>z=
 "inoremap } }<esc>:call LucManageBracesStack('}')<cr>
 "inoremap > ><esc>:call LucManageBracesStack('>')<cr>
 
-" web {{{2 1
+" web {{{2
 " functions to open URLs
 nmap <Leader>w :call HandleURI(SearchStringForURI(getline('.')))<CR>
 
 " find a script on vim.org by id or name
 nmap <Leader>v :call HandleURI('http://www.vim.org/scripts/script.php?script_id=' . matchstr(matchstr(expand('<cword>'), '[0-9]\+[^0-9]*$'), '^[0-9]*'))<CR>
 
-" misc {{{2
-
-" use ß to clear the screen if you want privacy for a moment
-nmap ß :!clear<CR>
-
-" easy compilation
+" easy compilation {{{2
 nmap <F2> :silent update <BAR> call LucQuickMake('', 0)<CR>
 imap <F2> <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
 nmap <silent> <D-F2> :silent update <BAR> call LucQuickMake('', 1)<CR>
 imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
 
-" visit a hidden "notes" buffer
-execute 'nmap <C-w># :call VisitBufferOrEditFile("' . s:notes . '")<CR>'
-
- "move between tabs
+" move between tabs {{{2
 nmap <C-Tab> gt
 imap <C-Tab> <C-O>gt
 nmap <C-S-Tab> gT
 imap <C-S-Tab> <C-O>gT
+
+" misc {{{2
+
+" use ß to clear the screen if you want privacy for a moment
+nmap ß :!clear<CR>
+
+" visit a hidden "notes" buffer
+execute 'nmap <C-w># :call VisitBufferOrEditFile("' . s:notes . '")<CR>'
 
 "command! -bar -bang Session silent call LucInitiateSession(len('<bang>'))
 
