@@ -160,26 +160,11 @@ let &guifont = s:normalfonts
 
 " {{{1 other
 
-  "let path  = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
-" fix $PATH (may be necessary if not started from a terminal)
-"echoerr 1 $PATH
-"if ! ($PATH =~ expand($HOME) . '/bin')
-"echoerr 2 $PATH
-"  let $PATH .= ':' . expand($HOME) . '/bin'
-"echoerr 3 $PATH
-"endif
-"if ! ($PATH =~ '/usr/local/bin')
-"echoerr 4 $PATH
-"  "let $PATH = '/usr/local/bin:' . substitute($PATH, ':\?/usr/local/bin:\?', ':', 'g')
-"echoerr 5 $PATH
-"  "let $PATH = substitute($PATH, '^:', '', '')
-"  let $PATH = '/usr/local/bin:' . $PATH
-"echoerr 6 $PATH
-"endif
-"
-for item in readfile(expand('~/.config/env/PATH'))
-  let item = expand(item)
-  if !($PATH =~ item)
-    let $PATH = item . ':' . $PATH
-  endif
-endfor
+if has('gui_macvim')
+  for item in readfile(expand('~/.config/env/PATH'))
+    let item = expand(item)
+    if !($PATH =~ item)
+      let $PATH = item . ':' . $PATH
+    endif
+  endfor
+endif
