@@ -1,10 +1,7 @@
 " gvimrc file by luc {{{1
 " vim: foldmethod=marker
 
-" {{{1 variables and functions
-
-" {{{2 fonts
-
+" user defined variables {{{1 
 
 "set guifont=DejaVu\ Sans\ Mono\ 9
 
@@ -31,6 +28,7 @@ if system('uname') == 'Linux'
   s:normalfonts = 'DejaVu Sans Mono 9'
 endif
 
+" user defined functions {{{1
 function! LucResizeFunction () " {{{2
   " function to put the gvim window on the left of the screen
   set nofullscreen
@@ -117,7 +115,7 @@ function! LucOpenPdfOrPreview (check, file, go_back) " {{{2
   endif
 endfunction
 
-" {{{1 user commands and mappings
+" user defined commands and mappings {{{1
 
 nmap ß :windo set rightleft!<CR>
 nmap <S-D-CR> <C-W>T
@@ -137,7 +135,7 @@ if has("gui_macvim")
   imap <silent> <D-F3> <C-O>:call LucOpenPdfOrPreview(1, '', 1)<CR>
 endif
 
-" {{{1 options
+" options: gui {{{1
 
 if has("gui_macvim")
   " use the macvim colorscheme, but slightly modify it.
@@ -158,7 +156,7 @@ set guioptions-=rT
 " TODO
 let &guifont = s:normalfonts
 
-" {{{1 other
+" other {{{1
 
 if has('gui_macvim')
   for item in readfile(expand('~/.config/env/PATH'))
