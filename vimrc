@@ -879,16 +879,16 @@ set grepprg=grep\ -nH\ $*
 " OPTIONAL: Handle empty .tex files as LaTeX.
 let g:tex_flavor='latex'
 " Folding:
-"let Tex_FoldedEnvironments='*'
+let Tex_FoldedEnvironments='*'
 "let Tex_FoldedEnvironments+=','
-let Tex_FoldedEnvironments='document,minipage,'
-let Tex_FoldedEnvironments.='di,lem,ivt,dc,'
-let Tex_FoldedEnvironments.='verbatim,comment,proof,eq,gather,'
-let Tex_FoldedEnvironments.='align,figure,table,thebibliography,'
-let Tex_FoldedEnvironments.='keywords,abstract,titlepage'
-let Tex_FoldedEnvironments.='item,enum,display'
-let Tex_FoldedMisc='comments,item,preamble,<<<'
-let Tex_FoldedEnvironments.='*'
+"let Tex_FoldedEnvironments  = 'document,minipage,'
+"let Tex_FoldedEnvironments .= 'di,lem,ivt,dc,'
+"let Tex_FoldedEnvironments .= 'verbatim,comment,proof,eq,gather,'
+"let Tex_FoldedEnvironments .= 'align,figure,table,thebibliography,'
+"let Tex_FoldedEnvironments .= 'keywords,abstract,titlepage'
+"let Tex_FoldedEnvironments .= 'item,enum,display'
+"let Tex_FoldedMisc = 'comments,item,preamble,<<<'
+"let Tex_FoldedEnvironments .= '*'
 
 " compiling with \ll
 let g:Tex_CompileRule_pdf='latexmk -silent -pv -pdf $*'
