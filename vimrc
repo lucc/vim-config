@@ -757,16 +757,16 @@ let g:LustyExplorerDefaultMappings = 0
 "   :LustyBufferExplorer
 "   :LustyBufferGrep
 " nice!!
-nmap <leader>b :LustyFilesystemExplorer<cr>
+nmap <leader>lf :LustyFilesystemExplorer<cr>
 " nearly the same as "WMToggle" but has preview option
-nmap <leader>c :LustyBufferExplorer<cr>
+nmap <leader>lb :LustyBufferExplorer<cr>
 
 " nerdtree.zip 1658 {{{3
 " is only checked for existenc
 "let loaded_nerd_tree = 1
 let NERDChristmasTree = 1
 let NERDTreeHijackNetrw = 1
-nmap <leader>d :NERDTreeToggle<cr>
+nmap <leader>nt :NERDTreeToggle<cr>
 
 " tselectbuffer.vba 1866 {{{3
 " needs tlib >= 0.40
