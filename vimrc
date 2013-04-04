@@ -474,7 +474,7 @@ execute 'nmap <C-w># :call LucVisitBufferOrEditFile("' . s:notes . '")<CR>'
 set backspace=indent,eol,start
 set backup 
 set hidden
-set history=100
+set history=1000
 set confirm
 " set the path for file searching
 set path=.
@@ -560,7 +560,7 @@ if has('statusline')
   set statusline+=[%{strftime('%a\ %F\ %R')}]     " clock
   set statusline+=\ [%c%V,%l/%L]                  " position in file
   set statusline+=\ [%P]                          " percent of above
-  set statusline+=\ %{SyntasticStatuslineFlag()}  " see :h syntastic
+  "set statusline+=\ %{SyntasticStatuslineFlag()}  " see :h syntastic
 
   " always display the statusline
   set laststatus=2
