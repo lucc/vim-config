@@ -658,22 +658,23 @@ if has('viminfo')
   rviminfo ~/.vim/default-buffer-list.viminfo
 endif
 
-" set colors {{{1
-if has('syntax')
-  " Are we running on MacVim?
-  if has('gui_macvim')
-    colorscheme macvim
-    " that is 202=#ff5f00, 234=#1c1c1c
-    hi Pmenu ctermfg=202 ctermbg=234
-    hi PmenuSel ctermfg=234 ctermbg=202
-    
-  " what is a good alternative colorsheme?
-  "else
-  endif
-
-  " always set the background of the line number
-  highlight LineNr ctermbg=black ctermfg=DarkGrey
-endif
+" plugins: management {{{1
+" I manage plugins with vundle.  In order to easyly test plugins I keep a
+" dictionary to store a flag depending on which the plugin should be loaded or
+" not.  One could also comment the the line loading the plugin, but these are
+" scatterd ofer the file and not centralized.
+let s:plugins = {
+              \ 'buffergator': 0,
+              \ 'syntastic': 0,
+              \ 'buffet': 1,
+              \ 'buftabs': 0,
+              \ 'commandt': 1,
+              \ 'popupbuffer': 0,
+              \ 'powerline': 0,
+              \ 'winmanager': 0,
+              \ 'bufferlist': 0,
+              \ 'bufmru': 0,
+              \ }
 
 " plugins: standard {{{1
 
@@ -691,22 +692,36 @@ endif
 " - vimballPlugin.vim
 " - zipPlugin.vim
 
-" getscript 642 {{{2
-" Should ship with vim.  The file ~/.vim/GetLatest/GetLatestVimScripts.dat
-" contains the instructions to load plugins.
+" plugins: vundle {{{1
+" Managing plugins with Vundle (https://github.com/gmarik/vundle)
+filetype off
+set runtimepath+=~/.vim/bundle/vundle/
+call vundle#rc()
+" Bundle 'gmarik/vundle'
+Bundle 'gmarik/vundle'
 
-" netrw {{{2
-" Should ship with vim.
-" TODO: configure with ssh passphrase and netrc file.
+" plugins: libs {{{1
+" Bundle 'L9' {{{2
+" vimscript 3252
+Bundle 'L9'
 
-" matchit {{{2
-"runtime macros/matchit.vim
+" Bundle 'tlib' {{{2
+" vimscript ?
+Bundle 'tomtom/tlib_vim'
 
-" plugins: additional: file managing {{{1
+" plugins: buffer and file management {{{1
+" Bundle 'ctrlp.vim' {{{2
+Bundle 'kien/ctrlp.vim'
+let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
+let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_show_hidden = 1
 
-" nice {{{2
+" Bundle 'unite.vim' {{{2
+Bundle 'Shougo/unite.vim'
 
-" vim-fuzzyfinder.zip 1984 {{{3
+" Bundle 'FuzzyFinder' {{{2
+" vimscript 1984
+Bundle 'FuzzyFinder'
 " requires l9lib (vimscript 3252)
 " I can not disable it?
 
@@ -740,14 +755,34 @@ augroup LucFufMaps
   autocmd FileType fuf inoremap <buffer> <C-I> <C-N>
 augroup END
 
-" testing {{{2
+" Bundle 'winmanager' {{{2
+" vimscript 95
+if s:plugins['winmanager']
+  " The NERD_Tree plugin provides the same functionality but seem nicer
+  Bundle 'winmanager'
+  "map <C-w><C-t> :WMToggle<CR> 
+  nmap <leader>wt :WMToggle<cr>
+endif
 
-" winmanager 95 {{{3
-" seems to be abondend since 2002 there is a patch at script_id=1440
-"map <C-w><C-t> :WMToggle<CR> 
-nmap <leader>a :WMToggle<cr>
+" Bundle 'tselectbuffer' {{{2
+" vimscript 1866
+Bundle 'tomtom/tselectbuffer_vim'
+" needs tlib >= 0.40
+" disable loading for the moment
+"let loaded_tselectbuffer = 0
+nmap <leader>t :TSelectBuffer<cr>
 
-" lusty-explorer.vim 1890 {{{3
+" Bundle 'tselectfiles' {{{2
+" vimscript ?
+Bundle 'tomtom/tselectfiles_vim'
+noremap <leader>tf :TSelectFiles<cr>
+
+" Bundle 'LustyJuggler' 'LustyExplorer' {{{2
+" vimscript 2050
+Bundle 'sjbach/lusty'
+" is checked for existenc only
+"let g:loaded_lustyjuggler = 0
+let g:LustyJugglerDefaultMappings = 0
 " help inside script: ~/.vim/plugin/lusty-explorer.vim
 " disable mappings
 let g:LustyExplorerDefaultMappings = 0
@@ -761,113 +796,119 @@ nmap <leader>lf :LustyFilesystemExplorer<cr>
 " nearly the same as "WMToggle" but has preview option
 nmap <leader>lb :LustyBufferExplorer<cr>
 
-" nerdtree.zip 1658 {{{3
+" Bundle 'command-t' {{{2
+" vimscript 3025
+if s:plugins['commandt']
+  Bundle 'git://git.wincent.com/command-t.git'
+  "let g:command_t_loaded = 0
+  let g:CommandTMaxCachedDirectories = 1 " default
+  let g:CommandTMaxCachedDirectories = 10
+  let g:CommandTScanDotDirectories = 1
+  let g:CommandTMatchWindowReverse = 1
+  let g:CommandTMaxFiles = 100000
+  "let g:CommandTMatchWindowAtTop = 1
+  "let g:CommandTToggleFocusMap = ''
+  "let g:CommandTSelectPrevMap = ['<up>', '<C-i>']
+  "let g:CommandTSelectNextMap = ['<down>', '<C-S-i>']
+
+  nmap <c-s-f> :CommandT<cr>
+  nmap <c-s-b> :CommandTBuffer<cr>
+endif
+
+" Bundle 'tcommand' {{{2
+" vimscript ?
+Bundle 'tomtom/tcommand_vim'
+
+" Bundle 'buftabs' {{{2
+" vimscript 1664
+if s:plugins['buftabs']
+  Bundle 'buftabs'
+  " no help / can not disable it / quite nice
+  let g:buftabs_marker_modified = '+'
+  let g:buftabs_only_basename = 1
+  "let g:buftabs_in_statusline=1
+  "set statusline=%=buffers:\ %{buftabs#statusline()}
+endif
+
+" Bundle 'sandeepcr529/Buffet.vim' {{{2
+" vimscript 3896
+if s:plugins['buffet']
+  Bundle 'sandeepcr529/Buffet.vim'
+  " no help?
+  " I can not disable it!
+  nmap <leader>bl :Bufferlist<CR>
+endif
+
+" Bundle 'qnamebuf' {{{2
+" vimscript 3217
+Bundle 'qnamebuf'
+let g:qnamebuf_loaded = 0
+"let g:qnamefile_loaded = 0
+" this will not help
+let qnamebuf_hotkey = '<leader>qb'
+"let qnamefile_hotkey = '<leader>j'
+
+" Bundle 'nerdtree' {{{2
+
+"Bundle 'nerdtree-ack'
+"Bundle 'NERD_Tree-and-ack'
+
+Bundle 'NERD_tree-Project'
+
+Bundle 'scrooloose/nerdcommenter'
+
+Bundle 'scrooloose/nerdtree'
+" vimscript 1658
 " is only checked for existenc
 "let loaded_nerd_tree = 1
 let NERDChristmasTree = 1
 let NERDTreeHijackNetrw = 1
 nmap <leader>nt :NERDTreeToggle<cr>
 
-" tselectbuffer.vba 1866 {{{3
-" needs tlib >= 0.40
-" disable loading for the moment
-"let loaded_tselectbuffer = 0
-nmap <leader>e :TSelectBuffer<cr>
+" Bundle 'Buffergator' {{{2
+" vimscript 3619
+if s:plugins['buffergator']
+  Bundle 'jeetsukumaran/vim-buffergator'
+  " browse buffers with preview, switch to window containing this buffer or
+  " display buffer in last window
+  let g:did_buffergator = 0
+  let g:buffergator_suppress_keymaps = 1
+  nmap <Leader>bg :BuffergatorToggle<CR>
+endif
 
-" command-t.vba 3025 {{{3
-"let g:command_t_loaded = 0
-let g:CommandTMaxCachedDirectories = 1
-let g:CommandTScanDotDirectories = 1
-let g:CommandTMatchWindowReverse = 1
-" buggy ??
-nmap <leader>f :CommandT<cr>
+" Bundle 'bufmru.vim' {{{2
+" vimscript 2346
+if s:plugins['bufmru']
+  Bundle 'bufmru.vim'
+  " no help
+  " is only checked for existenc
+  "let loaded_bufmru = 1
+  "let g:bufmru_switchkey = expand('<leader>bm')
+  " seems buggy
+endif
 
-" plugins: additional: buffer managing {{{1
+" Bundle 'bufferlist.vim' {{{2
+" vimscript 1325
+if s:plugins['bufferlist']
+  Bundle 'bufferlist.vim'
+  " Very simple list of loaded buffers
+  " is only checked for existenc
+  "let g:BufferListLoaded = 0
+  " does not need a mapping: 
+  nmap <leader>m :call BufferList()<cr>
+endif
 
-" nice {{{2
-
-" buftabs.vim 1664 {{{3
-" no help / can not disable it / quite nice
-let g:buftabs_marker_modified = '+'
-let g:buftabs_only_basename = 1
-"let g:buftabs_in_statusline=1
-"set statusline=%=buffers:\ %{buftabs#statusline()}
-" i moved this into ~/.vim/do_not_load/
-
-" testing {{{2
-
-" buffet.vim 3896 {{{3
-" no help?
-" I can not disable it!
-nmap <leader>g :Bufferlist<CR>
-
-" qbuf.vim 1910 {{{3
-" no help
-" bad coding style -> can not dissable it.
-"buggy ? 
-"but the htky does something interesting :)
-let g:qb_loaded = 0
-let g:qb_hotkey = '<leader>h'
-
-" qnamebuf.zip 3217 {{{3
-let g:qnamebuf_loaded = 0
-let g:qnamefile_loaded = 0
-" this will not help
-let qnamebuf_hotkey = '<leader>i'
-let qnamefile_hotkey = '<leader>j'
-
-" incbufswitch.vim 685 {{{3
-" no help
-" the plugin does only match buffers against the start
-" of the buffer name ... (not so nice)
-" moved to ~/.vim/do_not_load/
-
-" buflist.vim 1011 {{{3
-" no help
-" can not customize mapping. unconditionally maps <F4>
-" moved to ~/.vim/do_not_load/
-
-" bufexplorer.zip 42 {{{3
-" integrates with winmanager.vim
-
-" disabled {{{2
-
-" vim-buffergator.tar.gz 3619 {{{3
-" browse buffers with preview, switch to window containing this buffer or
-" display buffer in last window
-let g:did_buffergator = 0
-let g:buffergator_suppress_keymaps = 1
-nmap <Leader>k :BuffergatorToggle<CR>
-
-" bufmru.vim 2346 {{{3
-" no help
-" is only checked for existenc
-"let loaded_bufmru = 1
-let g:bufmru_switchkey = '<leader>l'
-" seems buggy
-
-" lusty-juggler.vim 2050 {{{3
-" no help
-" is checked for existenc only
-"let g:loaded_lustyjuggler = 0
-let g:LustyJugglerDefaultMappings = 0
-
-" bufferlist.vim 1325 {{{3
-" is only checked for existenc
-"let g:BufferListLoaded = 0
-" does not need a mapping: 
-nmap <leader>m :call Bufferlist()<cr>
+" plugins: powerline {{{1
+if s:plugins['powerline']
+  Bundle 'Lokaltog/vim-powerline'
+  Bundle 'Lokaltog/powerline'
+endif
 
 " plugins: additional: LeTeX {{{1
 
-" my private enhencements
-augroup LucLatex
-  autocmd!
-  autocmd BufNewFile,BufRead *.tex setlocal dictionary+=*.bib
-  autocmd BufNewFile,BufRead *.tex nmap <buffer> K :call LucTexDocFunction()<CR>
-augroup END
-
-" {{{2 PLUGIN LaTeX-Suite: 
+" Bundle 'LaTeX-Suite-aka-Vim-LaTeX' {{{2
+" vimscript 
+Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
 
 " REQUIRED: filetype plugin on
 " OPTIONAL: filetype indent on
@@ -916,6 +957,12 @@ let g:Tex_Menus=0
 
 " plugins: additional: tags {{{1
 
+" Bundle 'taglist-plus' {{{2
+" vimscript 
+Bundle 'taglist-plus'
+" Bundle 'taglist.vim' {{{2
+" vimscript 273
+Bundle 'taglist.vim'
 " taglist {{{2
 " http://www.vim.org/scripts/script.php?script_id=273 
 "let Tlist_Auto_Highlight_Tag        = 
@@ -1040,31 +1087,29 @@ else
   "call s:ctag_falback()
 endif
 
-" {{{1 music
-
-"if has('python')
-"  python import os, sys
-"  python sys.path.append(os.path.expanduser("~/.vim/vimmp"))
-"  pyfile ~/.vim/vimmp/main.py
-"endif
-"nmap <silent> <leader>x :py vimmp_toggle()<CR>
-
-" plugins: additional: misc {{{1
-
-" manpageview {{{
+" plugins: manpages {{{1
+" Bundle 'ManPageView' {{{2
+" vimscript 
+" TODO
+Bundle 'ManPageView'
+" http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
+" manually installed: open above url and execute :UseVimaball
 " display manpages in a vertical split (other options 'only', 'hsplit',
 " 'vsplit', 'hsplit=', 'vsplit=', 'reuse')
 let g:manpageview_winopen = 'reuse'
-" }}}
-"{{{ hints_man
+
+"{{{2 hints_man
 " http://www.vim.org/scripts/script.php?script_id=1825
 " http://www.vim.org/scripts/script.php?script_id=1826
 "augroup LucManHints
 "  autocmd!
 "  autocmd FileType c,cpp set cmdheight=2
 "augroup END
-"}}}
-"{{{ omnicppcomplete
+
+" plugins: completion {{{1
+" Bundle 'OmniCppComplete' omnicppcomplete {{{2
+" vimscript 
+Bundle 'OmniCppComplete'
 "http://www.vim.org/scripts/script.php?script_id=1520
 if version >= 7
   " OmniCompletion see ``:help compl-omni''
@@ -1085,10 +1130,160 @@ if version >= 7
   set completeopt=menu,longest,preview
   imap <C-TAB> <C-x><C-o>
 endif
-"}}}
-"{{{ AutoComplPop
+
+" Bundle 'AutoComplPop' AutoComplPop {{{2
+" vimscript 
+Bundle 'AutoComplPop'
 " id 1879
 " do not start popup menu after curser moved.
 "let g:acp_mappingDriven = 1
 "let g:acp_behaviorKeywordCommand = '<tab>'
-"}}}
+
+" Bundle 'delimitmate' {{{2
+Bundle 'Raimondi/delimitMate'
+" Stuff that was in the old ~/.vim/GetLatest/GetLatestVimScripts.dat {{{1
+""642 15781 :AutoInstall: GetLatestVimScripts.vim
+""
+""# conflicting usecases group "explorer" {{{2
+""42 19481 :AutoInstall: bufexplorer.zip
+""685 2110 :AutoInstall: incbufswitch.vim
+""1011 5371 :AutoInstall: buflist.vim
+""1910 9909 :AutoInstall: qbuf.vim
+""
+""# testing {{{2
+""1785 14914 :AutoInstall: javacompete
+""#1825 6877 :AutoInstall: hints_man2 #conflicting with AutoComplPop
+""#1826 6878 :AutoInstall: hints_man3 #conflicting with AutoComplPop
+""3412 15556 :AutoInstall: xterm-color-table.vim.tar.gz
+""# 2540 1 :AutoInstall: snipMate
+""2369 9222 :AutoInstall: vmmp
+""2856 11762 :AutoInstall: vmmpc
+""2582 12000 :AutoInstall: blogit
+""3510 18158 :AutoInstall: vimrepress
+""
+""# lisp/scheme interaction
+""2531 19000 :AutoInstall: slimv.vim
+""
+""# dependencies? {{{2
+""
+""# maybe not interesting {{{2
+""877 7775 :AutoInstall: gvcolor.vim
+""1283 17954 :AutoInstall: tbe.vim
+""
+""# why is this installed? {{{2
+""1066 7618 :AutoInstall: cecutil.vim
+""
+""# to be tested (shell in gvim) {{{2
+""#http://www.vim.org/scripts/script.php?script_id=118
+""#http://www.vim.org/scripts/script.php?script_id=165
+""#http://www.vim.org/scripts/script.php?script_id=1788
+""#http://www.vim.org/scripts/script.php?script_id=2620
+""#http://www.vim.org/scripts/script.php?script_id=2711
+""#http://www.vim.org/scripts/script.php?script_id=2771
+""#http://www.vim.org/scripts/script.php?script_id=3040
+""#http://www.vim.org/scripts/script.php?script_id=3123
+""#http://www.vim.org/scripts/script.php?script_id=3431
+""#http://www.vim.org/scripts/script.php?script_id=3554
+""4011 18175 :AutoInstall: vimux
+""
+""# other default {{{2
+""#40 1 :AutoInstall: DrawIt.tar.gz
+""#104 3201 :AutoInstall: blockhl.vim 
+""#120 1 :AutoInstall: decho.vim
+""#122 16752 :AutoInstall: astronaut.vim
+""#195 1 :AutoInstall: engspchk.vim
+""#294 1 :AutoInstall: Align.vim
+""#302 1 :AutoInstall: AnsiEsc.vim
+""#451 1 :AutoInstall: EasyAccents.vim
+""#514 1 :AutoInstall: mrswin.vim                   # wtf?
+""#551 1 :AutoInstall: Mines.vim                    # wtf?
+""#628 1 :AutoInstall: SeeTab.vim
+""#670 1 :AutoInstall: visincr.vim
+""
+""# added on 2012-02-14 (bookmarks) {{{2
+""#162 1 :AutoInstall: auctex.vim
+""#920 1 :AutoInstall: tex_autoclose.vim
+""#1048 1 :AutoInstall: R_with_vim.tar.gz
+""#1825 1 :AutoInstall: hints_man2.vba.gz
+""#1826 1 :AutoInstall: hints_man3.vba.gz
+""#2358 1 :AutoInstall: cpp_src.tar.bz2
+""#2945 1 :AutoInstall: AutomaticTexPlugin.vmb
+""#3109 1 :AutoInstall: LatexBox.vmb
+""#3230 1 :AutoInstall: tex_pdf.tar.gz
+""#3508 1 :AutoInstall: tex_nine.tar.gz
+""#3931 1 :AutoInstall: vim-support.zip
+""
+""# This stuff was in my old ~/.vim dir. {{{2
+""# AutoAlign.vba.gz
+""# auto.vim.gz
+""# bash-support.zip
+""# cppcomplete.vim.gz
+""# csv-0.22.vmb
+""# cvim.zip
+""# easytags.zip
+""# ex_plugins_package-unix-8.05_b2.zip
+""# hints_man2.vba.gz
+""# hints_man3.vba.gz
+""# icomplete-0.5.tar.bz2
+""# info.vim.gz
+""# lookupfile-1.8.zip
+""# neocomplcache-6.1.zip
+""# octave_with_vim_0.01-8.tar.gz
+""# project-1.4.1.tar.gz
+""# renamer.vim.gz
+""# sessionman.vim.gz
+""# snippy_plugin.vba.gz
+""# supertab.vba.gz
+""# taglist_45.zip
+""# tskeleton.vba.gz
+""# ttags.vba.gz
+
+" further testing {{{1
+
+" Bundle 'Syntastic' {{{2
+if s:plugins['syntastic']
+  Bundle 'scrooloose/syntastic'
+endif
+
+if s:plugins['popupbuffer']
+  " This is messing with fuf
+  Bundle 'PopupBuffer.vim'
+endif
+
+Bundle 'ack.vim'
+Bundle 'VimRepress'
+
+" moving from GetLatestVimScripts {{{1
+Bundle 'matchit.zip'
+Bundle 'Vimpress'
+Bundle 'browser.vim'
+Bundle 'applescript.vim'
+Bundle 'ZoomWin'
+Bundle 'calendar.vim'
+Bundle 'javacomplete'
+Bundle 'Vim-JDE'
+
+" plugins: colors {{{2
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'w0ng/vim-hybrid'
+Bundle 'chriskempson/vim-tomorrow-theme'
+Bundle 'nanotech/jellybeans.vim'
+
+
+" set colors {{{1
+filetype plugin indent on
+if has('syntax')
+  " Are we running on MacVim?
+  if has('gui_macvim')
+    colorscheme macvim
+    " that is 202=#ff5f00, 234=#1c1c1c
+    hi Pmenu ctermfg=202 ctermbg=234
+    hi PmenuSel ctermfg=234 ctermbg=202
+    
+  " what is a good alternative colorsheme?
+  "else
+  endif
+
+  " always set the background of the line number
+  highlight LineNr ctermbg=black ctermfg=DarkGrey
+endif
