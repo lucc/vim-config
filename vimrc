@@ -70,6 +70,52 @@ let s:path = split(join(map(s:path, 'glob("~/" . v:val)')))
 call map(s:path, 'v:val . "/**"')
 
 " user defined functions {{{1
+function! LucFindBaseDir() "{{{2
+  let indicator_files = [
+                      \ 'makefile',
+                      \ 'build.xml',
+                      \ ]
+  let matches = []
+  let path = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
+  let cwd = getcwd()
+  while ! empty(path)
+    let dir = '/' . join(path, '/')
+    for file in indicator_files
+      if filereadable(dir . '/' . file)
+	call add(matches, [dir, file])
+      endif
+    endfor
+    if dir == cwd
+      if empty(matches) || matches[-1][0] != cwd
+	call add(matches, [cwd, ''])
+      endif
+    endif
+    unlet path[-1]
+  endwhile
+  let path = split(cwd, '/')
+  while ! empty(path)
+    let dir = '/' . join(path, '/')
+    for file in indicator_files
+      if filereadable(dir . '/' . file)
+	call add(matches, [dir, file])
+      endif
+    endfor
+    if dir == cwd
+      if empty(matches) || matches[-1][0] != cwd
+	call add(matches, [cwd, ''])
+      endif
+    endif
+    unlet path[-1]
+  endwhile
+  if empty(matches)
+    call add(matches, ['/', ''])
+  endif
+  if len(matches) == 1
+    return matches[0][0]
+  endif
+  " not optimal jet:
+  return matches[0][0]
+endfunction
 
 function! SearchStringForURI(string) "{{{2
   " function to find an URI in a string
@@ -338,6 +384,11 @@ augroup END
 
 augroup LucMail "{{{2
   autocmd FileType mail setlocal textwidth=72
+augroup END
+
+augroup LucLocalWindowCD "{{{2
+  " FIXME: still buggy
+  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter * execute 'lcd' LucFindBaseDir()
 augroup END
 
 " user defined commands and mappings {{{1
