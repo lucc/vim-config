@@ -117,7 +117,7 @@ function! LucFindBaseDir() "{{{2
   return matches[0][0]
 endfunction
 
-function! SearchStringForURI(string) "{{{2
+function! LucSearchStringForURI(string) "{{{2
   " function to find an URI in a string
   " thanks to
   " http://vim.wikia.com/wiki/Open_a_web-browser_with_the_URL_in_the_current_line
@@ -127,7 +127,7 @@ function! SearchStringForURI(string) "{{{2
   "return matchstr(a:string, '[a-z]*:\/\/[^ >,;:]*')
 endfunction
 
-function! HandleURI(uri) "{{{2
+function! LucHandleURI(uri) "{{{2
   " function to find an URI on the current line and open it.
   
   " first find a browser
@@ -153,7 +153,7 @@ function! HandleURI(uri) "{{{2
   silent execute '!' browser shellescape(a:uri)
 endfunction
 
-function! InsertStatuslineColor(mode) "{{{2
+function! LucInsertStatuslineColor(mode) "{{{2
   " function to change the color of the statusline depending on the mode
   " this version is from
   " http://vim.wikia.com/wiki/Change_statusline_color_to_show_insert_or_normal_mode
@@ -168,7 +168,7 @@ function! InsertStatuslineColor(mode) "{{{2
   endif
 endfunction
 
-function! FindNextSpellError() "{{{2
+function! LucFindNextSpellError() "{{{2
   " A function to jump to the next spelling error
   setlocal spell
   "if spellbadword(expand('<cword>')) == ['', '']
@@ -176,7 +176,7 @@ function! FindNextSpellError() "{{{2
   "endif
 endfunction
 
-function! VisitBufferOrEditFile(name) "{{{2
+function! LucVisitBufferOrEditFile(name) "{{{2
   " A function to check if a file was already loaded into some buffer.
   " Depending if it was the function either switches to that buffer or
   " executes ':edit ' on the filename.
@@ -219,7 +219,7 @@ function! LucQuickMake(target, override) "{{{2
   while ! empty(path)
     let dir = '/' . join(path, '/')
     if filereadable(dir . '/makefile') || filereadable(dir . '/Makefile')
-      let cmd = 'make' . (a:target == '' ? '' : ' ' . a:target)
+      let cmd = 'make ' . a:target
       let path = []
     else
       unlet path[-1]
@@ -351,13 +351,21 @@ function! LucTexDocFunction() "{{{2
 endfunction
 " user defined autocommands {{{1
 
-" load a notes/scratch buffer which will be saved automatically.
+augroup LucLatex "{{{2
+  autocmd!
+  autocmd BufNewFile,BufRead *.tex setlocal dictionary+=*.bib
+  autocmd BufNewFile,BufRead *.tex nmap <buffer> g<C-g> :!texcount -nosub %<CR>
+  autocmd BufNewFile,BufRead *.tex nmap <buffer> K :call LucTexDocFunction()<CR>
+augroup END
+
 augroup LucNotesFile "{{{2
+  " load a notes/scratch buffer which will be saved automatically.
   autocmd!
   " use the variable in the autocommands
   execute 'au BufEnter' s:notes 'setlocal bufhidden=hide'
   execute 'au BufDelete,BufHidden,BufLeave,BufUnload,FocusLost' s:notes 'up'
 augroup END
+
 augroup LucTodoFile "{{{2
   autocmd!
   autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO normal zM
@@ -403,8 +411,8 @@ nmap Y y$
 inoremap <C-U> <C-G>u<C-U>
 
 " easy spell checking
-inoremap <C-s> <C-o>:call FindNextSpellError()<CR><C-x><C-s>
-nnoremap <C-s>      :call FindNextSpellError()<CR>z=
+inoremap <C-s> <C-o>:call LucFindNextSpellError()<CR><C-x><C-s>
+nnoremap <C-s>      :call LucFindNextSpellError()<CR>z=
 
 " TODO: is this usefull?
 "inoremap ( ()<++><ESC>F)i
@@ -422,10 +430,10 @@ nnoremap <C-s>      :call FindNextSpellError()<CR>z=
 
 " web {{{2
 " functions to open URLs
-nmap <Leader>w :call HandleURI(SearchStringForURI(getline('.')))<CR>
+nmap <Leader>w :call LucHandleURI(LucSearchStringForURI(getline('.')))<CR>
 
 " find a script on vim.org by id or name
-nmap <Leader>v :call HandleURI('http://www.vim.org/scripts/script.php?script_id=' . matchstr(matchstr(expand('<cword>'), '[0-9]\+[^0-9]*$'), '^[0-9]*'))<CR>
+nmap <Leader>v :call LucHandleURI('http://www.vim.org/scripts/script.php?script_id=' . matchstr(matchstr(expand('<cword>'), '[0-9]\+[^0-9]*$'), '^[0-9]*'))<CR>
 
 " easy compilation {{{2
 nmap <F2> :silent update <BAR> call LucQuickMake('', 0)<CR>
@@ -445,7 +453,7 @@ imap <C-S-Tab> <C-O>gT
 nmap ß :!clear<CR>
 
 " visit a hidden "notes" buffer
-execute 'nmap <C-w># :call VisitBufferOrEditFile("' . s:notes . '")<CR>'
+execute 'nmap <C-w># :call LucVisitBufferOrEditFile("' . s:notes . '")<CR>'
 
 "command! -bar -bang Session silent call LucInitiateSession(len('<bang>'))
 
@@ -561,8 +569,8 @@ if has('statusline')
     " change highlighting when mode changes
     augroup LucStatusLine
       autocmd!
-      autocmd InsertEnter * call InsertStatuslineColor(v:insertmode)
-      autocmd InsertLeave * call InsertStatuslineColor('n')
+      autocmd InsertEnter * call LucInsertStatuslineColor(v:insertmode)
+      autocmd InsertLeave * call LucInsertStatuslineColor('n')
     augroup END
     " now we set the colors for the statusline
     " in the most simple case
@@ -933,7 +941,6 @@ let Tlist_WinWidth                  = 75
 "let tlist_tex_settings='tex;b:bibitem;c:command;l:label;s:sections;t:subsections;u:subsubsections'
 "let tlist_tex_settings='tex;c:chapters;s:sections;u:subsections;b:subsubsections;p:parts;P:paragraphs;G:subparagraphs'
 let tlist_tex_settings='latex;s:structure;g:graphic+listing;l:label;r:ref;b:bib'
-
 
 nmap <silent> <F4> :TlistToggle<CR>
 "augroup LucTagList
