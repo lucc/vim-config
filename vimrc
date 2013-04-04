@@ -710,17 +710,31 @@ endif
 " requires l9lib (vimscript 3252)
 " I can not disable it?
 
-let g:fuf_modesDisable = [ 'directory', 'mrufile', 'mrucmd', 'bookmarkdir', 'taggedfile', 'jumplist', 'changelist', 'lines', 'givenfile', 'givendirectory', 'givencommand', 'callbackfile', 'callbackitem' ]
+let g:fuf_modesDisable = [
+                       \ 'directory',
+                       \ 'mrufile',
+                       \ 'mrucmd',
+                       \ 'bookmarkdir',
+                       \ 'taggedfile',
+                       \ 'jumplist',
+                       \ 'changelist',
+                       \ 'lines',
+                       \ 'givenfile',
+                       \ 'givendirectory',
+                       \ 'givencommand',
+                       \ 'callbackfile',
+                       \ 'callbackitem',
+                       \ ]
 let g:fuf_enumeratingLimit = 20
 let g:fuf_coveragefile_globPatterns = ['~/.*', '~/*']
-let g:fuf_dataDir = '~/.vim/fuf-data'
+let g:fuf_dataDir = '~/.vim/cache/fuf'
 let s:fuf_cov = extend(map(copy(s:path), 'v:val . "/.*"'), map(copy(s:path), 'v:val . "/*"'))
 call extend(g:fuf_coveragefile_globPatterns, s:fuf_cov)
-nnoremap <silent> <C-f> :silent FufCoverageFile<CR>
-nnoremap <silent> <C-b> :silent FufBuffer<CR>
+nnoremap <silent> <D-f> :silent FufCoverageFile<CR>
+nnoremap <silent> <D-b> :silent FufBuffer<CR>
 nnoremap <silent> <C-h> :silent FufHelp<CR>
-inoremap <silent> <C-f> <ESC>:silent FufCoverageFile<CR>
-inoremap <silent> <C-b> <ESC>:silent FufBuffer<CR>
+inoremap <silent> <D-f> <ESC>:silent FufCoverageFile<CR>
+inoremap <silent> <D-b> <ESC>:silent FufBuffer<CR>
 inoremap <silent> <C-h> <ESC>:silent FufHelp<CR>
 augroup LucFufMaps
   autocmd FileType fuf inoremap <buffer> <C-I> <C-N>
