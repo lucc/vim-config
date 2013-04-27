@@ -71,13 +71,19 @@ call map(s:path, 'v:val . "/**"')
 
 " user defined functions {{{1
 function! LucFindBaseDir() "{{{2
+  " files which indicate a suitable base directory
   let indicator_files = [
                       \ 'makefile',
                       \ 'build.xml',
                       \ ]
+  let indicator_dirs = [
+                     \ '~/uni',
+                     \ '~/.vim',
+		     \ ]
   let matches = []
   let path = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
   let cwd = getcwd()
+  " look at directory of the current buffer
   while ! empty(path)
     let dir = '/' . join(path, '/')
     for file in indicator_files
@@ -92,6 +98,7 @@ function! LucFindBaseDir() "{{{2
     endif
     unlet path[-1]
   endwhile
+  " look at the working directory
   let path = split(cwd, '/')
   while ! empty(path)
     let dir = '/' . join(path, '/')
@@ -107,12 +114,13 @@ function! LucFindBaseDir() "{{{2
     endif
     unlet path[-1]
   endwhile
+  " fallback value
   if empty(matches)
     call add(matches, ['/', ''])
   endif
-  if len(matches) == 1
-    return matches[0][0]
-  endif
+  "if len(matches) == 1
+  "  return matches[0][0]
+  "endif
   " not optimal jet:
   return matches[0][0]
 endfunction
