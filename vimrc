@@ -631,7 +631,7 @@ if has('statusline')
     set wildignore+=*.aux,*.out,*.toc              " LaTeX intermediate files
     set wildignore+=*.fdb_latexmk                  " LaTeXmk files
     set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg " binary images
-    set wildignore+=*.sw?                          " Vim swap files
+    set wildignore+=.*.sw?                         " Vim swap files
     set wildignore+=*.DS_Store                     " OSX bullshit
     "set wildignore+=*.o,*.obj,*.exe,*.dll,        " compiled object files
     "set wildignore+=*.spl                         " compiled spell word lists
@@ -649,12 +649,16 @@ endif
 
 " we could do something similar for tabs.
 " see :help 'tabline'
-"set tabline=Tabs:\ %{tabpagenr('$')}\ Buffers:\ %{len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))}%=%{strftime('%a\ %F\ %R')}
+"set tabline=Tabs:
+"set tabline+=\ %{tabpagenr('$')}
+"set tabline+=\ Buffers:
+"set tabline+=\ %{len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))}
+"set tabline+=%=%{strftime('%a\ %F\ %R')}
 
 " options: colorcolumn {{{1
 
 if version >= 703 	" NEW in VIM 7.3
-  set colorcolumn=79 	"highlight the background of the 79th column
+  set colorcolumn=+1 	"highlight the background of the 79th column
 else
   " this highlights the part of the line which is longer then 78 char in grey
   " (blue in a terminal).
