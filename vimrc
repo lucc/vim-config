@@ -357,6 +357,35 @@ function! LucTexDocFunction() "{{{2
   let l:word = expand("<cword>")
   silent execute '!texdoc' l:word
 endfunction
+
+function! LucManPageFunction(...) "{{{2
+  " try to find a manpage
+  if &filetype == 'man' && a:0 == 0
+    execute 'Man' expand('<cword>')
+  elseif a:0 > 0
+    execute 'tabnew +Man\ ' . join(a:000)
+  else
+    echohl Error
+    echo 'Topic missing.'
+    echohl None
+    return
+  endif
+  map <buffer> K :call LucManPageFunction()<CR>
+  vmap <buffer> K :call LucManPageFunction(LucGetVisualSelection())<CR>
+endfunction
+
+function! LucGetVisualSelection() "{{{2
+  " This function is copied from http://stackoverflow.com/questions/1533565/
+  let [lnum1, col1] = getpos("'<")[1:2]
+  "let [lnum1, col1] = getpos("v")[1:2]
+  let [lnum2, col2] = getpos("'>")[1:2]
+  "let [lnum2, col2] = getpos(".")[1:2]
+  let lines = getline(lnum1, lnum2)
+  let lines[-1] = lines[-1][: col2 - 2]
+  let lines[0] = lines[0][col1 - 1:]
+  return join(lines, "\n")
+endfunction
+
 " user defined autocommands {{{1
 
 augroup LucLatex "{{{2
