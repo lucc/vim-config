@@ -11,6 +11,7 @@ let s:fonts = [
       \ ['monospace',                10, 25],
       \ ['inconsolata',              14, 30],
       \ ['bitstream vera sans mono', 10, 20]
+      \ ['DejaVu Sans Mono',         9,  20]
       \ ]
 
 let s:delim = ''
