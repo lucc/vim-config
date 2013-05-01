@@ -10,8 +10,8 @@ let s:fonts = [
       \ ['menlo',                    12, 25],
       \ ['monospace',                10, 25],
       \ ['inconsolata',              14, 30],
-      \ ['bitstream vera sans mono', 10, 20]
-      \ ['DejaVu Sans Mono',         9,  20]
+      \ ['bitstream vera sans mono', 12, 20],
+      \ ['dejavu sans mono',         12, 20]
       \ ]
 
 let s:delim = ''
@@ -30,6 +30,16 @@ if system('uname') == 'Linux'
 endif
 
 " user defined functions {{{1
+function! LucSelectFont (big) "{{{2
+  " Select a font and set it
+  let delim = ''
+  if has('gui_macvim')
+    let s:delim = ':h'
+  elseif has('gui_gtk2')
+    let s:delim = ' '
+  endif
+endfunction
+
 function! LucResizeFunction () " {{{2
   " function to put the gvim window on the left of the screen
   set nofullscreen
