@@ -715,6 +715,7 @@ let s:plugins = {
               \ 'popupbuffer': 0,
               \ 'powerline': 0,
               \ 'syntastic': 0,
+              \ 'unite': 0,
               \ 'winmanager': 0,
               \ }
 
