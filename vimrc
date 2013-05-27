@@ -35,7 +35,7 @@ endif
 
 let s:notes = '~/.vim/notes'
 let mapleader = ','
-let s:braces_stack = []
+"let s:braces_stack = []
 let s:path = [
       \ '.abook',
       \ '.config',
@@ -137,7 +137,7 @@ endfunction
 
 function! LucHandleURI(uri) "{{{2
   " function to find an URI on the current line and open it.
-  
+
   " first find a browser
   let browser = ''
   let choises = [expand($BROWSER), 'elinks', 'links', 'w3m', 'lynx', 'wget', 'curl', '']
@@ -194,21 +194,21 @@ function! LucVisitBufferOrEditFile(name) "{{{2
   execute (bufexists(expand(a:name)) ? 'buffer ' : 'edit ') . expand(a:name)
 endfunction
 
-function! LucInitiateSession(load_old_session) "{{{2
-  " A function to source a session file and set up an autocommand which will
-  " automatically save the session again, when vim is quit.
-  let l:session = '~/.vim/Session.vim'
-  if a:load_old_session
-    execute 'source' l:session
-    silent execute '!rm -f' l:session
-  endif
-  augroup LucSession
-    autocmd!
-    execute 'autocmd VimLeave * mksession!' l:session
-  augroup END
-  if argc() | argdelete * | endif
-  redraw!
-endfunction
+"function! LucInitiateSession(load_old_session) "{{{2
+"  " A function to source a session file and set up an autocommand which will
+"  " automatically save the session again, when vim is quit.
+"  let l:session = '~/.vim/Session.vim'
+"  if a:load_old_session
+"    execute 'source' l:session
+"    silent execute '!rm -f' l:session
+"  endif
+"  augroup LucSession
+"    autocmd!
+"    execute 'autocmd VimLeave * mksession!' l:session
+"  augroup END
+"  if argc() | argdelete * | endif
+"  redraw!
+"endfunction
 
 function! LucQuickMake(target, override) "{{{2
   " Try to build stuff depending on some parameters.  What will be built is
@@ -304,7 +304,7 @@ endfunction
 "    "not good
 "  endif
 "endfunction
-  
+
 function! LucRemoteEditor(mail) "{{{2
   " a function to be called by a client who wishes to use a vim server as an
   " non forking edior. One can also set the environment variable EDITOR with
@@ -341,17 +341,17 @@ function! LucRemoteEditor(mail) "{{{2
   endif
 endfunction
 
-function! LucEditAllBuffers() "{{{2
-  let current = bufnr('%')
-  let alternative = bufnr('#')
-  bufdo edit
-  if bufexists(alternative)
-    execute 'buffer' alternative
-  endif
-  if bufexists(current)
-    execute 'buffer' current
-  endif
-endfunction
+"function! LucEditAllBuffers() "{{{2
+"  let current = bufnr('%')
+"  let alternative = bufnr('#')
+"  bufdo edit
+"  if bufexists(alternative)
+"    execute 'buffer' alternative
+"  endif
+"  if bufexists(current)
+"    execute 'buffer' current
+"  endif
+"endfunction
 
 function! LucTexDocFunction() "{{{2
   let l:word = expand("<cword>")
