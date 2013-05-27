@@ -529,7 +529,7 @@ command! -nargs=* -complete=dir J call LucAutoJumpWraper("<args>")
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
-set backup 
+set backup
 set hidden
 set history=1000
 set confirm
@@ -622,7 +622,7 @@ if has('statusline')
   " always display the statusline
   set laststatus=2
 
-  if has('autocmd')
+  if has('autocmd') && 0 "commented out
     " change highlighting when mode changes
     augroup LucStatusLine
       autocmd!
@@ -1097,7 +1097,7 @@ if has('cscope')
   set cscopetag
   " {{{ these lines are copied from
   " http://cscope.sourceforge.net/cscope_maps.vim and modified by me. Many
-  " thanks to the Cscope guys. 
+  " thanks to the Cscope guys.
   " The commands are defided into three prefixes:
   "
   " 	CTRL-_		show querry in current window
@@ -1138,7 +1138,7 @@ if has('cscope')
   nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
   nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>	
   nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
-  nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>  
+  nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
   " End of http://cscope.sourceforge.net/cscope_maps.vim stuff }}}
   if filereadable("cscope.out")
     cscope add cscope.out
@@ -1147,7 +1147,7 @@ if has('cscope')
   else
     " no database so use Ctags instead (unset cscope options)
     " run ``ctags **/.*[ch]'' to produce the file ``tags''.
-    " these headers are used: 
+    " these headers are used:
     " http://www.vim.org/scripts/script.php?script_id=2358
     set tags+=~/.vim/tags/usr_include.tags
     set tags+=~/.vim/tags/usr_include_cpp.tags
@@ -1164,7 +1164,7 @@ endif
 " plugins: manpages {{{1
 " info.vim.gz
 " Bundle 'ManPageView' {{{2
-" vimscript 
+" vimscript
 " TODO
 Bundle 'ManPageView'
 " http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
@@ -1189,7 +1189,7 @@ let g:manpageview_winopen = 'reuse'
 Bundle 'javacomplete'
 
 " Bundle 'OmniCppComplete' {{{2
-" vimscript 
+" vimscript
 Bundle 'OmniCppComplete'
 "http://www.vim.org/scripts/script.php?script_id=1520
 if version >= 7
@@ -1213,7 +1213,7 @@ if version >= 7
 endif
 
 " Bundle 'AutoComplPop' {{{2
-" vimscript 
+" vimscript
 Bundle 'AutoComplPop'
 " id 1879
 " do not start popup menu after curser moved.
@@ -1255,7 +1255,7 @@ Bundle 'Raimondi/delimitMate'
 
 " other default {{{2
 "40 DrawIt.tar.gz
-"104 blockhl.vim 
+"104 blockhl.vim
 "120 decho.vim
 "122 astronaut.vim
 "195 engspchk.vim
