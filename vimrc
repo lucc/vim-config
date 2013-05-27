@@ -386,6 +386,18 @@ function! LucGetVisualSelection() "{{{2
   return join(lines, "\n")
 endfunction
 
+function! LucAutoJumpWraper(...) "{{{2
+  " call the autojump executable to change the directory in vim
+  if a:0 == 0
+    let arg = '-s'
+    let cmd = 'echo'
+  else
+    let arg = join(a:000)
+    let cmd = 'cd'
+  endif
+  let result = system('autojump ' . arg)
+  execute cmd result
+endfunction
 " user defined autocommands {{{1
 
 augroup LucLatex "{{{2
@@ -505,6 +517,8 @@ execute 'nmap <C-w># :call LucVisitBufferOrEditFile("' . s:notes . '")<CR>'
 " file it was loaded from, thus the changes you made.
 " Only define it when not defined already.
 "command! DiffOrig vne | se bt=nofile | r # | 0d_ | difft | wincmd p | difft
+
+command! -nargs=* -complete=dir J call LucAutoJumpWraper("<args>")
 
 " options: TODO {{{1
 
