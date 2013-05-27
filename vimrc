@@ -227,7 +227,7 @@ function! LucQuickMake(target, override) "{{{2
   while ! empty(path)
     let dir = '/' . join(path, '/')
     if filereadable(dir . '/makefile') || filereadable(dir . '/Makefile')
-      let cmd = 'make ' . a:target
+      let cmd = 'make' . (a:target == '' ? '' : ' ' . a:target)
       let path = []
     else
       unlet path[-1]
@@ -473,16 +473,22 @@ nmap <Leader>w :call LucHandleURI(LucSearchStringForURI(getline('.')))<CR>
 nmap <Leader>v :call LucHandleURI('http://www.vim.org/scripts/script.php?script_id=' . matchstr(matchstr(expand('<cword>'), '[0-9]\+[^0-9]*$'), '^[0-9]*'))<CR>
 
 " easy compilation {{{2
-nmap <F2> :silent update <BAR> call LucQuickMake('', 0)<CR>
-imap <F2> <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
-nmap <silent> <D-F2> :silent update <BAR> call LucQuickMake('', 1)<CR>
+nmap          <F2>        :silent update <BAR> call LucQuickMake('', 0)<CR>
+imap          <F2>   <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
+nmap <silent> <D-F2>      :silent update <BAR> call LucQuickMake('', 1)<CR>
 imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
 
 " move between tabs {{{2
-nmap <C-Tab> gt
-imap <C-Tab> <C-O>gt
-nmap <C-S-Tab> gT
+nmap <C-Tab>        gt
+imap <C-Tab>   <C-O>gt
+nmap <C-S-Tab>      gT
 imap <C-S-Tab> <C-O>gT
+
+" move with mouse gestures {{{2
+nmap <SwipeUp>   gg
+imap <SwipeUp>   gg
+nmap <SwipeDown> G
+imap <SwipeDown> G
 
 " misc {{{2
 
@@ -628,7 +634,7 @@ if has('statusline')
   if has('wildignore')
     set wildmode=longest:full,full
     set wildignore+=.hg,.git,.svn                  " Version control
-    set wildignore+=*.aux,*.out,*.toc              " LaTeX intermediate files
+    set wildignore+=*.aux,*.out,*.toc,*.idx,*.fls  " LaTeX intermediate files
     set wildignore+=*.fdb_latexmk                  " LaTeXmk files
     set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg " binary images
     set wildignore+=.*.sw?                         " Vim swap files
@@ -1325,11 +1331,14 @@ if has('syntax')
     " that is 202=#ff5f00, 234=#1c1c1c
     hi Pmenu ctermfg=202 ctermbg=234
     hi PmenuSel ctermfg=234 ctermbg=202
-    
+
   " what is a good alternative colorsheme?
   "else
   endif
 
   " always set the background of the line number
   highlight LineNr ctermbg=black ctermfg=DarkGrey
+  " switching to solarized
+  set bg=dark
+  colorscheme solarized
 endif
