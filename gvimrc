@@ -144,32 +144,40 @@ if has("gui_macvim")
   imap <silent> <F3>   <C-O>:call LucOpenPdfOrPreview(0, '', 1)<CR>
   nmap <silent> <D-F3> :call LucOpenPdfOrPreview(1, '', 1)<CR>
   imap <silent> <D-F3> <C-O>:call LucOpenPdfOrPreview(1, '', 1)<CR>
+  nmap <silent> <SwipeLeft>  :pop<CR>
+  nmap <silent> <SwipeRight> :tag<CR>
 endif
 
 " options: gui {{{1
 
+" guioptions (default: egmrLtT)
+set guioptions+=cegv
+set guioptions-=rT
+set tabpagemax=30
+" TODO
+let &guifont = s:normalfonts
+
 if has("gui_macvim")
-  " use the macvim colorscheme, but slightly modify it.
-  colorscheme macvim
-  set background=light
-  "hi Normal  guifg=Grey50 guibg=#1f1f1f
-  "hi LineNr  guifg=Grey50 guibg=#1f1f1f
-  "hi Comment guifg=#3464A4
-  set tabpagemax=30
   set fuoptions=maxvert,maxhorz
   set antialias
 endif
 
-" guioptions (default: egmrLtT)
-set guioptions+=cegv
-set guioptions-=rT
-"set fullscreen
-" TODO
-let &guifont = s:normalfonts
+" use the macvim colorscheme, but slightly modify it.
+colorscheme macvim
+set background=light
+"hi Normal  guifg=Grey50 guibg=#1f1f1f
+"hi LineNr  guifg=Grey50 guibg=#1f1f1f
+"hi Comment guifg=#3464A4
+
+set bg=dark
+set bg=light
+colorscheme solarized
+
 
 " other {{{1
 
 if has('gui_macvim')
+  " fix $PATH on Mac OS X
   for item in readfile(expand('~/.config/env/PATH'))
     let item = expand(item)
     if !($PATH =~ item)
