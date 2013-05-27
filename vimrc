@@ -730,13 +730,22 @@ let s:plugins = {
               \ 'buffet': 1,
               \ 'bufmru': 0,
               \ 'buftabs': 0,
-              \ 'commandt': 1,
-              \ 'fuzzyfinder': 1,
+              \ 'commandt': 0,
+              \ 'ctrlp': 1,
+              \ 'fuzzyfinder': 0,
+              \ 'lusty': 0,
+              \ 'nerd': 0,
               \ 'popupbuffer': 0,
               \ 'powerline': 0,
+              \ 'qnamebuf': 0,
               \ 'syntastic': 0,
+              \ 'tcommand': 0,
+              \ 'tselectbuffer': 0,
+              \ 'tselectfiles': 0,
               \ 'unite': 0,
               \ 'winmanager': 0,
+              \ 'latexsuite': 1,
+              \ 'taglist': 1,
               \ }
 
 " plugins: standard {{{1
@@ -761,16 +770,14 @@ filetype off
 set runtimepath+=~/.vim/bundle/vundle/
 call vundle#rc()
 " Bundle 'gmarik/vundle'
-Bundle 'gmarik/vundle'
+"Bundle 'gmarik/vundle'
+Bundle 'lucc/vundle'
 
 " plugins: libs {{{1
-" Bundle 'L9' {{{2
-" vimscript 3252
 Bundle 'L9'
-
-" Bundle 'tlib' {{{2
-" vimscript ?
+" vimscript 3252
 Bundle 'tomtom/tlib_vim'
+" vimscript ?
 
 " plugins: buffer and file management {{{1
 "42 bufexplorer.zip
@@ -778,24 +785,87 @@ Bundle 'tomtom/tlib_vim'
 "1011 buflist.vim
 "1910 qbuf.vim
 
-" Bundle 'ctrlp.vim' {{{2
-Bundle 'kien/ctrlp.vim'
-let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
-let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_show_hidden = 1
-
-if s:plugins['unite'] "{{{2
-  Bundle 'Shougo/unite.vim'
-  let g:unite_data_directory = '~/.vim/cache/unite'
+if s:plugins['buffergator'] "{{{2
+  " vimscript 3619
+  Bundle 'jeetsukumaran/vim-buffergator'
+  " browse buffers with preview, switch to window containing this buffer or
+  " display buffer in last window
+  let g:did_buffergator = 0
+  let g:buffergator_suppress_keymaps = 1
+  nmap <Leader>bg :BuffergatorToggle<CR>
 endif
 
+if s:plugins['bufferlist'] "{{{2
+  " vimscript 1325
+  Bundle 'bufferlist.vim'
+  " Very simple list of loaded buffers
+  " is only checked for existenc
+  "let g:BufferListLoaded = 0
+  " does not need a mapping:
+  nmap <leader>m :call BufferList()<cr>
+endif
+
+if s:plugins['buffet'] "{{{2
+  " vimscript 3896
+  Bundle 'sandeepcr529/Buffet.vim'
+  " no help?
+  " I can not disable it!
+  nmap <leader>bl :Bufferlist<CR>
+endif
+
+if s:plugins['bufmru'] "{{{2
+  " vimscript 2346
+  Bundle 'bufmru.vim'
+  " no help
+  " is only checked for existenc
+  "let loaded_bufmru = 1
+  "let g:bufmru_switchkey = expand('<leader>bm')
+  " seems buggy
+endif
+
+if s:plugins['buftabs'] "{{{2
+  " vimscript 1664
+  Bundle 'buftabs'
+  " no help / can not disable it / quite nice
+  let g:buftabs_marker_modified = '+'
+  let g:buftabs_only_basename = 1
+  "let g:buftabs_in_statusline=1
+  "set statusline=%=buffers:\ %{buftabs#statusline()}
+endif
+
+if s:plugins['commandt'] "{{{2
+  " vimscript 3025
+  Bundle 'git://git.wincent.com/command-t.git'
+  "let g:command_t_loaded = 0
+  let g:CommandTMaxCachedDirectories = 1 " default
+  let g:CommandTMaxCachedDirectories = 10
+  let g:CommandTScanDotDirectories = 1
+  let g:CommandTMatchWindowReverse = 1
+  let g:CommandTMaxFiles = 100000
+  "let g:CommandTMatchWindowAtTop = 1
+  "let g:CommandTToggleFocusMap = ''
+  "let g:CommandTSelectPrevMap = ['<up>', '<C-i>']
+  "let g:CommandTSelectNextMap = ['<down>', '<C-S-i>']
+
+  nmap <c-s-f> :CommandT<cr>
+  nmap <c-s-b> :CommandTBuffer<cr>
+endif
+
+if s:plugins['ctrlp'] "{{{2
+  Bundle 'kien/ctrlp.vim'
+  "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
+  let g:ctrlp_clear_cache_on_exit = 0
+  let g:ctrlp_show_hidden = 1
+  let g:ctrlp_root_markers = ['makefile', 'Makefile', 'latexmkrc']
+  let g:ctrlp_map = '<c-space>'
+  let g:ctrlp_cmd = 'CtrlPMRU'
+  inoremap <C-Space> <C-O>:CtrlPMRU<CR>
+endif
 
 if s:plugins['fuzzyfinder'] "{{{2
   " vimscript 1984
   Bundle 'FuzzyFinder'
   " requires l9lib (vimscript 3252)
-  " I can not disable it?
-
   let g:fuf_modesDisable = [
 			 \ 'directory',
 			 \ 'mrufile',
@@ -816,152 +886,89 @@ if s:plugins['fuzzyfinder'] "{{{2
   let g:fuf_dataDir = '~/.vim/cache/fuf'
   let s:fuf_cov = extend(map(copy(s:path), 'v:val . "/.*"'),
                        \ map(copy(s:path), 'v:val . "/*"'))
-  call extend(g:fuf_coveragefile_globPatterns, s:fuf_cov)
-  nnoremap <silent> <D-f> :silent FufCoverageFile<CR>
-  nnoremap <silent> <D-b> :silent FufBuffer<CR>
-  nnoremap <silent> <C-h> :silent FufHelp<CR>
-  inoremap <silent> <D-f> <ESC>:silent FufCoverageFile<CR>
-  inoremap <silent> <D-b> <ESC>:silent FufBuffer<CR>
-  inoremap <silent> <C-h> <ESC>:silent FufHelp<CR>
+  call extend(g:fuf_coveragefile_globpatterns, s:fuf_cov)
+  nnoremap <silent> <d-f> :silent fufcoveragefile<cr>
+  nnoremap <silent> <d-b> :silent fufbuffer<cr>
+  nnoremap <silent> <c-h> :silent fufhelp<cr>
+  inoremap <silent> <d-f> <esc>:silent fufcoveragefile<cr>
+  inoremap <silent> <d-b> <esc>:silent fufbuffer<cr>
+  inoremap <silent> <c-h> <esc>:silent fufhelp<cr>
   augroup LucFufMaps
-    autocmd FileType fuf inoremap <buffer> <C-I> <C-N>
-  augroup END
+    autocmd filetype fuf inoremap <buffer> <c-i> <c-n>
+  augroup end
+endif
+
+if s:plugins['lusty'] "{{{2
+  " vimscript 2050
+  bundle 'sjbach/lusty'
+  let g:lustyjugglerdefaultmappings = 0
+  " help inside script: ~/.vim/plugin/lusty-explorer.vim
+  " disable mappings
+  let g:lustyexplorerdefaultmappings = 0
+  " available commands
+  "   :lustyfilesystemexplorer [optional-path]
+  "   :lustyfilesystemexplorerfromhere
+  "   :lustybufferexplorer
+  "   :lustybuffergrep
+  " nice!!
+  nmap <leader>lf :lustyfilesystemexplorer<cr>
+  " nearly the same as "wmtoggle" but has preview option
+  nmap <leader>lb :lustybufferexplorer<cr>
+endif
+
+if s:plugins['nerd'] "{{{2
+  Bundle 'NERD_tree-Project'
+  Bundle 'scrooloose/nerdcommenter'
+  Bundle 'scrooloose/nerdtree'
+  " vimscript 1658
+  " is only checked for existenc
+  "let loaded_nerd_tree = 1
+  let NERDChristmasTree = 1
+  let NERDTreeHijackNetrw = 1
+  nmap <leader>nt :NERDTreeToggle<cr>
+endif
+
+if s:plugins['qnamebuf'] "{{{2
+  " vimscript 3217
+  Bundle 'qnamebuf'
+  let g:qnamebuf_loaded = 0
+  "let g:qnamefile_loaded = 0
+  " this will not help
+  let qnamebuf_hotkey = '<leader>qb'
+  "let qnamefile_hotkey = '<leader>j'
+endif
+
+if s:plugins['tcommand'] "{{{2
+  " vimscript ?
+  Bundle 'tomtom/tcommand_vim'
+endif
+
+if s:plugins['tselectbuffer'] "{{{2
+  " vimscript 1866
+  Bundle 'tomtom/tselectbuffer_vim'
+  " needs tlib >= 0.40
+  " disable loading for the moment
+  "let loaded_tselectbuffer = 0
+  nmap <leader>t :TSelectBuffer<cr>
+endif
+
+if s:plugins['tselectfiles'] "{{{2
+  " vimscript ?
+  Bundle 'tomtom/tselectfiles_vim'
+  noremap <leader>tf :TSelectFiles<cr>
+endif
+
+if s:plugins['unite'] "{{{2
+  Bundle 'Shougo/unite.vim'
+  let g:unite_data_directory = '~/.vim/cache/unite'
 endif
 
 if s:plugins['winmanager'] "{{{2
   " vimscript 95
   " The NERD_Tree plugin provides the same functionality but seem nicer
   Bundle 'winmanager'
-  "map <C-w><C-t> :WMToggle<CR> 
+  "map <C-w><C-t> :WMToggle<CR>
   nmap <leader>wt :WMToggle<cr>
-endif
-
-" Bundle 'tselectbuffer' {{{2
-" vimscript 1866
-Bundle 'tomtom/tselectbuffer_vim'
-" needs tlib >= 0.40
-" disable loading for the moment
-"let loaded_tselectbuffer = 0
-nmap <leader>t :TSelectBuffer<cr>
-
-" Bundle 'tselectfiles' {{{2
-" vimscript ?
-Bundle 'tomtom/tselectfiles_vim'
-noremap <leader>tf :TSelectFiles<cr>
-
-" Bundle 'LustyJuggler' 'LustyExplorer' {{{2
-" vimscript 2050
-Bundle 'sjbach/lusty'
-" is checked for existenc only
-"let g:loaded_lustyjuggler = 0
-let g:LustyJugglerDefaultMappings = 0
-" help inside script: ~/.vim/plugin/lusty-explorer.vim
-" disable mappings
-let g:LustyExplorerDefaultMappings = 0
-" available commands
-"   :LustyFilesystemExplorer [optional-path]
-"   :LustyFilesystemExplorerFromHere
-"   :LustyBufferExplorer
-"   :LustyBufferGrep
-" nice!!
-nmap <leader>lf :LustyFilesystemExplorer<cr>
-" nearly the same as "WMToggle" but has preview option
-nmap <leader>lb :LustyBufferExplorer<cr>
-
-if s:plugins['commandt'] "{{{2
-  " vimscript 3025
-  Bundle 'git://git.wincent.com/command-t.git'
-  "let g:command_t_loaded = 0
-  let g:CommandTMaxCachedDirectories = 1 " default
-  let g:CommandTMaxCachedDirectories = 10
-  let g:CommandTScanDotDirectories = 1
-  let g:CommandTMatchWindowReverse = 1
-  let g:CommandTMaxFiles = 100000
-  "let g:CommandTMatchWindowAtTop = 1
-  "let g:CommandTToggleFocusMap = ''
-  "let g:CommandTSelectPrevMap = ['<up>', '<C-i>']
-  "let g:CommandTSelectNextMap = ['<down>', '<C-S-i>']
-
-  nmap <c-s-f> :CommandT<cr>
-  nmap <c-s-b> :CommandTBuffer<cr>
-endif
-
-" Bundle 'tcommand' {{{2
-" vimscript ?
-Bundle 'tomtom/tcommand_vim'
-
-if s:plugins['buftabs'] "{{{2
-  " vimscript 1664
-  Bundle 'buftabs'
-  " no help / can not disable it / quite nice
-  let g:buftabs_marker_modified = '+'
-  let g:buftabs_only_basename = 1
-  "let g:buftabs_in_statusline=1
-  "set statusline=%=buffers:\ %{buftabs#statusline()}
-endif
-
-if s:plugins['buffet'] "{{{2
-  " vimscript 3896
-  Bundle 'sandeepcr529/Buffet.vim'
-  " no help?
-  " I can not disable it!
-  nmap <leader>bl :Bufferlist<CR>
-endif
-
-" Bundle 'qnamebuf' {{{2
-" vimscript 3217
-Bundle 'qnamebuf'
-let g:qnamebuf_loaded = 0
-"let g:qnamefile_loaded = 0
-" this will not help
-let qnamebuf_hotkey = '<leader>qb'
-"let qnamefile_hotkey = '<leader>j'
-
-" Bundle 'nerdtree' {{{2
-
-"Bundle 'nerdtree-ack'
-"Bundle 'NERD_Tree-and-ack'
-
-Bundle 'NERD_tree-Project'
-
-Bundle 'scrooloose/nerdcommenter'
-
-Bundle 'scrooloose/nerdtree'
-" vimscript 1658
-" is only checked for existenc
-"let loaded_nerd_tree = 1
-let NERDChristmasTree = 1
-let NERDTreeHijackNetrw = 1
-nmap <leader>nt :NERDTreeToggle<cr>
-
-if s:plugins['buffergator'] "{{{2
-  " vimscript 3619
-  Bundle 'jeetsukumaran/vim-buffergator'
-  " browse buffers with preview, switch to window containing this buffer or
-  " display buffer in last window
-  let g:did_buffergator = 0
-  let g:buffergator_suppress_keymaps = 1
-  nmap <Leader>bg :BuffergatorToggle<CR>
-endif
-
-if s:plugins['bufmru'] "{{{2
-  " vimscript 2346
-  Bundle 'bufmru.vim'
-  " no help
-  " is only checked for existenc
-  "let loaded_bufmru = 1
-  "let g:bufmru_switchkey = expand('<leader>bm')
-  " seems buggy
-endif
-
-if s:plugins['bufferlist'] "{{{2
-  " vimscript 1325
-  Bundle 'bufferlist.vim'
-  " Very simple list of loaded buffers
-  " is only checked for existenc
-  "let g:BufferListLoaded = 0
-  " does not need a mapping: 
-  nmap <leader>m :call BufferList()<cr>
 endif
 
 " plugins: powerline {{{1
@@ -970,100 +977,98 @@ if s:plugins['powerline'] "{{{2
   Bundle 'Lokaltog/powerline'
 endif
 
-" plugins: LeTeX {{{1
-"162 auctex.vim
-"920 tex_autoclose.vim
-"2945 AutomaticTexPlugin.vmb
-"3109 LatexBox.vmb
-"3230 tex_pdf.tar.gz
-"3508 tex_nine.tar.gz
+" plugins: LaTeX {{{1
 
-" Bundle 'LaTeX-Suite-aka-Vim-LaTeX' {{{2
-" vimscript 
-Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
+" 3109 LatexBox.vmb
+Bundle 'auctex.vim'
+" 162 auctex.vim
+"Bundle 'coot/atp_vim'
+" AutomaticLaTeXPlugin 2945
+"Bundle 'LaTeX-functions'
+Bundle 'LaTeX-Help'
+"Bundle 'latextags'
+Bundle 'TeX-9'
+" 3508 tex_nine.tar.gz
+"Bundle 'tex.vim'
+"Bundle 'tex_autoclose.vim'
+" 920 tex_autoclose.vim
 
-" REQUIRED: filetype plugin on
-" OPTIONAL: filetype indent on
-" IMPORTANT: win32 users will need to have 'shellslash' set so that latex
-" can be called correctly.
-"set shellslash
-" IMPORTANT: force grep to display filename.
-set grepprg=grep\ -nH\ $*
-" OPTIONAL: Handle empty .tex files as LaTeX.
-let g:tex_flavor='latex'
-" Folding:
-let Tex_FoldedEnvironments='*'
-"let Tex_FoldedEnvironments+=','
-"let Tex_FoldedEnvironments  = 'document,minipage,'
-"let Tex_FoldedEnvironments .= 'di,lem,ivt,dc,'
-"let Tex_FoldedEnvironments .= 'verbatim,comment,proof,eq,gather,'
-"let Tex_FoldedEnvironments .= 'align,figure,table,thebibliography,'
-"let Tex_FoldedEnvironments .= 'keywords,abstract,titlepage'
-"let Tex_FoldedEnvironments .= 'item,enum,display'
-"let Tex_FoldedMisc = 'comments,item,preamble,<<<'
-"let Tex_FoldedEnvironments .= '*'
+if s:plugins['latexsuite'] "{{{2
+  Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
 
-" compiling with \ll
-let g:Tex_CompileRule_pdf='latexmk -silent -pv -pdf $*'
-"let g:Tex_CompileRule_pdf='pdflatex -interaction=nonstopmode $*'
-let Tex_UseMakefile=1
-let g:Tex_ViewRule_pdf='open -a Preview'
+  " REQUIRED: filetype plugin on
+  " OPTIONAL: filetype indent on
+  " IMPORTANT: win32 users will need to have 'shellslash' set so that latex
+  " can be called correctly.
+  "set shellslash
+  " IMPORTANT: force grep to display filename.
+  set grepprg=grep\ -nH\ $*
+  " OPTIONAL: Handle empty .tex files as LaTeX.
+  let g:tex_flavor='latex'
+  " Folding:
+  let Tex_FoldedEnvironments='*'
+  "let Tex_FoldedEnvironments+=','
+  "let Tex_FoldedEnvironments  = 'document,minipage,'
+  "let Tex_FoldedEnvironments .= 'di,lem,ivt,dc,'
+  "let Tex_FoldedEnvironments .= 'verbatim,comment,proof,eq,gather,'
+  "let Tex_FoldedEnvironments .= 'align,figure,table,thebibliography,'
+  "let Tex_FoldedEnvironments .= 'keywords,abstract,titlepage'
+  "let Tex_FoldedEnvironments .= 'item,enum,display'
+  "let Tex_FoldedMisc = 'comments,item,preamble,<<<'
+  "let Tex_FoldedEnvironments .= '*'
 
-"dont use latexsuite folding
-"let Tex_FoldedEnvironments=''
-"let Tex_FoldedMisc=''
-"let Tex_FoldedSections=''
+  " compiling with \ll
+  let g:Tex_CompileRule_pdf='latexmk -silent -pv -pdf $*'
+  "let g:Tex_CompileRule_pdf='pdflatex -interaction=nonstopmode $*'
+  let Tex_UseMakefile=1
+  let g:Tex_ViewRule_pdf='open -a Preview'
 
-" don't use LaTeX-Suite menus
-let g:Tex_Menus=0
-"let g:Tex_UseUtfMenus=1
+  "dont use latexsuite folding
+  "let Tex_FoldedEnvironments=''
+  "let Tex_FoldedMisc=''
+  "let Tex_FoldedSections=''
 
-" {{{2 PLUGIN AutomaticLaTexPlugin
-" http://www.vim.org/scripts/script.php?script_id=2945
-" {{{2 PLUGIN auctex.vim
-" http://www.vim.org/scripts/script.php?script_id=162
-" {{{2 PLUGIN tex_autoclose
-" http://www.vim.org/scripts/script.php?script_id=920
-" {{{2 PLUGIN tex9
-" http://www.vim.org/scripts/script.php?script_id=3508
+  " don't use LaTeX-Suite menus
+  let g:Tex_Menus=0
+  "let g:Tex_UseUtfMenus=1
+endif
 
 " plugins: tags {{{1
 " taglist_45.zip
 " ttags.vba.gz
 
 " Bundle 'taglist-plus' {{{2
-" vimscript 
 Bundle 'taglist-plus'
-" Bundle 'taglist.vim' {{{2
-" vimscript 273
-Bundle 'taglist.vim'
-" taglist {{{2
-" http://www.vim.org/scripts/script.php?script_id=273 
-"let Tlist_Auto_Highlight_Tag        = 
-"let Tlist_Auto_Open                 = 
-let Tlist_Auto_Update               = 1
-let Tlist_Close_On_Select           = 1
-let Tlist_Compact_Format            = 1
-"let Tlist_Ctags_Cmd                 = 
-let Tlist_Display_Prototype         = 1
-"let Tlist_Display_Tag_Scope         = 
-"let Tlist_Enable_Fold_Column        = 
-let Tlist_Exit_OnlyWindow           = 1
-let Tlist_File_Fold_Auto_Close      = 1
-let Tlist_GainFocus_On_ToggleOpen   = 1
-"let Tlist_Highlight_Tag_On_BufEnter = 
-"let Tlist_Inc_Winwidth              = 
-"let Tlist_Max_Submenu_Items         = 
-"let Tlist_Max_Tag_Length            = 
-"let Tlist_Process_File_Always       = 
-"let Tlist_Show_Menu                 = 1
-"let Tlist_Show_One_File             = 
-"let Tlist_Sort_Type                 = 
-"let Tlist_Use_Horiz_Window          = 
-let Tlist_Use_Right_Window          = 1
-"let Tlist_Use_SingleClick           = 
-"let Tlist_WinHeight                 = 
-let Tlist_WinWidth                  = 75
+
+if s:plugins['taglist'] "{{{2
+  " vimscript 273
+  Bundle 'taglist.vim'
+  "let Tlist_Auto_Highlight_Tag        =
+  "let Tlist_Auto_Open                 =
+  let Tlist_Auto_Update               = 1
+  let Tlist_Close_On_Select           = 1
+  let Tlist_Compact_Format            = 1
+  "let Tlist_Ctags_Cmd                 =
+  let Tlist_Display_Prototype         = 1
+  "let Tlist_Display_Tag_Scope         =
+  "let Tlist_Enable_Fold_Column        =
+  let Tlist_Exit_OnlyWindow           = 1
+  let Tlist_File_Fold_Auto_Close      = 1
+  let Tlist_GainFocus_On_ToggleOpen   = 1
+  "let Tlist_Highlight_Tag_On_BufEnter =
+  "let Tlist_Inc_Winwidth              =
+  "let Tlist_Max_Submenu_Items         =
+  "let Tlist_Max_Tag_Length            =
+  "let Tlist_Process_File_Always       =
+  "let Tlist_Show_Menu                 = 1
+  "let Tlist_Show_One_File             =
+  "let Tlist_Sort_Type                 =
+  "let Tlist_Use_Horiz_Window          =
+  let Tlist_Use_Right_Window          = 1
+  "let Tlist_Use_SingleClick           =
+  "let Tlist_WinHeight                 =
+  let Tlist_WinWidth                  = 75
+endif
 
 " Extend ctags to work with latex
 """""""""""""""""""""""""""""""""
@@ -1317,9 +1322,6 @@ Bundle 'matchit.zip'
 " Bundle 'Vim-JDE' {{{2
 Bundle 'Vim-JDE'
 
-" Bundle 'Vimpress' {{{2
-Bundle 'Vimpress'
-
 " Bundle 'VimRepress' {{{2
 Bundle 'VimRepress'
 
@@ -1329,14 +1331,23 @@ Bundle 'ZoomWin'
 " Bundle 'linediff' {{{2
 Bundle 'AndrewRadev/linediff.vim'
 
-" plugins: colors {{{2
+" plugins: git stuff {{{2
+"Bundle 'tpope/vim-git'
+Bundle 'tpope/vim-fugitive'
+
+" plugins: colors {{{1
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'w0ng/vim-hybrid'
 Bundle 'chriskempson/vim-tomorrow-theme'
 Bundle 'nanotech/jellybeans.vim'
+Bundle 'kalt.vim'
+Bundle 'kaltex.vim'
+Bundle 'textmate16.vim'
+Bundle 'vibrantink'
+Bundle 'tortex'
 
 
-" set colors {{{1
+" set colors for the terminal {{{1
 filetype plugin indent on
 if has('syntax')
   " Are we running on MacVim?
