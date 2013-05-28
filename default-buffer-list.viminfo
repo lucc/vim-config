@@ -5,34 +5,34 @@
 %~/TODO	0	0
 
 # vim config files
-%~/src/dotfiles/vim/vimrc	0	0
-%~/src/dotfiles/vim/gvimrc	0	0
+%~/.config/vim/vimrc	0	0
+%~/.config/vim/gvimrc	0	0
 
 # other config files
-%~/.latexmkrc	0	0
-%~/.mailcap	0	0
-%~/.mailcheckrc	0	0
-%~/.mime.types	0	0
-%~/.pentadactylrc	0	0
-%~/.rtorrent.rc	0	0
-%~/.tmux.conf	0	0
+%~/.config/latexmkrc	0	0
+%~/.config/mailcap	0	0
+%~/.config/mailcheckrc	0	0
+%~/.config/mime.types	0	0
+%~/.config/pentadactylrc	0	0
+%~/.config/rtorrent.rc	0	0
+%~/.config/tmux.conf	0	0
 
 # security config files 
-%~/.fetchmailrc	0	0
-%~/.mailfilter	0	0
-%~/.mutt/muttrc	0	0
-%~/.secure/gpg/gpg.conf	0	0
-%~/.secure/netrc	0	0
-%~/.secure/ssh/config	0	0
-%~/.secure/xml	0	0
+%~/.config/fetchmailrc	0	0
+%~/.config/mailfilter	0	0
+%~/.config/mutt/muttrc	0	0
+%~/.config/secure/gpg/gpg.conf	0	0
+%~/.config/secure/netrc	0	0
+%~/.config/secure/ssh/config	0	0
+%~/.config/secure/xml	0	0
 
 # vim buffer list and other stuff
-%~/.vim/default-buffer-list.viminfo	0	0
-%~/.vim/notes	0	0
-%~/.vimpagerrc	0	0
+%~/.config/vim/default-buffer-list.viminfo	0	0
+%~/.config/vim/notes	0	0
+%~/.config/vim/vimpagerrc	0	0
 
 # further config files
-%~/.emacs.d/init.el	0	0
+%~/.config/emacs.d/init.el	0	0
 %~/.config/env/INFOPATH	0	0
 %~/.config/env/PATH	0	0
 %~/.config/feh/keys	0	0
