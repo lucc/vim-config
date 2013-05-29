@@ -1335,6 +1335,9 @@ Bundle 'AndrewRadev/linediff.vim'
 "Bundle 'tpope/vim-git'
 Bundle 'tpope/vim-fugitive'
 
+" Bundle 'vimwiki' {{{2
+Bundle 'vimwiki'
+
 " plugins: colors {{{1
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'w0ng/vim-hybrid'
@@ -1345,7 +1348,7 @@ Bundle 'kaltex.vim'
 Bundle 'textmate16.vim'
 Bundle 'vibrantink'
 Bundle 'tortex'
-
+Bundle 'tomasr/molokai'
 
 " set colors for the terminal {{{1
 filetype plugin indent on
