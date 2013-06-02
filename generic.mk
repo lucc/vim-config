@@ -42,3 +42,6 @@ init:
 	git submodule update --recursive --init
 git-push:
 	git push github master
+
+# tags {{{1
+.PHONY: links clean hardlink-generics update init git-push
