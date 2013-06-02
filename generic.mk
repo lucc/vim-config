@@ -18,12 +18,13 @@ LN          = ln -s
 	       
 # linking files to $HOME {{{1
 
-# these targets uses the variable CONFIGS
+# these targets uses the variable CONFIGS and OTHER
 echo:;@echo $(call map,tail,$(CONFIGS))
+	false&&echo false ignored;echo hans
 links: clean
-	cd; $(foreach pair,$(CONFIGS), \
+	-cd; $(foreach pair,$(CONFIGS), \
 	$(LN) $(DIR)/$(subst $(SEP), ,$(pair));)
-	$(foreach triple,$(OTHER),    \
+	-$(foreach triple,$(OTHER),    \
 	cd $(call get,1,$(triple)) && \
 	$(LN) $(call get,2,$(triple)) $(call get,3,$(triple));)
 clean:
@@ -32,8 +33,6 @@ clean:
 	cd $(call head,$(triple))      && \
 	test -L $(call tail,$(triple)) && \
 	$(RM) $(call tail,$(triple));)
-hardlink-generics:
-	ln $(HOME)/$(DIR)/generic.mk .
 
 # update git repo {{{1
 update:
