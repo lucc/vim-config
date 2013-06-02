@@ -398,6 +398,9 @@ function! LucAutoJumpWraper(...) "{{{2
   let result = system('autojump ' . arg)
   execute cmd result
 endfunction
+
+function! LucMpdClient() "{{{2
+endfunction
 " user defined autocommands {{{1
 
 augroup LucLatex "{{{2
@@ -725,28 +728,29 @@ endif
 " not.  One could also comment the the line loading the plugin, but these are
 " scatterd ofer the file and not centralized.
 let s:plugins = {
-              \ 'buffergator': 0,
-              \ 'bufferlist': 0,
-              \ 'buffet': 1,
-              \ 'bufmru': 0,
-              \ 'buftabs': 0,
-              \ 'commandt': 0,
-              \ 'ctrlp': 1,
-              \ 'fuzzyfinder': 0,
-              \ 'lusty': 0,
-              \ 'nerd': 0,
-              \ 'popupbuffer': 0,
-              \ 'powerline': 0,
-              \ 'qnamebuf': 0,
-              \ 'syntastic': 0,
-              \ 'tcommand': 0,
-              \ 'tselectbuffer': 0,
-              \ 'tselectfiles': 0,
-              \ 'unite': 0,
-              \ 'winmanager': 0,
-              \ 'latexsuite': 1,
-              \ 'taglist': 1,
-              \ }
+	       \ 'buffergator': 0,
+	       \ 'bufferlist': 0,
+	       \ 'buffet': 1,
+	       \ 'bufmru': 0,
+	       \ 'buftabs': 0,
+	       \ 'commandt': 0,
+	       \ 'ctrlp': 1,
+	       \ 'fuzzyfinder': 0,
+	       \ 'latexsuite': 1,
+	       \ 'lusty': 0,
+	       \ 'nerd': 0,
+	       \ 'popupbuffer': 0,
+	       \ 'powerline': 0,
+	       \ 'qnamebuf': 0,
+	       \ 'syntastic': 0,
+	       \ 'taglist': 1,
+	       \ 'tcommand': 0,
+	       \ 'tselectbuffer': 0,
+	       \ 'tselectfiles': 0,
+	       \ 'unite': 0,
+	       \ 'vimmp': 1,
+	       \ 'winmanager': 0,
+	       \ }
 
 " plugins: standard {{{1
 
@@ -1337,6 +1341,22 @@ Bundle 'tpope/vim-fugitive'
 
 " Bundle 'vimwiki' {{{2
 Bundle 'vimwiki'
+
+" Bundle 'vimmpc' {{{2
+Bundle 'vimmpc'
+
+if s:plugins['vimmp'] "{{{2
+  Bundle 'vimmp'
+  let g:vimmp_server_type="mpd"
+  let g:mpd_music_directory="~/.mpd/music"
+  let g:mpd_playlist_directory="~/.mpd/lists"
+  if has('python')
+    py import os, sys
+    py sys.path.append(os.path.expanduser("~/.vim/bundle/vimmp"))
+    pyf ~/.vim/bundle/vimmp/main.py
+    command MPC py vimmp_toggle()
+  endif
+endif
 
 " plugins: colors {{{1
 Bundle 'altercation/vim-colors-solarized'
