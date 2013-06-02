@@ -7,8 +7,8 @@ tail           = $(lastword $(subst $(SEP), ,$(1)))
 head           = $(firstword $(subst $(SEP), ,$(1)))
 get            = $(word $(1),$(subst $(SEP), ,$(2)))
 is_link        = $(shell cd && if [ -L $(1) ]; then echo $(1); fi)
-link           = $(LN) $(DIR)/$(subst $(SEP), ,$(1))
-echo_and_link  = echo $(call link,$(1)); cd && $(call link,$(1));
+#link           = $(LN) $(DIR)/$(subst $(SEP), ,$(1))
+#echo_and_link  = echo $(call link,$(1)); cd && $(call link,$(1));
 
 # variables {{{1
 SEP         = :
@@ -19,24 +19,19 @@ LN          = ln -s
 # linking files to $HOME {{{1
 
 # these targets uses the variable CONFIGS
+echo:;@echo $(call map,tail,$(CONFIGS))
 links: clean
-	$(foreach triple,                                               \
-	  $(CONFIGS),                                                   \
-	  cd $(call get,1,$(triple)) &&                                 \
-	  ln -s $(DIR)/$(call get,2,$(triple)) $(call get,3,$(triple)); \
-	  )
-	$(foreach triple,                                        \
-	  $(OTHER),                                              \
-	  cd $(call get,1,$(triple)) &&                          \
-	  ln -s $(call get,2,$(triple)) $(call get,3,$(triple)); \
-	  )
+	cd; $(foreach pair,$(CONFIGS), \
+	$(LN) $(DIR)/$(subst $(SEP), ,$(pair));)
+	$(foreach triple,$(OTHER),    \
+	cd $(call get,1,$(triple)) && \
+	$(LN) $(call get,2,$(triple)) $(call get,3,$(triple));)
 clean:
-	-$(foreach triple,                   \
-	  $(CONFIGS) $(OTHER),               \
-	  cd $(call get,1,$(triple))      && \
-	  test -L $(call get,3,$(triple)) && \
-	  $(RM) $(call get,3,$(triple))   ;  \
-	  )
+	-cd && $(RM) $(call map,is_link,$(call map,tail,$(CONFIGS)))
+	-$(foreach triple,$(OTHER),       \
+	cd $(call head,$(triple))      && \
+	test -L $(call tail,$(triple)) && \
+	$(RM) $(call tail,$(triple));)
 hardlink-generics:
 	ln $(HOME)/$(DIR)/generic.mk .
 
