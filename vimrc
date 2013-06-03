@@ -739,7 +739,7 @@ let s:plugins = {
 	       \ 'latexsuite': 1,
 	       \ 'lusty': 0,
 	       \ 'nerd': 0,
-	       \ 'popupbuffer': 0,
+	       \ 'popupbuffer': 1,
 	       \ 'powerline': 0,
 	       \ 'qnamebuf': 0,
 	       \ 'syntastic': 0,
@@ -748,7 +748,7 @@ let s:plugins = {
 	       \ 'tselectbuffer': 0,
 	       \ 'tselectfiles': 0,
 	       \ 'unite': 0,
-	       \ 'vimmp': 1,
+	       \ 'vimmp': 0,
 	       \ 'winmanager': 0,
 	       \ }
 
