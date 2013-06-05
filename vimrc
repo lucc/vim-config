@@ -399,8 +399,31 @@ function! LucAutoJumpWraper(...) "{{{2
   execute cmd result
 endfunction
 
-function! LucMpdClient() "{{{2
-endfunction
+"function! LucMpdClient() "{{{2
+"endfunction
+
+"function! LucPatternBufferDo(pattern, ...) "{{{2
+"  " like :bufdo but only visit files which match pattern.
+"  let buffers = []
+"  let i
+"  let buf
+"  for i in range(bufnr('$'))
+"    if bufexists(i)
+"      if bufname(i) =~ a:pattern
+"	append(buffers, i)
+"      endif
+"    endif
+"  endfor
+"  if len(buffers) == 0
+"    echoerr 'No buffers match ' . pattern . '!'
+"    return
+"  endif
+"  for buf in buffers
+"    echo 'Visiting buffer ' . bufname(buf) . '.'
+"    execute 'buffer' buf '|' join(a:000, ' ')
+"  endfor
+"endfunction
+
 " user defined autocommands {{{1
 
 augroup LucLatex "{{{2
@@ -1343,7 +1366,7 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'vimwiki'
 
 " Bundle 'vimmpc' {{{2
-Bundle 'vimmpc'
+"Bundle 'vimmpc'
 
 if s:plugins['vimmp'] "{{{2
   Bundle 'vimmp'
