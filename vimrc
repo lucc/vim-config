@@ -757,29 +757,30 @@ endif
 " not.  One could also comment the the line loading the plugin, but these are
 " scatterd ofer the file and not centralized.
 let s:plugins = {
-	       \ 'buffergator': 0,
-	       \ 'bufferlist': 0,
-	       \ 'buffet': 1,
-	       \ 'bufmru': 0,
-	       \ 'buftabs': 0,
-	       \ 'commandt': 0,
-	       \ 'ctrlp': 1,
-	       \ 'fuzzyfinder': 0,
-	       \ 'latexsuite': 1,
-	       \ 'lusty': 0,
-	       \ 'nerd': 0,
-	       \ 'popupbuffer': 1,
-	       \ 'powerline': 0,
-	       \ 'qnamebuf': 0,
-	       \ 'syntastic': 0,
-	       \ 'taglist': 1,
-	       \ 'tcommand': 0,
-	       \ 'tselectbuffer': 0,
-	       \ 'tselectfiles': 0,
-	       \ 'unite': 0,
-	       \ 'vimmp': 0,
-	       \ 'winmanager': 0,
-	       \ }
+		\ 'buffergator': 0,
+		\ 'bufferlist': 0,
+		\ 'buffet': 1,
+		\ 'bufmru': 0,
+		\ 'buftabs': 0,
+		\ 'commandt': 0,
+		\ 'ctrlp': 1,
+		\ 'fuzzyfinder': 0,
+		\ 'latexsuite': 1,
+		\ 'lusty': 0,
+		\ 'neocompl': 0,
+		\ 'nerd': 0,
+		\ 'popupbuffer': 1,
+		\ 'powerline': 0,
+		\ 'qnamebuf': 0,
+		\ 'syntastic': 0,
+		\ 'taglist': 1,
+		\ 'tcommand': 0,
+		\ 'tselectbuffer': 0,
+		\ 'tselectfiles': 0,
+		\ 'unite': 0,
+		\ 'vimmp': 0,
+		\ 'winmanager': 0,
+		\ }
 
 " plugins: standard {{{1
 
@@ -1395,71 +1396,6 @@ Bundle 'AutoComplPop'
 Bundle 'Raimondi/delimitMate'
 
 " plugins: unsorted {{{1
-"3412 xterm-color-table.vim.tar.gz
-"2540 snipMate
-"2369 vmmp
-"2856 vmmpc
-"2582 blogit
-"3510 vimrepress
-" lisp/scheme interaction {{2
-"2531 slimv.vim
-
-" maybe not interesting {{{2
-"877 gvcolor.vim
-"1283 tbe.vim
-
-" why is this installed? {{{2
-"1066 cecutil.vim
-
-" to be tested (shell in gvim) {{{2
-"http://www.vim.org/scripts/script.php?script_id=118
-"http://www.vim.org/scripts/script.php?script_id=165
-"http://www.vim.org/scripts/script.php?script_id=1788
-"http://www.vim.org/scripts/script.php?script_id=2620
-"http://www.vim.org/scripts/script.php?script_id=2711
-"http://www.vim.org/scripts/script.php?script_id=2771
-"http://www.vim.org/scripts/script.php?script_id=3040
-"http://www.vim.org/scripts/script.php?script_id=3123
-"http://www.vim.org/scripts/script.php?script_id=3431
-"http://www.vim.org/scripts/script.php?script_id=3554
-"4011 18175 :AutoInstall: vimux
-
-" other default {{{2
-"40 DrawIt.tar.gz
-"104 blockhl.vim
-"120 decho.vim
-"122 astronaut.vim
-"195 engspchk.vim
-"294 Align.vim
-"302 AnsiEsc.vim
-"451 EasyAccents.vim
-"514 mrswin.vim                   # wtf?
-"551 Mines.vim                    # wtf?
-"628 SeeTab.vim
-"670 visincr.vim
-
-" added on 2012-02-14 (bookmarks) {{{2
-"1048 R_with_vim.tar.gz
-"2358 cpp_src.tar.bz2
-"3931 vim-support.zip
-
-" This stuff was in my old ~/.vim dir. {{{2
-" AutoAlign.vba.gz
-" auto.vim.gz
-" bash-support.zip
-" csv-0.22.vmb
-" cvim.zip
-" easytags.zip
-" ex_plugins_package-unix-8.05_b2.zip
-" lookupfile-1.8.zip
-" neocomplcache-6.1.zip
-" octave_with_vim_0.01-8.tar.gz
-" project-1.4.1.tar.gz
-" renamer.vim.gz
-" sessionman.vim.gz
-" snippy_plugin.vba.gz
-" supertab.vba.gz
-" tskeleton.vba.gz
 if s:plugins['powerline'] "{{{2
   Bundle 'Lokaltog/vim-powerline'
   Bundle 'Lokaltog/powerline'
@@ -1542,7 +1478,49 @@ Bundle 'vibrantink'
 Bundle 'tortex'
 Bundle 'tomasr/molokai'
 
-" set colors for the terminal {{{1
+" plugins: bookmarks {{{1
+"3412 xterm-color-table.vim.tar.gz
+"2540 snipMate
+
+" maybe not interesting {{{2
+"877 gvcolor.vim
+"1283 tbe.vim
+
+" why is this installed? {{{2
+"1066 cecutil.vim
+
+" other default {{{2
+"40 DrawIt.tar.gz
+"104 blockhl.vim
+"120 decho.vim
+"122 astronaut.vim
+"195 engspchk.vim
+"294 Align.vim
+"302 AnsiEsc.vim
+"451 EasyAccents.vim
+"514 mrswin.vim                   # wtf?
+"551 Mines.vim                    # wtf?
+"628 SeeTab.vim
+"670 visincr.vim
+
+" added on 2012-02-14 (bookmarks) {{{2
+"1048 R_with_vim.tar.gz
+"2358 cpp_src.tar.bz2
+"3931 vim-support.zip
+
+" This stuff was in my old ~/.vim dir. {{{2
+" AutoAlign.vba.gz
+" bash-support.zip
+" ex_plugins_package-unix-8.05_b2.zip
+" octave_with_vim_0.01-8.tar.gz
+" project-1.4.1.tar.gz
+" renamer.vim.gz
+" sessionman.vim.gz
+" snippy_plugin.vba.gz
+" supertab.vba.gz
+" tskeleton.vba.gz
+
+" last steps {{{1
 filetype plugin indent on
 if has('syntax')
   " Are we running on MacVim?
