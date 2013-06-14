@@ -484,6 +484,7 @@ nmap Y y$
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
+inoremap <C-W> <C-G>u<C-W>
 
 " easy spell checking
 inoremap <C-s> <C-o>:call LucFindNextSpellError()<CR><C-x><C-s>
@@ -508,7 +509,9 @@ nnoremap <C-s>      :call LucFindNextSpellError()<CR>z=
 nmap <Leader>w :call LucHandleURI(LucSearchStringForURI(getline('.')))<CR>
 
 " find a script on vim.org by id or name
-nmap <Leader>v :call LucHandleURI('http://www.vim.org/scripts/script.php?script_id=' . matchstr(matchstr(expand('<cword>'), '[0-9]\+[^0-9]*$'), '^[0-9]*'))<CR>
+nmap <Leader>v :call 
+  \ LucHandleURI('http://www.vim.org/scripts/script.php?script_id=' .
+  \ matchstr(matchstr(expand('<cword>'), '[0-9]\+[^0-9]*$'), '^[0-9]*'))<CR>
 
 " easy compilation {{{2
 nmap          <F2>        :silent update <BAR> call LucQuickMake('', 0)<CR>
