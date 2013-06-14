@@ -1522,17 +1522,19 @@ Bundle 'tomasr/molokai'
 
 " last steps {{{1
 filetype plugin indent on
-if has('syntax')
-  " Are we running on MacVim?
-  if has('gui_macvim')
-    colorscheme macvim
-    " that is 202=#ff5f00, 234=#1c1c1c
-    hi Pmenu ctermfg=202 ctermbg=234
-    hi PmenuSel ctermfg=234 ctermbg=202
 
-  " what is a good alternative colorsheme?
-  "else
-  endif
+" set colors for the terminal {{{1
+if has('syntax')
+  "" Are we running on MacVim?
+  "if has('gui_macvim')
+  "  colorscheme macvim
+  "  " that is 202=#ff5f00, 234=#1c1c1c
+  "  hi Pmenu ctermfg=202 ctermbg=234
+  "  hi PmenuSel ctermfg=234 ctermbg=202
+
+  "" what is a good alternative colorsheme?
+  ""else
+  "endif
 
   " always set the background of the line number
   highlight LineNr ctermbg=black ctermfg=DarkGrey
