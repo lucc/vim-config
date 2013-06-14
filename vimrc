@@ -1066,6 +1066,24 @@ endif
 Bundle 'slimv.vim'
 "2531 slimv.vim
 
+" plugins: shell {{{1
+
+Bundle 'Shougo/vimproc'
+Bundle 'Shougo/vimshell.vim'
+Bundle 'Conque-Shell'
+" to be tested (shell in gvim)
+"http://www.vim.org/scripts/script.php?script_id=118
+"http://www.vim.org/scripts/script.php?script_id=165
+"http://www.vim.org/scripts/script.php?script_id=1788
+"http://www.vim.org/scripts/script.php?script_id=2620
+"http://www.vim.org/scripts/script.php?script_id=2711
+"http://www.vim.org/scripts/script.php?script_id=2771
+"http://www.vim.org/scripts/script.php?script_id=3040
+"http://www.vim.org/scripts/script.php?script_id=3123
+"http://www.vim.org/scripts/script.php?script_id=3431
+"http://www.vim.org/scripts/script.php?script_id=3554
+"4011 18175 :AutoInstall: vimux
+
 " plugins: tags {{{1
 " taglist_45.zip
 " ttags.vba.gz
