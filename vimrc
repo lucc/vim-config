@@ -802,7 +802,6 @@ let s:plugins = {
 filetype off
 set runtimepath+=~/.vim/bundle/vundle/
 call vundle#rc()
-" Bundle 'gmarik/vundle'
 "Bundle 'gmarik/vundle'
 Bundle 'lucc/vundle'
 
@@ -1002,12 +1001,6 @@ if s:plugins['winmanager'] "{{{2
   Bundle 'winmanager'
   "map <C-w><C-t> :WMToggle<CR>
   nmap <leader>wt :WMToggle<cr>
-endif
-
-" plugins: powerline {{{1
-if s:plugins['powerline'] "{{{2
-  Bundle 'Lokaltog/vim-powerline'
-  Bundle 'Lokaltog/powerline'
 endif
 
 " plugins: LaTeX {{{1
@@ -1223,7 +1216,6 @@ let g:manpageview_winopen = 'reuse'
 " icomplete-0.5.tar.bz2
 " cppcomplete.vim.gz
 
-" Bundle 'javacomplete' {{{2
 Bundle 'javacomplete'
 
 " Bundle 'OmniCppComplete' {{{2
@@ -1251,9 +1243,8 @@ if version >= 7
 endif
 
 " Bundle 'AutoComplPop' {{{2
-" vimscript
+" vimscript id 1879
 Bundle 'AutoComplPop'
-" id 1879
 " do not start popup menu after curser moved.
 "let g:acp_mappingDriven = 1
 "let g:acp_behaviorKeywordCommand = '<tab>'
@@ -1327,6 +1318,10 @@ Bundle 'Raimondi/delimitMate'
 " snippy_plugin.vba.gz
 " supertab.vba.gz
 " tskeleton.vba.gz
+if s:plugins['powerline'] "{{{2
+  Bundle 'Lokaltog/vim-powerline'
+  Bundle 'Lokaltog/powerline'
+endif
 
 if s:plugins['syntastic'] "{{{2
   Bundle 'scrooloose/syntastic'
@@ -1347,7 +1342,8 @@ Bundle 'applescript.vim'
 Bundle 'browser.vim'
 
 " Bundle 'calendar.vim' {{{2
-Bundle 'calendar.vim'
+"Bundle 'calendar.vim'
+" buggy!
 
 " Bundle 'matchit.zip' {{{2
 Bundle 'matchit.zip'
@@ -1356,7 +1352,9 @@ Bundle 'matchit.zip'
 Bundle 'Vim-JDE'
 
 " Bundle 'VimRepress' {{{2
+"3510 vimrepress
 Bundle 'VimRepress'
+"2582 blogit
 
 " Bundle 'ZoomWin' {{{2
 Bundle 'ZoomWin'
@@ -1371,6 +1369,9 @@ Bundle 'tpope/vim-fugitive'
 " Bundle 'vimwiki' {{{2
 Bundle 'vimwiki'
 
+" plugins: mpd {{{1
+"2369 vmmp
+"2856 vmmpc
 " Bundle 'vimmpc' {{{2
 "Bundle 'vimmpc'
 
