@@ -1084,6 +1084,14 @@ Bundle 'Conque-Shell'
 "http://www.vim.org/scripts/script.php?script_id=3554
 "4011 18175 :AutoInstall: vimux
 
+" plugins: comma separated values (csv) {{{1
+"Bundle 'csv.vim'
+"Bundle 'csv-reader'
+"Bundle 'CSVTK'
+"Bundle 'rcsvers.vim'
+"Bundle 'csv-color'
+"Bundle 'CSV-delimited-field-jumper'
+
 " plugins: tags {{{1
 " taglist_45.zip
 " ttags.vba.gz
