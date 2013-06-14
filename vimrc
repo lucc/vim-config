@@ -1218,6 +1218,111 @@ let g:manpageview_winopen = 'reuse'
 
 Bundle 'javacomplete'
 
+if s:plugins['neocompl'] "{{{2
+  "Bundle 'Shougo/neocomplete.vim'
+  Bundle 'Shougo/neocomplcache.vim'
+  Bundle 'Shougo/neosnippet'
+  " Code from the help file:
+  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""{{{
+  "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+  " Disable AutoComplPop.
+  let g:acp_enableAtStartup = 0
+  " Use neocomplcache.
+  let g:neocomplcache_enable_at_startup = 1
+  " Use smartcase.
+  let g:neocomplcache_enable_smart_case = 1
+  " Set minimum syntax keyword length.
+  let g:neocomplcache_min_syntax_length = 3
+  let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+
+  " Enable heavy features.
+  " Use camel case completion.
+  "let g:neocomplcache_enable_camel_case_completion = 1
+  " Use underbar completion.
+  "let g:neocomplcache_enable_underbar_completion = 1
+
+  " Define dictionary.
+  let g:neocomplcache_dictionary_filetype_lists = {
+      \ 'default' : '',
+      \ 'vimshell' : $HOME.'/.vimshell_hist',
+      \ 'scheme' : $HOME.'/.gosh_completions'
+	  \ }
+
+  " Define keyword.
+  if !exists('g:neocomplcache_keyword_patterns')
+      let g:neocomplcache_keyword_patterns = {}
+  endif
+  let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+
+  " Plugin key-mappings.
+  inoremap <expr><C-g>     neocomplcache#undo_completion()
+  inoremap <expr><C-l>     neocomplcache#complete_common_string()
+
+  " Recommended key-mappings.
+  " <CR>: close popup and save indent.
+  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+  function! s:my_cr_function()
+    return neocomplcache#smart_close_popup() . "\<CR>"
+    " For no inserting <CR> key.
+    "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+  endfunction
+  " <TAB>: completion.
+  inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+  " <C-h>, <BS>: close popup and delete backword char.
+  inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+  inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+  inoremap <expr><C-y>  neocomplcache#close_popup()
+  inoremap <expr><C-e>  neocomplcache#cancel_popup()
+  " Close popup by <Space>.
+  "inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
+
+  " For cursor moving in insert mode(Not recommended)
+  "inoremap <expr><Left>  neocomplcache#close_popup() . "\<Left>"
+  "inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
+  "inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
+  "inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
+  " Or set this.
+  "let g:neocomplcache_enable_cursor_hold_i = 1
+  " Or set this.
+  "let g:neocomplcache_enable_insert_char_pre = 1
+
+  " AutoComplPop like behavior.
+  "let g:neocomplcache_enable_auto_select = 1
+
+  " Shell like behavior(not recommended).
+  "set completeopt+=longest
+  "let g:neocomplcache_enable_auto_select = 1
+  "let g:neocomplcache_disable_auto_complete = 1
+  "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+  " Enable omni completion.
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+  " Enable heavy omni completion.
+  if !exists('g:neocomplcache_omni_patterns')
+    let g:neocomplcache_omni_patterns = {}
+  endif
+  if !exists('g:neocomplcache_force_omni_patterns')
+    let g:neocomplcache_force_omni_patterns = {}
+  endif
+  let g:neocomplcache_omni_patterns.php =
+  \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+  let g:neocomplcache_omni_patterns.c =
+  \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
+  let g:neocomplcache_omni_patterns.cpp =
+  \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+
+  " For perlomni.vim setting.
+  " https://github.com/c9s/perlomni.vim
+  let g:neocomplcache_omni_patterns.perl =
+  \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
+endif
+
 " Bundle 'OmniCppComplete' {{{2
 " vimscript
 Bundle 'OmniCppComplete'
@@ -1229,9 +1334,9 @@ if version >= 7
   let OmniCpp_GlobalScopeSearch = 1
   let OmniCpp_ShowAccess = 1
   let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-  let OmniCpp_MayCompleteDot = 1 " autocomplete after .
-  let OmniCpp_MayCompleteArrow = 1 " autocomplete after ->
-  let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
+  let OmniCpp_MayCompleteDot = 1      " autocomplete after .
+  let OmniCpp_MayCompleteArrow = 1    " autocomplete after ->
+  let OmniCpp_MayCompleteScope= 1    " autocomplete after ::
   let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
   " automatically open and close the popup menu / preview window
   augroup LucOmniCppCompete
@@ -1249,7 +1354,44 @@ Bundle 'AutoComplPop'
 "let g:acp_mappingDriven = 1
 "let g:acp_behaviorKeywordCommand = '<tab>'
 
-" Bundle 'delimitmate' {{{2
+" From the help file:
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""{{{
+" snipMate's Trigger Completion ~
+" 
+" snipMate's trigger completion enables you to complete a snippet trigger
+" provided by snipMate plugin
+" (http://www.vim.org/scripts/script.php?script_id=2540) and expand it.
+" 
+" 
+" To enable auto-popup for this completion, add following function to
+" plugin/snipMate.vim:
+" >
+"   fun! GetSnipsInCurrentScope()
+"     let snips = {}
+"     for scope in [bufnr('%')] + split(&ft, '\.') + ['_']
+"       call extend(snips, get(s:snippets, scope, {}), 'keep')
+"       call extend(snips, get(s:multi_snips, scope, {}), 'keep')
+"     endfor
+"     return snips
+"   endf
+" <
+" And set |g:acp_behaviorSnipmateLength| option to 1.
+" 
+" There is the restriction on this auto-popup, that the word before cursor must
+" consist only of uppercase characters.
+" 
+"                                                                *acp-perl-omni*
+" Perl Omni-Completion ~
+" 
+" AutoComplPop supports perl-completion.vim
+" (http://www.vim.org/scripts/script.php?script_id=2852).
+" 
+" To enable auto-popup for this completion, set |g:acp_behaviorPerlOmniLength|
+" option to 0 or more.
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
+
+" plugins: parenthesis and quotes {{{1
+
 Bundle 'Raimondi/delimitMate'
 
 " plugins: unsorted {{{1
