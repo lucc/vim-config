@@ -637,13 +637,16 @@ if has('statusline')
   " current version
   set statusline=%t                               " tail of the filename
   set statusline+=\ %([%M%R%H]\ %)                " group for mod., ro. & help
-  set statusline+=[%{strlen(&fenc)?&fenc:'none'}, " display fileencoding
+  set statusline+=[
+  set statusline+=%{strlen(&fenc)?&fenc:'none'},  " display fileencoding
   set statusline+=%{&ff}                          " filetype (unix/windows)
-  set statusline+=%Y]                             " filetype (c/sh/vim/...)
+  set statusline+=%Y                              " filetype (c/sh/vim/...)
+  set statusline+=%{fugitive#statusline()}        " info about git
+  set statusline+=]
   set statusline+=\ [ASCII=x%03B]                 " ASCII code of char
   "set statusline+=\ [ASCII=x%02.2B]               " ASCII code of char
   set statusline+=\ %=                            " rubber space
-  set statusline+=[%{strftime('%a\ %F\ %R')}]     " clock
+  "set statusline+=[%{strftime('%a\ %F\ %R')}]     " clock
   set statusline+=\ [%c%V,%l/%L]                  " position in file
   set statusline+=\ [%P]                          " percent of above
   "set statusline+=\ %{SyntasticStatuslineFlag()}  " see :h syntastic
