@@ -1427,6 +1427,7 @@ Bundle 'AutoComplPop'
 " plugins: parenthesis and quotes {{{1
 
 Bundle 'Raimondi/delimitMate'
+Bundle 'paredit.vim'
 
 " plugins: unsorted {{{1
 if s:plugins['powerline'] "{{{2
