@@ -1060,6 +1060,12 @@ if s:plugins['latexsuite'] "{{{2
   "let g:Tex_UseUtfMenus=1
 endif
 
+" plugins: lisp/scheme {{{1
+
+" lisp/scheme interaction {{2
+Bundle 'slimv.vim'
+"2531 slimv.vim
+
 " plugins: tags {{{1
 " taglist_45.zip
 " ttags.vba.gz
