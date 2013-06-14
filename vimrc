@@ -1095,6 +1095,7 @@ Bundle 'Conque-Shell'
 " plugins: tags {{{1
 " taglist_45.zip
 " ttags.vba.gz
+"Bundle 'xolox/vim-easytags'
 
 " Bundle 'taglist-plus' {{{2
 Bundle 'taglist-plus'
