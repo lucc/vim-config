@@ -757,6 +757,7 @@ endif
 " not.  One could also comment the the line loading the plugin, but these are
 " scatterd ofer the file and not centralized.
 let s:plugins = {
+		\ 'autocomplpop': 1,
 		\ 'buffergator': 0,
 		\ 'bufferlist': 0,
 		\ 'buffet': 1,
@@ -1381,7 +1382,7 @@ if version >= 7
   imap <C-TAB> <C-x><C-o>
 endif
 
-" Bundle 'AutoComplPop' {{{2
+if s:plugins['autocomplpop'] "{{{2
 " vimscript id 1879
 Bundle 'AutoComplPop'
 " do not start popup menu after curser moved.
@@ -1423,6 +1424,7 @@ Bundle 'AutoComplPop'
 " To enable auto-popup for this completion, set |g:acp_behaviorPerlOmniLength|
 " option to 0 or more.
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
+endif
 
 " plugins: parenthesis and quotes {{{1
 
