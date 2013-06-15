@@ -1072,17 +1072,17 @@ Bundle 'slimv.vim'
 Bundle 'Shougo/vimproc'
 Bundle 'Shougo/vimshell.vim'
 Bundle 'Conque-Shell'
+"http://www.vim.org/scripts/script.php?script_id=2771
+
 " to be tested (shell in gvim)
-"http://www.vim.org/scripts/script.php?script_id=118
 "http://www.vim.org/scripts/script.php?script_id=165
 "http://www.vim.org/scripts/script.php?script_id=1788
 "http://www.vim.org/scripts/script.php?script_id=2620
 "http://www.vim.org/scripts/script.php?script_id=2711
-"http://www.vim.org/scripts/script.php?script_id=2771
-"http://www.vim.org/scripts/script.php?script_id=3040
 "http://www.vim.org/scripts/script.php?script_id=3123
 "http://www.vim.org/scripts/script.php?script_id=3431
-"http://www.vim.org/scripts/script.php?script_id=3554
+
+"Bundle 'vimux'
 "4011 18175 :AutoInstall: vimux
 
 " plugins: comma separated values (csv) {{{1
@@ -1453,7 +1453,7 @@ Bundle 'ack.vim'
 Bundle 'applescript.vim'
 
 " Bundle 'browser.vim' {{{2
-Bundle 'browser.vim'
+"Bundle 'browser.vim'
 
 " Bundle 'calendar.vim' {{{2
 "Bundle 'calendar.vim'
