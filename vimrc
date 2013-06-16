@@ -1065,7 +1065,7 @@ endif
 
 " lisp/scheme interaction {{2
 Bundle 'slimv.vim'
-"2531 slimv.vim
+Bundle 'tslime.vim'
 
 " plugins: shell {{{1
 
