@@ -890,7 +890,7 @@ if s:plugins['ctrlp'] "{{{2
   "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
   let g:ctrlp_clear_cache_on_exit = 0
   let g:ctrlp_show_hidden = 1
-  let g:ctrlp_root_markers = ['makefile', 'Makefile', 'latexmkrc']
+  "let g:ctrlp_root_markers = ['makefile', 'Makefile', 'latexmkrc']
   let g:ctrlp_map = '<c-space>'
   let g:ctrlp_cmd = 'CtrlPMRU'
   inoremap <C-Space> <C-O>:CtrlPMRU<CR>
