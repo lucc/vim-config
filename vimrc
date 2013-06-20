@@ -1015,7 +1015,7 @@ Bundle 'auctex.vim'
 "Bundle 'LaTeX-functions'
 Bundle 'LaTeX-Help'
 "Bundle 'latextags'
-Bundle 'TeX-9'
+"Bundle 'TeX-9'
 " 3508 tex_nine.tar.gz
 "Bundle 'tex.vim'
 "Bundle 'tex_autoclose.vim'
@@ -1065,7 +1065,9 @@ endif
 
 " lisp/scheme interaction {{2
 Bundle 'slimv.vim'
-Bundle 'tslime.vim'
+"Bundle 'tslime.vim'
+Bundle 'davidmfoley/tslime.vim'
+Bundle 'Limp'
 
 " plugins: shell {{{1
 
