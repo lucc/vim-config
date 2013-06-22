@@ -993,16 +993,15 @@ endif
 " plugins: LaTeX {{{1
 
 " 3109 LatexBox.vmb
-Bundle 'auctex.vim'
-" 162 auctex.vim
 "Bundle 'coot/atp_vim'
 "Bundle 'LaTeX-functions'
-Bundle 'LaTeX-Help'
 "Bundle 'latextags'
 "Bundle 'TeX-9'
 "Bundle 'tex.vim'
 "Bundle 'tex_autoclose.vim'
-" 920 tex_autoclose.vim
+
+Bundle 'auctex.vim'
+Bundle 'LaTeX-Help'
 
 if s:plugins['latexsuite'] "{{{2
   Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
@@ -1437,13 +1436,10 @@ Bundle 'VimRepress'
 "Bundle 'blogit.vim'
 Bundle 'ZoomWin'
 Bundle 'AndrewRadev/linediff.vim'
-
+Bundle 'vimwiki'
 " plugins: git stuff {{{2
 "Bundle 'tpope/vim-git'
 Bundle 'tpope/vim-fugitive'
-
-" Bundle 'vimwiki' {{{2
-Bundle 'vimwiki'
 
 " plugins: mpd {{{1
 "2369 vmmp
