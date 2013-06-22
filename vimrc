@@ -965,11 +965,6 @@ if s:plugins['qnamebuf'] "{{{2
   "let qnamefile_hotkey = '<leader>j'
 endif
 
-if s:plugins['tcommand'] "{{{2
-  " vimscript ?
-  Bundle 'tomtom/tcommand_vim'
-endif
-
 if s:plugins['tselectbuffer'] "{{{2
   Bundle 'tomtom/tselectbuffer_vim'
   " needs tlib >= 0.40
