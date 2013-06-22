@@ -412,6 +412,12 @@ function! LucGetVisualSelection() "{{{2
   return join(lines, "\n")
 endfunction
 
+function! LucManPageTopicsCompletion(ArgLead, CmdLine, CursorPos) "{{{2
+  let paths = tr(system('man -w'), ":\n", "  ")
+  "let paths = "/usr/share/man/man9"
+  return system('find ' . paths . ' -type f | sed "s#.*/##;s/\.gz$//;s/\.[0-9]\{1,\}//" | sort -u')
+endfunction
+
 function! LucAutoJumpWraper(...) "{{{2
   " call the autojump executable to change the directory in vim
   if a:0 == 0
