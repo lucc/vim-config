@@ -11,6 +11,16 @@
 " first, because it changes other options as a side effect.
 set nocompatible
 
+" see if some important features are present else do not load the file
+if !(   has('autocmd') &&
+      \ has('gui') &&
+      \ has('mouse') &&
+      \ has('syntax')
+      \ )
+  echoerr "This version of Vim lacks many features, please update!"
+  finish
+endif
+
 " Do not load many of the GUI menus.  This has to happen before 'syntax on'
 " and 'filetype ...'
 set guioptions+=M
