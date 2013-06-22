@@ -1,17 +1,17 @@
 "s:tmux_cmd = 'tmux'
 
-function! LTmux_Session_Names(A,L,P)
+function! LTmux_Session_Names(ArgLead, CmdLine, CursorPos)
   "return system("tmux list-sessions | sed -e 's/:.*$//'")
   return system("tmux list-sessions | cut -f 1 -d :")
   "return split(system("tmux list-sessions"), ':')[0]
 endfunction
 
-function! LTmux_Window_Names(A,L,P)
+function! LTmux_Window_Names(ArgLead, CmdLine, CursorPos)
   "return system("tmux list-windows -t " . b:tmux_sessionname . " | sed 's/^[1-9]: //' | sed 's/ .*$//'")
   return system("tmux list-windows -t " . b:tmux_sessionname . " | cut -f 1 -d :")
 endfunction
 
-function! LTmux_Pane_Numbers(A,L,P)
+function! LTmux_Pane_Numbers(ArgLead, CmdLine, CursorPos)
   call system("tmux display-panes")
   "return system("tmux list-panes -t " . b:tmux_sessionname . ":" . b:tmux_windowname . " | sed -e 's/:.*$//'")
   return system("tmux list-panes -t " . b:tmux_sessionname . ":" . b:tmux_windowname . " | cut -f 1 -d :")
