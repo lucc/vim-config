@@ -167,17 +167,23 @@ if has("gui_macvim")
   set antialias
 endif
 
-" use the macvim colorscheme, but slightly modify it.
-colorscheme macvim
-set background=light
-"hi Normal  guifg=Grey50 guibg=#1f1f1f
-"hi LineNr  guifg=Grey50 guibg=#1f1f1f
-"hi Comment guifg=#3464A4
-
-set bg=dark
-set bg=light
-colorscheme solarized
-
+" colorscheme {{{1
+let s:colorscheme = 'sol'
+if s:colorscheme == 'mv'
+  " use the macvim colorscheme, but slightly modify it
+  colorscheme macvim
+  set background=light
+  "hi Normal  guifg=Grey50 guibg=#1f1f1f
+  "hi LineNr  guifg=Grey50 guibg=#1f1f1f
+  "hi Comment guifg=#3464A4
+elseif s:colorscheme == 'sol'
+  " switching to solarized
+  set bg=light
+  colorscheme solarized
+elseif s:colorscheme == 'pp'
+  " switching to peachpuff because of a bug in (mac?)vim
+  colorscheme peachpuff
+endif
 
 " other {{{1
 
