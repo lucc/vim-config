@@ -27,18 +27,14 @@ set guioptions+=M
 
 " syntax and filetype {{{
 if has('syntax')
-
-  " Switch syntax highlighting on, when the terminal has colors
-  " check for colours in terminal (echo &t_Co)
+  " Switch syntax highlighting on, when the terminal has colors (echo &t_Co)
   if &t_Co > 2 || has("gui_running")
     syntax enable
   endif
-
   " Enable file type detection and language-dependent indenting.
   if has('autocmd')
     filetype plugin indent on
   endif
-
 endif
 
 " user defined variables {{{1
@@ -819,18 +815,16 @@ Bundle 'lucc/vundle'
 
 " plugins: libs {{{1
 Bundle 'L9'
-" vimscript 3252
 Bundle 'tomtom/tlib_vim'
-" vimscript ?
 
 " plugins: buffer and file management {{{1
-"42 bufexplorer.zip
-"685 incbufswitch.vim
-"1011 buflist.vim
+"Bundle 'bufexplorer.zip'
+"Bundle 'incbufswitch.vim'
+"Bundle 'buflist'
+"Bundle 'tomtom/tcommand_vim'
 "1910 qbuf.vim
 
 if s:plugins['buffergator'] "{{{2
-  " vimscript 3619
   Bundle 'jeetsukumaran/vim-buffergator'
   " browse buffers with preview, switch to window containing this buffer or
   " display buffer in last window
@@ -840,7 +834,6 @@ if s:plugins['buffergator'] "{{{2
 endif
 
 if s:plugins['bufferlist'] "{{{2
-  " vimscript 1325
   Bundle 'bufferlist.vim'
   " Very simple list of loaded buffers
   " is only checked for existenc
@@ -850,15 +843,12 @@ if s:plugins['bufferlist'] "{{{2
 endif
 
 if s:plugins['buffet'] "{{{2
-  " vimscript 3896
   Bundle 'sandeepcr529/Buffet.vim'
-  " no help?
-  " I can not disable it!
+  " no help?  I can not disable it!
   nmap <leader>bl :Bufferlist<CR>
 endif
 
 if s:plugins['bufmru'] "{{{2
-  " vimscript 2346
   Bundle 'bufmru.vim'
   " no help
   " is only checked for existenc
@@ -868,7 +858,6 @@ if s:plugins['bufmru'] "{{{2
 endif
 
 if s:plugins['buftabs'] "{{{2
-  " vimscript 1664
   Bundle 'buftabs'
   " no help / can not disable it / quite nice
   let g:buftabs_marker_modified = '+'
@@ -878,7 +867,6 @@ if s:plugins['buftabs'] "{{{2
 endif
 
 if s:plugins['commandt'] "{{{2
-  " vimscript 3025
   Bundle 'git://git.wincent.com/command-t.git'
   "let g:command_t_loaded = 0
   let g:CommandTMaxCachedDirectories = 1 " default
@@ -890,7 +878,6 @@ if s:plugins['commandt'] "{{{2
   "let g:CommandTToggleFocusMap = ''
   "let g:CommandTSelectPrevMap = ['<up>', '<C-i>']
   "let g:CommandTSelectNextMap = ['<down>', '<C-S-i>']
-
   nmap <c-s-f> :CommandT<cr>
   nmap <c-s-b> :CommandTBuffer<cr>
 endif
@@ -907,7 +894,6 @@ if s:plugins['ctrlp'] "{{{2
 endif
 
 if s:plugins['fuzzyfinder'] "{{{2
-  " vimscript 1984
   Bundle 'FuzzyFinder'
   " requires l9lib (vimscript 3252)
   let g:fuf_modesDisable = [
@@ -943,7 +929,6 @@ if s:plugins['fuzzyfinder'] "{{{2
 endif
 
 if s:plugins['lusty'] "{{{2
-  " vimscript 2050
   bundle 'sjbach/lusty'
   let g:lustyjugglerdefaultmappings = 0
   " help inside script: ~/.vim/plugin/lusty-explorer.vim
@@ -964,7 +949,6 @@ if s:plugins['nerd'] "{{{2
   Bundle 'NERD_tree-Project'
   Bundle 'scrooloose/nerdcommenter'
   Bundle 'scrooloose/nerdtree'
-  " vimscript 1658
   " is only checked for existenc
   "let loaded_nerd_tree = 1
   let NERDChristmasTree = 1
@@ -973,7 +957,6 @@ if s:plugins['nerd'] "{{{2
 endif
 
 if s:plugins['qnamebuf'] "{{{2
-  " vimscript 3217
   Bundle 'qnamebuf'
   let g:qnamebuf_loaded = 0
   "let g:qnamefile_loaded = 0
@@ -988,7 +971,6 @@ if s:plugins['tcommand'] "{{{2
 endif
 
 if s:plugins['tselectbuffer'] "{{{2
-  " vimscript 1866
   Bundle 'tomtom/tselectbuffer_vim'
   " needs tlib >= 0.40
   " disable loading for the moment
@@ -997,7 +979,6 @@ if s:plugins['tselectbuffer'] "{{{2
 endif
 
 if s:plugins['tselectfiles'] "{{{2
-  " vimscript ?
   Bundle 'tomtom/tselectfiles_vim'
   noremap <leader>tf :TSelectFiles<cr>
 endif
@@ -1008,7 +989,6 @@ if s:plugins['unite'] "{{{2
 endif
 
 if s:plugins['winmanager'] "{{{2
-  " vimscript 95
   " The NERD_Tree plugin provides the same functionality but seem nicer
   Bundle 'winmanager'
   "map <C-w><C-t> :WMToggle<CR>
@@ -1021,12 +1001,10 @@ endif
 Bundle 'auctex.vim'
 " 162 auctex.vim
 "Bundle 'coot/atp_vim'
-" AutomaticLaTeXPlugin 2945
 "Bundle 'LaTeX-functions'
 Bundle 'LaTeX-Help'
 "Bundle 'latextags'
 "Bundle 'TeX-9'
-" 3508 tex_nine.tar.gz
 "Bundle 'tex.vim'
 "Bundle 'tex_autoclose.vim'
 " 920 tex_autoclose.vim
@@ -1095,7 +1073,6 @@ Bundle 'Conque-Shell'
 "http://www.vim.org/scripts/script.php?script_id=3431
 
 "Bundle 'vimux'
-"4011 18175 :AutoInstall: vimux
 
 " plugins: comma separated values (csv) {{{1
 "Bundle 'csv.vim'
@@ -1106,15 +1083,13 @@ Bundle 'Conque-Shell'
 "Bundle 'CSV-delimited-field-jumper'
 
 " plugins: tags {{{1
-" taglist_45.zip
-" ttags.vba.gz
+"Bundle 'ttags'
 "Bundle 'xolox/vim-easytags'
 
 " Bundle 'taglist-plus' {{{2
 Bundle 'taglist-plus'
 
 if s:plugins['taglist'] "{{{2
-  " vimscript 273
   Bundle 'taglist.vim'
   "let Tlist_Auto_Highlight_Tag        =
   "let Tlist_Auto_Open                 =
@@ -1240,9 +1215,9 @@ else
 endif
 
 " plugins: manpages {{{1
-" info.vim.gz
+"Bundle 'info.vim'
+
 " Bundle 'ManPageView' {{{2
-" vimscript
 " TODO
 Bundle 'ManPageView'
 " http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
@@ -1260,8 +1235,8 @@ let g:manpageview_winopen = 'reuse'
 "augroup END
 
 " plugins: completion {{{1
-" icomplete-0.5.tar.bz2
-" cppcomplete.vim.gz
+"Bundle 'IComplete'
+"Bundle 'cppcomplete'
 
 Bundle 'javacomplete'
 
@@ -1371,7 +1346,6 @@ if s:plugins['neocompl'] "{{{2
 endif
 
 " Bundle 'OmniCppComplete' {{{2
-" vimscript
 Bundle 'OmniCppComplete'
 "http://www.vim.org/scripts/script.php?script_id=1520
 if version >= 7
@@ -1395,7 +1369,6 @@ if version >= 7
 endif
 
 if s:plugins['autocomplpop'] "{{{2
-" vimscript id 1879
 Bundle 'AutoComplPop'
 " do not start popup menu after curser moved.
 "let g:acp_mappingDriven = 1
@@ -1444,48 +1417,30 @@ Bundle 'Raimondi/delimitMate'
 Bundle 'paredit.vim'
 
 " plugins: unsorted {{{1
-if s:plugins['powerline'] "{{{2
+if s:plugins['powerline']
   Bundle 'Lokaltog/vim-powerline'
   Bundle 'Lokaltog/powerline'
 endif
 
-if s:plugins['syntastic'] "{{{2
+if s:plugins['syntastic']
   Bundle 'scrooloose/syntastic'
 endif
 
-if s:plugins['popupbuffer'] "{{{2
+if s:plugins['popupbuffer']
   " This is messing with fuf
   Bundle 'PopupBuffer.vim'
 endif
 
-" Bundle 'ack.vim' {{{2
 Bundle 'ack.vim'
-
-" Bundle 'applescript.vim' {{{2
 Bundle 'applescript.vim'
-
-" Bundle 'browser.vim' {{{2
 "Bundle 'browser.vim'
-
-" Bundle 'calendar.vim' {{{2
 "Bundle 'calendar.vim'
 " buggy!
-
-" Bundle 'matchit.zip' {{{2
 Bundle 'matchit.zip'
-
-" Bundle 'Vim-JDE' {{{2
 Bundle 'Vim-JDE'
-
-" Bundle 'VimRepress' {{{2
-"3510 vimrepress
 Bundle 'VimRepress'
-"2582 blogit
-
-" Bundle 'ZoomWin' {{{2
+"Bundle 'blogit.vim'
 Bundle 'ZoomWin'
-
-" Bundle 'linediff' {{{2
 Bundle 'AndrewRadev/linediff.vim'
 
 " plugins: git stuff {{{2
@@ -1497,8 +1452,6 @@ Bundle 'vimwiki'
 
 " plugins: mpd {{{1
 "2369 vmmp
-"2856 vmmpc
-" Bundle 'vimmpc' {{{2
 "Bundle 'vimmpc'
 
 if s:plugins['vimmp'] "{{{2
@@ -1527,15 +1480,15 @@ Bundle 'tortex'
 Bundle 'tomasr/molokai'
 
 " plugins: bookmarks {{{1
-"3412 xterm-color-table.vim.tar.gz
-"2540 snipMate
+"Bundle 'xterm-color-table.vim'
+"Bundle 'snipMate'
 
 " maybe not interesting {{{2
-"877 gvcolor.vim
+"Bundle 'GVColors'
 "1283 tbe.vim
 
 " why is this installed? {{{2
-"1066 cecutil.vim
+"Bundle 'cecutil'
 
 " other default {{{2
 "40 DrawIt.tar.gz
