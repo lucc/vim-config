@@ -1543,20 +1543,15 @@ filetype plugin indent on
 
 " set colors for the terminal {{{1
 if has('syntax')
-  "" Are we running on MacVim?
-  "if has('gui_macvim')
-  "  colorscheme macvim
-  "  " that is 202=#ff5f00, 234=#1c1c1c
-  "  hi Pmenu ctermfg=202 ctermbg=234
-  "  hi PmenuSel ctermfg=234 ctermbg=202
-
-  "" what is a good alternative colorsheme?
-  ""else
-  "endif
-
-  " always set the background of the line number
-  highlight LineNr ctermbg=black ctermfg=DarkGrey
-  " switching to solarized
-  set bg=dark
-  colorscheme solarized
+  let s:colorscheme = 'sol'
+  if s:colorscheme == 'mv'
+    colorscheme macvim
+    hi Pmenu ctermfg=202 ctermbg=234
+    hi PmenuSel ctermfg=234 ctermbg=202
+    highlight LineNr ctermbg=black ctermfg=DarkGrey
+  elseif s:colorscheme == 'sol'
+    " switching to solarized
+    set bg=dark
+    colorscheme solarized
+  endif
 endif
