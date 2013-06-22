@@ -380,6 +380,26 @@ function! LucManPageFunction(...) "{{{2
   vmap <buffer> K :call LucManPageFunction(LucGetVisualSelection())<CR>
 endfunction
 
+function! LucTManWrapper(type, string) "{{{2
+  " look up string in the documentation for type
+  if a:type =~ 'man\|m'
+    let suffix = 'man'
+  elseif a:type =~ 'info\|i'
+    let suffix = 'i'
+  elseif a:type =~ 'perldoc\|perl\|pl'
+    let suffix = 'pl'
+  elseif a:type =~ 'php'
+    let suffix = 'php'
+  elseif a:type =~ 'pydoc\|python\|py'
+    let suffix = 'py'
+  else
+    let suffix = 'man'
+  endif
+  execute 'TMan' a:string . '.' . suffix
+  " there seems to be a bug in :Man and :TMan
+  execute 'RMan' a:string . '.' . suffix
+endfunction
+
 function! LucGetVisualSelection() "{{{2
   " This function is copied from http://stackoverflow.com/questions/1533565/
   let [lnum1, col1] = getpos("'<")[1:2]
