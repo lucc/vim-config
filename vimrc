@@ -367,9 +367,9 @@ endfunction
 function! LucManPageFunction(...) "{{{2
   " try to find a manpage
   if &filetype == 'man' && a:0 == 0
-    execute 'Man' expand('<cword>')
+    execute 'RMan' expand('<cword>')
   elseif a:0 > 0
-    execute 'tabnew +Man\ ' . join(a:000)
+    execute 'TMan\ ' . join(a:000)
   else
     echohl Error
     echo 'Topic missing.'
