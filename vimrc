@@ -675,7 +675,6 @@ nmap <D--> :call LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
 
 " options: TODO {{{1
 
-"set transparency=15
 "set foldcolumn=2
 
 " options: basic {{{1
@@ -734,7 +733,7 @@ if has('folding')
   " fold code by indent
   "set foldmethod=indent
   " but open all (20) folds on startup
-  set foldlevelstart=20
+  "set foldlevelstart=20
   " enable folding for functions, heredocs and if-then-else stuff in sh files.
   let g:sh_fold_enabled=7
 endif
@@ -770,7 +769,7 @@ if has('statusline')
   set statusline+=\ [ASCII=x%03B]                 " ASCII code of char
   "set statusline+=\ [ASCII=x%02.2B]               " ASCII code of char
   set statusline+=\ %=                            " rubber space
-  "set statusline+=[%{strftime('%a\ %F\ %R')}]     " clock
+  set statusline+=[%{strftime('%a\ %F\ %R')}]     " clock
   set statusline+=\ [%c%V,%l/%L]                  " position in file
   set statusline+=\ [%P]                          " percent of above
   "set statusline+=\ %{SyntasticStatuslineFlag()}  " see :h syntastic
@@ -894,7 +893,7 @@ let s:plugins = {
 		\ 'lusty': 0,
 		\ 'neocompl': 0,
 		\ 'nerd': 0,
-		\ 'popupbuffer': 1,
+		\ 'popupbuffer': 0,
 		\ 'powerline': 0,
 		\ 'qnamebuf': 0,
 		\ 'syntastic': 0,
@@ -926,7 +925,7 @@ let s:plugins = {
 " plugins: vundle {{{1
 " Managing plugins with Vundle (https://github.com/gmarik/vundle)
 filetype off
-set runtimepath+=~/.vim/bundle/vundle/
+set runtimepath+=~/.vim/bundle/vundle
 call vundle#rc()
 "Bundle 'gmarik/vundle'
 Bundle 'lucc/vundle'
@@ -1305,7 +1304,7 @@ if has('cscope')
   nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
   nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
   " End of http://cscope.sourceforge.net/cscope_maps.vim stuff }}}
-  if filereadable("cscope.out")
+  if filereadable('cscope.out')
     cscope add cscope.out
   elseif $CSCOPE_DB != ""
     cscope add $CSCOPE_DB
