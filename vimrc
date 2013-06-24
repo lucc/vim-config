@@ -456,6 +456,41 @@ endfunction
 "  endfor
 "endfunction
 
+function! LucUpdateAllHelptags() "{{{2
+  for item in map(split(&runtimepath, ','), 'v:val . "/doc"')
+    if isdirectory(item)
+      "echo  'helptags' item
+      execute 'helptags' item
+    endif
+  endfor
+endfunction
+
+function! LucUpdateBundlesInBackground() "{{{2
+  silent echo ''
+endfunction
+
+function! LucUnsetOptions() "{{{2
+  set viminfo=
+  set noswapfile
+  set laststatus=0
+  set nonumber
+  "set lines=2
+  syntax off
+  redraw
+endfunction
+
+function! LucCpAsPrint(fname) "{{{2
+  let i = 1
+  let target = '~/vim-print-' . i . '.pdf'
+  while filereadable(target)
+    let i += 1
+    let target = '~/vim-print-' . i . '.pdf'
+  endwhile
+  call system('ps2pdf ' . a:fname . ' ' . target)
+  call delete(a:fname)
+  return v:shell_error
+endfunction
+
 " user defined autocommands {{{1
 
 augroup LucLatex "{{{2
@@ -580,6 +615,8 @@ execute 'nmap <C-w># :call LucVisitBufferOrEditFile("' . s:notes . '")<CR>'
 "command! DiffOrig vne | se bt=nofile | r # | 0d_ | difft | wincmd p | difft
 
 command! -nargs=* -complete=dir J call LucAutoJumpWraper("<args>")
+command! Helptags call LucUpdateAllHelptags()
+
 
 " options: TODO {{{1
 
