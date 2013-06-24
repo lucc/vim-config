@@ -76,6 +76,56 @@ let s:path = split(join(map(s:path, 'glob("~/" . v:val)')))
 call map(s:path, 'v:val . "/**"')
 
 " user defined functions {{{1
+
+" color scheme stuff {{{2
+function! LucFindAllColorschemes() "{{{3
+  return LucFlattenList(filter(map(split(&rtp, ','),
+	\ 'glob(v:val .  "/**/colors/*.vim", 0, 1)'), 'v:val != []'))
+endfunction
+
+function! LucSelectRandomColorscheme() "{{{3
+  let colorschemes = LucFindAllColorschemes()
+  let this = colorschemes[LucRandomNumber(0,len(colorschemes)-1)]
+  let this = split(this, '/')[-1][0:-5]
+  execute 'colorscheme' this
+  echo this
+endfunction
+
+function! LucLikeColorscheme(val) "{{{3
+  let fname = glob('~/.vim/colorscheme-ratings')
+  let cfiles = map(readfile(fname), 'split(v:val)')
+  for item in cfiles
+    if item[0] == g:colors_name
+      let item[1] += a:val
+      break
+    endif
+  endfor
+  call writefile(map(cfiles, 'join(v:val)'), fname)
+endfunction
+
+function! LucRandomNumber(start, end)
+  return (system('echo $RANDOM') % (a:end - a:start + 1)) + a:start
+  " code by Kazuo on vim@vim.org
+  python from random import randint
+  python from vim import command
+  execute 'python command("return %d" % randint('.a:start.','.a:end.'))'
+endfun 
+
+function! LucFlattenList(list)
+  " Code from bairui@#vim.freenode
+  " https://gist.github.com/3322468
+  let val = []
+  for elem in a:list
+    if type(elem) == type([])
+      call extend(val, LucFlattenList(elem))
+    else
+      call add(val, elem)
+    endif
+    unlet elem
+  endfor
+  return val
+endfunction
+
 function! LucFindBaseDir() "{{{2
   " files which indicate a suitable base directory
   let indicator_files = [
@@ -616,6 +666,11 @@ execute 'nmap <C-w># :call LucVisitBufferOrEditFile("' . s:notes . '")<CR>'
 
 command! -nargs=* -complete=dir J call LucAutoJumpWraper("<args>")
 command! Helptags call LucUpdateAllHelptags()
+command! DislikeCS call LucLikeColorscheme(-1)
+command! LikeCS call LucLikeColorscheme(1)
+
+nmap <D-+> :LikeCS<CR>
+nmap <D--> :call LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
 
 
 " options: TODO {{{1
@@ -1522,6 +1577,11 @@ if s:plugins['vimmp'] "{{{2
 endif
 
 " plugins: colors {{{1
+" list all colorschemes with: glob('~/.vim/**/colors/*.vim')
+" astronaut hybrid-light hybrid jellybeans kalt kaltex luc_dark molokai
+" nucolors solarized textmate16 Tomorrow-Night-Blue Tomorrow-Night-Bright
+" Tomorrow-Night-Eighties Tomorrow-Night Tomorrow tortex vibrantink
+
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'w0ng/vim-hybrid'
 Bundle 'chriskempson/vim-tomorrow-theme'
@@ -1532,6 +1592,28 @@ Bundle 'textmate16.vim'
 Bundle 'vibrantink'
 Bundle 'tortex'
 Bundle 'tomasr/molokai'
+
+Bundle 'ScrollColors'
+
+"Bundle 'molokai'
+Bundle 'Colour-Sampler-Pack'
+"Bundle 'pyte'
+"Bundle 'dw_colors'
+"Bundle 'Zenburn'
+"Bundle 'desert-warm-256'
+"Bundle 'tango-desert.vim'
+"Bundle 'desertEx'
+"Bundle 'darkerdesert'
+"Bundle 'DesertedOceanBurnt'
+"Bundle 'desertedocean.vim'
+"Bundle 'desertedocean.vim'
+"Bundle 'desert256.vim'
+"Bundle 'desert.vim'
+"Bundle 'eclm_wombat.vim'
+"Bundle 'wombat256.vim'
+"Bundle 'Wombat'
+"Bundle 'oceandeep'
+
 
 " plugins: bookmarks {{{1
 "Bundle 'xterm-color-table.vim'

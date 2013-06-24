@@ -185,6 +185,8 @@ elseif s:colorscheme == 'pp'
   colorscheme peachpuff
 endif
 
+cal LucSelectRandomColorscheme()
+
 " other {{{1
 
 if has('gui_macvim')
