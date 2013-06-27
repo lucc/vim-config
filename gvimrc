@@ -1,7 +1,7 @@
 " gvimrc file by luc {{{1
 " vim: foldmethod=marker
 
-" user defined variables {{{1 
+" user defined variables {{{1
 
 "set guifont=DejaVu\ Sans\ Mono\ 9
 
@@ -21,7 +21,7 @@ elseif has('gui_gtk2')
   let s:delim = ' '
 endif
 
-let s:normalfonts = join(map(copy(s:fonts), 
+let s:normalfonts = join(map(copy(s:fonts),
       \ 'join(v:val[0:1], s:delim)'), ',')
 let s:bigfonts = join(map(copy(s:fonts),
       \ '(remove(v:val, 1) . join(v:val, s:delim))[2:-1]'), ',')
@@ -38,6 +38,7 @@ function! LucSelectFont (big) "{{{2
   elseif has('gui_gtk2')
     let s:delim = ' '
   endif
+  " TODO
 endfunction
 
 function! LucResizeFunction () " {{{2
