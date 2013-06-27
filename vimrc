@@ -344,7 +344,8 @@ endfunction
 "  if a:typed == ''
 "    return
 "  elseif a:typed =~ '[[({<]'
-"    let l:matching = (a:typed == '(' ? ')' : (a:typed == '[' ? ']' : (a:typed == '{' ? '}' : (a:typed == '<' ? '>' : ''))))
+"    let l:matches = {'(': ')', '[': ']', '{': '}', '<': '>'}
+"    let l:matching = l:matches[a:typed]
 "    if l:matching == ''
 "      " not good
 "    else
