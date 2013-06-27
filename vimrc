@@ -547,6 +547,20 @@ function! LucCpAsPrint(fname) "{{{2
   return v:shell_error
 endfunction
 
+function! LucDiffFunction() "{{{2
+  " code taken from the help file diff.txt and from diff(1)
+  let opt  = '--text '
+  let opt .= '--binary '
+  let opt .= '--minimal'
+  if &diffopt =~ 'icase'
+    let opt .= '--ignore-case '
+  endif
+  if &diffopt =~ 'iwhite'
+    let opt .= '--ignore-space-change '
+  endif
+  silent execute '!diff' opt v:fname_in v:fname_new '>' v:fname_out
+endfunction
+
 " user defined autocommands {{{1
 
 " FileType autocommands {{{2
