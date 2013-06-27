@@ -109,7 +109,7 @@ function! LucRandomNumber(start, end)
   python from random import randint
   python from vim import command
   execute 'python command("return %d" % randint('.a:start.','.a:end.'))'
-endfun 
+endfun
 
 function! LucFlattenList(list)
   " Code from bairui@#vim.freenode
@@ -640,7 +640,7 @@ nnoremap <C-s>      :call LucFindNextSpellError()<CR>z=
 nmap <Leader>w :call LucHandleURI(LucSearchStringForURI(getline('.')))<CR>
 
 " find a script on vim.org by id or name
-nmap <Leader>v :call 
+nmap <Leader>v :call
   \ LucHandleURI('http://www.vim.org/scripts/script.php?script_id=' .
   \ matchstr(matchstr(expand('<cword>'), '[0-9]\+[^0-9]*$'), '^[0-9]*'))<CR>
 
@@ -1293,29 +1293,29 @@ if has('cscope')
   " 	'f'   file:   open the filename under cursor
   " 	'i'   includes: find files that include the filename under cursor
   " 	'd'   called: find functions that function under cursor calls
-  nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+  nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
   nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>	
-  nmap <C-@>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
-  nmap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>
+  nmap <C-@>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+  nmap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>
   nmap <C-@><C-@>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
   nmap <C-@><C-@>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
   nmap <C-@><C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
   nmap <C-@><C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
   nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>	
-  nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
+  nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
+  nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
   nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
   " End of http://cscope.sourceforge.net/cscope_maps.vim stuff }}}
   if filereadable('cscope.out')
@@ -1502,12 +1502,12 @@ Bundle 'AutoComplPop'
 " From the help file:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""{{{
 " snipMate's Trigger Completion ~
-" 
+"
 " snipMate's trigger completion enables you to complete a snippet trigger
 " provided by snipMate plugin
 " (http://www.vim.org/scripts/script.php?script_id=2540) and expand it.
-" 
-" 
+"
+"
 " To enable auto-popup for this completion, add following function to
 " plugin/snipMate.vim:
 " >
@@ -1521,16 +1521,16 @@ Bundle 'AutoComplPop'
 "   endf
 " <
 " And set |g:acp_behaviorSnipmateLength| option to 1.
-" 
+"
 " There is the restriction on this auto-popup, that the word before cursor must
 " consist only of uppercase characters.
-" 
-"                                                                *acp-perl-omni*
+"
+"                                                              *acp-perl-omni*
 " Perl Omni-Completion ~
-" 
+"
 " AutoComplPop supports perl-completion.vim
 " (http://www.vim.org/scripts/script.php?script_id=2852).
-" 
+"
 " To enable auto-popup for this completion, set |g:acp_behaviorPerlOmniLength|
 " option to 0 or more.
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
