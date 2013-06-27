@@ -16,7 +16,7 @@ if !(   has('autocmd') &&
       \ has('gui') &&
       \ has('mouse') &&
       \ has('syntax')
-      \ )
+      \ ) || version < 700
   echoerr "This version of Vim lacks many features, please update!"
   finish
 endif
