@@ -43,18 +43,10 @@ let s:notes = '~/.vim/notes'
 let mapleader = ','
 "let s:braces_stack = []
 let s:path = [
-      \ '.abook',
       \ '.config',
-      \ '.emacs.d',
-      \ '.env',
       \ '.local',
-      \ '.mutt',
       \ '.NetBeansProjects',
-      \ '.pentadactyl',
       \ '.postfix',
-      \ '.shell',
-      \ '.ssh',
-      \ '.vim',
       \ 'apply',
       \ 'art',
       \ 'bin',
