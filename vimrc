@@ -1395,7 +1395,7 @@ if s:plugins['neocompl'] "{{{2
   Bundle 'Shougo/neocomplcache.vim'
   Bundle 'Shougo/neosnippet'
   " Code from the help file:
-  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""{{{
+  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""{{{
   "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
   " Disable AutoComplPop.
   let g:acp_enableAtStartup = 0
@@ -1492,7 +1492,7 @@ if s:plugins['neocompl'] "{{{2
   " https://github.com/c9s/perlomni.vim
   let g:neocomplcache_omni_patterns.perl =
   \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
+  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 endif
 
 " Bundle 'OmniCppComplete' {{{2
