@@ -370,7 +370,9 @@ function! LucRemoteEditor(mail) "{{{2
   let abbreviate = 'cnoreabbrev <buffer>'
   let quit = 'confirm bdelete'
   let forcequit = 'bdelete!'
-  let hide = 'silent call system("osascript -e \"tell application \\\"Finder\\\" to set visible of process \\\"MacVim\\\" to false\"")'
+  let hide = 'silent call system("osascript -e \"' .
+	\ 'tell application \\\"Finder\\\" ' .
+	\ 'to set visible of process \\\"MacVim\\\" to false\"")'
   let quitandhide = quit . '<bar>' . hide . '<bar> redraw'
   let forcequitandhide = forcequit . '<bar>' . hide . '<bar> redraw'
   let write = 'write'
