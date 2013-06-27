@@ -387,6 +387,7 @@ function! LucRemoteEditor(mail) "{{{2
   execute 'nnoremap <buffer> <c-w>q'     ':' . quitandhide . '<CR>'
   if a:mail == 1
     /^$
+    normal vGzo
     redraw!
   endif
 endfunction
