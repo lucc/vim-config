@@ -1181,6 +1181,7 @@ Bundle 'Limp'
 
 Bundle 'Shougo/vimproc'
 Bundle 'Shougo/vimshell.vim'
+map <D-F11> :VimShellPop<cr>
 Bundle 'Conque-Shell'
 "http://www.vim.org/scripts/script.php?script_id=2771
 
@@ -1600,6 +1601,7 @@ Bundle 'textmate16.vim'
 Bundle 'vibrantink'
 Bundle 'tortex'
 Bundle 'tomasr/molokai'
+BUndle 'jonathanfilip/vim-lucius'
 
 Bundle 'ScrollColors'
 
