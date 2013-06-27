@@ -841,8 +841,8 @@ endif
 
 " options: colorcolumn {{{1
 
-if version >= 703 	" NEW in VIM 7.3
-  set colorcolumn=+1 	"highlight the background of the 79th column
+if version >= 703
+  set colorcolumn=+1
 else
   " this highlights the part of the line which is longer then 78 char in grey
   " (blue in a terminal).
