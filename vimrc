@@ -1630,7 +1630,7 @@ Bundle 'textmate16.vim'
 Bundle 'vibrantink'
 Bundle 'tortex'
 Bundle 'tomasr/molokai'
-BUndle 'jonathanfilip/vim-lucius'
+Bundle 'jonathanfilip/vim-lucius'
 
 Bundle 'ScrollColors'
 
