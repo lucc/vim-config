@@ -177,8 +177,7 @@ endfunction
 
 function! LucSearchStringForURI(string) "{{{2
   " function to find an URI in a string
-  " thanks to
-  " http://vim.wikia.com/wiki/Open_a_web-browser_with_the_URL_in_the_current_line
+  " thanks to  http://vim.wikia.com/wiki/VimTip306
   return matchstr(a:string, '[a-z]\+:\/\/[^ >,;:]\+')
   " alternatives:
   "return matchstr(a:string, '\(http://\|www\.\)[^ ,;\t]*')
@@ -190,7 +189,16 @@ function! LucHandleURI(uri) "{{{2
 
   " first find a browser
   let browser = ''
-  let choises = [expand($BROWSER), 'elinks', 'links', 'w3m', 'lynx', 'wget', 'curl', '']
+  let choises = [
+	\ expand($BROWSER),
+	\ 'elinks',
+	\ 'links',
+	\ 'w3m',
+	\ 'lynx',
+	\ 'wget',
+	\ 'curl',
+	\ '',
+	\ ]
   if has('gui_macvim')
     " this only works on Mac OS X
     let browser = 'open'
@@ -213,8 +221,7 @@ endfunction
 
 function! LucInsertStatuslineColor(mode) "{{{2
   " function to change the color of the statusline depending on the mode
-  " this version is from
-  " http://vim.wikia.com/wiki/Change_statusline_color_to_show_insert_or_normal_mode
+  " this version is from http://vim.wikia.com/wiki/VimTip1287
   if     a:mode == 'i'
     highlight StatusLine guibg=DarkGreen   ctermbg=DarkGreen
   elseif a:mode == 'r'
