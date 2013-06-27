@@ -538,11 +538,49 @@ endfunction
 
 " user defined autocommands {{{1
 
-augroup LucLatex "{{{2
+" FileType autocommands {{{2
+
+augroup LucLatex "{{{3
   autocmd!
-  autocmd BufNewFile,BufRead *.tex setlocal dictionary+=*.bib
-  autocmd BufNewFile,BufRead *.tex nmap <buffer> g<C-g> :!texcount -nosub %<CR>
-  autocmd BufNewFile,BufRead *.tex nmap <buffer> K :call LucTexDocFunction()<CR>
+  autocmd BufNewFile,BufRead *.tex
+	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex
+  autocmd BufNewFile,BufRead *.tex
+	\ nmap <buffer> g<C-g> :!texcount -nosub %<CR>
+  autocmd BufNewFile,BufRead *.tex
+	\ nmap <buffer> K :call LucTexDocFunction()<CR>
+augroup END
+
+augroup LucPython "{{{3
+  autocmd!
+  autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
+augroup END
+
+augroup LucJava "{{{3
+  autocmd!
+  autocmd Filetype java setlocal omnifunc=javacomplete#Complete
+  autocmd Filetype java setlocal makeprg=cd\ %:h\ &&\ javac\ %:t
+augroup END
+
+augroup LucMail "{{{3
+  autocmd!
+  autocmd FileType mail setlocal textwidth=72
+augroup END
+
+augroup LucMan "{{{3
+  autocmd!
+  autocmd FileType man setlocal nospell
+augroup END
+
+augroup LucTodoFile "{{{3
+  autocmd!
+  autocmd FileType luc-todo nnoremap <buffer> <down> zj
+  autocmd FileType luc-todo nnoremap <buffer> <up> zk
+  autocmd FileType luc-todo normal zM
+  autocmd FileType luc-todo autocmd CursorMoved <buffer> normal zx
+  "autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO normal zM
+  "autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO nmap <buffer> <down> zj
+  "autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO nmap <buffer> <up> zk
+  "autocmd CursorMoved ~/TODO normal zx
 augroup END
 
 augroup LucNotesFile "{{{2
@@ -551,14 +589,6 @@ augroup LucNotesFile "{{{2
   " use the variable in the autocommands
   execute 'au BufEnter' s:notes 'setlocal bufhidden=hide'
   execute 'au BufDelete,BufHidden,BufLeave,BufUnload,FocusLost' s:notes 'up'
-augroup END
-
-augroup LucTodoFile "{{{2
-  autocmd!
-  autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO normal zM
-  autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO nmap <buffer> <down> zj
-  autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO nmap <buffer> <up> zk
-  autocmd CursorMoved, ~/TODO normal zx
 augroup END
 
 augroup LucSession "{{{2
@@ -576,28 +606,16 @@ augroup LucSession "{{{2
 	\ endif
 augroup END
 
-augroup LucPython "{{{2
-  autocmd!
-  autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
-augroup END
-
-augroup LucJava "{{{2
-  autocmd Filetype java setlocal omnifunc=javacomplete#Complete
-  autocmd Filetype java setlocal makeprg=cd\ %:h\ &&\ javac\ %:t
-augroup END
-
-augroup LucMail "{{{2
-  autocmd FileType mail setlocal textwidth=72
-augroup END
-
 augroup LucLocalWindowCD "{{{2
+  autocmd!
   " FIXME: still buggy
   autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
 	\ execute 'lcd' LucFindBaseDir()
 augroup END
 
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
-  autocmd BufWrite * %substitute/\s$//
+  autocmd!
+  autocmd BufWrite * %substitute/\s$//e
 augroup END
 
 " user defined commands and mappings {{{1
