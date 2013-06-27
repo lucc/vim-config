@@ -80,7 +80,8 @@ function! LucSelectRandomColorscheme() "{{{3
   let this = colorschemes[LucRandomNumber(0,len(colorschemes)-1)]
   let this = split(this, '/')[-1][0:-5]
   execute 'colorscheme' this
-  echo this
+  redraw
+  echo g:colors_name
 endfunction
 
 function! LucLikeColorscheme(val) "{{{3
@@ -93,6 +94,7 @@ function! LucLikeColorscheme(val) "{{{3
     endif
   endfor
   call writefile(map(cfiles, 'join(v:val)'), fname)
+  echo g:colors_name
 endfunction
 
 function! LucRandomNumber(start, end)
