@@ -601,6 +601,10 @@ augroup LucLocalWindowCD "{{{2
 	\ execute 'lcd' LucFindBaseDir()
 augroup END
 
+augroup LucRemoveWhiteSpaceAtEOL "{{{2
+  autocmd BufWrite * %substitute/\s$//
+augroup END
+
 " user defined commands and mappings {{{1
 
 " editing {{{2
