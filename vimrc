@@ -568,8 +568,17 @@ augroup END
 
 augroup LucSession "{{{2
   autocmd!
-  "autocmd VimEnter * if bufname('%') == '' && bufnr('%') == 1 | bwipeout 1 | silent edit | silent redraw | endif
-  autocmd VimEnter * if LucCheckIfBufferIsNew(1) | bwipeout 1 | doautocmd BufRead,BufNewFile | endif
+  "autocmd VimEnter *
+  "      \ if bufname('%') == '' && bufnr('%') == 1 |
+  "      \   bwipeout 1 |
+  "      \   silent edit |
+  "      \   silent redraw |
+  "      \ endif
+  autocmd VimEnter *
+	\ if LucCheckIfBufferIsNew(1) |
+	\   bwipeout 1 |
+	\   doautocmd BufRead,BufNewFile |
+	\ endif
 augroup END
 
 augroup LucPython "{{{2
@@ -588,7 +597,8 @@ augroup END
 
 augroup LucLocalWindowCD "{{{2
   " FIXME: still buggy
-  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter * execute 'lcd' LucFindBaseDir()
+  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
+	\ execute 'lcd' LucFindBaseDir()
 augroup END
 
 " user defined commands and mappings {{{1
