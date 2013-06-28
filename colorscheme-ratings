@@ -21,7 +21,7 @@ bclear -1
 bigbang -4
 biogoo 1
 blackbeauty 0
-blacksea -1
+blacksea -2
 blue -1
 bluegreen 0
 borland -1
@@ -55,7 +55,7 @@ delek -1
 denim -3
 desert 2
 desert256 -1
-desertEx 1
+desertEx 2
 dusk 10
 dw_blue 0
 dw_cyan -2
@@ -81,7 +81,7 @@ gaea 1
 gentooish 0
 github 1
 golden 1
-greyhouse 1
+greyhouse 2
 guardian -3
 habilight 2
 herald 0
@@ -151,7 +151,7 @@ print_bw 4
 psclone 3
 psclone 1
 pyte 1
-railscasts 4
+railscasts 5
 railscasts2 0
 rdark 2
 relaxedgreen -1
