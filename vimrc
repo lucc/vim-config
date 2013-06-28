@@ -640,7 +640,7 @@ augroup END
 
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd!
-  autocmd BufWrite * %substitute/\s$//e
+  autocmd BufWrite * silent %substitute/\s$//e
 augroup END
 
 " user defined commands and mappings {{{1
