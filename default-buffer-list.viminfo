@@ -5,19 +5,19 @@
 %~/TODO	0	0
 
 # vim config files
-%~/.config/vim/vimrc	0	0
-%~/.config/vim/gvimrc	0	0
+%~/.vim/vimrc	0	0
+%~/.vim/gvimrc	0	0
 
 # other config files
-%~/.config/latexmkrc	0	0
-%~/.config/mailcap	0	0
-%~/.config/mailcheckrc	0	0
-%~/.config/mime.types	0	0
-%~/.config/pentadactylrc	0	0
-%~/.config/rtorrent.rc	0	0
-%~/.config/tmux.conf	0	0
+%~/.config/shell/latexmkrc	0	0
+%~/.config/mail/mailcap	0	0
+%~/.config/mail/mailcheckrc	0	0
+%~/.config/mime/mime.types	0	0
+%~/.config/pentadactyl/pentadactylrc	0	0
+%~/.config/shell/rtorrent.rc	0	0
+%~/.config/shell/tmux.conf	0	0
 
-# security config files 
+# security config files
 %~/.config/mail/fetchmailrc	0	0
 %~/.config/mail/mailfilter	0	0
 %~/.config/mail/mutt/muttrc	0	0
@@ -52,6 +52,5 @@
 %scp://ifi/.profile	0	0
 %scp://ifi/.profile_local	0	0
 %scp://lg/.bash_profile	0	0
-
 
 # vim: ft=viminfo
