@@ -624,6 +624,7 @@ augroup END
 augroup LucMan "{{{3
   autocmd!
   autocmd FileType man setlocal nospell
+  autocmd FileType man stopinsert
 augroup END
 
 augroup LucTodoFile "{{{3
@@ -1417,7 +1418,7 @@ endif
 
 " Bundle 'ManPageView' {{{2
 " TODO
-Bundle 'ManPageView'
+"Bundle 'ManPageView'
 " http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
 " manually installed: open above url and execute :UseVimaball
 " display manpages in a vertical split (other options 'only', 'hsplit',
