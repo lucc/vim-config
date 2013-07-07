@@ -6,7 +6,7 @@ set noloadplugins
 set mouse=a
 set mouse=n
 
-set viminfo=""
+set viminfo=
 
 
 
