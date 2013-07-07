@@ -1270,6 +1270,7 @@ Bundle 'Limp'
 Bundle 'Shougo/vimproc'
 Bundle 'Shougo/vimshell.vim'
 map <D-F11> :VimShellPop<cr>
+let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
 Bundle 'Conque-Shell'
 "http://www.vim.org/scripts/script.php?script_id=2771
 
@@ -1648,6 +1649,7 @@ Bundle 'applescript.vim'
 Bundle 'matchit.zip'
 Bundle 'Vim-JDE'
 Bundle 'VimRepress'
+"Bundle 'connermcd/VimRepress'
 "Bundle 'blogit.vim'
 Bundle 'ZoomWin'
 Bundle 'AndrewRadev/linediff.vim'
