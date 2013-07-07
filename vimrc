@@ -584,6 +584,13 @@ function! LucDiffFunction() "{{{2
   silent execute '!diff' opt v:fname_in v:fname_new '>' v:fname_out
 endfunction
 
+function! LucPutISODate() "{{{2
+  let old_register = @d
+  let @d = strftime('%F')
+  normal "dp
+  let @d = old_register
+endfunction
+
 " user defined autocommands {{{1
 
 " FileType autocommands {{{2
@@ -704,6 +711,9 @@ nmap <Leader>w :call LucHandleURI(LucSearchStringForURI(getline('.')))<CR>
 nmap <Leader>v :call
   \ LucHandleURI('http://www.vim.org/scripts/script.php?script_id=' .
   \ matchstr(matchstr(expand('<cword>'), '[0-9]\+[^0-9]*$'), '^[0-9]*'))<CR>
+
+nmap <Leader>d :call LucPutISODate()<CR>
+imap <Leader>d <C-O>:call LucPutISODate()<CR>
 
 " easy compilation {{{2
 nmap          <F2>        :silent update <BAR> call LucQuickMake('', 0)<CR>
