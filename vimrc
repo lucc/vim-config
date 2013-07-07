@@ -326,7 +326,7 @@ function! LucQuickMake(target, override) "{{{2
     let error = 1
   else
     execute 'cd' dir
-    echo 'Executing' cmd 'in' fnamemodify(getcwd(), ':~') '...'
+    echo 'Running' cmd 'in' fnamemodify(getcwd(), ':~')
     silent execute '!' cmd '&'
     cd -
     if v:shell_error
