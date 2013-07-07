@@ -775,7 +775,7 @@ nmap <D-_> :call LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
 set backspace=indent,eol,start
 set backup
 set hidden
-set history=1000
+set history=2000
 set confirm
 " set the path for file searching
 set path=.
@@ -798,6 +798,10 @@ set shortmess=
 set nostartofline
 set encoding=utf-8
 set switchbuf=useopen
+
+if $TERM_PROGRAM == 'iTerm.app'
+  set t_Co=256
+endif
 
 " options: searching {{{1
 set ignorecase
@@ -861,7 +865,8 @@ if has('statusline')
   set statusline+=\ [ASCII=x%03B]                 " ASCII code of char
   "set statusline+=\ [ASCII=x%02.2B]               " ASCII code of char
   set statusline+=\ %=                            " rubber space
-  set statusline+=[%{strftime('%a\ %F\ %R')}]     " clock
+  "set statusline+=[%{strftime('%a\ %F\ %R')}]     " clock
+  set statusline+=[%{strftime('%R')}]             " clock
   set statusline+=\ [%c%V,%l/%L]                  " position in file
   set statusline+=\ [%P]                          " percent of above
   "set statusline+=\ %{SyntasticStatuslineFlag()}  " see :h syntastic
@@ -949,7 +954,7 @@ if has('mksession')
 endif
 if has('viminfo')
   " default: '100,<50,s10,h
-  set viminfo='100,<50,s10,h,%
+  set viminfo='100,<50,s10,h,%,n~/.vim/viminfo
   " the flag ' is for filenames for marks
   set viminfo='100
   " the flag < is the nummber of lines saved per register
