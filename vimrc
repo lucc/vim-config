@@ -690,6 +690,11 @@ inoremap <C-W> <C-G>u<C-W>
 inoremap <C-s> <C-o>:call LucFindNextSpellError()<CR><C-x><C-s>
 nnoremap <C-s>      :call LucFindNextSpellError()<CR>z=
 
+if has('gui_macvim')
+  inoremap œ \
+  inoremap æ \|
+endif
+
 " TODO: is this usefull?
 "inoremap ( ()<++><ESC>F)i
 "inoremap [ []<++><ESC>F]i
