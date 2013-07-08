@@ -789,8 +789,11 @@ set path+=/opt/X11/include/
 set textwidth=78
 set shiftwidth=2
 set background=light
-" break text and comments but do not reformat lines where no input occures
-set formatoptions+=nr
+" formatoptions default is tcq
+set formatoptions+=n " recognize numbered lists
+set formatoptions+=r " insert comment leader when hitting <enter>
+set formatoptions+=j " remove comment leader when joining lines
+set formatoptions+=l " do not break lines which are already long
 set number
 " scroll when the courser is 5 lines from the border line
 set scrolloff=5
