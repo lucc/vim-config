@@ -301,13 +301,16 @@ function! LucQuickMake(target, override) "{{{2
   " local variables
   let cmd   = ''
   let error = 0
-  let path  = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
+  let path  = filter(split(expand('%:p:h'), '/'), 'v:val != ""')
   let dir   = ''
   " try to find a makefile and set dir and cmd
   while ! empty(path)
     let dir = '/' . join(path, '/')
     if filereadable(dir . '/makefile') || filereadable(dir . '/Makefile')
       let cmd = 'make' . (a:target == '' ? '' : ' ' . a:target)
+      let path = []
+    elseif filereadable(dir . '/build.xml')
+      let cmd = 'ant' . (a:target == '' ? '' : ' ' . a:target)
       let path = []
     else
       unlet path[-1]
