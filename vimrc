@@ -594,6 +594,10 @@ function! LucPutISODate() "{{{2
   let @d = old_register
 endfunction
 
+function! LucGermanUTF8Quotes() "{{{2
+
+endfunction
+
 " user defined autocommands {{{1
 
 " FileType autocommands {{{2
@@ -911,7 +915,8 @@ if has('statusline')
     set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg " binary images
     set wildignore+=.*.sw?                         " Vim swap files
     set wildignore+=*.DS_Store                     " OSX bullshit
-    "set wildignore+=*.o,*.obj,*.exe,*.dll,        " compiled object files
+    set wildignore+=*.o,*.obj,*.exe,*.dll,         " compiled object files
+    set wildignore+=*.class                        " java class files
     "set wildignore+=*.spl                         " compiled spell word lists
     "set wildignore+=*.luac                        " Lua byte code
     "set wildignore+=migrations                    " Django migrations
