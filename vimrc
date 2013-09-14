@@ -302,7 +302,7 @@ function! LucQuickMake(target, override) "{{{2
   " local variables
   let cmd   = ''
   let error = 0
-  let path  = filter(split(expand('%:p:h'), '/'), 'v:val != ""')
+  let path  = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
   let dir   = ''
   " try to find a makefile and set dir and cmd
   while ! empty(path)
