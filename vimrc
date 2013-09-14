@@ -24,6 +24,7 @@ endif
 " Do not load many of the GUI menus.  This has to happen before 'syntax on'
 " and 'filetype ...'
 set guioptions+=M
+"set guioptions-=m
 
 " syntax and filetype {{{
 if has('syntax')
@@ -923,7 +924,7 @@ if has('statusline')
     set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg " binary images
     set wildignore+=.*.sw?                         " Vim swap files
     set wildignore+=*.DS_Store                     " OSX bullshit
-    set wildignore+=*.o,*.obj,*.exe,*.dll,         " compiled object files
+    set wildignore+=*.o,*.obj,*.exe,*.dll          " compiled object files
     set wildignore+=*.class                        " java class files
     "set wildignore+=*.spl                         " compiled spell word lists
     "set wildignore+=*.luac                        " Lua byte code
