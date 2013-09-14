@@ -598,6 +598,14 @@ function! LucGermanUTF8Quotes() "{{{2
 
 endfunction
 
+function! LucLoadScpBuffers() "{{{2
+  badd ftp://ftp.lima-city.de/index.html
+  badd ftp://ftp.lima-city.de/files/dotfiles/index.php
+  badd scp://math/.profile
+  badd scp://ifi/.profile
+  badd scp://ifi/.profile_local
+  badd scp://lg/.bash_profile
+endfunction
 " user defined autocommands {{{1
 
 " FileType autocommands {{{2
