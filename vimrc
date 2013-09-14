@@ -1001,7 +1001,6 @@ let s:plugins = {
 		\ 'lusty': 0,
 		\ 'neocompl': 0,
 		\ 'nerd': 0,
-		\ 'popupbuffer': 0,
 		\ 'powerline': 0,
 		\ 'qnamebuf': 0,
 		\ 'syntastic': 0,
@@ -1225,7 +1224,7 @@ endif
 "Bundle 'tex.vim'
 "Bundle 'tex_autoclose.vim'
 
-Bundle 'auctex.vim'
+"Bundle 'auctex.vim'
 Bundle 'LaTeX-Help'
 
 if s:plugins['latexsuite'] "{{{2
@@ -1647,11 +1646,6 @@ if s:plugins['syntastic']
   Bundle 'scrooloose/syntastic'
 endif
 
-if s:plugins['popupbuffer']
-  " This is messing with fuf
-  Bundle 'PopupBuffer.vim'
-endif
-
 Bundle 'ack.vim'
 Bundle 'applescript.vim'
 "Bundle 'browser.vim'
@@ -1701,7 +1695,6 @@ Bundle 'textmate16.vim'
 Bundle 'tortex'
 Bundle 'tomasr/molokai'
 Bundle 'jonathanfilip/vim-lucius'
-Bundle 'dw_colors'
 
 Bundle 'ScrollColors'
 
