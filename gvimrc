@@ -179,14 +179,18 @@ if s:colorscheme == 'mv'
   "hi Comment guifg=#3464A4
 elseif s:colorscheme == 'sol'
   " switching to solarized
-  set bg=light
+  if strftime('%H%M') > 700 && strftime('%H%M') < 2100
+    set bg=light
+  else
+    set bg=dark
+  endif
   colorscheme solarized
 elseif s:colorscheme == 'pp'
   " switching to peachpuff because of a bug in (mac?)vim
   colorscheme peachpuff
 endif
 
-cal LucSelectRandomColorscheme()
+"cal LucSelectRandomColorscheme()
 
 " other {{{1
 
