@@ -1122,6 +1122,10 @@ if s:plugins['ctrlp'] "{{{2
   "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
   let g:ctrlp_clear_cache_on_exit = 0
   let g:ctrlp_show_hidden = 1
+  let g:ctrlp_max_files = 0
+  let g:ctrlp_custom_ignore = {
+	\ 'dir':  '\/Users\/luc\/\v(flac|Musik.*|img)'
+	\ }
   "let g:ctrlp_root_markers = ['makefile', 'Makefile', 'latexmkrc']
   let g:ctrlp_map = '<c-space>'
   let g:ctrlp_cmd = 'CtrlPMRU'
@@ -1251,7 +1255,8 @@ if s:plugins['latexsuite'] "{{{2
   " OPTIONAL: Handle empty .tex files as LaTeX.
   let g:tex_flavor='latex'
   " Folding:
-  let Tex_FoldedEnvironments='*'
+  "let Tex_FoldedEnvironments='*'
+
   "let Tex_FoldedEnvironments+=','
   "let Tex_FoldedEnvironments  = 'document,minipage,'
   "let Tex_FoldedEnvironments .= 'di,lem,ivt,dc,'
