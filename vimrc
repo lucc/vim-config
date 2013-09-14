@@ -709,6 +709,8 @@ nnoremap <C-s>      :call LucFindNextSpellError()<CR>z=
 if has('gui_macvim')
   inoremap œ \
   inoremap æ \|
+  cnoremap œ \
+  cnoremap æ \|
 endif
 
 " TODO: is this usefull?
