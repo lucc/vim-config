@@ -600,7 +600,8 @@ function! LucGermanUTF8Quotes() "{{{2
 endfunction
 
 function! LucLoadScpBuffers() "{{{2
-  badd ftp://ftp.lima-city.de/index.html
+  badd ftp://ftp.lima-city.de/index.php
+  badd ftp://ftp.lima-city.de/css/main.css
   badd ftp://ftp.lima-city.de/files/dotfiles/index.php
   badd scp://math/.profile
   badd scp://ifi/.profile
