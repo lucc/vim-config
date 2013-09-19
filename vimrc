@@ -339,6 +339,10 @@ function! LucQuickMake(target, override) "{{{2
     let error = ! v:shell_error
   endif
 
+  if &filetype == 'tex'
+    silent ! ( sleep 3 && killall -HUP mupdf ) &
+  endif
+
   " return shell errors
   return error
 endfunction
