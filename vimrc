@@ -402,7 +402,7 @@ function! LucRemoteEditor(mail) "{{{2
   let quit = 'confirm bdelete'
   let forcequit = 'bdelete!'
   let hide = 'silent call system("osascript -e \"' .
-	\ 'tell application \\\"Finder\\\" ' .
+	\ 'tell application \\\"System Events\\\" ' .
 	\ 'to set visible of process \\\"MacVim\\\" to false\"")'
   let quitandhide = quit . '<bar>' . hide . '<bar> redraw'
   let forcequitandhide = forcequit . '<bar>' . hide . '<bar> redraw'
