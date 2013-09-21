@@ -612,18 +612,38 @@ function! LucLoadScpBuffers() "{{{2
   badd scp://ifi/.profile_local
   badd scp://lg/.bash_profile
 endfunction
+
+function! LucLatexSaveFolds() "{{{2
+  let l:old = &viewoptions
+  set viewoptions=folds
+  mkview
+  let &viewoptions = l:old
+endfunction
+
 " user defined autocommands {{{1
 
 " FileType autocommands {{{2
 
 augroup LucLatex "{{{3
   autocmd!
-  autocmd BufNewFile,BufRead *.tex
-	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex
-  autocmd BufNewFile,BufRead *.tex
-	\ nmap <buffer> g<C-g> :!texcount -nosub %<CR>
-  autocmd BufNewFile,BufRead *.tex
-	\ nmap <buffer> K :call LucTexDocFunction()<CR>
+  "autocmd BufNewFile,BufRead *.tex
+  "      \ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex
+  "autocmd BufNewFile,BufRead *.tex
+  "      \ nmap <buffer> g<C-g> :!texcount -nosub %<CR>
+  "autocmd BufNewFile,BufRead *.tex
+  "      \ nmap <buffer> K :call LucTexDocFunction()<CR>
+  autocmd FileType tex
+	\ nmap <buffer> K :call LucTexDocFunction()<CR>|
+	\ nmap <buffer> g<C-g> :!texcount -nosub %<CR>|
+	\ nmap <buffer> gG :!texcount -nosub -char %<CR>|
+	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex|
+	\ vmap <buffer> g<C-g> :write !texcount -nosub -<CR>|
+	\ vmap <buffer> gG :write !texcount -nosub -char -<CR>|
+	\
+  autocmd BufWinLeave *.tex
+	\ call LucLatexSaveFolds()
+  autocmd BufWinEnter *.tex
+	\ silent loadview
 augroup END
 
 augroup LucPython "{{{3
@@ -990,7 +1010,7 @@ if has('viminfo')
   set viminfo+=s10
   " disable hlsearch
   set viminfo+=h
-  " remember buffer list
+  " remember (whole) buffer list
   set viminfo+=%
   " name of the viminfo file
   set viminfo+=n~/.vim/viminfo
