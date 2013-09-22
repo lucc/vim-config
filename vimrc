@@ -620,25 +620,35 @@ function! LucLatexSaveFolds() "{{{2
   let &viewoptions = l:old
 endfunction
 
+function! LucLatexCount(chars) range "{{{2
+  let tc = '!texcount -nosub '
+  let wc = '!pdftotext %:r.pdf /dev/stdout | wc -w '
+  if a:chars == 'char'
+    let tc .= '-char '
+    let wc .= '-m'
+  endif
+  if a:firstline == a:lastline
+    let tc .= '%'
+  else
+    let tc = a:firstline . ',' . a:lastline . 'write ' . tc . '-'
+  endif
+  execute tc
+  execute wc '2>/dev/null'
+endfunction
+
 " user defined autocommands {{{1
 
 " FileType autocommands {{{2
 
 augroup LucLatex "{{{3
   autocmd!
-  "autocmd BufNewFile,BufRead *.tex
-  "      \ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex
-  "autocmd BufNewFile,BufRead *.tex
-  "      \ nmap <buffer> g<C-g> :!texcount -nosub %<CR>
-  "autocmd BufNewFile,BufRead *.tex
-  "      \ nmap <buffer> K :call LucTexDocFunction()<CR>
   autocmd FileType tex
 	\ nmap <buffer> K :call LucTexDocFunction()<CR>|
-	\ nmap <buffer> g<C-g> :!texcount -nosub %<CR>|
-	\ nmap <buffer> gG :!texcount -nosub -char %<CR>|
+	\ nmap <buffer> g<C-g> :call LucLatexCount('')<CR>|
+	\ nmap <buffer> gG :call LucLatexCount('char')<CR>|
 	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex|
-	\ vmap <buffer> g<C-g> :write !texcount -nosub -<CR>|
-	\ vmap <buffer> gG :write !texcount -nosub -char -<CR>|
+	\ vmap <buffer> g<C-g> :call LucLatexCount('')<CR>|
+	\ vmap <buffer> gG :call LucLatexCount('char')<CR>|
 	\
   autocmd BufWinLeave *.tex
 	\ call LucLatexSaveFolds()
