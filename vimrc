@@ -70,7 +70,68 @@ call map(s:path, 'v:val . "/**"')
 
 " user defined functions {{{1
 
-" color scheme stuff {{{2
+" help and documentation functions {{{2
+
+function! LucTexDocFunction() "{{{3
+  let l:word = expand("<cword>")
+  silent execute '!texdoc' l:word
+endfunction
+
+function! LucManPageFunction(...) "{{{3
+  " try to find a manpage
+  if &filetype == 'man' && a:0 == 0
+    execute 'RMan' expand('<cword>')
+  elseif a:0 > 0
+    execute 'TMan\ ' . join(a:000)
+  else
+    echohl Error
+    echo 'Topic missing.'
+    echohl None
+    return
+  endif
+  map <buffer> K :call LucManPageFunction()<CR>
+  vmap <buffer> K :call LucManPageFunction(LucGetVisualSelection())<CR>
+endfunction
+
+function! LucTManWrapper(type, string) "{{{3
+  " look up string in the documentation for type
+  if a:type =~ 'man\|m'
+    let suffix = 'man'
+  elseif a:type =~ 'info\|i'
+    let suffix = 'i'
+  elseif a:type =~ 'perldoc\|perl\|pl'
+    let suffix = 'pl'
+  elseif a:type =~ 'php'
+    let suffix = 'php'
+  elseif a:type =~ 'pydoc\|python\|py'
+    let suffix = 'py'
+  else
+    let suffix = 'man'
+  endif
+  execute 'TMan' a:string . '.' . suffix
+  " there seems to be a bug in :Man and :TMan
+  "execute 'RMan' a:string . '.' . suffix
+  call foreground()
+  redraw
+endfunction
+
+function! LucManPageTopicsCompletion(ArgLead, CmdLine, CursorPos) "{{{3
+  let paths = tr(system('man -w'), ":\n", "  ")
+  "let paths = "/usr/share/man/man9"
+  return system('find ' . paths .
+	\ ' -type f | sed "s#.*/##;s/\.gz$//;s/\.[0-9]\{1,\}//" | sort -u')
+endfunction
+
+function! LucUpdateAllHelptags() "{{{3
+  for item in map(split(&runtimepath, ','), 'v:val . "/doc"')
+    if isdirectory(item)
+      "echo  'helptags' item
+      execute 'helptags' item
+    endif
+  endfor
+endfunction
+
+" color scheme functions {{{2
 function! LucFindAllColorschemes() "{{{3
   "return LucFlattenList(filter(map(split(&rtp, ','),
   "      \ 'glob(v:val .  "/**/colors/*.vim", 0, 1)'), 'v:val != []'))
@@ -445,47 +506,6 @@ endfunction
 "  endif
 "endfunction
 
-function! LucTexDocFunction() "{{{2
-  let l:word = expand("<cword>")
-  silent execute '!texdoc' l:word
-endfunction
-
-function! LucManPageFunction(...) "{{{2
-  " try to find a manpage
-  if &filetype == 'man' && a:0 == 0
-    execute 'RMan' expand('<cword>')
-  elseif a:0 > 0
-    execute 'TMan\ ' . join(a:000)
-  else
-    echohl Error
-    echo 'Topic missing.'
-    echohl None
-    return
-  endif
-  map <buffer> K :call LucManPageFunction()<CR>
-  vmap <buffer> K :call LucManPageFunction(LucGetVisualSelection())<CR>
-endfunction
-
-function! LucTManWrapper(type, string) "{{{2
-  " look up string in the documentation for type
-  if a:type =~ 'man\|m'
-    let suffix = 'man'
-  elseif a:type =~ 'info\|i'
-    let suffix = 'i'
-  elseif a:type =~ 'perldoc\|perl\|pl'
-    let suffix = 'pl'
-  elseif a:type =~ 'php'
-    let suffix = 'php'
-  elseif a:type =~ 'pydoc\|python\|py'
-    let suffix = 'py'
-  else
-    let suffix = 'man'
-  endif
-  execute 'TMan' a:string . '.' . suffix
-  " there seems to be a bug in :Man and :TMan
-  execute 'RMan' a:string . '.' . suffix
-endfunction
-
 function! LucGetVisualSelection() "{{{2
   " This function is copied from http://stackoverflow.com/questions/1533565/
   let [lnum1, col1] = getpos("'<")[1:2]
@@ -496,13 +516,6 @@ function! LucGetVisualSelection() "{{{2
   let lines[-1] = lines[-1][: col2 - 2]
   let lines[0] = lines[0][col1 - 1:]
   return join(lines, "\n")
-endfunction
-
-function! LucManPageTopicsCompletion(ArgLead, CmdLine, CursorPos) "{{{2
-  let paths = tr(system('man -w'), ":\n", "  ")
-  "let paths = "/usr/share/man/man9"
-  return system('find ' . paths .
-	\ ' -type f | sed "s#.*/##;s/\.gz$//;s/\.[0-9]\{1,\}//" | sort -u')
 endfunction
 
 function! LucAutoJumpWraper(...) "{{{2
@@ -542,15 +555,6 @@ endfunction
 "    execute 'buffer' buf '|' join(a:000, ' ')
 "  endfor
 "endfunction
-
-function! LucUpdateAllHelptags() "{{{2
-  for item in map(split(&runtimepath, ','), 'v:val . "/doc"')
-    if isdirectory(item)
-      "echo  'helptags' item
-      execute 'helptags' item
-    endif
-  endfor
-endfunction
 
 function! LucUpdateBundlesInBackground() "{{{2
   silent echo ''
