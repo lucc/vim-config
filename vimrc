@@ -1284,16 +1284,11 @@ Bundle 'LaTeX-Help'
 if s:plugins['latexsuite'] "{{{2
   Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
 
-  " REQUIRED: filetype plugin on
-  " OPTIONAL: filetype indent on
-  " IMPORTANT: win32 users will need to have 'shellslash' set so that latex
-  " can be called correctly.
-  "set shellslash
   " IMPORTANT: force grep to display filename.
   set grepprg=grep\ -nH\ $*
-  " OPTIONAL: Handle empty .tex files as LaTeX.
-  let g:tex_flavor='latex'
-  " Folding:
+  " Handle empty .tex files as LaTeX (optional).
+  let g:tex_flavor = 'latex'
+  " Folding
   "let Tex_FoldedEnvironments='*'
 
   "let Tex_FoldedEnvironments+=','
@@ -1306,11 +1301,13 @@ if s:plugins['latexsuite'] "{{{2
   "let Tex_FoldedMisc = 'comments,item,preamble,<<<'
   "let Tex_FoldedEnvironments .= '*'
 
-  " compiling with \ll
-  let g:Tex_CompileRule_pdf='latexmk -silent -pv -pdf $*'
-  "let g:Tex_CompileRule_pdf='pdflatex -interaction=nonstopmode $*'
-  let Tex_UseMakefile=1
-  let g:Tex_ViewRule_pdf='open -a Preview'
+  " compiling with <leader>ll
+  let g:Tex_CompileRule_pdf = 'latexmk -silent -pv -pdf $*'
+  let Tex_UseMakefile = 1
+  if has('mac')
+    let g:Tex_ViewRule_pdf = 'open -a Preview'
+  endif
+  "let Tex_FoldedSections = 'part,chapter,section,subsection,subsubsection,paragraph'
 
   "dont use latexsuite folding
   "let Tex_FoldedEnvironments=''
@@ -1318,7 +1315,7 @@ if s:plugins['latexsuite'] "{{{2
   "let Tex_FoldedSections=''
 
   " don't use LaTeX-Suite menus
-  let g:Tex_Menus=0
+  let g:Tex_Menus = 0
   "let g:Tex_UseUtfMenus=1
 endif
 
