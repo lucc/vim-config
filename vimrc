@@ -284,7 +284,7 @@ function! LucHandleURI(uri) "{{{2
 	\ 'curl',
 	\ '',
 	\ ]
-  if has('gui_macvim')
+  if has('mac')
     " this only works on Mac OS X
     let browser = 'open'
   else
