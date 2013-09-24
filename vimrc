@@ -1828,7 +1828,9 @@ filetype plugin indent on
 
 " set colors for the terminal {{{1
 if has('syntax')
+  " for quick changes
   let s:colorscheme = 'sol'
+
   if s:colorscheme == 'mv'
     colorscheme macvim
     hi Pmenu ctermfg=202 ctermbg=234
@@ -1836,7 +1838,15 @@ if has('syntax')
     highlight LineNr ctermbg=black ctermfg=DarkGrey
   elseif s:colorscheme == 'sol'
     " switching to solarized
-    set bg=dark
     colorscheme solarized
+    if has('gui_running')
+      if strftime('%H%M') > 700 && strftime('%H%M') < 2100
+	set background=light
+      else
+	set background=dark
+      endif
+    else
+      set background=dark
+    endif
   endif
 endif
