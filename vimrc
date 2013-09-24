@@ -276,6 +276,7 @@ function! LucHandleURI(uri) "{{{2
   let browser = ''
   let choises = [
 	\ expand($BROWSER),
+	\ 'firefox',
 	\ 'elinks',
 	\ 'links',
 	\ 'w3m',
@@ -301,7 +302,8 @@ function! LucHandleURI(uri) "{{{2
 
   " everything set: open the uri
   echo 'Visiting' a:uri '...'
-  silent execute '!' browser shellescape(a:uri)
+  let a:uri = substitute(shellescape(a:uri), '[%#]', '\\&', 'g')
+  silent execute '!' browser a:uri
 endfunction
 
 function! LucInsertStatuslineColor(mode) "{{{2
