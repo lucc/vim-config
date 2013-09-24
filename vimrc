@@ -864,6 +864,9 @@ set nostartofline
 set encoding=utf-8
 set switchbuf=useopen
 
+set cpoptions+=$ " don't redraw the display while executing c, s, ... cmomands
+set cpoptions+={ " let { and } stop on a "{" in the first column
+
 if $TERM_PROGRAM == 'iTerm.app'
   set t_Co=256
 endif
@@ -883,7 +886,7 @@ endif
 if has('syntax')
   " on Mac OS X the spellchecking files are in:
   " /Applications/editoren/Vim.app/Contents/Resources/vim/runtime/spell
-  set spelllang=de
+  set spelllang=de,en
   set nospell
 endif
 
@@ -927,7 +930,7 @@ if has('statusline')
   set statusline+=%Y                              " filetype (c/sh/vim/...)
   set statusline+=%{fugitive#statusline()}        " info about git
   set statusline+=]
-  set statusline+=\ [ASCII=x%03B]                 " ASCII code of char
+  set statusline+=\ [ASCII=x%02B]                 " ASCII code of char
   "set statusline+=\ [ASCII=x%02.2B]               " ASCII code of char
   set statusline+=\ %=                            " rubber space
   "set statusline+=[%{strftime('%a\ %F\ %R')}]     " clock
