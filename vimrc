@@ -735,8 +735,11 @@ augroup END
 
 " editing {{{2
 
+" Don't use Ex mode, use Q for formatting (from the example file)
+nnoremap Q gq
+
 " make Y behave like D,S,C ...
-nmap Y y$
+nnoremap Y y$
 
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
