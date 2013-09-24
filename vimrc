@@ -967,15 +967,18 @@ if has('statusline')
     set wildignore+=.hg,.git,.svn                  " Version control
     set wildignore+=*.aux,*.out,*.toc,*.idx,*.fls  " LaTeX intermediate files
     set wildignore+=*.fdb_latexmk                  " LaTeXmk files
+    set wildignore+=*.pdf,*.dvi,*.ps               " binary documents (latex)
+    set wildignore+=*.odt,*.doc,*.docx             " office text documents
+    set wildignore+=*.ods,*.xls,*.xlsx             " office spreadsheets
     set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg " binary images
     set wildignore+=.*.sw?                         " Vim swap files
     set wildignore+=*.DS_Store                     " OSX bullshit
     set wildignore+=*.o,*.obj,*.exe,*.dll          " compiled object files
     set wildignore+=*.class                        " java class files
-    "set wildignore+=*.spl                         " compiled spell word lists
+    set wildignore+=*.spl                          " compiled spell word lists
     "set wildignore+=*.luac                        " Lua byte code
     "set wildignore+=migrations                    " Django migrations
-    "set wildignore+=*.pyc                         " Python byte code
+    set wildignore+=*.pyc                          " Python byte code
     "set wildignore+=*.orig                        " Merge resolution files
   endif
 
