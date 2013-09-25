@@ -1432,14 +1432,14 @@ endif
 "let tlist_tex_settings='tex;c:chapters;s:sections;u:subsections;b:subsubsections;p:parts;P:paragraphs;G:subparagraphs'
 let tlist_tex_settings='latex;s:structure;g:graphic+listing;l:label;r:ref;b:bib'
 
-nmap <silent> <F4> :TlistToggle<CR>
+nmap <silent> <F4> :silent TlistToggle<CR>
 "augroup LucTagList
 "  autocmd!
 "  autocmd BufEnter *.tex let Tlist_Ctags_Cmd = expand('~/.vim/ltags')
 "  autocmd BufLeave *.tex let Tlist_Ctags_Cmd = 'ctags'
 "augroup END
 
-" {{{2 Ctags and Cscope
+" Ctags and Cscope {{{2
 " always search for a tags file from $PWD down to '/'.
 set tags=./tags,tags;/
 
@@ -1470,40 +1470,41 @@ if has('cscope')
   " 	'f'   file:   open the filename under cursor
   " 	'i'   includes: find files that include the filename under cursor
   " 	'd'   called: find functions that function under cursor calls
-  nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-  nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>
-  nmap <C-@>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  nmap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@><C-@>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@><C-@>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@><C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@><C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
-  nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+  "nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+  "nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>
+  "nmap <C-@>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+  "nmap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@><C-@>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@><C-@>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@><C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@><C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
+  "nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+  "nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
   " End of http://cscope.sourceforge.net/cscope_maps.vim stuff }}}
-  if filereadable('cscope.out')
-    cscope add cscope.out
-  elseif $CSCOPE_DB != ""
+  if $CSCOPE_DB != ""
     cscope add $CSCOPE_DB
+  elseif filereadable('cscope.out')
+    cscope add cscope.out
   else
     " no database so use Ctags instead (unset cscope options)
     " run ``ctags **/.*[ch]'' to produce the file ``tags''.
     " these headers are used:
     " http://www.vim.org/scripts/script.php?script_id=2358
+    "Bundle 'tags-for-std-cpp-STL-streams-...'
     set tags+=~/.vim/tags/usr_include.tags
     set tags+=~/.vim/tags/usr_include_cpp.tags
     set tags+=~/.vim/tags/usr_local_include.tags
