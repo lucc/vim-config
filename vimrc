@@ -626,7 +626,27 @@ function! LucLatexSaveFolds() "{{{2
   let &viewoptions = l:old
 endfunction
 
-function! LucLatexCount(chars) range "{{{2
+function! LucLatexCount(char, bib, files) range "{{{2
+  if type(a:files) == type(list())
+    let files = join(a:files)
+  elseif type(a:files) == type(0)
+    let files = bufname(a:files)
+  elseif type(a:files) == type("")
+    if a:files == ""
+      let files = expand("%")
+    endif
+  else
+    return Error
+  endif
+  let cmd = 'texcount -quiet -nocol '
+  if a:bib == "bib"
+    let cmd .= '-incbib '
+  endif
+  if a:char == 'char'
+    let chars = system(cmd.'-char '.files)
+    echo
+  endif
+  let words = system(cmd.files)
   let tc = '!texcount -nosub '
   let wc = '!pdftotext %:r.pdf /dev/stdout | wc -w '
   if a:chars == 'char'
