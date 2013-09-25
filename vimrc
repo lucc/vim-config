@@ -682,6 +682,41 @@ augroup LucLatex "{{{3
 	\ silent loadview
 augroup END
 
+augroup LucLatexSuiteSettings "{{{3
+  " Tex_ViewRule_pdf and Tex_CompileRule_pdf are for the macros ,ll and ,lv
+  " Tex_UseMakefile forces latex-suite to use makefiles
+  " grep shoul display the filename
+  " Tex_Menus are disabled and empty files are treated as LaTeX with
+  " tex_flavor='latex'
+  autocmd FileType tex
+	\ if has('mac')|let g:Tex_ViewRule_pdf = 'open -a Preview'|endif|
+	\ let g:Tex_UseMakefile = 1|
+	\ let g:Tex_CompileRule_pdf = 'latexmk -silent -pv -pdf $*'|
+	\ let g:Tex_Menus = 0|
+	\ let g:Tex_Flavor = 'latex'|
+	\ setlocal grepprg=grep\ -nH\ $*|
+	\
+  " force grep to display filename.
+  " Handle empty .tex files as LaTeX (optional).
+  " Folding
+  "let Tex_FoldedEnvironments='*'
+  "let Tex_FoldedEnvironments+=','
+  "let Tex_FoldedEnvironments  = 'document,minipage,'
+  "let Tex_FoldedEnvironments .= 'di,lem,ivt,dc,'
+  "let Tex_FoldedEnvironments .= 'verbatim,comment,proof,eq,gather,'
+  "let Tex_FoldedEnvironments .= 'align,figure,table,thebibliography,'
+  "let Tex_FoldedEnvironments .= 'keywords,abstract,titlepage'
+  "let Tex_FoldedEnvironments .= 'item,enum,display'
+  "let Tex_FoldedMisc = 'comments,item,preamble,<<<'
+  "let Tex_FoldedEnvironments .= '*'
+  "let Tex_FoldedSections = 'part,chapter,section,subsection,subsubsection,paragraph'
+  " dont use latexsuite folding
+  "let Tex_FoldedEnvironments=''
+  "let Tex_FoldedMisc=''
+  "let Tex_FoldedSections=''
+  "
+  "let g:Tex_UseUtfMenus=1
+augroup END
 augroup LucPython "{{{3
   autocmd!
   autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
@@ -1311,44 +1346,8 @@ endif
 
 "Bundle 'auctex.vim'
 Bundle 'LaTeX-Help'
-
-if s:plugins['latexsuite'] "{{{2
-  Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
-
-  " IMPORTANT: force grep to display filename.
-  set grepprg=grep\ -nH\ $*
-  " Handle empty .tex files as LaTeX (optional).
-  let g:tex_flavor = 'latex'
-  " Folding
-  "let Tex_FoldedEnvironments='*'
-
-  "let Tex_FoldedEnvironments+=','
-  "let Tex_FoldedEnvironments  = 'document,minipage,'
-  "let Tex_FoldedEnvironments .= 'di,lem,ivt,dc,'
-  "let Tex_FoldedEnvironments .= 'verbatim,comment,proof,eq,gather,'
-  "let Tex_FoldedEnvironments .= 'align,figure,table,thebibliography,'
-  "let Tex_FoldedEnvironments .= 'keywords,abstract,titlepage'
-  "let Tex_FoldedEnvironments .= 'item,enum,display'
-  "let Tex_FoldedMisc = 'comments,item,preamble,<<<'
-  "let Tex_FoldedEnvironments .= '*'
-
-  " compiling with <leader>ll
-  let g:Tex_CompileRule_pdf = 'latexmk -silent -pv -pdf $*'
-  let Tex_UseMakefile = 1
-  if has('mac')
-    let g:Tex_ViewRule_pdf = 'open -a Preview'
-  endif
-  "let Tex_FoldedSections = 'part,chapter,section,subsection,subsubsection,paragraph'
-
-  "dont use latexsuite folding
-  "let Tex_FoldedEnvironments=''
-  "let Tex_FoldedMisc=''
-  "let Tex_FoldedSections=''
-
-  " don't use LaTeX-Suite menus
-  let g:Tex_Menus = 0
-  "let g:Tex_UseUtfMenus=1
-endif
+Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
+" The settings for vim-latex are in the LucLatexSuiteSettings autocmdgroup.
 
 " plugins: lisp/scheme {{{1
 
