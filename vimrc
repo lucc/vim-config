@@ -302,8 +302,8 @@ function! LucHandleURI(uri) "{{{2
 
   " everything set: open the uri
   echo 'Visiting' a:uri '...'
-  let a:uri = substitute(shellescape(a:uri), '[%#]', '\\&', 'g')
-  silent execute '!' browser a:uri
+  let uri = substitute(shellescape(a:uri), '[%#]', '\\&', 'g')
+  silent execute '!' browser uri
 endfunction
 
 function! LucInsertStatuslineColor(mode) "{{{2
