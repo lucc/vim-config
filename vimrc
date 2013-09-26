@@ -627,30 +627,30 @@ function! LucLatexSaveFolds() "{{{2
   let &viewoptions = l:old
 endfunction
 
-function! LucLatexCount(char, bib, files) range "{{{2
-  if type(a:files) == type(list())
-    let files = join(a:files)
-  elseif type(a:files) == type(0)
-    let files = bufname(a:files)
-  elseif type(a:files) == type("")
-    if a:files == ""
-      let files = expand("%")
+function! LucLatexCount(file) range "{{{2
+  if type(a:file) == type(0)
+    let tex = bufname(a:file)
+  elseif type(a:file) == type("")
+    if a:file == ""
+      let tex = expand("%")
+    else
+      let tex = a:file
     endif
   else
-    return Error
+    return No_File_Found
   endif
-  let cmd = 'texcount -quiet -nocol '
-  if a:bib == "bib"
-    let cmd .= '-incbib '
-  endif
-  if a:char == 'char'
-    let chars = system(cmd.'-char '.files)
-    echo
-  endif
-  let words = system(cmd.files)
+  let cmd = 'texcount -quiet -nocol -1 -utf8 -incbib '
+  let texchars = split(split(system(cmd . '-char ' . tex), "\n")[0], '+')[0]
+  let texwords = split(split(system(cmd . tex), "\n")[0], '+')[0]
+  let pdf = join(split(tex, '\.')[0:-2], '.').'.pdf'
+  let cmd = 'pdftotext ' . pdf . ' /dev/stdout | wc -mw'
+  let [pdfwords, pdfchars] = split(system(cmd))
+  echo texwords 'words and' texchars 'chars in file' tex
+  echo pdfwords 'words and' pdfchars 'chars in file' pdf
+  return
   let tc = '!texcount -nosub '
-  let wc = '!pdftotext %:r.pdf /dev/stdout | wc -w '
-  if a:chars == 'char'
+  let wc = '!pdftotext %:r.pdf /dev/stdout | wc -mw '
+  if a:char == 'char'
     let tc .= '-char '
     let wc .= '-m'
   endif
@@ -671,11 +671,9 @@ augroup LucLatex "{{{3
   autocmd!
   autocmd FileType tex
 	\ nmap <buffer> K :call LucTexDocFunction()<CR>|
-	\ nmap <buffer> g<C-g> :call LucLatexCount('')<CR>|
-	\ nmap <buffer> gG :call LucLatexCount('char')<CR>|
+	\ nnoremap <buffer> gG :call LucLatexCount('')<CR>|
 	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex|
-	\ vmap <buffer> g<C-g> :call LucLatexCount('')<CR>|
-	\ vmap <buffer> gG :call LucLatexCount('char')<CR>|
+	\ vnoremap <buffer> gG :call LucLatexCount('')<CR>|
 	\
   autocmd BufWinLeave *.tex
 	\ call LucLatexSaveFolds()
