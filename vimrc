@@ -966,6 +966,10 @@ if has('syntax')
   " on Mac OS X the spellchecking files are in:
   " /Applications/editoren/Vim.app/Contents/Resources/vim/runtime/spell
   set spelllang=de,en
+  if &spellfile == ''
+    set spellfile+=~/.vim/spell/de.utf-8.add
+    set spellfile+=~/.vim/spell/en.utf-8.add
+  endif
   set nospell
 endif
 
