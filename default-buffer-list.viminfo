@@ -2,7 +2,7 @@
 *encoding=utf-8
 
 # Buffer list:
-%~/TODO	0	0
+%~/notes.mkd	0	0
 
 # vim config files
 %~/.vim/vimrc	0	0
@@ -28,7 +28,6 @@
 
 # vim buffer list and other stuff
 %~/.config/vim/default-buffer-list.viminfo	0	0
-%~/.config/vim/notes	0	0
 %~/.config/vim/vimpagerrc	0	0
 
 # further config files
@@ -43,7 +42,6 @@
 %~/.config/shell/profile	0	0
 %~/.config/shell/zshenv	0	0
 %~/.config/shell/zshrc	0	0
-%~/etc/notizen.txt	0	0
 
 # remote files
 #%ftp://ftp.lima-city.de/index.html	0	0
