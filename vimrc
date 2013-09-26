@@ -24,7 +24,8 @@ endif
 " Do not load many of the GUI menus.  This has to happen before 'syntax on'
 " and 'filetype ...'
 set guioptions+=M
-"set guioptions-=m
+set guioptions-=m
+aunmenu *
 
 " syntax and filetype {{{
 if has('syntax')
@@ -785,6 +786,15 @@ augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd!
   autocmd BufWrite * silent %substitute/\s\+$//e
 augroup END
+
+"augroup LucDelMenus
+"  autocmd!
+"  autocmd VimEnter *
+"	\ aunmenu *|
+"	\ augroup LucDelMenus|autocmd!|execute 'augroup EN'.'D'
+"  " Vim syntax higlighting has a bug therefore we use execute in the previous
+"  " line.
+"augroup END
 
 " user defined commands and mappings {{{1
 
