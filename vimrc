@@ -41,7 +41,7 @@ endif
 
 " user defined variables {{{1
 
-let s:notes = '~/.vim/notes'
+"let s:notes = '~/.vim/notes'
 let mapleader = ','
 "let s:braces_stack = []
 let s:path = [
@@ -663,6 +663,21 @@ function! LucLatexCount(file) range "{{{2
   execute wc '2>/dev/null'
 endfunction
 
+function! LucOpenImportantFiles() "{{{2
+  let todo = []
+  let cur = bufnr('%')
+  let alt = bufnr('#')
+  for nr in [2, 3]
+    if bufnr('%') != nr
+      let todo += [nr]
+    endif
+  endfor
+  for nr in todo
+    execute 'tab sbuffer' nr
+  endfor
+  execute 'buffer' cur
+
+endfunction
 " user defined autocommands {{{1
 
 " FileType autocommands {{{2
@@ -750,13 +765,13 @@ augroup LucTodoFile "{{{3
   "autocmd CursorMoved ~/TODO normal zx
 augroup END
 
-augroup LucNotesFile "{{{2
-  " load a notes/scratch buffer which will be saved automatically.
-  autocmd!
-  " use the variable in the autocommands
-  execute 'au BufEnter' s:notes 'setlocal bufhidden=hide'
-  execute 'au BufDelete,BufHidden,BufLeave,BufUnload,FocusLost' s:notes 'up'
-augroup END
+"augroup LucNotesFile "{{{2
+"  " load a notes/scratch buffer which will be saved automatically.
+"  autocmd!
+"  " use the variable in the autocommands
+"  execute 'au BufEnter' s:notes 'setlocal bufhidden=hide'
+"  execute 'au BufDelete,BufHidden,BufLeave,BufUnload,FocusLost' s:notes 'up'
+"augroup END
 
 augroup LucSession "{{{2
   autocmd!
@@ -869,8 +884,8 @@ imap <SwipeDown> G
 " use ß to clear the screen if you want privacy for a moment
 nmap ß :!clear<CR>
 
-" visit a hidden "notes" buffer
-execute 'nmap <C-w># :call LucVisitBufferOrEditFile("' . s:notes . '")<CR>'
+"" visit a hidden "notes" buffer
+"execute 'nmap <C-w># :call LucVisitBufferOrEditFile("' . s:notes . '")<CR>'
 
 "command! -bar -bang Session silent call LucInitiateSession(len('<bang>'))
 
