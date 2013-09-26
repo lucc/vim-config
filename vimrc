@@ -730,6 +730,7 @@ augroup LucLatexSuiteSettings "{{{3
   "let Tex_FoldedSections=''
   "
   "let g:Tex_UseUtfMenus=1
+  let g:Tex_Env_quote = "\\begin{quote}\<CR>,,<++>`` \\cite[S.~<++>]{<++>}\<CR>\\end{quote}"
 augroup END
 augroup LucPython "{{{3
   autocmd!
