@@ -859,8 +859,9 @@ nmap <Leader>v :call
   \ LucHandleURI('http://www.vim.org/scripts/script.php?script_id=' .
   \ matchstr(matchstr(expand('<cword>'), '[0-9]\+[^0-9]*$'), '^[0-9]*'))<CR>
 
-nmap <Leader>d :call LucPutISODate()<CR>
-imap <Leader>d <C-O>:call LucPutISODate()<CR>
+"nmap <Leader>d :call LucPutISODate()<CR>
+"imap <Leader>d <C-O>:call LucPutISODate()<CR>
+nmap <Leader>d "=strftime('%F')<CR>p
 
 " easy compilation {{{2
 nmap          <F2>        :silent update <BAR> call LucQuickMake('', 0)<CR>
