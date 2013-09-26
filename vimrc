@@ -1380,6 +1380,23 @@ Bundle 'slimv.vim'
 Bundle 'davidmfoley/tslime.vim'
 Bundle 'Limp'
 
+" plugins: markdown {{{1
+Bundle 'vim-pandoc/vim-markdownfootnotes'
+
+" strange folding
+"Bundle 'plasticboy/vim-markdown'
+"Bundle   'hallison/vim-markdown'
+
+" strange autocmd which run a lot
+"Bundle 'suan/vim-instant-markdown'
+
+" good folding uses expr
+Bundle 'nelstrom/vim-markdown-folding'
+let g:markdown_fold_style = 'nested'
+
+" strange folding?
+"Bundle 'tpope/vim-markdown'
+
 " plugins: shell {{{1
 
 Bundle 'Shougo/vimproc'
