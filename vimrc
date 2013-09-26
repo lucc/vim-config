@@ -1389,7 +1389,9 @@ Bundle 'davidmfoley/tslime.vim'
 Bundle 'Limp'
 
 " plugins: markdown {{{1
-Bundle 'vim-pandoc/vim-markdownfootnotes'
+" unconditionally binds <Leader>f and <Leader>r (also in insert mode=bad for
+" latex)
+"Bundle 'vim-pandoc/vim-markdownfootnotes'
 
 " strange folding
 "Bundle 'plasticboy/vim-markdown'
