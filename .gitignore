@@ -1,0 +1,21 @@
+# general stuff
+*~
+.*.swp
+.swp
+
+#bundle
+#bundle/*
+#!bundle/vundle
+
+# big spell files
+spell/*
+!spell/*.add
+#spell/de.utf-8.spl
+#spell/de.utf-8.sug
+
+#cache
+viminfo
+
+#doc/tags
+#.VimballRecord
+#.netrwhist

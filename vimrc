@@ -374,22 +374,6 @@ function! LucFindNextSpellError() "{{{2
 endfunction
 
 
-"function! LucInitiateSession(load_old_session) "{{{2
-"  " A function to source a session file and set up an autocommand which will
-"  " automatically save the session again, when vim is quit.
-"  let l:session = '~/.vim/Session.vim'
-"  if a:load_old_session
-"    execute 'source' l:session
-"    silent execute '!rm -f' l:session
-"  endif
-"  augroup LucSession
-"    autocmd!
-"    execute 'autocmd VimLeave * mksession!' l:session
-"  augroup END
-"  if argc() | argdelete * | endif
-"  redraw!
-"endfunction
-
 function! LucQuickMake(target, override) "{{{2
   " Try to build stuff depending on some parameters.  What will be built is
   " decided by a:target and if absent the current file.  First a makefile is
@@ -468,31 +452,6 @@ endfunction
 " see:
 "http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
 "
-"function! LucManageBracesStack(typed) "{{{2
-"  " This function handles the b:braces_stack variables. It is intendet to
-"  " mange the brackets for the user.
-"  if a:typed == ''
-"    return
-"  elseif a:typed =~ '[[({<]'
-"    let l:matches = {'(': ')', '[': ']', '{': '}', '<': '>'}
-"    let l:matching = l:matches[a:typed]
-"    if l:matching == ''
-"      " not good
-"    else
-"      call add(b:braces_stack, l:matching)
-"    endif
-"  elseif a:typed == '[])}>'
-"    if a:typed == b:braces_stack[-1]
-"      execute 'normal i<BS><ESC>x/' . a:typed . '<CR>a'
-"      unlet b:braces_stack[-1]
-"    else
-"      "not ok
-"    endif
-"  else
-"    "not good
-"  endif
-"endfunction
-
 function! LucRemoteEditor(mail) "{{{2
   " a function to be called by a client who wishes to use a vim server as an
   " non forking edior. One can also set the environment variable EDITOR with
@@ -546,7 +505,49 @@ function! LucGetVisualSelection() "{{{2
   return join(lines, "\n")
 endfunction
 
-function! LucUnsetOptions() "{{{2
+" misc/old {{{2
+"function! LucInitiateSession(load_old_session) "{{{3
+"  " A function to source a session file and set up an autocommand which will
+"  " automatically save the session again, when vim is quit.
+"  let l:session = '~/.vim/Session.vim'
+"  if a:load_old_session
+"    execute 'source' l:session
+"    silent execute '!rm -f' l:session
+"  endif
+"  augroup LucSession
+"    autocmd!
+"    execute 'autocmd VimLeave * mksession!' l:session
+"  augroup END
+"  if argc() | argdelete * | endif
+"  redraw!
+"endfunction
+
+"function! LucManageBracesStack(typed) "{{{3
+"  " This function handles the b:braces_stack variables. It is intendet to
+"  " mange the brackets for the user.
+"  if a:typed == ''
+"    return
+"  elseif a:typed =~ '[[({<]'
+"    let l:matches = {'(': ')', '[': ']', '{': '}', '<': '>'}
+"    let l:matching = l:matches[a:typed]
+"    if l:matching == ''
+"      " not good
+"    else
+"      call add(b:braces_stack, l:matching)
+"    endif
+"  elseif a:typed == '[])}>'
+"    if a:typed == b:braces_stack[-1]
+"      execute 'normal i<BS><ESC>x/' . a:typed . '<CR>a'
+"      unlet b:braces_stack[-1]
+"    else
+"      "not ok
+"    endif
+"  else
+"    "not good
+"  endif
+"endfunction
+
+function! LucUnsetOptions() "{{{3
   " unset some options
   " FIXME WHAT FOR?
   set viminfo=
@@ -558,19 +559,7 @@ function! LucUnsetOptions() "{{{2
   redraw
 endfunction
 
-function! LucCpAsPrint(fname) "{{{2
-  let i = 1
-  let target = '~/vim-print-' . i . '.pdf'
-  while filereadable(target)
-    let i += 1
-    let target = '~/vim-print-' . i . '.pdf'
-  endwhile
-  call system('ps2pdf ' . a:fname . ' ' . target)
-  call delete(a:fname)
-  return v:shell_error
-endfunction
-
-function! LucDiffFunction() "{{{2
+function! LucDiffFunction() "{{{3
   " code taken from the help file diff.txt and from diff(1)
   let opt  = '--text '
   let opt .= '--binary '
@@ -584,7 +573,7 @@ function! LucDiffFunction() "{{{2
   silent execute '!diff' opt v:fname_in v:fname_new '>' v:fname_out
 endfunction
 
-function! LucLoadScpBuffers() "{{{2
+function! LucLoadScpBuffers() "{{{3
   badd ftp://ftp.lima-city.de/index.php
   badd ftp://ftp.lima-city.de/css/main.css
   badd ftp://ftp.lima-city.de/files/dotfiles/index.php
@@ -594,8 +583,19 @@ function! LucLoadScpBuffers() "{{{2
   badd scp://lg/.bash_profile
 endfunction
 
-" misc/old {{{2
-"function! LucPatternBufferDo(pattern, ...) "{{{2
+function! LucCpAsPrint(fname) "{{{3
+  let i = 1
+  let target = '~/vim-print-' . i . '.pdf'
+  while filereadable(target)
+    let i += 1
+    let target = '~/vim-print-' . i . '.pdf'
+  endwhile
+  call system('ps2pdf ' . a:fname . ' ' . target)
+  call delete(a:fname)
+  return v:shell_error
+endfunction
+
+"function! LucPatternBufferDo(pattern, ...) "{{{3
 "  " like :bufdo but only visit files which match pattern.
 "  let buffers = []
 "  let i
@@ -617,7 +617,7 @@ endfunction
 "  endfor
 "endfunction
 
-function! LucOpenImportantFiles() "{{{2
+function! LucOpenImportantFiles() "{{{3
   let todo = []
   let cur = bufnr('%')
   let alt = bufnr('#')
@@ -634,7 +634,7 @@ function! LucOpenImportantFiles() "{{{2
 endfunction
 
 
-"function! LucEditAllBuffers() "{{{2
+"function! LucEditAllBuffers() "{{{3
 "  let current = bufnr('%')
 "  let alternative = bufnr('#')
 "  bufdo edit
@@ -646,7 +646,7 @@ endfunction
 "  endif
 "endfunction
 
-function! LucVisitBufferOrEditFile(name) "{{{2
+function! LucVisitBufferOrEditFile(name) "{{{3
   " A function to check if a file was already loaded into some buffer.
   " Depending if it was the function either switches to that buffer or
   " executes ':edit ' on the filename.
@@ -767,12 +767,12 @@ augroup LucSession "{{{2
 	\ endif
 augroup END
 
-augroup LucLocalWindowCD "{{{2
-  autocmd!
-  " FIXME: still buggy
-  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
-	\ execute 'lcd' LucFindBaseDir()
-augroup END
+"augroup LucLocalWindowCD "{{{2
+"  autocmd!
+"  " FIXME: still buggy
+"  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
+"	\ execute 'lcd' LucFindBaseDir()
+"augroup END
 
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd!
@@ -1129,7 +1129,7 @@ let s:plugins = {
 		\ 'omnicppcomplete': 0,
 		\ 'powerline': 0,
 		\ 'qnamebuf': 0,
-		\ 'syntastic': 0,
+		\ 'syntastic': 1,
 		\ 'taglist': 1,
 		\ 'tcommand': 0,
 		\ 'tselectbuffer': 0,
@@ -1927,7 +1927,7 @@ Bundle 'Colour-Sampler-Pack'
 filetype plugin indent on
 
 " set colors for the terminal {{{1
-if has('syntax')
+if has('syntax') &&0
   " for quick changes
   let s:colorscheme = 'sol'
 
