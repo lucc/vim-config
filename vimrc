@@ -968,10 +968,6 @@ rviminfo ~/.vim/default-buffer-list.viminfo
 let s:plugins = {
 		\ 'autocomplpop': 0,
 		\ 'buffergator': 0,
-		\ 'bufferlist': 0,
-		\ 'buffet': 1,
-		\ 'bufmru': 0,
-		\ 'buftabs': 0,
 		\ 'commandt': 0,
 		\ 'ctrlp': 1,
 		\ 'fuzzyfinder': 0,
@@ -981,15 +977,11 @@ let s:plugins = {
 		\ 'nerd': 0,
 		\ 'omnicppcomplete': 0,
 		\ 'powerline': 0,
-		\ 'qnamebuf': 0,
 		\ 'syntastic': 1,
 		\ 'taglist': 1,
-		\ 'tcommand': 0,
 		\ 'tselectbuffer': 0,
 		\ 'tselectfiles': 0,
 		\ 'unite': 0,
-		\ 'vimmp': 0,
-		\ 'winmanager': 0,
 		\ }
 
 " plugins: vundle {{{1

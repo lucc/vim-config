@@ -68,7 +68,6 @@ function! LucToggleFullscreenFunction (big) " {{{2
   endif
 endfunction
 
-
 function! LucOpenPdfOrPreview (check, file, go_back) " {{{2
   " function to check if a pdf file is open in Preview.app and bring it to the
   " foreground.  a:go_back is used to return to vim or not.  When a:file is
@@ -169,28 +168,27 @@ if has("gui_macvim")
 endif
 
 " colorscheme {{{1
-let s:colorscheme = 'sol'
-if s:colorscheme == 'mv'
-  " use the macvim colorscheme, but slightly modify it
-  colorscheme macvim
-  set background=light
-  "hi Normal  guifg=Grey50 guibg=#1f1f1f
-  "hi LineNr  guifg=Grey50 guibg=#1f1f1f
-  "hi Comment guifg=#3464A4
-elseif s:colorscheme == 'sol'
-  " switching to solarized
-  if strftime('%H%M') > 700 && strftime('%H%M') < 2100
-    set bg=light
-  else
-    set bg=dark
-  endif
-  colorscheme solarized
-elseif s:colorscheme == 'pp'
-  " switching to peachpuff because of a bug in (mac?)vim
-  colorscheme peachpuff
-endif
+" version 1
+" use the macvim colorscheme, but slightly modify it
+"colorscheme macvim
+"set background=light
+"hi Normal  guifg=Grey50 guibg=#1f1f1f
+"hi LineNr  guifg=Grey50 guibg=#1f1f1f
+"hi Comment guifg=#3464A4
 
-"cal LucSelectRandomColorscheme()
+" version 2
+" switching to peachpuff because of a bug in (mac?)vim
+"colorscheme peachpuff
+
+" version 3
+" switching to solarized
+if strftime('%H%M') > 700 && strftime('%H%M') < 2100
+  set bg=light
+else
+  set bg=dark
+endif
+colorscheme solarized
+
 
 " other {{{1
 
