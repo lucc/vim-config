@@ -13,8 +13,8 @@ set nocompatible
 
 " see if some important features are present else do not load the file
 if !(   has('autocmd') &&
-      \ has('gui') &&
-      \ has('mouse') &&
+      \ has('gui')     &&
+      \ has('mouse')   &&
       \ has('syntax')
       \ ) || version < 700
   echoerr "This version of Vim lacks many features, please update!"
@@ -28,22 +28,15 @@ set guioptions-=m
 aunmenu *
 
 " syntax and filetype {{{
-if has('syntax')
-  " Switch syntax highlighting on, when the terminal has colors (echo &t_Co)
-  if &t_Co > 2 || has("gui_running")
-    syntax enable
-  endif
-  " Enable file type detection and language-dependent indenting.
-  if has('autocmd')
-    filetype plugin indent on
-  endif
+" Switch syntax highlighting on, when the terminal has colors (echo &t_Co)
+if &t_Co > 2 || has("gui_running")
+  syntax enable
 endif
+" Enable file type detection and language-dependent indenting.
+filetype plugin indent on
 
 " user defined variables {{{1
-
-"let s:notes = '~/.vim/notes'
 let mapleader = ','
-"let s:braces_stack = []
 let s:path = [
       \ '.config',
       \ '.local',
@@ -506,46 +499,6 @@ function! LucGetVisualSelection() "{{{2
 endfunction
 
 " misc/old {{{2
-"function! LucInitiateSession(load_old_session) "{{{3
-"  " A function to source a session file and set up an autocommand which will
-"  " automatically save the session again, when vim is quit.
-"  let l:session = '~/.vim/Session.vim'
-"  if a:load_old_session
-"    execute 'source' l:session
-"    silent execute '!rm -f' l:session
-"  endif
-"  augroup LucSession
-"    autocmd!
-"    execute 'autocmd VimLeave * mksession!' l:session
-"  augroup END
-"  if argc() | argdelete * | endif
-"  redraw!
-"endfunction
-
-"function! LucManageBracesStack(typed) "{{{3
-"  " This function handles the b:braces_stack variables. It is intendet to
-"  " mange the brackets for the user.
-"  if a:typed == ''
-"    return
-"  elseif a:typed =~ '[[({<]'
-"    let l:matches = {'(': ')', '[': ']', '{': '}', '<': '>'}
-"    let l:matching = l:matches[a:typed]
-"    if l:matching == ''
-"      " not good
-"    else
-"      call add(b:braces_stack, l:matching)
-"    endif
-"  elseif a:typed == '[])}>'
-"    if a:typed == b:braces_stack[-1]
-"      execute 'normal i<BS><ESC>x/' . a:typed . '<CR>a'
-"      unlet b:braces_stack[-1]
-"    else
-"      "not ok
-"    endif
-"  else
-"    "not good
-"  endif
-"endfunction
 
 function! LucUnsetOptions() "{{{3
   " unset some options
@@ -616,23 +569,6 @@ endfunction
 "    execute 'buffer' buf '|' join(a:000, ' ')
 "  endfor
 "endfunction
-
-function! LucOpenImportantFiles() "{{{3
-  let todo = []
-  let cur = bufnr('%')
-  let alt = bufnr('#')
-  for nr in [2, 3]
-    if bufnr('%') != nr
-      let todo += [nr]
-    endif
-  endfor
-  for nr in todo
-    execute 'tab sbuffer' nr
-  endfor
-  execute 'buffer' cur
-
-endfunction
-
 
 "function! LucEditAllBuffers() "{{{3
 "  let current = bufnr('%')
@@ -710,6 +646,7 @@ augroup LucLatexSuiteSettings "{{{3
   "let g:Tex_UseUtfMenus=1
   let g:Tex_Env_quote = "\\begin{quote}\<CR>,,<++>`` \\cite[S.~<++>]{<++>}\<CR>\\end{quote}"
 augroup END
+
 augroup LucPython "{{{3
   autocmd!
   autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
@@ -717,7 +654,7 @@ augroup END
 
 augroup LucJava "{{{3
   autocmd!
-  autocmd Filetype java setlocal omnifunc=javacomplete#Complete
+  "autocmd Filetype java setlocal omnifunc=javacomplete#Complete
   autocmd Filetype java setlocal makeprg=cd\ %:h\ &&\ javac\ %:t
 augroup END
 
@@ -728,38 +665,11 @@ augroup END
 
 augroup LucMan "{{{3
   autocmd!
-  autocmd FileType man setlocal nospell
-  autocmd FileType man stopinsert
+  autocmd FileType man stopinsert | setlocal nospell
 augroup END
-
-augroup LucTodoFile "{{{3
-  autocmd!
-  autocmd FileType luc-todo nnoremap <buffer> <down> zj
-  autocmd FileType luc-todo nnoremap <buffer> <up> zk
-  autocmd FileType luc-todo normal zM
-  autocmd FileType luc-todo autocmd CursorMoved <buffer> normal zx
-  "autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO normal zM
-  "autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO nmap <buffer> <down> zj
-  "autocmd BufRead,BufNewFile,BufNew,BufEnter ~/TODO nmap <buffer> <up> zk
-  "autocmd CursorMoved ~/TODO normal zx
-augroup END
-
-"augroup LucNotesFile "{{{2
-"  " load a notes/scratch buffer which will be saved automatically.
-"  autocmd!
-"  " use the variable in the autocommands
-"  execute 'au BufEnter' s:notes 'setlocal bufhidden=hide'
-"  execute 'au BufDelete,BufHidden,BufLeave,BufUnload,FocusLost' s:notes 'up'
-"augroup END
 
 augroup LucSession "{{{2
   autocmd!
-  "autocmd VimEnter *
-  "      \ if bufname('%') == '' && bufnr('%') == 1 |
-  "      \   bwipeout 1 |
-  "      \   silent edit |
-  "      \   silent redraw |
-  "      \ endif
   autocmd VimEnter *
 	\ if LucCheckIfBufferIsNew(1) |
 	\   bwipeout 1 |
@@ -814,32 +724,8 @@ if has('gui_macvim')
   cnoremap æ \|
 endif
 
-" TODO: is this usefull?
-"inoremap ( ()<++><ESC>F)i
-"inoremap [ []<++><ESC>F]i
-"inoremap { {}<++><ESC>F}i
-"autocmd BufNew,BufNewFile,BufRead * let b:braces_stack = []
-"inoremap ( ()<esc>:call LucManageBracesStack('(')<cr>
-"inoremap [ []<esc>:call LucManageBracesStack('[')<cr>
-"inoremap { {}<esc>:call LucManageBracesStack('{')<cr>
-"inoremap < <><esc>:call LucManageBracesStack('<')<cr>
-"inoremap ) )<esc>:call LucManageBracesStack(')')<cr>
-"inoremap ] ]<esc>:call LucManageBracesStack(']')<cr>
-"inoremap } }<esc>:call LucManageBracesStack('}')<cr>
-"inoremap > ><esc>:call LucManageBracesStack('>')<cr>
-
-" web {{{2
-" functions to open URLs
+" open URLs {{{2
 nmap <Leader>w :call LucHandleURI(LucSearchStringForURI(getline('.')))<CR>
-
-" find a script on vim.org by id or name
-nmap <Leader>v :call
-  \ LucHandleURI('http://www.vim.org/scripts/script.php?script_id=' .
-  \ matchstr(matchstr(expand('<cword>'), '[0-9]\+[^0-9]*$'), '^[0-9]*'))<CR>
-
-"nmap <Leader>d :call LucPutISODate()<CR>
-"imap <Leader>d <C-O>:call LucPutISODate()<CR>
-nmap <Leader>d "=strftime('%F')<CR>p
 
 " easy compilation {{{2
 nmap          <F2>        :silent update <BAR> call LucQuickMake('', 0)<CR>
@@ -847,13 +733,12 @@ imap          <F2>   <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
 nmap <silent> <D-F2>      :silent update <BAR> call LucQuickMake('', 1)<CR>
 imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
 
-" move between tabs {{{2
+" moveing around {{{2
 nmap <C-Tab>        gt
 imap <C-Tab>   <C-O>gt
 nmap <C-S-Tab>      gT
 imap <C-S-Tab> <C-O>gT
 
-" move with mouse gestures {{{2
 nmap <SwipeUp>   gg
 imap <SwipeUp>   gg
 nmap <SwipeDown> G
@@ -861,13 +746,10 @@ imap <SwipeDown> G
 
 " misc {{{2
 
+nmap <Leader>d "=strftime('%F')<CR>p
+
 " use ß to clear the screen if you want privacy for a moment
 nmap ß :!clear<CR>
-
-"" visit a hidden "notes" buffer
-"execute 'nmap <C-w># :call LucVisitBufferOrEditFile("' . s:notes . '")<CR>'
-
-"command! -bar -bang Session silent call LucInitiateSession(len('<bang>'))
 
 " From the .vimrc example file:
 " Convenient command to see the difference between the current buffer and the
@@ -875,19 +757,13 @@ nmap ß :!clear<CR>
 " Only define it when not defined already.
 "command! DiffOrig vne | se bt=nofile | r # | 0d_ | difft | wincmd p | difft
 
-command! -nargs=* -complete=dir J call LucAutoJumpWraper("<args>")
-command! Helptags call LucUpdateAllHelptags()
+"command! Helptags call LucUpdateAllHelptags()
 command! DislikeCS call LucLikeColorscheme(-1)
 command! LikeCS call LucLikeColorscheme(1)
 
 nmap <D-+> :call LucLikeColorscheme(1)\|call LucSelectRandomColorscheme()<CR>
 nmap <D--> :call LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
 nmap <D-_> :call LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
-
-
-" options: TODO {{{1
-
-"set foldcolumn=2
 
 " options: basic {{{1
 
@@ -932,37 +808,31 @@ endif
 " options: searching {{{1
 set ignorecase
 set smartcase
-if has('extra_search')
-  " highlight the last used search pattern.
-  set hlsearch
-  " incremental search
-  set incsearch
-endif
+" highlight the last used search pattern.
+set hlsearch
+" incremental search
+set incsearch
 
 " options: spellchecking {{{1
 
-if has('syntax')
-  " on Mac OS X the spellchecking files are in:
-  " /Applications/editoren/Vim.app/Contents/Resources/vim/runtime/spell
-  set spelllang=de,en
-  if &spellfile == ''
-    set spellfile+=~/.vim/spell/de.utf-8.add
-    set spellfile+=~/.vim/spell/en.utf-8.add
-  endif
-  set nospell
+" on Mac OS X the spellchecking files are in:
+" MacVim.app/Contents/Resources/vim/runtime/spell
+set spelllang=de,en
+if &spellfile == ''
+  set spellfile+=~/.vim/spell/de.utf-8.add
+  set spellfile+=~/.vim/spell/en.utf-8.add
 endif
+set nospell
 
 " options: folding {{{1
 
-if has('folding')
-  set foldmethod=syntax
-  " fold code by indent
-  "set foldmethod=indent
-  " but open all (20) folds on startup
-  "set foldlevelstart=20
-  " enable folding for functions, heredocs and if-then-else stuff in sh files.
-  let g:sh_fold_enabled=7
-endif
+set foldmethod=syntax
+" fold code by indent
+"set foldmethod=indent
+" but open all (20) folds on startup
+"set foldlevelstart=20
+" enable folding for functions, heredocs and if-then-else stuff in sh files.
+let g:sh_fold_enabled=7
 
 " options: satusline and wildmenu {{{1
 
@@ -1063,49 +933,32 @@ endif
 "set tabline+=\ %{len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))}
 "set tabline+=%=%{strftime('%a\ %F\ %R')}
 
-" options: colorcolumn {{{1
-
-if version >= 703
-  set colorcolumn=+1
-else
-  " this highlights the part of the line which is longer then 78 char in grey
-  " (blue in a terminal).
-  augroup LucOverlength
-    autocmd!
-    autocmd BufRead * highlight OverLength ctermbg=blue ctermfg=white
-    autocmd BufRead * match OverLength /\%79v.*/
-  augroup END
-endif
-
 " options: other {{{1
-if has('mouse')        | set mouse=a                 | endif
-if has('cmdline_info') | set showcmd                 | endif
-if has('vertsplit')    | set splitright              | endif
-if has('virtualedit')  | set virtualedit=block       | endif
-if has('diff')         | set diffopt=filler,vertical | endif
-if has('vms')          | set nobackup                | endif
-if has('mksession')
-  " default: blank,buffers,curdir,folds,help,options,tabpages,winsize
-  set sessionoptions+=resize,winpos
-endif
-if has('viminfo')
-  " default: '100,<50,s10,h
-  set viminfo='100,<50,s10,h,%,n~/.vim/viminfo
-  " the flag ' is for filenames for marks
-  set viminfo='100
-  " the flag < is the nummber of lines saved per register
-  set viminfo+=<50
-  " max size saved for registers in kb
-  set viminfo+=s10
-  " disable hlsearch
-  set viminfo+=h
-  " remember (whole) buffer list
-  set viminfo+=%
-  " name of the viminfo file
-  set viminfo+=n~/.vim/viminfo
-  " load a static viminfo file with a file list
-  rviminfo ~/.vim/default-buffer-list.viminfo
-endif
+set colorcolumn=+1
+set mouse=a
+set showcmd
+set splitright
+set virtualedit=block
+set diffopt=filler,vertical
+" default: blank,buffers,curdir,folds,help,options,tabpages,winsize
+set sessionoptions+=resize,winpos
+
+" default: '100,<50,s10,h
+set viminfo='100,<50,s10,h,%,n~/.vim/viminfo
+" the flag ' is for filenames for marks
+set viminfo='100
+" the flag < is the nummber of lines saved per register
+set viminfo+=<50
+" max size saved for registers in kb
+set viminfo+=s10
+" disable hlsearch
+set viminfo+=h
+" remember (whole) buffer list
+set viminfo+=%
+" name of the viminfo file
+set viminfo+=n~/.vim/viminfo
+" load a static viminfo file with a file list
+rviminfo ~/.vim/default-buffer-list.viminfo
 
 " plugins: management {{{1
 " I manage plugins with vundle.  In order to easyly test plugins I keep a
@@ -1139,22 +992,6 @@ let s:plugins = {
 		\ 'winmanager': 0,
 		\ }
 
-" plugins: standard {{{1
-
-" 2012-03-01
-" These are the builtin plugins which are loaded from the global vim/runtime
-" directory:
-" - getscriptPlugin.vim
-" - gzip.vim
-" - matchparen.vim
-" - netrwPlugin.vim
-" - rrhelper.vim
-" - spellfile.vim
-" - tarPlugin.vim
-" - tohtml.vim
-" - vimballPlugin.vim
-" - zipPlugin.vim
-
 " plugins: vundle {{{1
 " Managing plugins with Vundle (https://github.com/gmarik/vundle)
 filetype off
@@ -1168,11 +1005,6 @@ Bundle 'L9'
 Bundle 'tomtom/tlib_vim'
 
 " plugins: buffer and file management {{{1
-"Bundle 'bufexplorer.zip'
-"Bundle 'incbufswitch.vim'
-"Bundle 'buflist'
-"Bundle 'tomtom/tcommand_vim'
-"1910 qbuf.vim
 
 if s:plugins['buffergator'] "{{{2
   Bundle 'jeetsukumaran/vim-buffergator'
@@ -1181,39 +1013,6 @@ if s:plugins['buffergator'] "{{{2
   let g:did_buffergator = 0
   let g:buffergator_suppress_keymaps = 1
   nmap <Leader>bg :BuffergatorToggle<CR>
-endif
-
-if s:plugins['bufferlist'] "{{{2
-  Bundle 'bufferlist.vim'
-  " Very simple list of loaded buffers
-  " is only checked for existenc
-  "let g:BufferListLoaded = 0
-  " does not need a mapping:
-  nmap <leader>m :call BufferList()<cr>
-endif
-
-if s:plugins['buffet'] "{{{2
-  Bundle 'sandeepcr529/Buffet.vim'
-  " no help?  I can not disable it!
-  nmap <leader>bl :Bufferlist<CR>
-endif
-
-if s:plugins['bufmru'] "{{{2
-  Bundle 'bufmru.vim'
-  " no help
-  " is only checked for existenc
-  "let loaded_bufmru = 1
-  "let g:bufmru_switchkey = expand('<leader>bm')
-  " seems buggy
-endif
-
-if s:plugins['buftabs'] "{{{2
-  Bundle 'buftabs'
-  " no help / can not disable it / quite nice
-  let g:buftabs_marker_modified = '+'
-  let g:buftabs_only_basename = 1
-  "let g:buftabs_in_statusline=1
-  "set statusline=%=buffers:\ %{buftabs#statusline()}
 endif
 
 if s:plugins['commandt'] "{{{2
@@ -1310,15 +1109,6 @@ if s:plugins['nerd'] "{{{2
   nmap <leader>nt :NERDTreeToggle<cr>
 endif
 
-if s:plugins['qnamebuf'] "{{{2
-  Bundle 'qnamebuf'
-  let g:qnamebuf_loaded = 0
-  "let g:qnamefile_loaded = 0
-  " this will not help
-  let qnamebuf_hotkey = '<leader>qb'
-  "let qnamefile_hotkey = '<leader>j'
-endif
-
 if s:plugins['tselectbuffer'] "{{{2
   Bundle 'tomtom/tselectbuffer_vim'
   " needs tlib >= 0.40
@@ -1335,13 +1125,6 @@ endif
 if s:plugins['unite'] "{{{2
   Bundle 'Shougo/unite.vim'
   let g:unite_data_directory = '~/.vim/cache/unite'
-endif
-
-if s:plugins['winmanager'] "{{{2
-  " The NERD_Tree plugin provides the same functionality but seem nicer
-  Bundle 'winmanager'
-  "map <C-w><C-t> :WMToggle<CR>
-  nmap <leader>wt :WMToggle<cr>
 endif
 
 " plugins: LaTeX {{{1
@@ -1822,26 +1605,10 @@ Bundle 'VimRepress'
 Bundle 'ZoomWin'
 Bundle 'AndrewRadev/linediff.vim'
 Bundle 'vimwiki'
-" plugins: git stuff {{{2
+
+" plugins: git stuff {{{1
 "Bundle 'tpope/vim-git'
 Bundle 'tpope/vim-fugitive'
-
-" plugins: mpd {{{1
-"2369 vmmp
-"Bundle 'vimmpc'
-
-if s:plugins['vimmp'] "{{{2
-  Bundle 'vimmp'
-  let g:vimmp_server_type="mpd"
-  let g:mpd_music_directory="~/.mpd/music"
-  let g:mpd_playlist_directory="~/.mpd/lists"
-  if has('python')
-    py import os, sys
-    py sys.path.append(os.path.expanduser("~/.vim/bundle/vimmp"))
-    pyf ~/.vim/bundle/vimmp/main.py
-    command MPC py vimmp_toggle()
-  endif
-endif
 
 " plugins: colors {{{1
 " list all colorschemes with: globpath(&rtp,'colors/*.vim')
@@ -1885,26 +1652,6 @@ Bundle 'Colour-Sampler-Pack'
 "Bundle 'xterm-color-table.vim'
 "Bundle 'snipMate'
 
-" maybe not interesting {{{2
-"Bundle 'GVColors'
-"1283 tbe.vim
-
-" why is this installed? {{{2
-"Bundle 'cecutil'
-
-" other default {{{2
-"40 DrawIt.tar.gz
-"104 blockhl.vim
-"120 decho.vim
-"122 astronaut.vim
-"195 engspchk.vim
-"294 Align.vim
-"302 AnsiEsc.vim
-"451 EasyAccents.vim
-"514 mrswin.vim                   # wtf?
-"551 Mines.vim                    # wtf?
-"628 SeeTab.vim
-"670 visincr.vim
 
 " added on 2012-02-14 (bookmarks) {{{2
 "1048 R_with_vim.tar.gz
@@ -1927,26 +1674,21 @@ Bundle 'Colour-Sampler-Pack'
 filetype plugin indent on
 
 " set colors for the terminal {{{1
-if has('syntax') &&0
-  " for quick changes
-  let s:colorscheme = 'sol'
 
-  if s:colorscheme == 'mv'
-    colorscheme macvim
-    hi Pmenu ctermfg=202 ctermbg=234
-    hi PmenuSel ctermfg=234 ctermbg=202
-    highlight LineNr ctermbg=black ctermfg=DarkGrey
-  elseif s:colorscheme == 'sol'
-    " switching to solarized
-    colorscheme solarized
-    if has('gui_running')
-      if strftime('%H%M') > 700 && strftime('%H%M') < 2100
-	set background=light
-      else
-	set background=dark
-      endif
-    else
-      set background=dark
-    endif
+" version 1
+"colorscheme macvim
+"hi Pmenu ctermfg=202 ctermbg=234
+"hi PmenuSel ctermfg=234 ctermbg=202
+"highlight LineNr ctermbg=black ctermfg=DarkGrey
+
+" version 2
+colorscheme solarized
+if has('gui_running')
+  if strftime('%H%M') > 700 && strftime('%H%M') < 2100
+    set background=light
+  else
+    set background=dark
   endif
+else
+  set background=dark
 endif

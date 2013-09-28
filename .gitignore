@@ -1,21 +1,20 @@
-# general stuff
+# backup and swap files
 *~
 .*.swp
 .swp
 
-#bundle
+# spell files
+spell/*
+!spell/*.add
+
+# bundle repositories
+bundle
 #bundle/*
 #!bundle/vundle
 
-# big spell files
-spell/*
-!spell/*.add
-#spell/de.utf-8.spl
-#spell/de.utf-8.sug
-
+# other stuff
 #cache
 viminfo
-
 #doc/tags
 #.VimballRecord
 #.netrwhist
