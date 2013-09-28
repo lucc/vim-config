@@ -73,11 +73,6 @@ call map(s:path, 'v:val . "/**"')
 
 " help and documentation functions {{{2
 
-function! LucTexDocFunction() "{{{3
-  let l:word = expand("<cword>")
-  silent execute '!texdoc' l:word
-endfunction
-
 function! LucManPageFunction(...) "{{{3
   " try to find a manpage
   if &filetype == 'man' && a:0 == 0
@@ -206,6 +201,55 @@ function! LucRemoveColorscheme() "{{{3
   endif
 endfunction
 
+" latex functions {{{2
+function! LucTexDocFunction() "{{{3
+  let l:word = expand("<cword>")
+  silent execute '!texdoc' l:word
+endfunction
+
+function! LucLatexSaveFolds() "{{{3
+  let l:old = &viewoptions
+  set viewoptions=folds
+  mkview
+  let &viewoptions = l:old
+endfunction
+
+function! LucLatexCount(file) range "{{{3
+  if type(a:file) == type(0)
+    let tex = bufname(a:file)
+  elseif type(a:file) == type("")
+    if a:file == ""
+      let tex = expand("%")
+    else
+      let tex = a:file
+    endif
+  else
+    return No_File_Found
+  endif
+  let cmd = 'texcount -quiet -nocol -1 -utf8 -incbib '
+  let texchars = split(split(system(cmd . '-char ' . tex), "\n")[0], '+')[0]
+  let texwords = split(split(system(cmd . tex), "\n")[0], '+')[0]
+  let pdf = join(split(tex, '\.')[0:-2], '.').'.pdf'
+  let cmd = 'pdftotext ' . pdf . ' /dev/stdout | wc -mw'
+  let [pdfwords, pdfchars] = split(system(cmd))
+  echo texwords 'words and' texchars 'chars in file' tex
+  echo pdfwords 'words and' pdfchars 'chars in file' pdf
+  return
+  let tc = '!texcount -nosub '
+  let wc = '!pdftotext %:r.pdf /dev/stdout | wc -mw '
+  if a:char == 'char'
+    let tc .= '-char '
+    let wc .= '-m'
+  endif
+  if a:firstline == a:lastline
+    let tc .= '%'
+  else
+    let tc = a:firstline . ',' . a:lastline . 'write ' . tc . '-'
+  endif
+  execute tc
+  execute wc '2>/dev/null'
+endfunction
+
 function! LucFindBaseDir() "{{{2
   " files which indicate a suitable base directory
   let indicator_files = [
@@ -329,15 +373,6 @@ function! LucFindNextSpellError() "{{{2
   "endif
 endfunction
 
-function! LucVisitBufferOrEditFile(name) "{{{2
-  " A function to check if a file was already loaded into some buffer.
-  " Depending if it was the function either switches to that buffer or
-  " executes ':edit ' on the filename.
-  if match(expand(a:name), '/') == -1
-    let a:name = getcwd() . '/' . a:name
-  endif
-  execute (bufexists(expand(a:name)) ? 'buffer ' : 'edit ') . expand(a:name)
-endfunction
 
 "function! LucInitiateSession(load_old_session) "{{{2
 "  " A function to source a session file and set up an autocommand which will
@@ -462,52 +497,42 @@ function! LucRemoteEditor(mail) "{{{2
   " a function to be called by a client who wishes to use a vim server as an
   " non forking edior. One can also set the environment variable EDITOR with
   " EDITOR='vim --remote-tab-wait-silent +call\ LucRemoteEditor()'
-  let abbreviate = 'cnoreabbrev <buffer>'
-  let quit = 'confirm bdelete'
-  let forcequit = 'bdelete!'
-  let hide = 'silent call system("osascript -e \"' .
-	\ 'tell application \\\"System Events\\\" ' .
-	\ 'to set visible of process \\\"MacVim\\\" to false\"")'
-  let quitandhide = quit . '<bar>' . hide . '<bar> redraw'
-  let forcequitandhide = forcequit . '<bar>' . hide . '<bar> redraw'
-  let write = 'write'
-  let update = 'update'
-  execute abbreviate 'q'                          quitandhide
-  "execute abbreviate 'q!'                    forcequitandhide
-  execute abbreviate 'qu'                         quitandhide
-  "execute abbreviate 'qu!'                   forcequitandhide
-  execute abbreviate 'qui'                        quitandhide
-  "execute abbreviate 'qui!'                  forcequitandhide
-  execute abbreviate 'quit'                       quitandhide
-  "execute abbreviate 'quit!'                 forcequitandhide
-  execute abbreviate 'wq'   write  '<bar>'        quitandhide
-  execute abbreviate 'x'    update '<bar>'        quitandhide
-  execute abbreviate 'xi'   update '<bar>'        quitandhide
-  execute abbreviate 'xit'  update '<bar>'        quitandhide
-  execute abbreviate 'exi'  update '<bar>'        quitandhide
-  execute abbreviate 'exit' update '<bar>'        quitandhide
-  execute 'nnoremap <buffer> ZZ :update<bar>'     quitandhide . '<CR>'
-  execute 'nnoremap <buffer> ZQ :bdelete!<bar>' hide . '<CR>'
-  execute 'nnoremap <buffer> <c-w><c-q>' ':' . quitandhide . '<CR>'
-  execute 'nnoremap <buffer> <c-w>q'     ':' . quitandhide . '<CR>'
+
+  " the command to hide MacVim (use with system())
+  let s:applescript = 'osascript -e "tell application \"System Events\"' .
+	\ ' to set visible of process \"MacVim\" to false" &'
+
+  " use an autocommand to move MacVim to the background when leaving the
+  " buffer
+  augroup RemoteEditor
+    autocmd BufDelete <buffer> silent call system(s:applescript)
+  augroup END
+
+  " define some custom commands to quit the buffer
+  command -bang -buffer -bar QuitRemoteEditor confirm bdelete<bang>
+  command -bang -buffer -bar HideRemoteEditor silent call system(applescript)
+
+  cnoreabbrev <buffer> q        bdelete
+  cnoreabbrev <buffer> qu       bdelete
+  cnoreabbrev <buffer> qui      bdelete
+  cnoreabbrev <buffer> quit     bdelete
+  cnoreabbrev <buffer> wq       write  <bar> bdelete
+  cnoreabbrev <buffer> x        update <bar> bdelete
+  cnoreabbrev <buffer> xi       update <bar> bdelete
+  cnoreabbrev <buffer> xit      update <bar> bdelete
+  cnoreabbrev <buffer> exi      update <bar> bdelete
+  cnoreabbrev <buffer> exit     update <bar> bdelete
+  nnoremap <buffer> ZZ         :update<bar>bdelete<CR>
+  nnoremap <buffer> ZQ         :bdelete!<CR>
+  nnoremap <buffer> <c-w><c-q> :bdelete<CR>
+  nnoremap <buffer> <c-w>q     :bdelete<CR>
+
   if a:mail == 1
     /^$
     normal vGzo
     redraw!
   endif
 endfunction
-
-"function! LucEditAllBuffers() "{{{2
-"  let current = bufnr('%')
-"  let alternative = bufnr('#')
-"  bufdo edit
-"  if bufexists(alternative)
-"    execute 'buffer' alternative
-"  endif
-"  if bufexists(current)
-"    execute 'buffer' current
-"  endif
-"endfunction
 
 function! LucGetVisualSelection() "{{{2
   " This function is copied from http://stackoverflow.com/questions/1533565/
@@ -521,49 +546,9 @@ function! LucGetVisualSelection() "{{{2
   return join(lines, "\n")
 endfunction
 
-function! LucAutoJumpWraper(...) "{{{2
-  " call the autojump executable to change the directory in vim
-  if a:0 == 0
-    let arg = '-s'
-    let cmd = 'echo'
-  else
-    let arg = join(a:000)
-    let cmd = 'cd'
-  endif
-  let result = system('autojump ' . arg)
-  execute cmd result
-endfunction
-
-"function! LucMpdClient() "{{{2
-"endfunction
-
-"function! LucPatternBufferDo(pattern, ...) "{{{2
-"  " like :bufdo but only visit files which match pattern.
-"  let buffers = []
-"  let i
-"  let buf
-"  for i in range(bufnr('$'))
-"    if bufexists(i)
-"      if bufname(i) =~ a:pattern
-"	append(buffers, i)
-"      endif
-"    endif
-"  endfor
-"  if len(buffers) == 0
-"    echoerr 'No buffers match ' . pattern . '!'
-"    return
-"  endif
-"  for buf in buffers
-"    echo 'Visiting buffer ' . bufname(buf) . '.'
-"    execute 'buffer' buf '|' join(a:000, ' ')
-"  endfor
-"endfunction
-
-function! LucUpdateBundlesInBackground() "{{{2
-  silent echo ''
-endfunction
-
 function! LucUnsetOptions() "{{{2
+  " unset some options
+  " FIXME WHAT FOR?
   set viminfo=
   set noswapfile
   set laststatus=0
@@ -599,17 +584,6 @@ function! LucDiffFunction() "{{{2
   silent execute '!diff' opt v:fname_in v:fname_new '>' v:fname_out
 endfunction
 
-function! LucPutISODate() "{{{2
-  let old_register = @d
-  let @d = strftime('%F')
-  normal "dp
-  let @d = old_register
-endfunction
-
-function! LucGermanUTF8Quotes() "{{{2
-
-endfunction
-
 function! LucLoadScpBuffers() "{{{2
   badd ftp://ftp.lima-city.de/index.php
   badd ftp://ftp.lima-city.de/css/main.css
@@ -620,48 +594,28 @@ function! LucLoadScpBuffers() "{{{2
   badd scp://lg/.bash_profile
 endfunction
 
-function! LucLatexSaveFolds() "{{{2
-  let l:old = &viewoptions
-  set viewoptions=folds
-  mkview
-  let &viewoptions = l:old
-endfunction
-
-function! LucLatexCount(file) range "{{{2
-  if type(a:file) == type(0)
-    let tex = bufname(a:file)
-  elseif type(a:file) == type("")
-    if a:file == ""
-      let tex = expand("%")
-    else
-      let tex = a:file
-    endif
-  else
-    return No_File_Found
-  endif
-  let cmd = 'texcount -quiet -nocol -1 -utf8 -incbib '
-  let texchars = split(split(system(cmd . '-char ' . tex), "\n")[0], '+')[0]
-  let texwords = split(split(system(cmd . tex), "\n")[0], '+')[0]
-  let pdf = join(split(tex, '\.')[0:-2], '.').'.pdf'
-  let cmd = 'pdftotext ' . pdf . ' /dev/stdout | wc -mw'
-  let [pdfwords, pdfchars] = split(system(cmd))
-  echo texwords 'words and' texchars 'chars in file' tex
-  echo pdfwords 'words and' pdfchars 'chars in file' pdf
-  return
-  let tc = '!texcount -nosub '
-  let wc = '!pdftotext %:r.pdf /dev/stdout | wc -mw '
-  if a:char == 'char'
-    let tc .= '-char '
-    let wc .= '-m'
-  endif
-  if a:firstline == a:lastline
-    let tc .= '%'
-  else
-    let tc = a:firstline . ',' . a:lastline . 'write ' . tc . '-'
-  endif
-  execute tc
-  execute wc '2>/dev/null'
-endfunction
+" misc/old {{{2
+"function! LucPatternBufferDo(pattern, ...) "{{{2
+"  " like :bufdo but only visit files which match pattern.
+"  let buffers = []
+"  let i
+"  let buf
+"  for i in range(bufnr('$'))
+"    if bufexists(i)
+"      if bufname(i) =~ a:pattern
+"	append(buffers, i)
+"      endif
+"    endif
+"  endfor
+"  if len(buffers) == 0
+"    echoerr 'No buffers match ' . pattern . '!'
+"    return
+"  endif
+"  for buf in buffers
+"    echo 'Visiting buffer ' . bufname(buf) . '.'
+"    execute 'buffer' buf '|' join(a:000, ' ')
+"  endfor
+"endfunction
 
 function! LucOpenImportantFiles() "{{{2
   let todo = []
@@ -678,6 +632,30 @@ function! LucOpenImportantFiles() "{{{2
   execute 'buffer' cur
 
 endfunction
+
+
+"function! LucEditAllBuffers() "{{{2
+"  let current = bufnr('%')
+"  let alternative = bufnr('#')
+"  bufdo edit
+"  if bufexists(alternative)
+"    execute 'buffer' alternative
+"  endif
+"  if bufexists(current)
+"    execute 'buffer' current
+"  endif
+"endfunction
+
+function! LucVisitBufferOrEditFile(name) "{{{2
+  " A function to check if a file was already loaded into some buffer.
+  " Depending if it was the function either switches to that buffer or
+  " executes ':edit ' on the filename.
+  if match(expand(a:name), '/') == -1
+    let a:name = getcwd() . '/' . a:name
+  endif
+  execute (bufexists(expand(a:name)) ? 'buffer ' : 'edit ') . expand(a:name)
+endfunction
+
 " user defined autocommands {{{1
 
 " FileType autocommands {{{2
@@ -1135,7 +1113,7 @@ endif
 " not.  One could also comment the the line loading the plugin, but these are
 " scatterd ofer the file and not centralized.
 let s:plugins = {
-		\ 'autocomplpop': 1,
+		\ 'autocomplpop': 0,
 		\ 'buffergator': 0,
 		\ 'bufferlist': 0,
 		\ 'buffet': 1,
@@ -1148,6 +1126,7 @@ let s:plugins = {
 		\ 'lusty': 0,
 		\ 'neocompl': 0,
 		\ 'nerd': 0,
+		\ 'omnicppcomplete': 0,
 		\ 'powerline': 0,
 		\ 'qnamebuf': 0,
 		\ 'syntastic': 0,
@@ -1181,8 +1160,8 @@ let s:plugins = {
 filetype off
 set runtimepath+=~/.vim/bundle/vundle
 call vundle#rc()
-"Bundle 'gmarik/vundle'
-Bundle 'lucc/vundle'
+Bundle 'gmarik/vundle'
+"Bundle 'lucc/vundle'
 
 " plugins: libs {{{1
 Bundle 'L9'
@@ -1632,7 +1611,16 @@ let g:manpageview_winopen = 'reuse'
 "Bundle 'IComplete'
 "Bundle 'cppcomplete'
 
-Bundle 'javacomplete'
+Bundle 'Valloric/YouCompleteMe'
+let g:ycm_filetype_blacklist = {}
+let g:ycm_complete_in_comments = 1
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_autoclose_preview_window_after_completion = 0
+
+
+"Bundle 'javacomplete'
 
 if s:plugins['neocompl'] "{{{2
   "Bundle 'Shougo/neocomplete.vim'
@@ -1739,70 +1727,71 @@ if s:plugins['neocompl'] "{{{2
   """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 endif
 
-" Bundle 'OmniCppComplete' {{{2
-Bundle 'OmniCppComplete'
-"http://www.vim.org/scripts/script.php?script_id=1520
-if version >= 7
-  " OmniCompletion see ``:help compl-omni''
-  " thanks to http://vim.wikia.com/wiki/C%2B%2B_code_completion
-  let OmniCpp_NamespaceSearch = 1
-  let OmniCpp_GlobalScopeSearch = 1
-  let OmniCpp_ShowAccess = 1
-  let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-  let OmniCpp_MayCompleteDot = 1      " autocomplete after .
-  let OmniCpp_MayCompleteArrow = 1    " autocomplete after ->
-  let OmniCpp_MayCompleteScope= 1    " autocomplete after ::
-  let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-  " automatically open and close the popup menu / preview window
-  augroup LucOmniCppCompete
-    autocmd!
-    autocmd CursorMovedI,InsertLeave * if pumvisible() == 0|sil! pclose|endif
-  augroup END
-  set completeopt=menu,longest,preview
-  imap <C-TAB> <C-x><C-o>
+if s:plugins['omnicppcomplete'] "{{{2
+  Bundle 'OmniCppComplete'
+  "http://www.vim.org/scripts/script.php?script_id=1520
+  if version >= 7
+    " OmniCompletion see ``:help compl-omni''
+    " thanks to http://vim.wikia.com/wiki/C%2B%2B_code_completion
+    let OmniCpp_NamespaceSearch = 1
+    let OmniCpp_GlobalScopeSearch = 1
+    let OmniCpp_ShowAccess = 1
+    let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
+    let OmniCpp_MayCompleteDot = 1      " autocomplete after .
+    let OmniCpp_MayCompleteArrow = 1    " autocomplete after ->
+    let OmniCpp_MayCompleteScope= 1    " autocomplete after ::
+    let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
+    " automatically open and close the popup menu / preview window
+    augroup LucOmniCppCompete
+      autocmd!
+      autocmd CursorMovedI,InsertLeave * if pumvisible() == 0|sil! pclose|endif
+    augroup END
+    set completeopt=menu,longest,preview
+    imap <C-TAB> <C-x><C-o>
+  endif
 endif
 
 if s:plugins['autocomplpop'] "{{{2
-Bundle 'AutoComplPop'
-" do not start popup menu after curser moved.
-"let g:acp_mappingDriven = 1
-"let g:acp_behaviorKeywordCommand = '<tab>'
+  Bundle 'AutoComplPop'
+  " do not start popup menu after curser moved.
+  "let g:acp_mappingDriven = 1
+  "let g:acp_behaviorKeywordCommand = '<tab>'
 
-" From the help file:
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""{{{
-" snipMate's Trigger Completion ~
-"
-" snipMate's trigger completion enables you to complete a snippet trigger
-" provided by snipMate plugin
-" (http://www.vim.org/scripts/script.php?script_id=2540) and expand it.
-"
-"
-" To enable auto-popup for this completion, add following function to
-" plugin/snipMate.vim:
-" >
-"   fun! GetSnipsInCurrentScope()
-"     let snips = {}
-"     for scope in [bufnr('%')] + split(&ft, '\.') + ['_']
-"       call extend(snips, get(s:snippets, scope, {}), 'keep')
-"       call extend(snips, get(s:multi_snips, scope, {}), 'keep')
-"     endfor
-"     return snips
-"   endf
-" <
-" And set |g:acp_behaviorSnipmateLength| option to 1.
-"
-" There is the restriction on this auto-popup, that the word before cursor must
-" consist only of uppercase characters.
-"
-"                                                              *acp-perl-omni*
-" Perl Omni-Completion ~
-"
-" AutoComplPop supports perl-completion.vim
-" (http://www.vim.org/scripts/script.php?script_id=2852).
-"
-" To enable auto-popup for this completion, set |g:acp_behaviorPerlOmniLength|
-" option to 0 or more.
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
+  " From the help file:
+  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""{{{
+  " snipMate's Trigger Completion ~
+  "
+  " snipMate's trigger completion enables you to complete a snippet trigger
+  " provided by snipMate plugin
+  " (http://www.vim.org/scripts/script.php?script_id=2540) and expand it.
+  "
+  "
+  " To enable auto-popup for this completion, add following function to
+  " plugin/snipMate.vim:
+  " >
+  "   fun! GetSnipsInCurrentScope()
+  "     let snips = {}
+  "     for scope in [bufnr('%')] + split(&ft, '\.') + ['_']
+  "       call extend(snips, get(s:snippets, scope, {}), 'keep')
+  "       call extend(snips, get(s:multi_snips, scope, {}), 'keep')
+  "     endfor
+  "     return snips
+  "   endf
+  " <
+  " And set |g:acp_behaviorSnipmateLength| option to 1.
+  "
+  " There is the restriction on this auto-popup, that the word before cursor
+  " must consist only of uppercase characters.
+  "
+  "                                                            *acp-perl-omni*
+  " Perl Omni-Completion ~
+  "
+  " AutoComplPop supports perl-completion.vim
+  " (http://www.vim.org/scripts/script.php?script_id=2852).
+  "
+  " To enable auto-popup for this completion, set
+  " |g:acp_behaviorPerlOmniLength| option to 0 or more.
+  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 endif
 
 " plugins: parenthesis and quotes {{{1
