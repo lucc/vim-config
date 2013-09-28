@@ -668,10 +668,10 @@ augroup LucLatex "{{{3
 	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex|
 	\ vnoremap <buffer> gG :call LucLatexCount('')<CR>|
 	\
-  autocmd BufWinLeave *.tex
-	\ call LucLatexSaveFolds()
-  autocmd BufWinEnter *.tex
-	\ silent loadview
+  "autocmd BufWinLeave *.tex
+  "      \ call LucLatexSaveFolds()
+  "autocmd BufWinEnter *.tex
+  "      \ silent loadview
 augroup END
 
 augroup LucLatexSuiteSettings "{{{3
