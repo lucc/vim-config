@@ -784,7 +784,6 @@ set path+=/usr/X11/include/
 set path+=/opt/X11/include/
 set textwidth=78
 set shiftwidth=2
-set background=light
 " formatoptions default is tcq
 set formatoptions+=n " recognize numbered lists
 set formatoptions+=r " insert comment leader when hitting <enter>
@@ -869,7 +868,7 @@ if has('statusline')
   set statusline+=[%{strftime('%R')}]             " clock
   set statusline+=\ [%c%V,%l/%L]                  " position in file
   set statusline+=\ [%P]                          " percent of above
-  "set statusline+=\ %{SyntasticStatuslineFlag()}  " see :h syntastic
+  set statusline+=\ %{SyntasticStatuslineFlag()}  " see :h syntastic
 
   " always display the statusline
   set laststatus=2
@@ -1590,7 +1589,10 @@ Bundle 'applescript.vim'
 "Bundle 'calendar.vim'
 " buggy!
 Bundle 'matchit.zip'
-Bundle 'Vim-JDE'
+
+" Takes forever to load
+"Bundle 'Vim-JDE'
+
 Bundle 'VimRepress'
 "Bundle 'connermcd/VimRepress'
 "Bundle 'blogit.vim'
@@ -1667,20 +1669,15 @@ filetype plugin indent on
 
 " set colors for the terminal {{{1
 
-" version 1
-"colorscheme macvim
-"hi Pmenu ctermfg=202 ctermbg=234
-"hi PmenuSel ctermfg=234 ctermbg=202
-"highlight LineNr ctermbg=black ctermfg=DarkGrey
+" If the GUI is running the colorscheme will be set in gvimrc.
+if ! has('gui_running')
+  " version 1
+  "colorscheme macvim
+  "hi Pmenu ctermfg=202 ctermbg=234
+  "hi PmenuSel ctermfg=234 ctermbg=202
+  "highlight LineNr ctermbg=black ctermfg=DarkGrey
 
-" version 2
-colorscheme solarized
-if has('gui_running')
-  if strftime('%H%M') > 700 && strftime('%H%M') < 2100
-    set background=light
-  else
-    set background=dark
-  endif
-else
+  " version 2
   set background=dark
+  colorscheme solarized
 endif
