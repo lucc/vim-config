@@ -1,0 +1,29 @@
+snippet article "The default header for an article" i
+\documentclass[4apaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[${1:ngerman}]{babel}
+
+\author{Lucas Hoffmann}
+\title{$2}
+
+\begin{document}
+%%fakesection titlepage
+\maketitle
+\renewcommand\abstractname{}
+\begin{abstract}
+% TODO
+\end{abstract}
+\vfill
+\tableofcontents
+\clearpage
+
+\section{Einleitung}
+$0
+
+%%fakesection Bibliographie
+\biblographystyle{${3:alphadin}}
+\bibliography{${4:main}}
+\end{document}
+%%fakesection Notizen
+endsnippet
