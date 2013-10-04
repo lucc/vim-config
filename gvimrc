@@ -29,6 +29,12 @@ if system('uname') == 'Linux'
   s:normalfonts = 'DejaVu Sans Mono 9'
 endif
 
+" A directory/namespace for functions local ti this vimrc file
+let s:luc = {}
+" And a directory/namespace for other user defined functions.  This should be
+" set in vimrc already!
+"let luc = {}
+
 " user defined functions {{{1
 function! LucSelectFont (big) "{{{2
   " Select a font and set it

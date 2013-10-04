@@ -25,7 +25,6 @@ endif
 " and 'filetype ...'
 set guioptions+=M
 set guioptions-=m
-aunmenu *
 
 " syntax and filetype {{{
 " Switch syntax highlighting on, when the terminal has colors (echo &t_Co)
@@ -62,11 +61,62 @@ let s:path = [
 let s:path = split(join(map(s:path, 'glob("~/" . v:val)')))
 call map(s:path, 'v:val . "/**"')
 
+" month names for emails
+"let s:month_names = {
+"      \ 'jannuar':   'Jan',
+"      \ 'januar':    'Jan',
+"      \ 'februar':   'Feb',
+"      \ 'march':     'Mar',
+"      \ 'märz':      'Mar',
+"      \ 'april':     'Apr',
+"      \ 'mai':       'May',
+"      \ 'may':       'May',
+"      \ 'juni':      'Jun',
+"      \ 'june':      'Jun',
+"      \ 'juli':      'Jul',
+"      \ 'july':      'Jul',
+"      \ 'august':    'Aug',
+"      \ 'september': 'Sep',
+"      \ 'oktober':   'Oct',
+"      \ 'october':   'Oct',
+"      \ 'november':  'Nov',
+"      \ 'dezember':  'Dec',
+"      \ 'december':  'Dec',
+"      \ }
+"let s:day_names = {
+"      \ 'montag': 'Mon',
+"      \ 'monday': 'Mon',
+"      \ 'dienstag': 'Tue',
+"      \ 'tuesday': 'Tue',
+"      \ 'mittwoch': 'Wed',
+"      \ 'wednesday': 'Wed',
+"      \ 'donnerstag': 'Thu',
+"      \ 'thursday': 'Thu',
+"      \ 'freitag': 'Fri',
+"      \ 'friday': 'Fri',
+"      \ 'samstag': 'Sat',
+"      \ 'saturday': 'Sat',
+"      \ 'sonntag': 'Sun',
+"      \ 'sunday': 'Sun',
+"      \ }
+" use with:
+" :1,/^$/s/^Date:\s\+\(\d\+\)\.\?\s\+\([^ ]*\)/\='Date: '.submatch(1).' '.month_names[tolower(submatch(2))]
+" :1,/^$/s/^Date:\s*\([^ ,]*\),\s*\(\d\+\)\.\?\s*\([^ ]*\)/\='Date: '.day_names[tolower(submatch(1))].', '.submatch(2).' '.month_names[tolower(submatch(3))]
+
+" A directory/namespace for functions local ti this vimrc file
+let s:luc = {} " does not really work
+" And a directory/namespace for other user defined functions
+let luc = {}
+
 " user defined functions {{{1
 
 " help and documentation functions {{{2
+if !exists('luc.man')
+  let luc.man = {}
+endif
 
-function! LucManPageFunction(...) "{{{3
+function! luc.man.open(...) "{{{3
+"function! LucManPageFunction(...)
   " try to find a manpage
   if &filetype == 'man' && a:0 == 0
     execute 'RMan' expand('<cword>')
@@ -78,11 +128,14 @@ function! LucManPageFunction(...) "{{{3
     echohl None
     return
   endif
-  map <buffer> K :call LucManPageFunction()<CR>
-  vmap <buffer> K :call LucManPageFunction(LucGetVisualSelection())<CR>
+  map <buffer> K :call luc.man.open()<CR>
+  map <buffer> K :call luc.man.open()<CR>
+  vmap <buffer> K :call luc.man.open(LucGetVisualSelection())<CR>
+  vmap <buffer> K :call luc.man.open(LucGetVisualSelection())<CR>
 endfunction
 
-function! LucTManWrapper(type, string) "{{{3
+function! luc.man.tabopen(type, string) "{{{3
+"function! LucTManWrapper(type, string)
   " look up string in the documentation for type
   if a:type =~ 'man\|m'
     let suffix = 'man'
@@ -104,7 +157,8 @@ function! LucTManWrapper(type, string) "{{{3
   redraw
 endfunction
 
-function! LucManPageTopicsCompletion(ArgLead, CmdLine, CursorPos) "{{{3
+function! luc.man.completeTopics(ArgLead, CmdLine, CursorPos) "{{{3
+"function! LucManPageTopicsCompletion(ArgLead, CmdLine, CursorPos)
   let paths = tr(system('man -w'), ":\n", "  ")
   "let paths = "/usr/share/man/man9"
   return system('find ' . paths .
@@ -121,15 +175,21 @@ function! LucUpdateAllHelptags() "{{{3
 endfunction
 
 " color scheme functions {{{2
-function! LucFindAllColorschemes() "{{{3
+if !exists('luc.color')
+  let luc.color = {}
+endif
+
+function! luc.color.find() "{{{3
+"function! s:LucFindAllColorschemes()
   "return LucFlattenList(filter(map(split(&rtp, ','),
   "      \ 'glob(v:val .  "/**/colors/*.vim", 0, 1)'), 'v:val != []'))
   return sort(map(split(globpath(&rtp, 'colors/*.vim'), '\n'),
         \ 'split(v:val, "/")[-1][0:-5]'))
 endfunction
 
-function! LucSelectRandomColorscheme() "{{{3
-  let colorschemes = LucFindAllColorschemes()
+function! luc.color.selectRandom() "{{{3
+"function! LucSelectRandomColorscheme()
+  let colorschemes = s:LucFindAllColorschemes()
   let this = colorschemes[LucRandomNumber(0,len(colorschemes)-1)]
   execute 'colorscheme' this
   redraw
@@ -137,7 +197,7 @@ function! LucSelectRandomColorscheme() "{{{3
   echo g:colors_name
 endfunction
 
-function! LucLikeColorscheme(val) "{{{3
+function! s:LucLikeColorscheme(val) "{{{3
   let fname = glob('~/.vim/colorscheme-ratings')
   let cfiles = map(readfile(fname), 'split(v:val)')
   for item in cfiles
@@ -173,7 +233,7 @@ function! LucFlattenList(list) "{{{3
   return val
 endfunction
 
-function! LucRemoveColorscheme() "{{{3
+function! s:LucRemoveColorscheme() "{{{3
   if !exists('g:colors_name')
     echoerr 'The variable g:colors_name is not set!'
     return
@@ -195,19 +255,48 @@ function! LucRemoveColorscheme() "{{{3
 endfunction
 
 " latex functions {{{2
+if !exists('luc.tex')
+  let luc.tex = {}
+endif
+
+function! luc.tex.formatBib() "{{{3
+  " format bibentries in the current file
+
+  " define a local helper function
+  let d = {}
+  let dist = 18
+  function! d.f(type, key)
+    let dist = 18
+    let factor = dist - 2 - strlen(a:type)
+    return '@' . a:type . '{' . printf('%'.factor.'s', ' ') . a:key . ','
+  endfunction
+  function! d.g(key, value)
+    let dist = 18
+    let factor = dist - 4 - strlen(a:key)
+    return '  ' . a:key . printf('%'.factor.'s', ' ') . '= "' . a:value . '",'
+  endfunction
+
+  " format the line with "@type{key,"
+  %substitute/^@\([a-z]\+\)\s*{\s*\([a-z0-9.:-]\+\),\s*$/\=d.f(submatch(1), submatch(2))/
+  " format lines wit closing brackets
+  %substitute/^\s*}\s*$/}/
+  " format lines in the entries
+  %substitute/^\s*\([A-Za-z]\+\)\s*=\s*["{]\(.*\)["}],$/\=d.g(submatch(1), submatch(2))/
+endfunction
 function! LucTexDocFunction() "{{{3
-  let l:word = expand("<cword>")
-  silent execute '!texdoc' l:word
+  " call the texdoc programm with the word under the cursor or the selected
+  " text.
+  silent execute '!texdoc' expand("<cword>")
 endfunction
 
-function! LucLatexSaveFolds() "{{{3
+function! s:LucLatexSaveFolds() "{{{3
   let l:old = &viewoptions
   set viewoptions=folds
   mkview
   let &viewoptions = l:old
 endfunction
 
-function! LucLatexCount(file) range "{{{3
+function! s:LucLatexCount(file) range "{{{3
   if type(a:file) == type(0)
     let tex = bufname(a:file)
   elseif type(a:file) == type("")
@@ -243,7 +332,7 @@ function! LucLatexCount(file) range "{{{3
   execute wc '2>/dev/null'
 endfunction
 
-function! LucFindBaseDir() "{{{2
+function! s:LucFindBaseDir() "{{{2
   " files which indicate a suitable base directory
   let indicator_files = [
                       \ 'makefile',
@@ -344,7 +433,7 @@ function! LucHandleURI(uri) "{{{2
   silent execute '!' browser uri
 endfunction
 
-function! LucInsertStatuslineColor(mode) "{{{2
+function! s:LucInsertStatuslineColor(mode) "{{{2
   " function to change the color of the statusline depending on the mode
   " this version is from http://vim.wikia.com/wiki/VimTip1287
   if     a:mode == 'i'
@@ -423,7 +512,7 @@ function! LucQuickMake(target, override) "{{{2
   return error
 endfunction
 
-function! LucCheckIfBufferIsNew(...) "{{{2
+function! s:LucCheckIfBufferIsNew(...) "{{{2
   " check if the buffer with number a:1 is new.  That is to say, if it as
   " no name and is empty.  If a:1 is not supplied 1 is used.
   " find the buffer nr to check
@@ -488,6 +577,7 @@ endfunction
 
 function! LucGetVisualSelection() "{{{2
   " This function is copied from http://stackoverflow.com/questions/1533565/
+  " FIXME: This seems to exclude the last character from the selection.
   let [lnum1, col1] = getpos("'<")[1:2]
   "let [lnum1, col1] = getpos("v")[1:2]
   let [lnum2, col2] = getpos("'>")[1:2]
@@ -512,19 +602,19 @@ function! LucUnsetOptions() "{{{3
   redraw
 endfunction
 
-function! LucDiffFunction() "{{{3
-  " code taken from the help file diff.txt and from diff(1)
-  let opt  = '--text '
-  let opt .= '--binary '
-  let opt .= '--minimal'
-  if &diffopt =~ 'icase'
-    let opt .= '--ignore-case '
-  endif
-  if &diffopt =~ 'iwhite'
-    let opt .= '--ignore-space-change '
-  endif
-  silent execute '!diff' opt v:fname_in v:fname_new '>' v:fname_out
-endfunction
+"function! LucDiffFunction() "{{{3
+"  " code taken from the help file diff.txt and from diff(1)
+"  let opt  = '--text '
+"  let opt .= '--binary '
+"  let opt .= '--minimal'
+"  if &diffopt =~ 'icase'
+"    let opt .= '--ignore-case '
+"  endif
+"  if &diffopt =~ 'iwhite'
+"    let opt .= '--ignore-space-change '
+"  endif
+"  silent execute '!diff' opt v:fname_in v:fname_new '>' v:fname_out
+"endfunction
 
 function! LucLoadScpBuffers() "{{{3
   badd ftp://ftp.lima-city.de/index.php
@@ -536,17 +626,17 @@ function! LucLoadScpBuffers() "{{{3
   badd scp://lg/.bash_profile
 endfunction
 
-function! LucCpAsPrint(fname) "{{{3
-  let i = 1
-  let target = '~/vim-print-' . i . '.pdf'
-  while filereadable(target)
-    let i += 1
-    let target = '~/vim-print-' . i . '.pdf'
-  endwhile
-  call system('ps2pdf ' . a:fname . ' ' . target)
-  call delete(a:fname)
-  return v:shell_error
-endfunction
+"function! LucCpAsPrint(fname) "{{{3
+"  let i = 1
+"  let target = '~/vim-print-' . i . '.pdf'
+"  while filereadable(target)
+"    let i += 1
+"    let target = '~/vim-print-' . i . '.pdf'
+"  endwhile
+"  call system('ps2pdf ' . a:fname . ' ' . target)
+"  call delete(a:fname)
+"  return v:shell_error
+"endfunction
 
 "function! LucPatternBufferDo(pattern, ...) "{{{3
 "  " like :bufdo but only visit files which match pattern.
@@ -570,28 +660,6 @@ endfunction
 "  endfor
 "endfunction
 
-"function! LucEditAllBuffers() "{{{3
-"  let current = bufnr('%')
-"  let alternative = bufnr('#')
-"  bufdo edit
-"  if bufexists(alternative)
-"    execute 'buffer' alternative
-"  endif
-"  if bufexists(current)
-"    execute 'buffer' current
-"  endif
-"endfunction
-
-function! LucVisitBufferOrEditFile(name) "{{{3
-  " A function to check if a file was already loaded into some buffer.
-  " Depending if it was the function either switches to that buffer or
-  " executes ':edit ' on the filename.
-  if match(expand(a:name), '/') == -1
-    let a:name = getcwd() . '/' . a:name
-  endif
-  execute (bufexists(expand(a:name)) ? 'buffer ' : 'edit ') . expand(a:name)
-endfunction
-
 " user defined autocommands {{{1
 
 " FileType autocommands {{{2
@@ -600,17 +668,18 @@ augroup LucLatex "{{{3
   autocmd!
   autocmd FileType tex
 	\ nmap <buffer> K :call LucTexDocFunction()<CR>|
-	\ nnoremap <buffer> gG :call LucLatexCount('')<CR>|
+	\ nnoremap <buffer> gG :call s:LucLatexCount('')<CR>|
 	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex|
-	\ vnoremap <buffer> gG :call LucLatexCount('')<CR>|
+	\ vnoremap <buffer> gG :call s:LucLatexCount('')<CR>|
 	\
   "autocmd BufWinLeave *.tex
-  "      \ call LucLatexSaveFolds()
+  "      \ call s:LucLatexSaveFolds()
   "autocmd BufWinEnter *.tex
   "      \ silent loadview
 augroup END
 
 augroup LucLatexSuiteSettings "{{{3
+  autocmd!
   " Tex_ViewRule_pdf and Tex_CompileRule_pdf are for the macros ,ll and ,lv
   " Tex_UseMakefile forces latex-suite to use makefiles
   " grep shoul display the filename
@@ -620,8 +689,9 @@ augroup LucLatexSuiteSettings "{{{3
 	\ if has('mac')|let g:Tex_ViewRule_pdf = 'open -a Preview'|endif|
 	\ let g:Tex_UseMakefile = 1|
 	\ let g:Tex_CompileRule_pdf = 'latexmk -silent -pv -pdf $*'|
-	\ let g:Tex_Menus = 0|
-	\ let g:Tex_Flavor = 'latex'|
+	\ let g:Tex_SmartQuoteOpen = '„'|
+	\ let g:Tex_SmartQuoteClose = '“'|
+	\ let g:Tex_Env_quote = "\\begin{quote}\<CR>,,<++>`` \\cite[S.~<++>]{<++>}\<CR>\\end{quote}"|
 	\ setlocal grepprg=grep\ -nH\ $*|
 	\
   " force grep to display filename.
@@ -644,7 +714,6 @@ augroup LucLatexSuiteSettings "{{{3
   "let Tex_FoldedSections=''
   "
   "let g:Tex_UseUtfMenus=1
-  let g:Tex_Env_quote = "\\begin{quote}\<CR>,,<++>`` \\cite[S.~<++>]{<++>}\<CR>\\end{quote}"
 augroup END
 
 augroup LucPython "{{{3
@@ -671,7 +740,7 @@ augroup END
 augroup LucSession "{{{2
   autocmd!
   autocmd VimEnter *
-	\ if LucCheckIfBufferIsNew(1) |
+	\ if s:LucCheckIfBufferIsNew(1) |
 	\   bwipeout 1 |
 	\   doautocmd BufRead,BufNewFile |
 	\ endif
@@ -681,7 +750,7 @@ augroup END
 "  autocmd!
 "  " FIXME: still buggy
 "  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
-"	\ execute 'lcd' LucFindBaseDir()
+"	\ execute 'lcd' s:LucFindBaseDir()
 "augroup END
 
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
@@ -689,14 +758,16 @@ augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd BufWrite * silent %substitute/\s\+$//e
 augroup END
 
-"augroup LucDelMenus
-"  autocmd!
+augroup LucDelMenus
+  autocmd!
 "  autocmd VimEnter *
 "	\ aunmenu *|
 "	\ augroup LucDelMenus|autocmd!|execute 'augroup EN'.'D'
 "  " Vim syntax higlighting has a bug therefore we use execute in the previous
 "  " line.
-"augroup END
+  autocmd VimEnter *
+	\ aunmenu *
+augroup END
 
 " user defined commands and mappings {{{1
 
@@ -734,10 +805,10 @@ nmap <silent> <D-F2>      :silent update <BAR> call LucQuickMake('', 1)<CR>
 imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
 
 " moveing around {{{2
-nmap <C-Tab>        gt
-imap <C-Tab>   <C-O>gt
-nmap <C-S-Tab>      gT
-imap <C-S-Tab> <C-O>gT
+"nmap <C-Tab>        gt
+"imap <C-Tab>   <C-O>gt
+"nmap <C-S-Tab>      gT
+"imap <C-S-Tab> <C-O>gT
 
 nmap <SwipeUp>   gg
 imap <SwipeUp>   gg
@@ -758,12 +829,12 @@ nmap ß :!clear<CR>
 "command! DiffOrig vne | se bt=nofile | r # | 0d_ | difft | wincmd p | difft
 
 "command! Helptags call LucUpdateAllHelptags()
-command! DislikeCS call LucLikeColorscheme(-1)
-command! LikeCS call LucLikeColorscheme(1)
+command! DislikeCS call s:LucLikeColorscheme(-1)
+command! LikeCS call s:LucLikeColorscheme(1)
 
-nmap <D-+> :call LucLikeColorscheme(1)\|call LucSelectRandomColorscheme()<CR>
-nmap <D--> :call LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
-nmap <D-_> :call LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
+nmap <D-+> :call s:LucLikeColorscheme(1)\|call LucSelectRandomColorscheme()<CR>
+nmap <D--> :call s:LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
+nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
 
 " options: basic {{{1
 
@@ -833,97 +904,63 @@ set foldmethod=syntax
 " enable folding for functions, heredocs and if-then-else stuff in sh files.
 let g:sh_fold_enabled=7
 
-" options: satusline and wildmenu {{{1
+" options: satusline {{{1
 
-if has('statusline')
-  " many thanks to
-  "   http://vim.wikia.com/wiki/Writing_a_valid_statusline
-  "   https://wincent.com/wiki/Set_the_Vim_statusline
-  "   http://winterdom.com/2007/06/vimstatusline
-  "   http://got-ravings.blogspot.com/2008/08/
+" many thanks to
+"   http://vim.wikia.com/wiki/Writing_a_valid_statusline
+"   https://wincent.com/wiki/Set_the_Vim_statusline
+"   http://winterdom.com/2007/06/vimstatusline
+"   http://got-ravings.blogspot.com/2008/08/
 
-  " some examples
-  "set statusline=last\ changed\ %{strftime(\"%c\",getftime(expand(\"%:p\")))}
+" some examples
+"set statusline=last\ changed\ %{strftime(\"%c\",getftime(expand(\"%:p\")))}
 
-  " my old versions:
-  "set statusline=%t%m%r[%{&ff}][%{&fenc}]%y[ASCII=\%03.3b]%=[%c%V,%l/%L][%p%%]
-  "set statusline=%t%m%r[%{&fenc},%{&ff}%Y][ASCII=x%02.2B]%=[%c%V,%l/%L][%P]
-  "set statusline=%t[%M%R%H][%{strlen(&fenc)?&fenc:'none'},%{&ff}%Y]
-  "set statusline+=[ASCII=x%02.2B]%=%{strftime(\"%Y-%m-%d\ %H:%M\")}
-  "set statusline+=\ [%c%V,%l/%L][%P]
+" my old versions:
+"set statusline=%t%m%r[%{&ff}][%{&fenc}]%y[ASCII=\%03.3b]%=[%c%V,%l/%L][%p%%]
+"set statusline=%t%m%r[%{&fenc},%{&ff}%Y][ASCII=x%02.2B]%=[%c%V,%l/%L][%P]
+"set statusline=%t[%M%R%H][%{strlen(&fenc)?&fenc:'none'},%{&ff}%Y]
+"set statusline+=[ASCII=x%02.2B]%=%{strftime(\"%Y-%m-%d\ %H:%M\")}
+"set statusline+=\ [%c%V,%l/%L][%P]
 
-  " current version
-  set statusline=%t                               " tail of the filename
-  set statusline+=\ %([%M%R%H]\ %)                " group for mod., ro. & help
-  set statusline+=[
-  set statusline+=%{strlen(&fenc)?&fenc:'none'},  " display fileencoding
-  set statusline+=%{&ff}                          " filetype (unix/windows)
-  set statusline+=%Y                              " filetype (c/sh/vim/...)
-  set statusline+=%{fugitive#statusline()}        " info about git
-  set statusline+=]
-  set statusline+=\ [ASCII=x%02B]                 " ASCII code of char
-  "set statusline+=\ [ASCII=x%02.2B]               " ASCII code of char
-  set statusline+=\ %=                            " rubber space
-  "set statusline+=[%{strftime('%a\ %F\ %R')}]     " clock
-  set statusline+=[%{strftime('%R')}]             " clock
-  set statusline+=\ [%c%V,%l/%L]                  " position in file
-  set statusline+=\ [%P]                          " percent of above
-  set statusline+=\ %{SyntasticStatuslineFlag()}  " see :h syntastic
+" current version
+set statusline=%t                               " tail of the filename
+set statusline+=\ %([%M%R%H]\ %)                " group for mod., ro. & help
+set statusline+=[
+set statusline+=%{strlen(&fenc)?&fenc:'none'},  " display fileencoding
+set statusline+=%{&ff}                          " filetype (unix/windows)
+set statusline+=%Y                              " filetype (c/sh/vim/...)
+set statusline+=%{fugitive#statusline()}        " info about git
+set statusline+=]
+set statusline+=\ [ASCII=x%02B]                 " ASCII code of char
+set statusline+=\ %=                            " rubber space
+set statusline+=[%{strftime('%R')}]             " clock
+set statusline+=\ [%c%V,%l/%L]                  " position in file
+set statusline+=\ [%P]                          " percent of above
+set statusline+=\ %{SyntasticStatuslineFlag()}  " see :h syntastic
 
-  " always display the statusline
-  set laststatus=2
+" always display the statusline
+set laststatus=2
+" use the wildmenu inside the status line
+set wildmenu
 
-  if has('autocmd') && 0 "commented out
-    " change highlighting when mode changes
-    augroup LucStatusLine
-      autocmd!
-      autocmd InsertEnter * call LucInsertStatuslineColor(v:insertmode)
-      autocmd InsertLeave * call LucInsertStatuslineColor('n')
-    augroup END
-    " now we set the colors for the statusline
-    " in the most simple case
-    highlight StatusLine term=reverse
-    " for color terminal
-    highlight StatusLine cterm=bold,reverse
-    highlight StatusLine ctermbg=1
-    " for the gui
-    "highlight StatusLine gui=bold
-    highlight StatusLine guibg=DarkBlue
-    highlight StatusLine guifg=background
-  endif
+" " change highlighting when mode changes
+" augroup LucStatusLine
+"   autocmd!
+"   autocmd InsertEnter * call s:LucInsertStatuslineColor(v:insertmode)
+"   autocmd InsertLeave * call s:LucInsertStatuslineColor('n')
+" augroup END
+" " now we set the colors for the statusline
+" " in the most simple case
+" highlight StatusLine term=reverse
+" " for color terminal
+" highlight StatusLine cterm=bold,reverse
+" highlight StatusLine ctermbg=1
+" " for the gui
+" "highlight StatusLine gui=bold
+" highlight StatusLine guibg=DarkBlue
+" highlight StatusLine guifg=background
 
-  if has('wildmenu')
-    set wildmenu
-  endif
-
-  if has('wildignore')
-    set wildmode=longest:full,full
-    set wildignore+=.hg,.git,.svn                  " Version control
-    set wildignore+=*.aux,*.out,*.toc,*.idx,*.fls  " LaTeX intermediate files
-    set wildignore+=*.fdb_latexmk                  " LaTeXmk files
-    set wildignore+=*.pdf,*.dvi,*.ps,*.djvu        " binary documents (latex)
-    set wildignore+=*.odt,*.doc,*.docx             " office text documents
-    set wildignore+=*.ods,*.xls,*.xlsx             " office spreadsheets
-    set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg " binary images
-    set wildignore+=*.mp3,*.flac                   " music
-    set wildignore+=.*.sw?                         " Vim swap files
-    set wildignore+=.DS_Store,*.dmg                " OSX bullshit
-    set wildignore+=*.o,*.obj,*.exe,*.dll          " compiled object files
-    set wildignore+=*.class                        " java class files
-    set wildignore+=*.spl                          " compiled spell word lists
-    set wildignore+=*.tar,*.tgz,*.tbz2,*.tar.gz,*.tar.bz2
-    "set wildignore+=*.luac                        " Lua byte code
-    "set wildignore+=migrations                    " Django migrations
-    set wildignore+=*.pyc                          " Python byte code
-    "set wildignore+=*.orig                        " Merge resolution files
-  endif
-
-" We do not have the 'statusline' feature. Maybe we can still have a ruler?
-elseif has('cmdline_info')
-  "show the cursor position all the time (at bottom right)
-  set ruler
-endif
-
+" options: tabline {{{1
 " we could do something similar for tabs.
 " see :help 'tabline'
 "set tabline=Tabs:
@@ -931,6 +968,27 @@ endif
 "set tabline+=\ Buffers:
 "set tabline+=\ %{len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))}
 "set tabline+=%=%{strftime('%a\ %F\ %R')}
+
+" options: wildignore {{{1
+set wildmode=longest:full,full
+set wildignore+=.hg,.git,.svn                  " Version control
+set wildignore+=*.aux,*.out,*.toc,*.idx,*.fls  " LaTeX intermediate files
+set wildignore+=*.fdb_latexmk                  " LaTeXmk files
+set wildignore+=*.pdf,*.dvi,*.ps,*.djvu        " binary documents (latex)
+set wildignore+=*.odt,*.doc,*.docx             " office text documents
+set wildignore+=*.ods,*.xls,*.xlsx             " office spreadsheets
+set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg " binary images
+set wildignore+=*.mp3,*.flac                   " music
+set wildignore+=.*.sw?                         " Vim swap files
+set wildignore+=.DS_Store,*.dmg                " OSX bullshit
+set wildignore+=*.o,*.obj,*.exe,*.dll          " compiled object files
+set wildignore+=*.class                        " java class files
+set wildignore+=*.spl                          " compiled spell word lists
+set wildignore+=*.tar,*.tgz,*.tbz2,*.tar.gz,*.tar.bz2
+"set wildignore+=*.luac                        " Lua byte code
+"set wildignore+=migrations                    " Django migrations
+set wildignore+=*.pyc                          " Python byte code
+"set wildignore+=*.orig                        " Merge resolution files
 
 " options: other {{{1
 set colorcolumn=+1
@@ -959,11 +1017,12 @@ set viminfo+=n~/.vim/viminfo
 " load a static viminfo file with a file list
 rviminfo ~/.vim/default-buffer-list.viminfo
 
-" plugins: management {{{1
+" plugins: management with vundle {{{1
 " I manage plugins with vundle.  In order to easyly test plugins I keep a
 " dictionary to store a flag depending on which the plugin should be loaded or
 " not.  One could also comment the the line loading the plugin, but these are
-" scatterd ofer the file and not centralized.
+" scatterd ofer the file and not centralized.  Also some plugins need further
+" configuration which is put in the if statements.
 let s:plugins = {
 		\ 'autocomplpop': 0,
 		\ 'buffergator': 0,
@@ -983,7 +1042,6 @@ let s:plugins = {
 		\ 'unite': 0,
 		\ }
 
-" plugins: vundle {{{1
 " Managing plugins with Vundle (https://github.com/gmarik/vundle)
 filetype off
 set runtimepath+=~/.vim/bundle/vundle
@@ -1130,8 +1188,15 @@ endif
 
 "Bundle 'auctex.vim'
 Bundle 'LaTeX-Help'
+
+" Vim-latex aka LaTeX-Suite {{{2
 Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
-" The settings for vim-latex are in the LucLatexSuiteSettings autocmdgroup.
+let g:ngerman_package_file = 1
+let g:Tex_Menus = 0
+" this has to be lower case!
+let g:tex_flavor = 'latex'
+" The other settings for vim-latex are in the LucLatexSuiteSettings
+" autocmdgroup.
 
 " plugins: lisp/scheme {{{1
 
@@ -1160,7 +1225,15 @@ let g:markdown_fold_style = 'nested'
 " strange folding?
 "Bundle 'tpope/vim-markdown'
 
-" plugins: shell {{{1
+" plugins: comma separated values (csv) {{{1
+"Bundle 'csv.vim'
+"Bundle 'csv-reader'
+"Bundle 'CSVTK'
+"Bundle 'rcsvers.vim'
+"Bundle 'csv-color'
+"Bundle 'CSV-delimited-field-jumper'
+
+" plugins: shell in Vim {{{1
 
 Bundle 'Shougo/vimproc'
 Bundle 'Shougo/vimshell.vim'
@@ -1178,14 +1251,6 @@ Bundle 'Conque-Shell'
 "http://www.vim.org/scripts/script.php?script_id=3431
 
 "Bundle 'vimux'
-
-" plugins: comma separated values (csv) {{{1
-"Bundle 'csv.vim'
-"Bundle 'csv-reader'
-"Bundle 'CSVTK'
-"Bundle 'rcsvers.vim'
-"Bundle 'csv-color'
-"Bundle 'CSV-delimited-field-jumper'
 
 " plugins: tags {{{1
 "Bundle 'ttags'
@@ -1568,6 +1633,18 @@ if s:plugins['autocomplpop'] "{{{2
   """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 endif
 
+" plugin: snippets {{{1
+"Bundle 'snipMate'
+" snippy_plugin.vba.gz
+Bundle 'SirVer/ultisnips'
+let g:UltiSnipsExpandTrigger = '<C-F>'
+let g:UltiSnipsJumpForwardTrigger = '<C-F>'
+"let g:UltiSnipsJumpBackwardTrigger = '<C-Tab>'
+"let g:UltiSnipsExpandTrigger       = <tab>
+"let g:UltiSnipsListSnippets        = <c-tab>
+"let g:UltiSnipsJumpForwardTrigger  = <c-j>
+"let g:UltiSnipsJumpBackwardTrigger = <c-k>
+
 " plugins: parenthesis and quotes {{{1
 
 Bundle 'Raimondi/delimitMate'
@@ -1581,6 +1658,11 @@ endif
 
 if s:plugins['syntastic']
   Bundle 'scrooloose/syntastic'
+  let g:syntastic_mode_map = {
+	\ 'mode': 'active',
+	\ 'active_filetypes': [],
+	\ 'passive_filetypes': ['tex']
+	\ }
 endif
 
 Bundle 'ack.vim'
@@ -1644,7 +1726,6 @@ Bundle 'Colour-Sampler-Pack'
 
 " plugins: bookmarks {{{1
 "Bundle 'xterm-color-table.vim'
-"Bundle 'snipMate'
 
 
 " added on 2012-02-14 (bookmarks) {{{2
@@ -1660,16 +1741,28 @@ Bundle 'Colour-Sampler-Pack'
 " project-1.4.1.tar.gz
 " renamer.vim.gz
 " sessionman.vim.gz
-" snippy_plugin.vba.gz
 " supertab.vba.gz
 " tskeleton.vba.gz
 
 " last steps {{{1
+
+" switch on filezype detection after defining all Bundles
 filetype plugin indent on
 
-" set colors for the terminal {{{1
+" fix the runtimepath mess that vundle creates {{{2
+set runtimepath-=~/.vim
+set runtimepath-=~/.vim/after
+set runtimepath-=$VIM/vimfiles
+set runtimepath-=$VIM/runtime
+set runtimepath-=$VIM/vimfiles/after
+set runtimepath^=$VIM/runtime
+set runtimepath^=$VIM/vimfiles
+set runtimepath^=~/.vim
+set runtimepath+=$VIM/vimfiles/after
+set runtimepath+=~/.vim/after
 
-" If the GUI is running the colorscheme will be set in gvimrc.
+" {{{2 Set colors for the terminal.  If the GUI is running the colorscheme
+"      will be set in gvimrc.
 if ! has('gui_running')
   " version 1
   "colorscheme macvim
