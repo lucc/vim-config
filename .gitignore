@@ -18,3 +18,5 @@ viminfo
 #doc/tags
 #.VimballRecord
 #.netrwhist
+vimshell
+.VimballRecord
