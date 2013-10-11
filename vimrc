@@ -165,7 +165,8 @@ function! luc.man.completeTopics(ArgLead, CmdLine, CursorPos) "{{{3
 	\ ' -type f | sed "s#.*/##;s/\.gz$//;s/\.[0-9]\{1,\}//" | sort -u')
 endfunction
 
-function! LucUpdateAllHelptags() "{{{3
+function! luc.man.helptags() "{{{3
+"function! LucUpdateAllHelptags()
   for item in map(split(&runtimepath, ','), 'v:val . "/doc"')
     if isdirectory(item)
       "echo  'helptags' item
@@ -190,14 +191,15 @@ endfunction
 function! luc.color.selectRandom() "{{{3
 "function! LucSelectRandomColorscheme()
   let colorschemes = s:LucFindAllColorschemes()
-  let this = colorschemes[LucRandomNumber(0,len(colorschemes)-1)]
+  let this = colorschemes[luc.random(0,len(colorschemes)-1)]
   execute 'colorscheme' this
   redraw
   let g:colors_name = this
   echo g:colors_name
 endfunction
 
-function! s:LucLikeColorscheme(val) "{{{3
+function! luc.color.like(val) "{{{3
+"function! s:LucLikeColorscheme(val)
   let fname = glob('~/.vim/colorscheme-ratings')
   let cfiles = map(readfile(fname), 'split(v:val)')
   for item in cfiles
@@ -210,7 +212,8 @@ function! s:LucLikeColorscheme(val) "{{{3
   echo g:colors_name
 endfunction
 
-function! LucRandomNumber(start, end) "{{{3
+function! luc.random(start, end) "{{{3
+"function! LucRandomNumber(start, end)
   return (system('echo $RANDOM') % (a:end - a:start + 1)) + a:start
   " code by Kazuo on vim@vim.org
   python from random import randint
@@ -218,13 +221,13 @@ function! LucRandomNumber(start, end) "{{{3
   execute 'python command("return %d" % randint('.a:start.','.a:end.'))'
 endfun
 
-function! LucFlattenList(list) "{{{3
+function! luc.flattenList(list) "{{{3
   " Code from bairui@#vim.freenode
   " https://gist.github.com/3322468
   let val = []
   for elem in a:list
     if type(elem) == type([])
-      call extend(val, LucFlattenList(elem))
+      call extend(val, luc.flattenList(elem))
     else
       call add(val, elem)
     endif
@@ -233,7 +236,7 @@ function! LucFlattenList(list) "{{{3
   return val
 endfunction
 
-function! s:LucRemoveColorscheme() "{{{3
+function! luc.color.remove() "{{{3
   if !exists('g:colors_name')
     echoerr 'The variable g:colors_name is not set!'
     return
@@ -283,20 +286,23 @@ function! luc.tex.formatBib() "{{{3
   " format lines in the entries
   %substitute/^\s*\([A-Za-z]\+\)\s*=\s*["{]\(.*\)["}],$/\=d.g(submatch(1), submatch(2))/
 endfunction
-function! LucTexDocFunction() "{{{3
+function! luc.tex.doc() "{{{3
+"function! LucTexDocFunction()
   " call the texdoc programm with the word under the cursor or the selected
   " text.
   silent execute '!texdoc' expand("<cword>")
 endfunction
 
-function! s:LucLatexSaveFolds() "{{{3
+function! luc.tex.saveFolds() "{{{3
+"function! s:LucLatexSaveFolds()
   let l:old = &viewoptions
   set viewoptions=folds
   mkview
   let &viewoptions = l:old
 endfunction
 
-function! s:LucLatexCount(file) range "{{{3
+function! luc.tex.count(file) range "{{{3
+"function! LucLatexCount(file) range
   if type(a:file) == type(0)
     let tex = bufname(a:file)
   elseif type(a:file) == type("")
@@ -495,7 +501,7 @@ function! LucQuickMake(target, override) "{{{2
     let error = 1
   else
     execute 'cd' dir
-    echo 'Running' cmd 'in' fnamemodify(getcwd(), ':~')
+    echo 'Running' cmd 'in' fnamemodify(getcwd(), ':~:.')
     silent execute '!' cmd '&'
     cd -
     if v:shell_error
@@ -507,6 +513,9 @@ function! LucQuickMake(target, override) "{{{2
   if &filetype == 'tex'
     silent ! ( sleep 3 && killall -HUP mupdf ) &
   endif
+
+  " redraw the screen to get rid of unneded "press enter" prompts
+  redraw
 
   " return shell errors
   return error
@@ -546,7 +555,7 @@ function! LucRemoteEditor(mail) "{{{2
   " use an autocommand to move MacVim to the background when leaving the
   " buffer
   augroup RemoteEditor
-    autocmd BufDelete <buffer> silent call system(s:applescript)
+    autocmd BufDelete <buffer> silent call system(s:applescript)|redraw!
   augroup END
 
   " define some custom commands to quit the buffer
@@ -667,10 +676,10 @@ endfunction
 augroup LucLatex "{{{3
   autocmd!
   autocmd FileType tex
-	\ nmap <buffer> K :call LucTexDocFunction()<CR>|
-	\ nnoremap <buffer> gG :call s:LucLatexCount('')<CR>|
+	\ nmap <buffer> K :call luc.tex.doc()<CR>|
+	\ nnoremap <buffer> gG :call luc.tex.count('')<CR>|
 	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex|
-	\ vnoremap <buffer> gG :call s:LucLatexCount('')<CR>|
+	\ vnoremap <buffer> gG :call luc.tex.count('')<CR>|
 	\
   "autocmd BufWinLeave *.tex
   "      \ call s:LucLatexSaveFolds()
@@ -805,10 +814,10 @@ nmap <silent> <D-F2>      :silent update <BAR> call LucQuickMake('', 1)<CR>
 imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
 
 " moveing around {{{2
-"nmap <C-Tab>        gt
-"imap <C-Tab>   <C-O>gt
-"nmap <C-S-Tab>      gT
-"imap <C-S-Tab> <C-O>gT
+nmap <C-Tab>        gt
+imap <C-Tab>   <C-O>gt
+nmap <C-S-Tab>      gT
+imap <C-S-Tab> <C-O>gT
 
 nmap <SwipeUp>   gg
 imap <SwipeUp>   gg
@@ -841,13 +850,12 @@ nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 set backup
+set backupdir=~/.vim/backup
 set hidden
 set history=2000
 set confirm
 " set the path for file searching
-set path=.
-set path+=~/
-execute 'set path+=' . join(s:path, ',')
+set path=.,,./**,.;,~/
 set path+=/usr/include/
 set path+=/usr/local/include/
 set path+=/usr/lib/wx/include/
@@ -1049,10 +1057,6 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 "Bundle 'lucc/vundle'
 
-" plugins: libs {{{1
-Bundle 'L9'
-Bundle 'tomtom/tlib_vim'
-
 " plugins: buffer and file management {{{1
 
 if s:plugins['buffergator'] "{{{2
@@ -1082,14 +1086,20 @@ endif
 
 if s:plugins['ctrlp'] "{{{2
   Bundle 'kien/ctrlp.vim'
+
+  " How the plugin should manage the cache
   "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
   let g:ctrlp_clear_cache_on_exit = 0
+
+  " What files to display or ignore
   let g:ctrlp_show_hidden = 1
   let g:ctrlp_max_files = 0
   let g:ctrlp_custom_ignore = {
-	\ 'dir':  '\/Users\/luc\/\v(flac|Musik.*|img)'
+	\ 'dir':  '\v(\/private|\/var|\/tmp|\/Users\/luc\/(flac|Musik.*|img))',
 	\ }
   "let g:ctrlp_root_markers = ['makefile', 'Makefile', 'latexmkrc']
+
+  " mappings for the plugin
   let g:ctrlp_map = '<c-space>'
   let g:ctrlp_cmd = 'CtrlPMRU'
   inoremap <C-Space> <C-O>:CtrlPMRU<CR>
@@ -1098,6 +1108,7 @@ endif
 if s:plugins['fuzzyfinder'] "{{{2
   Bundle 'FuzzyFinder'
   " requires l9lib (vimscript 3252)
+  Bundle 'L9'
   let g:fuf_modesDisable = [
 			 \ 'directory',
 			 \ 'mrufile',
@@ -1161,9 +1172,9 @@ endif
 if s:plugins['tselectbuffer'] "{{{2
   Bundle 'tomtom/tselectbuffer_vim'
   " needs tlib >= 0.40
-  " disable loading for the moment
-  "let loaded_tselectbuffer = 0
   nmap <leader>t :TSelectBuffer<cr>
+
+  Bundle 'tomtom/tlib_vim'
 endif
 
 if s:plugins['tselectfiles'] "{{{2
@@ -1233,22 +1244,27 @@ let g:markdown_fold_style = 'nested'
 "Bundle 'csv-color'
 "Bundle 'CSV-delimited-field-jumper'
 
+" plugins: python {{{1
+
+"Bundle 'python_fold_compact'
+"Bundle 'jpythonfold.vim'
+Bundle 'Python-Syntax-Folding'
+"Bundle 'klen/python-mode'
+
 " plugins: shell in Vim {{{1
 
 Bundle 'Shougo/vimproc'
 Bundle 'Shougo/vimshell.vim'
 map <D-F11> :VimShellPop<cr>
 let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
-Bundle 'Conque-Shell'
-"http://www.vim.org/scripts/script.php?script_id=2771
+"Bundle 'Conque-Shell'
 
 " to be tested (shell in gvim)
-"http://www.vim.org/scripts/script.php?script_id=165
-"http://www.vim.org/scripts/script.php?script_id=1788
-"http://www.vim.org/scripts/script.php?script_id=2620
-"http://www.vim.org/scripts/script.php?script_id=2711
-"http://www.vim.org/scripts/script.php?script_id=3123
-"http://www.vim.org/scripts/script.php?script_id=3431
+"Bundle 'ervandew/screen'
+Bundle 'https://bitbucket.org/fboender/bexec.git'
+Bundle 'pydave/AsyncCommand'
+"Bundle 'vimsh.tar.gz'
+"Bundle 'xolox/vim-shell'
 
 "Bundle 'vimux'
 
@@ -1391,7 +1407,6 @@ endif
 "Bundle 'utags'
 "Bundle 'ctags_cache'
 "Bundle 'Intelligent-Tags'
-"Bundle 'git_patch_tags.vim'
 "Bundle 'Find-XML-Tags'
 "Bundle 'ProjectCTags'
 "Bundle 'cHiTags'
