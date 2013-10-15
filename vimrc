@@ -597,6 +597,18 @@ function! LucGetVisualSelection() "{{{2
   return join(lines, "\n")
 endfunction
 
+function! luc.f2_function() "{{{2
+  if &filetype == 'markdown' || &ft == 'text'
+    sil up
+  elseif &ft == 'vim'
+    sil up
+    so %
+  else
+    sil up
+    cal LucQuickMake('',0)
+  endif
+endfunction
+
 " misc/old {{{2
 
 function! LucUnsetOptions() "{{{3
@@ -808,8 +820,12 @@ endif
 nmap <Leader>w :call LucHandleURI(LucSearchStringForURI(getline('.')))<CR>
 
 " easy compilation {{{2
-nmap          <F2>        :silent update <BAR> call LucQuickMake('', 0)<CR>
-imap          <F2>   <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
+"nmap          <F2>        :silent update <BAR> call LucQuickMake('', 0)<CR>
+"imap          <F2>   <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
+"nmap <silent> <D-F2>      :silent update <BAR> call LucQuickMake('', 1)<CR>
+"imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
+nmap          <F2>        :cal luc.f2_function()<CR>
+imap          <F2>   <C-O>:cal luc.f2_function()<CR>
 nmap <silent> <D-F2>      :silent update <BAR> call LucQuickMake('', 1)<CR>
 imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
 
@@ -1268,6 +1284,11 @@ Bundle 'pydave/AsyncCommand'
 
 "Bundle 'vimux'
 
+" plugins: iCal {{{1
+
+" syntax highlighting
+Bundle 'icalendar.vim'
+
 " plugins: tags {{{1
 "Bundle 'ttags'
 "Bundle 'xolox/vim-easytags'
@@ -1648,7 +1669,7 @@ if s:plugins['autocomplpop'] "{{{2
   """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 endif
 
-" plugin: snippets {{{1
+" plugins: snippets {{{1
 "Bundle 'snipMate'
 " snippy_plugin.vba.gz
 Bundle 'SirVer/ultisnips'
@@ -1659,6 +1680,7 @@ let g:UltiSnipsJumpForwardTrigger = '<C-F>'
 "let g:UltiSnipsListSnippets        = <c-tab>
 "let g:UltiSnipsJumpForwardTrigger  = <c-j>
 "let g:UltiSnipsJumpBackwardTrigger = <c-k>
+let g:UltiSnipsJumpBackwardTrigger = '<SID>NOT_DEFINED'
 
 " plugins: parenthesis and quotes {{{1
 
