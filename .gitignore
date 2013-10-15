@@ -17,6 +17,6 @@ bundle
 viminfo
 #doc/tags
 #.VimballRecord
-#.netrwhist
+.netrwhist
 vimshell
 .VimballRecord
