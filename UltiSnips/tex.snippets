@@ -27,3 +27,22 @@ $0
 \end{document}
 %%fakesection Notizen
 endsnippet
+
+snippet rezept "Ein Rezept für mein Kochbuch" !b
+\begin{rezept}{${1:Name}}{${2:von wem?}}
+
+\index{$7}
+
+\begin{zutaten}[${3:reicht für ...}]
+  $4
+\end{zutaten}
+
+\zubereitung
+
+\begin{enumerate}
+  \item $5
+  \item $6
+\end{enumerate}
+
+\end{rezept}
+endsnippet
