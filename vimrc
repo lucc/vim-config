@@ -864,6 +864,7 @@ nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
 " options: basic {{{1
 
 " allow backspacing over everything in insert mode
+set autoindent
 set backspace=indent,eol,start
 set backup
 set backupdir=~/.vim/backup
@@ -1024,6 +1025,7 @@ set diffopt=filler,vertical
 " default: blank,buffers,curdir,folds,help,options,tabpages,winsize
 set sessionoptions+=resize,winpos
 
+" options: viminfo {{{1
 " default: '100,<50,s10,h
 set viminfo='100,<50,s10,h,%,n~/.vim/viminfo
 " the flag ' is for filenames for marks
