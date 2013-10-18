@@ -685,6 +685,12 @@ endfunction
 
 " FileType autocommands {{{2
 
+augroup LucLilypond "{{{3
+  autocmd!
+  autocmd FileType lilypond
+	\ setlocal dictionary+=~/.vim/syntax/lilypond-words
+augroup END
+
 augroup LucLatex "{{{3
   autocmd!
   autocmd FileType tex
@@ -871,20 +877,8 @@ set backupdir=~/.vim/backup
 set hidden
 set history=2000
 set confirm
-" set the path for file searching
-set path=.,,./**,.;,~/
-set path+=/usr/include/
-set path+=/usr/local/include/
-set path+=/usr/lib/wx/include/
-set path+=/usr/X11/include/
-set path+=/opt/X11/include/
 set textwidth=78
 set shiftwidth=2
-" formatoptions default is tcq
-set formatoptions+=n " recognize numbered lists
-set formatoptions+=r " insert comment leader when hitting <enter>
-set formatoptions+=j " remove comment leader when joining lines
-set formatoptions+=l " do not break lines which are already long
 set number
 " scroll when the courser is 5 lines from the border line
 set scrolloff=5
@@ -892,10 +886,30 @@ set shortmess=
 set nostartofline
 set encoding=utf-8
 set switchbuf=useopen
+set colorcolumn=+1
+set mouse=a
+set showcmd
+set splitright
+set virtualedit=block
+set diffopt=filler,vertical
+" default: blank,buffers,curdir,folds,help,options,tabpages,winsize
+set sessionoptions+=resize,winpos
 
+" options: cpoptions {{{1
 set cpoptions+=$ " don't redraw the display while executing c, s, ... cmomands
 set cpoptions+={ " let { and } stop on a "{" in the first column
 
+" options: dictionary and complete {{{1
+
+set complete+=k
+
+" use the current spell checking settings for directory completion:
+set dictionary+=spell
+
+" add private directories:
+set dictionary+=~/.vim/dictionary/*
+
+" options: terminal stuff {{{1
 if $TERM_PROGRAM == 'iTerm.app'
   set t_Co=256
 endif
@@ -928,6 +942,22 @@ set foldmethod=syntax
 "set foldlevelstart=20
 " enable folding for functions, heredocs and if-then-else stuff in sh files.
 let g:sh_fold_enabled=7
+
+" options: path {{{1
+" set the path for file searching
+set path=.,,./**,.;,~/
+set path+=/usr/include/
+set path+=/usr/local/include/
+set path+=/usr/lib/wx/include/
+set path+=/usr/X11/include/
+set path+=/opt/X11/include/
+
+" options: formatoptions {{{1
+" formatoptions default is tcq
+set formatoptions+=n " recognize numbered lists
+set formatoptions+=r " insert comment leader when hitting <enter>
+set formatoptions+=j " remove comment leader when joining lines
+set formatoptions+=l " do not break lines which are already long
 
 " options: satusline {{{1
 
@@ -1015,15 +1045,6 @@ set wildignore+=*.tar,*.tgz,*.tbz2,*.tar.gz,*.tar.bz2
 set wildignore+=*.pyc                          " Python byte code
 "set wildignore+=*.orig                        " Merge resolution files
 
-" options: other {{{1
-set colorcolumn=+1
-set mouse=a
-set showcmd
-set splitright
-set virtualedit=block
-set diffopt=filler,vertical
-" default: blank,buffers,curdir,folds,help,options,tabpages,winsize
-set sessionoptions+=resize,winpos
 
 " options: viminfo {{{1
 " default: '100,<50,s10,h
