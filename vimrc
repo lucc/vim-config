@@ -1047,21 +1047,13 @@ rviminfo ~/.vim/default-buffer-list.viminfo
 " configuration which is put in the if statements.
 let s:plugins = {
 		\ 'autocomplpop': 0,
-		\ 'buffergator': 0,
-		\ 'commandt': 0,
 		\ 'ctrlp': 1,
-		\ 'fuzzyfinder': 0,
 		\ 'latexsuite': 1,
-		\ 'lusty': 0,
 		\ 'neocompl': 0,
-		\ 'nerd': 0,
 		\ 'omnicppcomplete': 0,
 		\ 'powerline': 0,
 		\ 'syntastic': 1,
 		\ 'taglist': 1,
-		\ 'tselectbuffer': 0,
-		\ 'tselectfiles': 0,
-		\ 'unite': 0,
 		\ }
 
 " Managing plugins with Vundle (https://github.com/gmarik/vundle)
@@ -1073,133 +1065,24 @@ Bundle 'gmarik/vundle'
 
 " plugins: buffer and file management {{{1
 
-if s:plugins['buffergator'] "{{{2
-  Bundle 'jeetsukumaran/vim-buffergator'
-  " browse buffers with preview, switch to window containing this buffer or
-  " display buffer in last window
-  let g:did_buffergator = 0
-  let g:buffergator_suppress_keymaps = 1
-  nmap <Leader>bg :BuffergatorToggle<CR>
-endif
+Bundle 'kien/ctrlp.vim'
 
-if s:plugins['commandt'] "{{{2
-  Bundle 'git://git.wincent.com/command-t.git'
-  "let g:command_t_loaded = 0
-  let g:CommandTMaxCachedDirectories = 1 " default
-  let g:CommandTMaxCachedDirectories = 10
-  let g:CommandTScanDotDirectories = 1
-  let g:CommandTMatchWindowReverse = 1
-  let g:CommandTMaxFiles = 100000
-  "let g:CommandTMatchWindowAtTop = 1
-  "let g:CommandTToggleFocusMap = ''
-  "let g:CommandTSelectPrevMap = ['<up>', '<C-i>']
-  "let g:CommandTSelectNextMap = ['<down>', '<C-S-i>']
-  nmap <c-s-f> :CommandT<cr>
-  nmap <c-s-b> :CommandTBuffer<cr>
-endif
+" How the plugin should manage the cache
+"let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
+let g:ctrlp_clear_cache_on_exit = 0
 
-if s:plugins['ctrlp'] "{{{2
-  Bundle 'kien/ctrlp.vim'
+" What files to display or ignore
+let g:ctrlp_show_hidden = 1
+let g:ctrlp_max_files = 0
+let g:ctrlp_custom_ignore = {
+      \ 'dir':  '\v(\/private|\/var|\/tmp|\/Users\/luc\/(flac|Musik.*|img))',
+      \ }
+"let g:ctrlp_root_markers = ['makefile', 'Makefile', 'latexmkrc']
 
-  " How the plugin should manage the cache
-  "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
-  let g:ctrlp_clear_cache_on_exit = 0
-
-  " What files to display or ignore
-  let g:ctrlp_show_hidden = 1
-  let g:ctrlp_max_files = 0
-  let g:ctrlp_custom_ignore = {
-	\ 'dir':  '\v(\/private|\/var|\/tmp|\/Users\/luc\/(flac|Musik.*|img))',
-	\ }
-  "let g:ctrlp_root_markers = ['makefile', 'Makefile', 'latexmkrc']
-
-  " mappings for the plugin
-  let g:ctrlp_map = '<c-space>'
-  let g:ctrlp_cmd = 'CtrlPMRU'
-  inoremap <C-Space> <C-O>:CtrlPMRU<CR>
-endif
-
-if s:plugins['fuzzyfinder'] "{{{2
-  Bundle 'FuzzyFinder'
-  " requires l9lib (vimscript 3252)
-  Bundle 'L9'
-  let g:fuf_modesDisable = [
-			 \ 'directory',
-			 \ 'mrufile',
-			 \ 'mrucmd',
-			 \ 'bookmarkdir',
-			 \ 'taggedfile',
-			 \ 'jumplist',
-			 \ 'changelist',
-			 \ 'lines',
-			 \ 'givenfile',
-			 \ 'givendirectory',
-			 \ 'givencommand',
-			 \ 'callbackfile',
-			 \ 'callbackitem',
-			 \ ]
-  let g:fuf_enumeratingLimit = 20
-  let g:fuf_coveragefile_globPatterns = ['~/.*', '~/*']
-  let g:fuf_dataDir = '~/.vim/cache/fuf'
-  let s:fuf_cov = extend(map(copy(s:path), 'v:val . "/.*"'),
-                       \ map(copy(s:path), 'v:val . "/*"'))
-  call extend(g:fuf_coveragefile_globpatterns, s:fuf_cov)
-  nnoremap <silent> <d-f> :silent fufcoveragefile<cr>
-  nnoremap <silent> <d-b> :silent fufbuffer<cr>
-  nnoremap <silent> <c-h> :silent fufhelp<cr>
-  inoremap <silent> <d-f> <esc>:silent fufcoveragefile<cr>
-  inoremap <silent> <d-b> <esc>:silent fufbuffer<cr>
-  inoremap <silent> <c-h> <esc>:silent fufhelp<cr>
-  augroup LucFufMaps
-    autocmd filetype fuf inoremap <buffer> <c-i> <c-n>
-  augroup end
-endif
-
-if s:plugins['lusty'] "{{{2
-  bundle 'sjbach/lusty'
-  let g:lustyjugglerdefaultmappings = 0
-  " help inside script: ~/.vim/plugin/lusty-explorer.vim
-  " disable mappings
-  let g:lustyexplorerdefaultmappings = 0
-  " available commands
-  "   :lustyfilesystemexplorer [optional-path]
-  "   :lustyfilesystemexplorerfromhere
-  "   :lustybufferexplorer
-  "   :lustybuffergrep
-  " nice!!
-  nmap <leader>lf :lustyfilesystemexplorer<cr>
-  " nearly the same as "wmtoggle" but has preview option
-  nmap <leader>lb :lustybufferexplorer<cr>
-endif
-
-if s:plugins['nerd'] "{{{2
-  Bundle 'NERD_tree-Project'
-  Bundle 'scrooloose/nerdcommenter'
-  Bundle 'scrooloose/nerdtree'
-  " is only checked for existenc
-  "let loaded_nerd_tree = 1
-  let NERDChristmasTree = 1
-  let NERDTreeHijackNetrw = 1
-  nmap <leader>nt :NERDTreeToggle<cr>
-endif
-
-if s:plugins['tselectbuffer'] "{{{2
-  Bundle 'tomtom/tselectbuffer_vim'
-  " needs tlib >= 0.40
-  nmap <leader>t :TSelectBuffer<cr>
-
-  Bundle 'tomtom/tlib_vim'
-endif
-
-if s:plugins['tselectfiles'] "{{{2
-  Bundle 'tomtom/tselectfiles_vim'
-  noremap <leader>tf :TSelectFiles<cr>
-endif
-
-if s:plugins['unite'] "{{{2
-  Bundle 'Shougo/unite.vim'
-  let g:unite_data_directory = '~/.vim/cache/unite'
-endif
+" mappings for the plugin
+let g:ctrlp_map = '<c-space>'
+let g:ctrlp_cmd = 'CtrlPMRU'
+inoremap <C-Space> <C-O>:CtrlPMRU<CR>
 
 " plugins: LaTeX {{{1
 
@@ -1761,14 +1644,9 @@ Bundle 'Colour-Sampler-Pack'
 
 " plugins: bookmarks {{{1
 "Bundle 'xterm-color-table.vim'
-
-
-" added on 2012-02-14 (bookmarks) {{{2
 "1048 R_with_vim.tar.gz
 "2358 cpp_src.tar.bz2
 "3931 vim-support.zip
-
-" This stuff was in my old ~/.vim dir. {{{2
 " AutoAlign.vba.gz
 " bash-support.zip
 " ex_plugins_package-unix-8.05_b2.zip
@@ -1799,13 +1677,6 @@ set runtimepath+=~/.vim/after
 " {{{2 Set colors for the terminal.  If the GUI is running the colorscheme
 "      will be set in gvimrc.
 if ! has('gui_running')
-  " version 1
-  "colorscheme macvim
-  "hi Pmenu ctermfg=202 ctermbg=234
-  "hi PmenuSel ctermfg=234 ctermbg=202
-  "highlight LineNr ctermbg=black ctermfg=DarkGrey
-
-  " version 2
   set background=dark
   colorscheme solarized
 endif
