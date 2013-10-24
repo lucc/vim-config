@@ -687,10 +687,6 @@ augroup LucLatex "{{{3
 	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex|
 	\ vnoremap <buffer> gG :call luc.tex.count('')<CR>|
 	\
-  "autocmd BufWinLeave *.tex
-  "      \ call s:LucLatexSaveFolds()
-  "autocmd BufWinEnter *.tex
-  "      \ silent loadview
 augroup END
 
 augroup LucLatexSuiteSettings "{{{3
@@ -775,11 +771,6 @@ augroup END
 
 augroup LucDelMenus
   autocmd!
-"  autocmd VimEnter *
-"	\ aunmenu *|
-"	\ augroup LucDelMenus|autocmd!|execute 'augroup EN'.'D'
-"  " Vim syntax higlighting has a bug therefore we use execute in the previous
-"  " line.
   autocmd VimEnter *
 	\ aunmenu *
 augroup END
