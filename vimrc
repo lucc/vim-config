@@ -36,30 +36,30 @@ filetype plugin indent on
 
 " user defined variables {{{1
 let mapleader = ','
-let s:path = [
-      \ '.config',
-      \ '.local',
-      \ '.NetBeansProjects',
-      \ '.postfix',
-      \ 'apply',
-      \ 'art',
-      \ 'bin',
-      \ 'cook',
-      \ 'dsa',
-      \ 'etc',
-      \ 'go',
-      \ 'leh',
-      \ 'lit',
-      \ 'log',
-      \ 'phon',
-      \ 'sammersee',
-      \ 'schule',
-      \ 'src',
-      \ 'uni',
-      \ 'zis',
-      \ ]
-let s:path = split(join(map(s:path, 'glob("~/" . v:val)')))
-call map(s:path, 'v:val . "/**"')
+"let s:path = [
+"      \ '.config',
+"      \ '.local',
+"      \ '.NetBeansProjects',
+"      \ '.postfix',
+"      \ 'apply',
+"      \ 'art',
+"      \ 'bin',
+"      \ 'cook',
+"      \ 'dsa',
+"      \ 'etc',
+"      \ 'go',
+"      \ 'leh',
+"      \ 'lit',
+"      \ 'log',
+"      \ 'phon',
+"      \ 'sammersee',
+"      \ 'schule',
+"      \ 'src',
+"      \ 'uni',
+"      \ 'zis',
+"      \ ]
+"let s:path = split(join(map(s:path, 'glob("~/" . v:val)')))
+"call map(s:path, 'v:val . "/**"')
 
 " month names for emails
 "let s:month_names = {
@@ -103,12 +103,114 @@ call map(s:path, 'v:val . "/**"')
 " :1,/^$/s/^Date:\s\+\(\d\+\)\.\?\s\+\([^ ]*\)/\='Date: '.submatch(1).' '.month_names[tolower(submatch(2))]
 " :1,/^$/s/^Date:\s*\([^ ,]*\),\s*\(\d\+\)\.\?\s*\([^ ]*\)/\='Date: '.day_names[tolower(submatch(1))].', '.submatch(2).' '.month_names[tolower(submatch(3))]
 
-" A directory/namespace for functions local ti this vimrc file
-let s:luc = {} " does not really work
 " And a directory/namespace for other user defined functions
 let luc = {}
 
 " user defined functions {{{1
+
+" compiler functions {{{2
+if !exists('luc.compiler')
+  let luc.compiler = {}
+endif
+
+function! luc.compiler.generic(target, override) dict "{{{3
+  " Try to build stuff depending on some parameters.  What will be built is
+  " decided by a:target and if absent the current file.  First a makefile is
+  " searched for in the directory %:h and above.  If one is found it is used
+  " to make a:target.  If no makefile is found and filetype=tex, the current
+  " file will be compiled with latexmk.  If a:override is non zero only
+  " latexmk will be executed and no makefile will be searched.
+
+  " local variables
+  let bdir = expand('%:h')
+  let bfile = expand('%:t')
+  let Fun = function('function')
+  let functionname = ''
+  let path = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
+  let dir = ''
+  let error = 0
+
+  " old local variables
+  let cmd   = ''
+
+  " try to find a makefile and set dir and cmd
+  while ! empty(path)
+    let dir = '/' . join(path, '/')
+    if filereadable(dir . '/makefile') || filereadable(dir . '/Makefile')
+      "let Fun = g:luc.compiler.make
+      let functionname = 'make'
+      let argument = a:target
+      let path = []
+    elseif filereadable(dir . '/build.xml')
+      "let Fun = g:luc.compiler.ant
+      let functionname = 'ant'
+      let argument = a:target
+      let path = []
+    else
+      unlet path[-1]
+    endif
+  endwhile
+
+  " if no makefile was found or override was asked for try to use latex
+  "if a:override || Fun == function('function') " && &filetype == 'tex' && a:target == ''
+  if a:override || functionname == ''
+    if has_key(g:luc.compiler, &filetype)
+      let functionname = &filetype
+      "execute 'let Fun = g:luc.compiler.' . &filetype
+      let argument = bfile
+      let dir = bdir
+    else
+      echoerr 'Not able to compile anything.'
+      let error = 1
+    endif
+  endif
+
+  " execute the command in the proper directory
+  "if Fun == function('function')
+  if functionname == ''
+    echoerr 'Not able to compile anything. (2)'
+    let error = 1
+  else
+    execute 'cd' dir
+    execute 'let cmd = g:luc.compiler.' . functionname . '(argument)'
+    let dir = fnamemodify(getcwd(), ':~:.')
+    let dir = dir == '' ? '~' : dir
+    echo 'Running' cmd 'in' dir
+    silent execute '!' cmd '&'
+    cd -
+    if v:shell_error
+      echoerr 'Compilation returned ' . v:shell_error . '.'
+    endif
+    let error = ! v:shell_error
+  endif
+
+  "if &filetype == 'tex'
+  "  silent ! ( sleep 3 && killall -HUP mupdf ) &
+  "endif
+
+  " redraw the screen to get rid of unneded "press enter" prompts
+  redraw
+
+  " return shell errors
+  return error
+endfunction
+
+function! luc.compiler.ant(target) dict "{{{3
+  return 'ant' . (a:target == '' ? '' : ' ' . a:target)
+endfunction
+
+function! luc.compiler.make(target) dict "{{{3
+  return 'make' . (a:target == '' ? '' : ' ' . a:target)
+endfunction
+
+function! luc.compiler.markdown(sourcefile) dict "{{{3
+  let target = fnamemodify(a:sourcefile, ':r').'.html'
+  return 'multimarkdown --full --smart --output='.target.' '.a:sourcefile
+endfunction
+
+function! luc.compiler.tex(sourcefile) dict "{{{3
+  return 'latexmk -silent ' . a:sourcefile
+endfunction
 
 " help and documentation functions {{{2
 if !exists('luc.man')
@@ -122,6 +224,7 @@ function! luc.man.open(...) "{{{3
     execute 'RMan' expand('<cword>')
   elseif a:0 > 0
     execute 'TMan\ ' . join(a:000)
+    execute 'RMan\ ' . join(a:000)
   else
     echohl Error
     echo 'Topic missing.'
@@ -318,10 +421,14 @@ function! luc.tex.count(file) range "{{{3
   let texchars = split(split(system(cmd . '-char ' . tex), "\n")[0], '+')[0]
   let texwords = split(split(system(cmd . tex), "\n")[0], '+')[0]
   let pdf = join(split(tex, '\.')[0:-2], '.').'.pdf'
-  let cmd = 'pdftotext ' . pdf . ' /dev/stdout | wc -mw'
-  let [pdfwords, pdfchars] = split(system(cmd))
+  if filereadable(pdf)
+    let cmd = 'pdftotext ' . pdf . ' /dev/stdout | wc -mw'
+    let [pdfwords, pdfchars] = split(system(cmd))
+  endif
   echo texwords 'words and' texchars 'chars in file' tex
-  echo pdfwords 'words and' pdfchars 'chars in file' pdf
+  if exists('pdfwords')
+    echo pdfwords 'words and' pdfchars 'chars in file' pdf
+  endif
   return
   let tc = '!texcount -nosub '
   let wc = '!pdftotext %:r.pdf /dev/stdout | wc -mw '
@@ -598,7 +705,10 @@ function! LucGetVisualSelection() "{{{2
 endfunction
 
 function! luc.f2_function() "{{{2
-  if &filetype == 'markdown' || &ft == 'text'
+  if &filetype == 'markdown'
+    sil up
+    cal g:luc.compiler.markdown(expand('%'))
+  elseif &ft == 'text'
     sil up
   elseif &ft == 'vim'
     sil up
@@ -830,10 +940,14 @@ nmap <Leader>w :call LucHandleURI(LucSearchStringForURI(getline('.')))<CR>
 "imap          <F2>   <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
 "nmap <silent> <D-F2>      :silent update <BAR> call LucQuickMake('', 1)<CR>
 "imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
-nmap          <F2>        :cal luc.f2_function()<CR>
-imap          <F2>   <C-O>:cal luc.f2_function()<CR>
-nmap <silent> <D-F2>      :silent update <BAR> call LucQuickMake('', 1)<CR>
-imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
+"nmap          <F2>        :cal luc.f2_function()<CR>
+"imap          <F2>   <C-O>:cal luc.f2_function()<CR>
+"nmap <silent> <D-F2>      :silent update <BAR> call LucQuickMake('', 1)<CR>
+"imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
+nmap <silent> <F2>        :sil up <BAR> call luc.compiler.generic('', 0)<CR>
+imap <silent> <F2>   <C-O>:sil up <BAR> call luc.compiler.generic('', 0)<CR>
+nmap <silent> <D-F2>      :sil up <BAR> call luc.compiler.generic('', 1)<CR>
+imap <silent> <D-F2> <C-O>:sil up <BAR> call luc.compiler.generic('', 1)<CR>
 
 " moveing around {{{2
 nmap <C-Tab>        gt
