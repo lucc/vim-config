@@ -569,65 +569,6 @@ function! LucFindNextSpellError() "{{{2
 endfunction
 
 
-function! LucQuickMake(target, override) "{{{2
-  " Try to build stuff depending on some parameters.  What will be built is
-  " decided by a:target and if absent the current file.  First a makefile is
-  " searched for in the directory %:h and above.  If one is found it is used
-  " to make a:target.  If no makefile is found and filetype=tex, the current
-  " file will be compiled with latexmk.  If a:override is non zero only
-  " latexmk will be executed and no makefile will be searched.
-
-  " local variables
-  let cmd   = ''
-  let error = 0
-  let path  = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
-  let dir   = ''
-  " try to find a makefile and set dir and cmd
-  while ! empty(path)
-    let dir = '/' . join(path, '/')
-    if filereadable(dir . '/makefile') || filereadable(dir . '/Makefile')
-      let cmd = 'make' . (a:target == '' ? '' : ' ' . a:target)
-      let path = []
-    elseif filereadable(dir . '/build.xml')
-      let cmd = 'ant' . (a:target == '' ? '' : ' ' . a:target)
-      let path = []
-    else
-      unlet path[-1]
-    endif
-  endwhile
-
-  " if no makefile was found or override was asked for try to use latex
-  if a:override || cmd == '' && &filetype == 'tex' && a:target == ''
-    let dir = expand('%:h')
-    let cmd = 'latexmk -silent ' . expand('%:t')
-  endif
-
-  " execute the command in the proper directory
-  if cmd == ''
-    echoerr 'No makefile found.'
-    let error = 1
-  else
-    execute 'cd' dir
-    echo 'Running' cmd 'in' fnamemodify(getcwd(), ':~:.')
-    silent execute '!' cmd '&'
-    cd -
-    if v:shell_error
-      echoerr 'Make returned ' . v:shell_error . '.'
-    endif
-    let error = ! v:shell_error
-  endif
-
-  if &filetype == 'tex'
-    silent ! ( sleep 3 && killall -HUP mupdf ) &
-  endif
-
-  " redraw the screen to get rid of unneded "press enter" prompts
-  redraw
-
-  " return shell errors
-  return error
-endfunction
-
 function! s:LucCheckIfBufferIsNew(...) "{{{2
   " check if the buffer with number a:1 is new.  That is to say, if it as
   " no name and is empty.  If a:1 is not supplied 1 is used.
@@ -702,21 +643,6 @@ function! LucGetVisualSelection() "{{{2
   let lines[-1] = lines[-1][: col2 - 2]
   let lines[0] = lines[0][col1 - 1:]
   return join(lines, "\n")
-endfunction
-
-function! luc.f2_function() "{{{2
-  if &filetype == 'markdown'
-    sil up
-    cal g:luc.compiler.markdown(expand('%'))
-  elseif &ft == 'text'
-    sil up
-  elseif &ft == 'vim'
-    sil up
-    so %
-  else
-    sil up
-    cal LucQuickMake('',0)
-  endif
 endfunction
 
 " misc/old {{{2
@@ -936,14 +862,6 @@ endif
 nmap <Leader>w :call LucHandleURI(LucSearchStringForURI(getline('.')))<CR>
 
 " easy compilation {{{2
-"nmap          <F2>        :silent update <BAR> call LucQuickMake('', 0)<CR>
-"imap          <F2>   <C-O>:silent update <BAR> call LucQuickMake('', 0)<CR>
-"nmap <silent> <D-F2>      :silent update <BAR> call LucQuickMake('', 1)<CR>
-"imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
-"nmap          <F2>        :cal luc.f2_function()<CR>
-"imap          <F2>   <C-O>:cal luc.f2_function()<CR>
-"nmap <silent> <D-F2>      :silent update <BAR> call LucQuickMake('', 1)<CR>
-"imap <silent> <D-F2> <C-O>:silent update <BAR> call LucQuickMake('', 1)<CR>
 nmap <silent> <F2>        :sil up <BAR> call luc.compiler.generic('', 0)<CR>
 imap <silent> <F2>   <C-O>:sil up <BAR> call luc.compiler.generic('', 0)<CR>
 nmap <silent> <D-F2>      :sil up <BAR> call luc.compiler.generic('', 1)<CR>
