@@ -42,7 +42,7 @@ let luc = {}
 " user defined functions {{{1
 
 " compiler functions {{{2
-if !exists('luc.compiler')
+if !has_key(luc, 'compiler')
   let luc.compiler = {}
 endif
 
@@ -146,7 +146,7 @@ function! luc.compiler.tex(sourcefile) dict "{{{3
 endfunction
 
 " help and documentation functions {{{2
-if !exists('luc.man')
+if !has_key(luc, 'man')
   let luc.man = {}
 endif
 
@@ -166,8 +166,8 @@ function! luc.man.open(...) "{{{3
   endif
   map <buffer> K :call luc.man.open()<CR>
   map <buffer> K :call luc.man.open()<CR>
-  vmap <buffer> K :call luc.man.open(LucGetVisualSelection())<CR>
-  vmap <buffer> K :call luc.man.open(LucGetVisualSelection())<CR>
+  vmap <buffer> K :call luc.man.open(luc.misc.GetVisualSelection())<CR>
+  vmap <buffer> K :call luc.man.open(luc.misc.GetVisualSelection())<CR>
 endfunction
 
 function! luc.man.tabopen(type, string) "{{{3
@@ -212,7 +212,7 @@ function! luc.man.helptags() "{{{3
 endfunction
 
 " color scheme functions {{{2
-if !exists('luc.color')
+if !has_key(luc, 'color')
   let luc.color = {}
 endif
 
@@ -294,7 +294,7 @@ function! luc.color.remove() "{{{3
 endfunction
 
 " latex functions {{{2
-if !exists('luc.tex')
+if !has_key(luc, 'tex')
   let luc.tex = {}
 endif
 
@@ -378,7 +378,12 @@ function! luc.tex.count(file) range "{{{3
   execute wc '2>/dev/null'
 endfunction
 
-function! s:LucFindBaseDir() "{{{2
+" misc functions {{{2
+if !has_key(luc, 'misc')
+  let luc.misc = {}
+endif
+
+function! luc.misc.findBaseDir() "{{{3
   " files which indicate a suitable base directory
   let indicator_files = [
                       \ 'makefile',
@@ -433,7 +438,7 @@ function! s:LucFindBaseDir() "{{{2
   return matches[0][0]
 endfunction
 
-function! LucSearchStringForURI(string) "{{{2
+function! luc.misc.searchStringForURI(string) "{{{3
   " function to find an URI in a string
   " thanks to  http://vim.wikia.com/wiki/VimTip306
   return matchstr(a:string, '[a-z]\+:\/\/[^ >,;:]\+')
@@ -442,7 +447,7 @@ function! LucSearchStringForURI(string) "{{{2
   "return matchstr(a:string, '[a-z]*:\/\/[^ >,;:]*')
 endfunction
 
-function! LucHandleURI(uri) "{{{2
+function! luc.misc.HandleURI(uri) "{{{3
   " function to find an URI on the current line and open it.
 
   " first find a browser
@@ -479,7 +484,7 @@ function! LucHandleURI(uri) "{{{2
   silent execute '!' browser uri
 endfunction
 
-function! s:LucInsertStatuslineColor(mode) "{{{2
+function! luc.misc.InsertStatuslineColor(mode) "{{{3
   " function to change the color of the statusline depending on the mode
   " this version is from http://vim.wikia.com/wiki/VimTip1287
   if     a:mode == 'i'
@@ -493,7 +498,7 @@ function! s:LucInsertStatuslineColor(mode) "{{{2
   endif
 endfunction
 
-function! LucFindNextSpellError() "{{{2
+function! luc.misc.FindNextSpellError() "{{{3
   " A function to jump to the next spelling error
   setlocal spell
   "if spellbadword(expand('<cword>')) == ['', '']
@@ -502,7 +507,7 @@ function! LucFindNextSpellError() "{{{2
 endfunction
 
 
-function! s:LucCheckIfBufferIsNew(...) "{{{2
+function! luc.misc.CheckIfBufferIsNew(...) "{{{3
   " check if the buffer with number a:1 is new.  That is to say, if it as
   " no name and is empty.  If a:1 is not supplied 1 is used.
   " find the buffer nr to check
@@ -524,10 +529,10 @@ endfunction
 " see:
 "http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
 "
-function! LucRemoteEditor(mail) "{{{2
+function! luc.misc.RemoteEditor(mail) "{{{3
   " a function to be called by a client who wishes to use a vim server as an
   " non forking edior. One can also set the environment variable EDITOR with
-  " EDITOR='vim --remote-tab-wait-silent +call\ LucRemoteEditor()'
+  " EDITOR='vim --remote-tab-wait-silent +call\ luc.misc.RemoteEditor()'
 
   " the command to hide MacVim (use with system())
   let s:applescript = 'osascript -e "tell application \"System Events\"' .
@@ -565,7 +570,7 @@ function! LucRemoteEditor(mail) "{{{2
   endif
 endfunction
 
-function! LucGetVisualSelection() "{{{2
+function! luc.misc.GetVisualSelection() "{{{3
   " This function is copied from http://stackoverflow.com/questions/1533565/
   " FIXME: This seems to exclude the last character from the selection.
   let [lnum1, col1] = getpos("'<")[1:2]
@@ -578,9 +583,12 @@ function! LucGetVisualSelection() "{{{2
   return join(lines, "\n")
 endfunction
 
-" misc/old {{{2
+" old functions {{{2
+if !has_key(luc, 'old')
+  let luc.old = {}
+endif
 
-function! LucUnsetOptions() "{{{3
+function! luc.old.unsetOptions() "{{{3
   " unset some options
   " FIXME WHAT FOR?
   set viminfo=
@@ -592,7 +600,7 @@ function! LucUnsetOptions() "{{{3
   redraw
 endfunction
 
-function! LucLoadScpBuffers() "{{{3
+function! luc.old.loadScpBuffers() "{{{3
   badd ftp://ftp.lima-city.de/index.php
   badd ftp://ftp.lima-city.de/css/main.css
   badd ftp://ftp.lima-city.de/files/dotfiles/index.php
@@ -684,7 +692,7 @@ augroup END
 augroup LucSession "{{{2
   autocmd!
   autocmd VimEnter *
-	\ if s:LucCheckIfBufferIsNew(1) |
+	\ if luc.misc.CheckIfBufferIsNew(1) |
 	\   bwipeout 1 |
 	\   doautocmd BufRead,BufNewFile |
 	\ endif
@@ -694,7 +702,7 @@ augroup END
 "  autocmd!
 "  " FIXME: still buggy
 "  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
-"	\ execute 'lcd' s:LucFindBaseDir()
+"	\ execute 'lcd' luc.misc.findBaseDir()
 "augroup END
 
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
@@ -724,8 +732,8 @@ inoremap <C-U> <C-G>u<C-U>
 inoremap <C-W> <C-G>u<C-W>
 
 " easy spell checking
-inoremap <C-s> <C-o>:call LucFindNextSpellError()<CR><C-x><C-s>
-nnoremap <C-s>      :call LucFindNextSpellError()<CR>z=
+inoremap <C-s> <C-o>:call luc.misc.FindNextSpellError()<CR><C-x><C-s>
+nnoremap <C-s>      :call luc.misc.FindNextSpellError()<CR>z=
 
 if has('gui_macvim')
   inoremap œ \
@@ -735,7 +743,7 @@ if has('gui_macvim')
 endif
 
 " open URLs {{{2
-nmap <Leader>w :call LucHandleURI(LucSearchStringForURI(getline('.')))<CR>
+nmap <Leader>w :call luc.misc.HandleURI(luc.misc.SearchStringForURI(getline('.')))<CR>
 
 " easy compilation {{{2
 nmap <silent> <F2>        :sil up <BAR> call luc.compiler.generic('', 0)<CR>
@@ -909,8 +917,8 @@ set wildmenu
 " " change highlighting when mode changes
 " augroup LucStatusLine
 "   autocmd!
-"   autocmd InsertEnter * call s:LucInsertStatuslineColor(v:insertmode)
-"   autocmd InsertLeave * call s:LucInsertStatuslineColor('n')
+"   autocmd InsertEnter * call luc.misc.InsertStatuslineColor(v:insertmode)
+"   autocmd InsertLeave * call luc.misc.InsertStatuslineColor('n')
 " augroup END
 " " now we set the colors for the statusline
 " " in the most simple case
