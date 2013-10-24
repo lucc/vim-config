@@ -29,12 +29,6 @@ if system('uname') == 'Linux'
   s:normalfonts = 'DejaVu Sans Mono 9'
 endif
 
-" A directory/namespace for functions local ti this vimrc file
-let s:luc = {}
-" And a directory/namespace for other user defined functions.  This should be
-" set in vimrc already!
-"let luc = {}
-
 " user defined functions {{{1
 function! LucSelectFont (big) "{{{2
   " Select a font and set it
@@ -174,24 +168,10 @@ if has("gui_macvim")
 endif
 
 " colorscheme {{{1
-" version 1
-" use the macvim colorscheme, but slightly modify it
-"colorscheme macvim
-"set background=light
-"hi Normal  guifg=Grey50 guibg=#1f1f1f
-"hi LineNr  guifg=Grey50 guibg=#1f1f1f
-"hi Comment guifg=#3464A4
-
-" version 2
-" switching to peachpuff because of a bug in (mac?)vim
-"colorscheme peachpuff
-
-" version 3
-" switching to solarized
 if strftime('%H%M') > 700 && strftime('%H%M') < 2100
-  set bg=light
+  set background=light
 else
-  set bg=dark
+  set background=dark
 endif
 colorscheme solarized
 
