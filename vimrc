@@ -659,20 +659,6 @@ function! LucUnsetOptions() "{{{3
   redraw
 endfunction
 
-"function! LucDiffFunction() "{{{3
-"  " code taken from the help file diff.txt and from diff(1)
-"  let opt  = '--text '
-"  let opt .= '--binary '
-"  let opt .= '--minimal'
-"  if &diffopt =~ 'icase'
-"    let opt .= '--ignore-case '
-"  endif
-"  if &diffopt =~ 'iwhite'
-"    let opt .= '--ignore-space-change '
-"  endif
-"  silent execute '!diff' opt v:fname_in v:fname_new '>' v:fname_out
-"endfunction
-
 function! LucLoadScpBuffers() "{{{3
   badd ftp://ftp.lima-city.de/index.php
   badd ftp://ftp.lima-city.de/css/main.css
@@ -682,40 +668,6 @@ function! LucLoadScpBuffers() "{{{3
   badd scp://ifi/.profile_local
   badd scp://lg/.bash_profile
 endfunction
-
-"function! LucCpAsPrint(fname) "{{{3
-"  let i = 1
-"  let target = '~/vim-print-' . i . '.pdf'
-"  while filereadable(target)
-"    let i += 1
-"    let target = '~/vim-print-' . i . '.pdf'
-"  endwhile
-"  call system('ps2pdf ' . a:fname . ' ' . target)
-"  call delete(a:fname)
-"  return v:shell_error
-"endfunction
-
-"function! LucPatternBufferDo(pattern, ...) "{{{3
-"  " like :bufdo but only visit files which match pattern.
-"  let buffers = []
-"  let i
-"  let buf
-"  for i in range(bufnr('$'))
-"    if bufexists(i)
-"      if bufname(i) =~ a:pattern
-"	append(buffers, i)
-"      endif
-"    endif
-"  endfor
-"  if len(buffers) == 0
-"    echoerr 'No buffers match ' . pattern . '!'
-"    return
-"  endif
-"  for buf in buffers
-"    echo 'Visiting buffer ' . bufname(buf) . '.'
-"    execute 'buffer' buf '|' join(a:000, ' ')
-"  endfor
-"endfunction
 
 " user defined autocommands {{{1
 
