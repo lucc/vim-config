@@ -36,74 +36,7 @@ filetype plugin indent on
 
 " user defined variables {{{1
 let mapleader = ','
-"let s:path = [
-"      \ '.config',
-"      \ '.local',
-"      \ '.NetBeansProjects',
-"      \ '.postfix',
-"      \ 'apply',
-"      \ 'art',
-"      \ 'bin',
-"      \ 'cook',
-"      \ 'dsa',
-"      \ 'etc',
-"      \ 'go',
-"      \ 'leh',
-"      \ 'lit',
-"      \ 'log',
-"      \ 'phon',
-"      \ 'sammersee',
-"      \ 'schule',
-"      \ 'src',
-"      \ 'uni',
-"      \ 'zis',
-"      \ ]
-"let s:path = split(join(map(s:path, 'glob("~/" . v:val)')))
-"call map(s:path, 'v:val . "/**"')
-
-" month names for emails
-"let s:month_names = {
-"      \ 'jannuar':   'Jan',
-"      \ 'januar':    'Jan',
-"      \ 'februar':   'Feb',
-"      \ 'march':     'Mar',
-"      \ 'märz':      'Mar',
-"      \ 'april':     'Apr',
-"      \ 'mai':       'May',
-"      \ 'may':       'May',
-"      \ 'juni':      'Jun',
-"      \ 'june':      'Jun',
-"      \ 'juli':      'Jul',
-"      \ 'july':      'Jul',
-"      \ 'august':    'Aug',
-"      \ 'september': 'Sep',
-"      \ 'oktober':   'Oct',
-"      \ 'october':   'Oct',
-"      \ 'november':  'Nov',
-"      \ 'dezember':  'Dec',
-"      \ 'december':  'Dec',
-"      \ }
-"let s:day_names = {
-"      \ 'montag': 'Mon',
-"      \ 'monday': 'Mon',
-"      \ 'dienstag': 'Tue',
-"      \ 'tuesday': 'Tue',
-"      \ 'mittwoch': 'Wed',
-"      \ 'wednesday': 'Wed',
-"      \ 'donnerstag': 'Thu',
-"      \ 'thursday': 'Thu',
-"      \ 'freitag': 'Fri',
-"      \ 'friday': 'Fri',
-"      \ 'samstag': 'Sat',
-"      \ 'saturday': 'Sat',
-"      \ 'sonntag': 'Sun',
-"      \ 'sunday': 'Sun',
-"      \ }
-" use with:
-" :1,/^$/s/^Date:\s\+\(\d\+\)\.\?\s\+\([^ ]*\)/\='Date: '.submatch(1).' '.month_names[tolower(submatch(2))]
-" :1,/^$/s/^Date:\s*\([^ ,]*\),\s*\(\d\+\)\.\?\s*\([^ ]*\)/\='Date: '.day_names[tolower(submatch(1))].', '.submatch(2).' '.month_names[tolower(submatch(3))]
-
-" And a directory/namespace for other user defined functions
+" a directory/namespace for user defined functions
 let luc = {}
 
 " user defined functions {{{1
