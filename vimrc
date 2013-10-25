@@ -588,22 +588,7 @@ if !has_key(luc, 'old')
   let luc.old = {}
 endif
 
-function! luc.old.unsetOptions() "{{{3
-  " unset some options
-  " FIXME WHAT FOR?
-  set viminfo=
-  set noswapfile
-  set laststatus=0
-  set nonumber
-  "set lines=2
-  syntax off
-  redraw
-endfunction
-
 function! luc.old.loadScpBuffers() "{{{3
-  badd ftp://ftp.lima-city.de/index.php
-  badd ftp://ftp.lima-city.de/css/main.css
-  badd ftp://ftp.lima-city.de/files/dotfiles/index.php
   badd scp://math/.profile
   badd scp://ifi/.profile
   badd scp://ifi/.profile_local
@@ -1582,21 +1567,6 @@ Bundle 'Colour-Sampler-Pack'
 "Bundle 'Wombat'
 "Bundle 'oceandeep'
 
-
-" plugins: bookmarks {{{1
-"Bundle 'xterm-color-table.vim'
-"1048 R_with_vim.tar.gz
-"2358 cpp_src.tar.bz2
-"3931 vim-support.zip
-" AutoAlign.vba.gz
-" bash-support.zip
-" ex_plugins_package-unix-8.05_b2.zip
-" octave_with_vim_0.01-8.tar.gz
-" project-1.4.1.tar.gz
-" renamer.vim.gz
-" sessionman.vim.gz
-" supertab.vba.gz
-" tskeleton.vba.gz
 
 " last steps {{{1
 
