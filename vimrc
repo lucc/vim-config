@@ -151,7 +151,6 @@ if !has_key(luc, 'man')
 endif
 
 function! luc.man.open(...) "{{{3
-"function! LucManPageFunction(...)
   " try to find a manpage
   if &filetype == 'man' && a:0 == 0
     execute 'RMan' expand('<cword>')
@@ -171,7 +170,6 @@ function! luc.man.open(...) "{{{3
 endfunction
 
 function! luc.man.tabopen(type, string) "{{{3
-"function! LucTManWrapper(type, string)
   " look up string in the documentation for type
   if a:type =~ 'man\|m'
     let suffix = 'man'
@@ -194,7 +192,6 @@ function! luc.man.tabopen(type, string) "{{{3
 endfunction
 
 function! luc.man.completeTopics(ArgLead, CmdLine, CursorPos) "{{{3
-"function! LucManPageTopicsCompletion(ArgLead, CmdLine, CursorPos)
   let paths = tr(system('man -w'), ":\n", "  ")
   "let paths = "/usr/share/man/man9"
   return system('find ' . paths .
@@ -217,7 +214,6 @@ if !has_key(luc, 'color')
 endif
 
 function! luc.color.find() "{{{3
-"function! s:LucFindAllColorschemes()
   "return LucFlattenList(filter(map(split(&rtp, ','),
   "      \ 'glob(v:val .  "/**/colors/*.vim", 0, 1)'), 'v:val != []'))
   return sort(map(split(globpath(&rtp, 'colors/*.vim'), '\n'),
@@ -225,7 +221,6 @@ function! luc.color.find() "{{{3
 endfunction
 
 function! luc.color.selectRandom() "{{{3
-"function! LucSelectRandomColorscheme()
   let colorschemes = s:LucFindAllColorschemes()
   let this = colorschemes[luc.random(0,len(colorschemes)-1)]
   execute 'colorscheme' this
@@ -235,7 +230,6 @@ function! luc.color.selectRandom() "{{{3
 endfunction
 
 function! luc.color.like(val) "{{{3
-"function! s:LucLikeColorscheme(val)
   let fname = glob('~/.vim/colorscheme-ratings')
   let cfiles = map(readfile(fname), 'split(v:val)')
   for item in cfiles
@@ -249,7 +243,6 @@ function! luc.color.like(val) "{{{3
 endfunction
 
 function! luc.random(start, end) "{{{3
-"function! LucRandomNumber(start, end)
   return (system('echo $RANDOM') % (a:end - a:start + 1)) + a:start
   " code by Kazuo on vim@vim.org
   python from random import randint
@@ -272,26 +265,27 @@ function! luc.flattenList(list) "{{{3
   return val
 endfunction
 
-function! luc.color.remove() "{{{3
-  if !exists('g:colors_name')
-    echoerr 'The variable g:colors_name is not set!'
-    return
-  else
-    let file = globpath(&rtp, 'colors/' . g:colors_name . '.vim')
-    if file == ''
-      echoerr 'Can not find colorscheme ' . g:colors_name . '!'
-      return
-    elseif !exists('g:remove_files')
-      let g:remove_files = [file]
-    elseif type(g:remove_files) != type([])
-      echoerr 'g:remove_files is not a list!'
-      return
-    else
-      call add(g:remove_files, file)
-      return file
-    endif
-  endif
-endfunction
+"function! luc.color.remove() "{{{3
+"  " what does this do?
+"  if !exists('g:colors_name')
+"    echoerr 'The variable g:colors_name is not set!'
+"    return
+"  else
+"    let file = globpath(&rtp, 'colors/' . g:colors_name . '.vim')
+"    if file == ''
+"      echoerr 'Can not find colorscheme ' . g:colors_name . '!'
+"      return
+"    elseif !exists('g:remove_files')
+"      let g:remove_files = [file]
+"    elseif type(g:remove_files) != type([])
+"      echoerr 'g:remove_files is not a list!'
+"      return
+"    else
+"      call add(g:remove_files, file)
+"      return file
+"    endif
+"  endif
+"endfunction
 
 " latex functions {{{2
 if !has_key(luc, 'tex')
@@ -1010,285 +1004,6 @@ let g:ctrlp_map = '<c-space>'
 let g:ctrlp_cmd = 'CtrlPMRU'
 inoremap <C-Space> <C-O>:CtrlPMRU<CR>
 
-" plugins: LaTeX {{{1
-
-" 3109 LatexBox.vmb
-"Bundle 'coot/atp_vim'
-"Bundle 'LaTeX-functions'
-"Bundle 'latextags'
-"Bundle 'TeX-9'
-"Bundle 'tex.vim'
-"Bundle 'tex_autoclose.vim'
-
-"Bundle 'auctex.vim'
-Bundle 'LaTeX-Help'
-
-" Vim-latex aka LaTeX-Suite {{{2
-Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
-let g:ngerman_package_file = 1
-let g:Tex_Menus = 0
-" this has to be lower case!
-let g:tex_flavor = 'latex'
-" The other settings for vim-latex are in the LucLatexSuiteSettings
-" autocmdgroup.
-
-" plugins: lisp/scheme {{{1
-
-" lisp/scheme interaction {{2
-Bundle 'slimv.vim'
-"Bundle 'tslime.vim'
-Bundle 'davidmfoley/tslime.vim'
-Bundle 'Limp'
-
-" plugins: markdown {{{1
-" unconditionally binds <Leader>f and <Leader>r (also in insert mode=bad for
-" latex)
-"Bundle 'vim-pandoc/vim-markdownfootnotes'
-
-" strange folding
-"Bundle 'plasticboy/vim-markdown'
-"Bundle   'hallison/vim-markdown'
-
-" strange autocmd which run a lot
-"Bundle 'suan/vim-instant-markdown'
-
-" good folding uses expr
-Bundle 'nelstrom/vim-markdown-folding'
-let g:markdown_fold_style = 'nested'
-
-" strange folding?
-"Bundle 'tpope/vim-markdown'
-
-" plugins: comma separated values (csv) {{{1
-"Bundle 'csv.vim'
-"Bundle 'csv-reader'
-"Bundle 'CSVTK'
-"Bundle 'rcsvers.vim'
-"Bundle 'csv-color'
-"Bundle 'CSV-delimited-field-jumper'
-
-" plugins: python {{{1
-
-"Bundle 'python_fold_compact'
-"Bundle 'jpythonfold.vim'
-Bundle 'Python-Syntax-Folding'
-"Bundle 'klen/python-mode'
-
-" plugins: shell in Vim {{{1
-
-Bundle 'Shougo/vimproc'
-Bundle 'Shougo/vimshell.vim'
-map <D-F11> :VimShellPop<cr>
-let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
-"Bundle 'Conque-Shell'
-
-" to be tested (shell in gvim)
-"Bundle 'ervandew/screen'
-Bundle 'https://bitbucket.org/fboender/bexec.git'
-Bundle 'pydave/AsyncCommand'
-"Bundle 'vimsh.tar.gz'
-"Bundle 'xolox/vim-shell'
-
-"Bundle 'vimux'
-
-" plugins: iCal {{{1
-
-" syntax highlighting
-Bundle 'icalendar.vim'
-
-" plugins: tags {{{1
-"Bundle 'ttags'
-"Bundle 'xolox/vim-easytags'
-
-" Bundle 'taglist-plus' {{{2
-Bundle 'taglist-plus'
-
-if s:plugins['taglist'] "{{{2
-  Bundle 'taglist.vim'
-  "let Tlist_Auto_Highlight_Tag        =
-  "let Tlist_Auto_Open                 =
-  let Tlist_Auto_Update               = 1
-  let Tlist_Close_On_Select           = 1
-  let Tlist_Compact_Format            = 1
-  "let Tlist_Ctags_Cmd                 =
-  let Tlist_Display_Prototype         = 1
-  "let Tlist_Display_Tag_Scope         =
-  "let Tlist_Enable_Fold_Column        =
-  let Tlist_Exit_OnlyWindow           = 1
-  let Tlist_File_Fold_Auto_Close      = 1
-  let Tlist_GainFocus_On_ToggleOpen   = 1
-  "let Tlist_Highlight_Tag_On_BufEnter =
-  "let Tlist_Inc_Winwidth              =
-  "let Tlist_Max_Submenu_Items         =
-  "let Tlist_Max_Tag_Length            =
-  "let Tlist_Process_File_Always       =
-  "let Tlist_Show_Menu                 = 1
-  "let Tlist_Show_One_File             =
-  "let Tlist_Sort_Type                 =
-  "let Tlist_Use_Horiz_Window          =
-  let Tlist_Use_Right_Window          = 1
-  "let Tlist_Use_SingleClick           =
-  "let Tlist_WinHeight                 =
-  let Tlist_WinWidth                  = 75
-endif
-
-" Extend ctags to work with latex
-"""""""""""""""""""""""""""""""""
-" This is strongly dependent on the file ~/.ctags and the definitions therein.
-" See ctags(1) for a description of the format.
-" The variable tlist_tex_settings is a semicolon separated list of key:val
-" pairs. The first item is no such pair but only the language name used by
-" ctags. The key is a single letter used by ctags as "kind" of the tag, the
-" val is a word used by tlist to categorice the tags in the tlist window.
-"let tlist_tex_settings='tex;b:bibitem;c:command;l:label;s:sections;t:subsections;u:subsubsections'
-"let tlist_tex_settings='tex;c:chapters;s:sections;u:subsections;b:subsubsections;p:parts;P:paragraphs;G:subparagraphs'
-let tlist_tex_settings='latex;s:structure;g:graphic+listing;l:label;r:ref;b:bib'
-
-nmap <silent> <F4> :silent TlistToggle<CR>
-"augroup LucTagList
-"  autocmd!
-"  autocmd BufEnter *.tex let Tlist_Ctags_Cmd = expand('~/.vim/ltags')
-"  autocmd BufLeave *.tex let Tlist_Ctags_Cmd = 'ctags'
-"augroup END
-
-" Ctags and Cscope {{{2
-" always search for a tags file from $PWD down to '/'.
-set tags=./tags,tags;/
-
-" try to use Cscope
-if has('cscope')
-  set nocsverb
-  if has('quickfix') | set cscopequickfix=s-,c-,d-,i-,t-,e- | endif
-  " search cscope database first (1 = ``tags first'')
-  set cscopetagorder=0
-  set cscopetag
-  " {{{ these lines are copied from
-  " http://cscope.sourceforge.net/cscope_maps.vim and modified by me. Many
-  " thanks to the Cscope guys.
-  " The commands are defided into three prefixes:
-  "
-  " 	CTRL-_		show querry in current window
-  " 	CTRL-@		show querry in horizontal split
-  " 	CTRL-@ CTRL-@	show querry in vertival split
-  "
-  " (NOTE: CTRL-@ can also be typed as CTRL-<SPACE>
-  " The querry is determind by the last character of the map. Like this:
-  "
-  " 	's'   symbol: find all references to the token under cursor
-  " 	'g'   global: find global definition(s) of the token under cursor
-  " 	'c'   calls:  find all calls to the function name under cursor
-  " 	't'   text:   find all instances of the text under cursor
-  " 	'e'   egrep:  egrep search for the word under cursor
-  " 	'f'   file:   open the filename under cursor
-  " 	'i'   includes: find files that include the filename under cursor
-  " 	'd'   called: find functions that function under cursor calls
-  "nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-  "nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  "nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>
-  "nmap <C-@>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  "nmap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
-  "nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  "nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
-  " End of http://cscope.sourceforge.net/cscope_maps.vim stuff }}}
-  if $CSCOPE_DB != ""
-    cscope add $CSCOPE_DB
-  elseif filereadable('cscope.out')
-    cscope add cscope.out
-  else
-    " no database so use Ctags instead (unset cscope options)
-    " run ``ctags **/.*[ch]'' to produce the file ``tags''.
-    " these headers are used:
-    " http://www.vim.org/scripts/script.php?script_id=2358
-    "Bundle 'tags-for-std-cpp-STL-streams-...'
-    set tags+=~/.vim/tags/usr_include.tags
-    set tags+=~/.vim/tags/usr_include_cpp.tags
-    set tags+=~/.vim/tags/usr_local_include.tags
-    set tags+=~/.vim/tags/usr_local_include_boost.tags
-    set tags+=~/.vim/tags/cpp.tags
-    set nocscopetag
-  endif
-  set cscopeverbose
-else
-  "call s:ctag_fallback()
-endif
-
-" Tags Bookmarks {{{3
-"Bundle 'a-new-txt2tags-syntax'
-"Bundle 'gtags-multiwindow-browsing'
-"Bundle 'utags'
-"Bundle 'ctags_cache'
-"Bundle 'Intelligent-Tags'
-"Bundle 'Find-XML-Tags'
-"Bundle 'ProjectCTags'
-"Bundle 'cHiTags'
-"Bundle 'easytags.vim'
-"Bundle 'loadtags'
-"Bundle 'OmniTags'
-"Bundle 'tags-for-std-cpp-STL-streams-...'
-"Bundle 'ctags.exe'
-"Bundle 'ttags'
-"Bundle 'undo_tags'
-"Bundle 'GtagsClient'
-"Bundle 'projtags.vim'
-"Bundle 'tagscan'
-"Bundle 'TagsParser'
-"Bundle 'tagSetting.vim'
-"Bundle 'switchtags.vim'
-"Bundle 'tagselect'
-"Bundle 'DoTagStuff'
-"Bundle 'txt2tags'
-"Bundle 'txt2tags-menu'
-"Bundle 'gtags.vim'
-"Bundle 'tagsubmenu'
-"Bundle 'ctags.vim'
-"Bundle 'vtags_def'
-"Bundle 'vtags'
-"Bundle 'latextags'
-"Bundle 'ctags.vim'
-"Bundle 'TagsBase.zip'
-"Bundle 'functags.vim'
-"Bundle 'aux2tags.vim'
-"Bundle 'dtags'
-"Bundle 'TagsMenu.zip'
-"Bundle 'ctags.vim'
-
-" plugins: manpages {{{1
-"Bundle 'info.vim'
-
-" Bundle 'ManPageView' {{{2
-" TODO
-"Bundle 'ManPageView'
-" http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
-" manually installed: open above url and execute :UseVimaball
-" display manpages in a vertical split (other options 'only', 'hsplit',
-" 'vsplit', 'hsplit=', 'vsplit=', 'reuse')
-let g:manpageview_winopen = 'reuse'
-
-"{{{2 hints_man
-" http://www.vim.org/scripts/script.php?script_id=1825
-" http://www.vim.org/scripts/script.php?script_id=1826
-"augroup LucManHints
-"  autocmd!
-"  autocmd FileType c,cpp set cmdheight=2
-"augroup END
-
 " plugins: completion {{{1
 "Bundle 'IComplete'
 "Bundle 'cppcomplete'
@@ -1489,6 +1204,297 @@ let g:UltiSnipsJumpForwardTrigger = '<C-F>'
 "let g:UltiSnipsJumpBackwardTrigger = <c-k>
 let g:UltiSnipsJumpBackwardTrigger = '<SID>NOT_DEFINED'
 
+" plugins: syntastic {{{1
+Bundle 'scrooloose/syntastic'
+let g:syntastic_mode_map = {
+      \ 'mode': 'active',
+      \ 'active_filetypes': [],
+      \ 'passive_filetypes': ['tex']
+      \ }
+
+" plugins: languages {{{1
+
+Bundle 'applescript.vim'
+
+" plugins: LaTeX {{{2
+
+" 3109 LatexBox.vmb
+"Bundle 'coot/atp_vim'
+"Bundle 'LaTeX-functions'
+"Bundle 'latextags'
+"Bundle 'TeX-9'
+"Bundle 'tex.vim'
+"Bundle 'tex_autoclose.vim'
+
+"Bundle 'auctex.vim'
+Bundle 'LaTeX-Help'
+
+" Vim-latex aka LaTeX-Suite {{{3
+Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
+let g:ngerman_package_file = 1
+let g:Tex_Menus = 0
+" this has to be lower case!
+let g:tex_flavor = 'latex'
+" The other settings for vim-latex are in the LucLatexSuiteSettings
+" autocmdgroup.
+
+" plugins: lisp/scheme {{{2
+
+" lisp/scheme interaction {{3
+Bundle 'slimv.vim'
+"Bundle 'tslime.vim'
+Bundle 'davidmfoley/tslime.vim'
+Bundle 'Limp'
+
+" plugins: markdown {{{2
+" unconditionally binds <Leader>f and <Leader>r (also in insert mode=bad for
+" latex)
+"Bundle 'vim-pandoc/vim-markdownfootnotes'
+
+" strange folding
+"Bundle 'plasticboy/vim-markdown'
+"Bundle   'hallison/vim-markdown'
+
+" strange autocmd which run a lot
+"Bundle 'suan/vim-instant-markdown'
+
+" good folding uses expr
+Bundle 'nelstrom/vim-markdown-folding'
+let g:markdown_fold_style = 'nested'
+
+" strange folding?
+"Bundle 'tpope/vim-markdown'
+
+" plugins: comma separated values (csv) {{{2
+"Bundle 'csv.vim'
+"Bundle 'csv-reader'
+"Bundle 'CSVTK'
+"Bundle 'rcsvers.vim'
+"Bundle 'csv-color'
+"Bundle 'CSV-delimited-field-jumper'
+
+" plugins: python {{{2
+
+"Bundle 'python_fold_compact'
+"Bundle 'jpythonfold.vim'
+Bundle 'Python-Syntax-Folding'
+"Bundle 'klen/python-mode'
+
+" plugins: iCal {{{2
+
+" syntax highlighting
+Bundle 'icalendar.vim'
+
+" plugins: shell in Vim {{{1
+
+Bundle 'Shougo/vimproc'
+Bundle 'Shougo/vimshell.vim'
+map <D-F11> :VimShellPop<cr>
+let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
+"Bundle 'Conque-Shell'
+
+" to be tested (shell in gvim)
+"Bundle 'ervandew/screen'
+Bundle 'https://bitbucket.org/fboender/bexec.git'
+Bundle 'pydave/AsyncCommand'
+"Bundle 'vimsh.tar.gz'
+"Bundle 'xolox/vim-shell'
+
+"Bundle 'vimux'
+
+" plugins: tags {{{1
+"Bundle 'ttags'
+"Bundle 'xolox/vim-easytags'
+
+" Bundle 'taglist-plus' {{{2
+Bundle 'taglist-plus'
+
+if s:plugins['taglist'] "{{{2
+  Bundle 'taglist.vim'
+  "let Tlist_Auto_Highlight_Tag        =
+  "let Tlist_Auto_Open                 =
+  let Tlist_Auto_Update               = 1
+  let Tlist_Close_On_Select           = 1
+  let Tlist_Compact_Format            = 1
+  "let Tlist_Ctags_Cmd                 =
+  let Tlist_Display_Prototype         = 1
+  "let Tlist_Display_Tag_Scope         =
+  "let Tlist_Enable_Fold_Column        =
+  let Tlist_Exit_OnlyWindow           = 1
+  let Tlist_File_Fold_Auto_Close      = 1
+  let Tlist_GainFocus_On_ToggleOpen   = 1
+  "let Tlist_Highlight_Tag_On_BufEnter =
+  "let Tlist_Inc_Winwidth              =
+  "let Tlist_Max_Submenu_Items         =
+  "let Tlist_Max_Tag_Length            =
+  "let Tlist_Process_File_Always       =
+  "let Tlist_Show_Menu                 = 1
+  "let Tlist_Show_One_File             =
+  "let Tlist_Sort_Type                 =
+  "let Tlist_Use_Horiz_Window          =
+  let Tlist_Use_Right_Window          = 1
+  "let Tlist_Use_SingleClick           =
+  "let Tlist_WinHeight                 =
+  let Tlist_WinWidth                  = 75
+endif
+
+" Extend ctags to work with latex
+"""""""""""""""""""""""""""""""""
+" This is strongly dependent on the file ~/.ctags and the definitions therein.
+" See ctags(1) for a description of the format.
+" The variable tlist_tex_settings is a semicolon separated list of key:val
+" pairs. The first item is no such pair but only the language name used by
+" ctags. The key is a single letter used by ctags as "kind" of the tag, the
+" val is a word used by tlist to categorice the tags in the tlist window.
+"let tlist_tex_settings='tex;b:bibitem;c:command;l:label;s:sections;t:subsections;u:subsubsections'
+"let tlist_tex_settings='tex;c:chapters;s:sections;u:subsections;b:subsubsections;p:parts;P:paragraphs;G:subparagraphs'
+let tlist_tex_settings='latex;s:structure;g:graphic+listing;l:label;r:ref;b:bib'
+
+nmap <silent> <F4> :silent TlistToggle<CR>
+"augroup LucTagList
+"  autocmd!
+"  autocmd BufEnter *.tex let Tlist_Ctags_Cmd = expand('~/.vim/ltags')
+"  autocmd BufLeave *.tex let Tlist_Ctags_Cmd = 'ctags'
+"augroup END
+
+" Ctags and Cscope {{{2
+" always search for a tags file from $PWD down to '/'.
+set tags=./tags,tags;/
+
+" try to use Cscope
+if has('cscope')
+  set nocsverb
+  if has('quickfix') | set cscopequickfix=s-,c-,d-,i-,t-,e- | endif
+  " search cscope database first (1 = ``tags first'')
+  set cscopetagorder=0
+  set cscopetag
+  " {{{ these lines are copied from
+  " http://cscope.sourceforge.net/cscope_maps.vim and modified by me. Many
+  " thanks to the Cscope guys.
+  " The commands are defided into three prefixes:
+  "
+  " 	CTRL-_		show querry in current window
+  " 	CTRL-@		show querry in horizontal split
+  " 	CTRL-@ CTRL-@	show querry in vertival split
+  "
+  " (NOTE: CTRL-@ can also be typed as CTRL-<SPACE>
+  " The querry is determind by the last character of the map. Like this:
+  "
+  " 	's'   symbol: find all references to the token under cursor
+  " 	'g'   global: find global definition(s) of the token under cursor
+  " 	'c'   calls:  find all calls to the function name under cursor
+  " 	't'   text:   find all instances of the text under cursor
+  " 	'e'   egrep:  egrep search for the word under cursor
+  " 	'f'   file:   open the filename under cursor
+  " 	'i'   includes: find files that include the filename under cursor
+  " 	'd'   called: find functions that function under cursor calls
+  "nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+  "nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+  "nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>
+  "nmap <C-@>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+  "nmap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@><C-@>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@><C-@>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@><C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@><C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
+  "nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
+  "nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+  "nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
+  " End of http://cscope.sourceforge.net/cscope_maps.vim stuff }}}
+  if $CSCOPE_DB != ""
+    cscope add $CSCOPE_DB
+  elseif filereadable('cscope.out')
+    cscope add cscope.out
+  else
+    " no database so use Ctags instead (unset cscope options)
+    " run ``ctags **/.*[ch]'' to produce the file ``tags''.
+    " these headers are used:
+    " http://www.vim.org/scripts/script.php?script_id=2358
+    "Bundle 'tags-for-std-cpp-STL-streams-...'
+    set tags+=~/.vim/tags/usr_include.tags
+    set tags+=~/.vim/tags/usr_include_cpp.tags
+    set tags+=~/.vim/tags/usr_local_include.tags
+    set tags+=~/.vim/tags/usr_local_include_boost.tags
+    set tags+=~/.vim/tags/cpp.tags
+    set nocscopetag
+  endif
+  set cscopeverbose
+else
+  "call s:ctag_fallback()
+endif
+
+" Tags Bookmarks {{{3
+"Bundle 'a-new-txt2tags-syntax'
+"Bundle 'gtags-multiwindow-browsing'
+"Bundle 'utags'
+"Bundle 'ctags_cache'
+"Bundle 'Intelligent-Tags'
+"Bundle 'Find-XML-Tags'
+"Bundle 'ProjectCTags'
+"Bundle 'cHiTags'
+"Bundle 'easytags.vim'
+"Bundle 'loadtags'
+"Bundle 'OmniTags'
+"Bundle 'tags-for-std-cpp-STL-streams-...'
+"Bundle 'ctags.exe'
+"Bundle 'ttags'
+"Bundle 'undo_tags'
+"Bundle 'GtagsClient'
+"Bundle 'projtags.vim'
+"Bundle 'tagscan'
+"Bundle 'TagsParser'
+"Bundle 'tagSetting.vim'
+"Bundle 'switchtags.vim'
+"Bundle 'tagselect'
+"Bundle 'DoTagStuff'
+"Bundle 'txt2tags'
+"Bundle 'txt2tags-menu'
+"Bundle 'gtags.vim'
+"Bundle 'tagsubmenu'
+"Bundle 'ctags.vim'
+"Bundle 'vtags_def'
+"Bundle 'vtags'
+"Bundle 'latextags'
+"Bundle 'ctags.vim'
+"Bundle 'TagsBase.zip'
+"Bundle 'functags.vim'
+"Bundle 'aux2tags.vim'
+"Bundle 'dtags'
+"Bundle 'TagsMenu.zip'
+"Bundle 'ctags.vim'
+
+" plugins: manpages {{{1
+"Bundle 'info.vim'
+
+" Bundle 'ManPageView' {{{2
+" TODO
+"Bundle 'ManPageView'
+" http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
+" manually installed: open above url and execute :UseVimaball
+" display manpages in a vertical split (other options 'only', 'hsplit',
+" 'vsplit', 'hsplit=', 'vsplit=', 'reuse')
+let g:manpageview_winopen = 'reuse'
+
+" hints_man {{{2
+" http://www.vim.org/scripts/script.php?script_id=1825
+" http://www.vim.org/scripts/script.php?script_id=1826
+"augroup LucManHints
+"  autocmd!
+"  autocmd FileType c,cpp set cmdheight=2
+"augroup END
+
 " plugins: parenthesis and quotes {{{1
 
 Bundle 'Raimondi/delimitMate'
@@ -1500,31 +1506,20 @@ if s:plugins['powerline']
   Bundle 'Lokaltog/powerline'
 endif
 
-if s:plugins['syntastic']
-  Bundle 'scrooloose/syntastic'
-  let g:syntastic_mode_map = {
-	\ 'mode': 'active',
-	\ 'active_filetypes': [],
-	\ 'passive_filetypes': ['tex']
-	\ }
-endif
-
 Bundle 'ack.vim'
-Bundle 'applescript.vim'
+
 "Bundle 'browser.vim'
 "Bundle 'calendar.vim'
+
 " buggy!
 Bundle 'matchit.zip'
-
-" Takes forever to load
-"Bundle 'Vim-JDE'
 
 Bundle 'VimRepress'
 "Bundle 'connermcd/VimRepress'
 "Bundle 'blogit.vim'
+
 Bundle 'ZoomWin'
 Bundle 'AndrewRadev/linediff.vim'
-Bundle 'vimwiki'
 
 " plugins: git stuff {{{1
 "Bundle 'tpope/vim-git'
@@ -1535,6 +1530,7 @@ Bundle 'tpope/vim-fugitive'
 
 Bundle 'altercation/vim-colors-solarized'
 let g:solarized_menu = 0
+
 Bundle 'w0ng/vim-hybrid'
 Bundle 'chriskempson/vim-tomorrow-theme'
 Bundle 'nanotech/jellybeans.vim'
