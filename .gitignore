@@ -7,16 +7,15 @@
 spell/*
 !spell/*.add
 
-# bundle repositories
+# some subfolders
 bundle
-#bundle/*
-#!bundle/vundle
+cache
+backup
 
-# other stuff
-#cache
 viminfo
-#doc/tags
-#.VimballRecord
+doc/tags
 .netrwhist
 vimshell
 .VimballRecord
+
+startuptime
