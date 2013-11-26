@@ -186,7 +186,7 @@ function! luc.man.tabopen(type, string) "{{{3
   endif
   execute 'TMan' a:string . '.' . suffix
   " there seems to be a bug in :Man and :TMan
-  "execute 'RMan' a:string . '.' . suffix
+  execute 'RMan' a:string . '.' . suffix
   call foreground()
   redraw
 endfunction
@@ -769,6 +769,7 @@ set autoindent
 set backspace=indent,eol,start
 set backup
 set backupdir=~/.vim/backup
+let &backupskip .= ',' . expand('$HOME') . '/.config/secure/*'
 set hidden
 set history=2000
 set confirm
@@ -974,6 +975,7 @@ let s:plugins = {
 		\ 'powerline': 0,
 		\ 'syntastic': 1,
 		\ 'taglist': 1,
+		\ 'vimshell': 0,
 		\ }
 
 " Managing plugins with Vundle (https://github.com/gmarik/vundle)
@@ -1003,6 +1005,11 @@ let g:ctrlp_custom_ignore = {
 let g:ctrlp_map = '<c-space>'
 let g:ctrlp_cmd = 'CtrlPMRU'
 inoremap <C-Space> <C-O>:CtrlPMRU<CR>
+
+" Use the compiled C-version for speed improvements
+Bundle 'JazzCore/ctrlp-cmatcher'
+let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
+
 
 " plugins: completion {{{1
 "Bundle 'IComplete'
@@ -1287,10 +1294,12 @@ Bundle 'icalendar.vim'
 
 " plugins: shell in Vim {{{1
 
-Bundle 'Shougo/vimproc'
-Bundle 'Shougo/vimshell.vim'
-map <D-F11> :VimShellPop<cr>
-let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
+if s:plugins['vimshell']
+  Bundle 'Shougo/vimproc'
+  Bundle 'Shougo/vimshell.vim'
+  map <D-F11> :VimShellPop<cr>
+  let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
+endif
 "Bundle 'Conque-Shell'
 
 " to be tested (shell in gvim)
