@@ -3,6 +3,11 @@
 
 " user defined variables {{{1
 
+" the vimrc file will initialize a directory "luc" to store functions
+if !has_key(luc, 'gui')
+  let luc.gui = {}
+endif
+
 "set guifont=DejaVu\ Sans\ Mono\ 9
 
 " TODO
@@ -25,7 +30,7 @@ let s:normalfonts = join(map(copy(s:fonts),
       \ 'join(v:val[0:1], s:delim)'), ',')
 let s:bigfonts = join(map(copy(s:fonts),
       \ '(remove(v:val, 1) . join(v:val, s:delim))[2:-1]'), ',')
-if system('uname') == 'Linux'
+if system('uname') == "Linux\n"
   s:normalfonts = 'DejaVu Sans Mono 9'
 endif
 
@@ -39,6 +44,16 @@ function! LucSelectFont (big) "{{{2
     let s:delim = ' '
   endif
   " TODO
+endfunction
+
+function! luc.gui.toggleFontsize() "{{{2
+  if &guifont == s:normalfonts
+    let &guifont = s:bigfonts
+  elseif &guifont == s:bigfonts
+    let &guifont = s:normalfonts
+  else
+    echoerr 'Can not toggle font.'
+  endif
 endfunction
 
 function! LucResizeFunction () " {{{2
@@ -136,7 +151,7 @@ if has("gui_macvim")
   " fullscreen
   nmap <D-CR> :call LucToggleFullscreenFunction(0)<CR>
   imap <D-CR> <C-O>:call LucToggleFullscreenFunction(0)<CR>
-  nmap <D-F12> :call LucFullscreenFunction(1)<CR>
+  nmap <D-F12> :call luc.gui.toggleFontsize()<CR>
   " copy and paste like the mac osx default
   nmap <silent> <D-v>  "*p
   imap <silent> <D-v>  <C-r>*
