@@ -1,9 +1,8 @@
-" file:    ~/.vimrc                                                       {{{1
-" author:  luc
-" credits: Many thanks to Bram Moolenaar <Bram@Vim.org> for the excellent
-"          example vimrc
+" vimrc file by luc {{{1
 " vi: set foldmethod=marker spelllang=en:
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Credits:
+" * Many thanks to Bram for the excellent example vimrc
+" *
 
 " start (things to do first) {{{1
 
@@ -722,7 +721,7 @@ if has('gui_macvim')
 endif
 
 " open URLs {{{2
-nmap <Leader>w :call luc.misc.HandleURI(luc.misc.SearchStringForURI(getline('.')))<CR>
+nmap <Leader>w :call luc.misc.HandleURI(luc.misc.searchStringForURI(getline('.')))<CR>
 
 " easy compilation {{{2
 nmap <silent> <F2>        :sil up <BAR> call luc.compiler.generic('', 0)<CR>
@@ -874,20 +873,20 @@ set formatoptions+=l " do not break lines which are already long
 "set statusline+=\ [%c%V,%l/%L][%P]
 
 " current version
-set statusline=%t                               " tail of the filename
-set statusline+=\ %([%M%R%H]\ %)                " group for mod., ro. & help
+set statusline=%t                                  " tail of the filename
+set statusline+=\ %([%M%R%H]\ %)                   " group for mod., ro. & help
 set statusline+=[
-set statusline+=%{strlen(&fenc)?&fenc:'none'},  " display fileencoding
-set statusline+=%{&ff}                          " filetype (unix/windows)
-set statusline+=%Y                              " filetype (c/sh/vim/...)
-set statusline+=%{fugitive#statusline()}        " info about git
+set statusline+=%{strlen(&fenc)?&fenc:'none'},     " display fileencoding
+set statusline+=%{&fileformat}                     " filetype (unix/windows)
+set statusline+=%Y                                 " filetype (c/sh/vim/...)
+set statusline+=%{fugitive#statusline()}           " info about git
 set statusline+=]
-set statusline+=\ [ASCII=x%02B]                 " ASCII code of char
-set statusline+=\ %=                            " rubber space
-set statusline+=[%{strftime('%R')}]             " clock
-set statusline+=\ [%c%V,%l/%L]                  " position in file
-set statusline+=\ [%P]                          " percent of above
-set statusline+=\ %{SyntasticStatuslineFlag()}  " see :h syntastic
+set statusline+=\ [ASCII=x%02B]                    " ASCII code of char
+set statusline+=\ %=                               " rubber space
+set statusline+=[%{strftime('%R')}]                " clock
+set statusline+=\ [%c%V,%l/%L]                     " position in file
+set statusline+=\ [%P]                             " percent of above
+set statusline+=%(\ %{SyntasticStatuslineFlag()}%) " see :h syntastic
 
 " always display the statusline
 set laststatus=2
