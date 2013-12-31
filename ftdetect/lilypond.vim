@@ -1,0 +1,1 @@
+/usr/local/opt/lilypond/share/lilypond/2.16.2/vim/ftdetect/lilypond.vim

@@ -1,7 +1,12 @@
 " gvimrc file by luc {{{1
 " vim: foldmethod=marker
 
-" user defined variables {{{1 
+" user defined variables {{{1
+
+" the vimrc file will initialize a directory "luc" to store functions
+if !has_key(luc, 'gui')
+  let luc.gui = {}
+endif
 
 "set guifont=DejaVu\ Sans\ Mono\ 9
 
@@ -21,11 +26,11 @@ elseif has('gui_gtk2')
   let s:delim = ' '
 endif
 
-let s:normalfonts = join(map(copy(s:fonts), 
+let s:normalfonts = join(map(copy(s:fonts),
       \ 'join(v:val[0:1], s:delim)'), ',')
 let s:bigfonts = join(map(copy(s:fonts),
       \ '(remove(v:val, 1) . join(v:val, s:delim))[2:-1]'), ',')
-if system('uname') == 'Linux'
+if system('uname') == "Linux\n"
   s:normalfonts = 'DejaVu Sans Mono 9'
 endif
 
@@ -37,6 +42,17 @@ function! LucSelectFont (big) "{{{2
     let s:delim = ':h'
   elseif has('gui_gtk2')
     let s:delim = ' '
+  endif
+  " TODO
+endfunction
+
+function! luc.gui.toggleFontsize() "{{{2
+  if &guifont == s:normalfonts
+    let &guifont = s:bigfonts
+  elseif &guifont == s:bigfonts
+    let &guifont = s:normalfonts
+  else
+    echoerr 'Can not toggle font.'
   endif
 endfunction
 
@@ -66,7 +82,6 @@ function! LucToggleFullscreenFunction (big) " {{{2
     call LucFullscreenFunction(a:big)
   endif
 endfunction
-
 
 function! LucOpenPdfOrPreview (check, file, go_back) " {{{2
   " function to check if a pdf file is open in Preview.app and bring it to the
@@ -129,21 +144,26 @@ endfunction
 " user defined commands and mappings {{{1
 
 nmap ß :windo set rightleft!<CR>
-nmap <S-D-CR> <C-W>T
-imap <S-D-CR> <C-O><C-W>T
-nmap <D-CR> :call LucToggleFullscreenFunction(0)<CR>
-imap <D-CR> <C-O>:call LucToggleFullscreenFunction(0)<CR>
-nmap <D-F12> :call LucFullscreenFunction(1)<CR>
 if has("gui_macvim")
+  " tabs
+  nmap <S-D-CR> <C-W>T
+  imap <S-D-CR> <C-O><C-W>T
+  " fullscreen
+  nmap <D-CR> :call LucToggleFullscreenFunction(0)<CR>
+  imap <D-CR> <C-O>:call LucToggleFullscreenFunction(0)<CR>
+  nmap <D-F12> :call luc.gui.toggleFontsize()<CR>
+  " copy and paste like the mac osx default
   nmap <silent> <D-v>  "*p
   imap <silent> <D-v>  <C-r>*
   nmap <silent> <D-c>  "*yy
   imap <silent> <D-c>  <C-o>"*yy
   vmap <silent> <D-c>  "*y
+  " open pdfs for tex files
   nmap <silent> <F3>   :call LucOpenPdfOrPreview(0, '', 1)<CR>
   imap <silent> <F3>   <C-O>:call LucOpenPdfOrPreview(0, '', 1)<CR>
   nmap <silent> <D-F3> :call LucOpenPdfOrPreview(1, '', 1)<CR>
   imap <silent> <D-F3> <C-O>:call LucOpenPdfOrPreview(1, '', 1)<CR>
+  " mouse gestures
   nmap <silent> <SwipeLeft>  :pop<CR>
   nmap <silent> <SwipeRight> :tag<CR>
 endif
@@ -162,15 +182,12 @@ if has("gui_macvim")
   set antialias
 endif
 
-" use the macvim colorscheme, but slightly modify it.
-colorscheme macvim
-set background=light
-"hi Normal  guifg=Grey50 guibg=#1f1f1f
-"hi LineNr  guifg=Grey50 guibg=#1f1f1f
-"hi Comment guifg=#3464A4
-
-set bg=dark
-set bg=light
+" colorscheme {{{1
+if strftime('%H%M') > 700 && strftime('%H%M') < 2100
+  set background=light
+else
+  set background=dark
+endif
 colorscheme solarized
 
 
