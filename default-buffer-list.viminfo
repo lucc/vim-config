@@ -8,40 +8,42 @@
 %~/.vim/vimrc	0	0
 %~/.vim/gvimrc	0	0
 
+# shell (zsh) config
+%~/.inputrc	0	0
+%~/.profile	0	0
+%~/.zshenv	0	0
+%~/.config/shell/zshrc	0	0
+%~/.config/shell/aliases	0	0
+%~/.config/shell/envrc	0	0
+
 # other config files
-%~/.config/shell/latexmkrc	0	0
+%~/.latexmkrc	0	0
 %~/.config/mime/mailcap	0	0
 %~/.config/mail/mailcheckrc	0	0
 %~/.config/mime/mime.types	0	0
-%~/.config/pentadactyl/pentadactylrc	0	0
-%~/.config/shell/rtorrent.rc	0	0
-%~/.config/shell/tmux.conf	0	0
+%~/.pentadactyl/pentadactylrc	0	0
+%~/.rtorrent.rc	0	0
+%~/.tmux.conf	0	0
 
 # security config files
-%~/.config/mail/fetchmailrc	0	0
+%~/.fetchmailrc	0	0
 %~/.config/mail/mailfilter	0	0
-%~/.config/mail/mutt/muttrc	0	0
-%~/.config/secure/gpg/gpg.conf	0	0
-%~/.config/secure/netrc	0	0
-%~/.config/secure/ssh/config	0	0
+%~/.mutt/muttrc	0	0
+%~/.gpg/gpg.conf	0	0
+%~/.netrc	0	0
+%~/.ssh/config	0	0
 %~/.config/secure/xml	0	0
 
 # vim buffer list and other stuff
-%~/.config/vim/default-buffer-list.viminfo	0	0
-%~/.config/vim/vimpagerrc	0	0
+%~/.vim/default-buffer-list.viminfo	0	0
+%~/.vim/vimpagerrc	0	0
 
 # further config files
-%~/.config/emacs.d/init.el	0	0
+%~/.emacs.d/init.el	0	0
 %~/.config/env/INFOPATH	0	0
 %~/.config/env/PATH	0	0
 %~/.config/feh/keys	0	0
 %~/.config/feh/themes	0	0
-%~/.config/shell/aliases	0	0
-%~/.config/shell/envrc	0	0
-%~/.config/shell/inputrc	0	0
-%~/.config/shell/profile	0	0
-%~/.config/shell/zshenv	0	0
-%~/.config/shell/zshrc	0	0
 
 # remote files
 #%ftp://ftp.lima-city.de/index.html	0	0
