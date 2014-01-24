@@ -127,6 +127,80 @@ function! luc.compiler.generic(target, override) dict "{{{3
   return error
 endfunction
 
+function! luc.compiler.generic2(target) dict "{{{3
+  " Try to build the current file automatically.  If a:target is not specified
+  " and there is a compiler function available in g:luc.compiler it will be
+  " used to find out how to compile the current file.  If a:target is
+  " specified or there is no compiler function a makefile will be searched.
+
+  " local variables
+  let functionname = ''
+  let path = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
+  let dir = ''
+  "let error = 0
+
+  " type check
+  if type(a:target) != type('string')
+    echoerr 'The target has to be a string.'
+    return TypeError
+  endif
+
+  " look at g:luc.compiler to find a function for &filetype
+  if has_key(g:luc.compiler, &filetype)
+    let functionname = &filetype
+    let argument = expand('%:t') " file of this buffer
+    let dir = expand('%:h') " directory of this buffer
+  endif
+
+  " if a target was specified override the filetype compiler or if no filetype
+  " compiler was found, use ant or make
+  if a:target != '' || functionname == ''
+    let functionname = ''
+    let argument = ''
+    let dir = ''
+    " try to find a makefile and set dir and functionname
+    while ! empty(path)
+      let dir = '/' . join(path, '/')
+      if filereadable(dir . '/makefile') || filereadable(dir . '/Makefile')
+	let functionname = 'make'
+	let argument = a:target
+	let path = []
+      elseif filereadable(dir . '/build.xml')
+	let functionname = 'ant'
+	let argument = a:target
+	let path = []
+      else
+	unlet path[-1]
+      endif
+    endwhile
+  endif
+
+  " if no filetype function or makefile was found return with an error
+  if functionname == ''
+    echoerr 'Not able to compile anything. (2)'
+    let error = 1
+  " else execute the command in the proper directory
+  else
+    execute 'cd' dir
+    execute 'let cmd = g:luc.compiler.' . functionname . '(argument)'
+    let dir = fnamemodify(getcwd(), ':~:.')
+    let dir = dir == '' ? '~' : dir
+    echo 'Running' cmd 'in' dir
+    silent execute '!' cmd '&'
+    cd -
+    if v:shell_error
+      echoerr 'Compilation returned ' . v:shell_error . '.'
+    endif
+    let error = ! v:shell_error
+  endif
+
+  " redraw the screen to get rid of unneded "press enter" prompts
+  redraw
+
+  " return shell errors
+  return error
+endfunction
+
 function! luc.compiler.ant(target) dict "{{{3
   return 'ant' . (a:target == '' ? '' : ' ' . a:target)
 endfunction
@@ -332,6 +406,7 @@ endfunction
 
 function! luc.tex.count(file) range "{{{3
 "function! LucLatexCount(file) range
+  let noerr = ' 2>/dev/null'
   if type(a:file) == type(0)
     let tex = bufname(a:file)
   elseif type(a:file) == type("")
@@ -343,9 +418,9 @@ function! luc.tex.count(file) range "{{{3
   else
     return No_File_Found
   endif
-  let cmd = 'texcount -quiet -nocol -1 -utf8 -incbib '
-  let texchars = split(split(system(cmd . '-char ' . tex), "\n")[0], '+')[0]
-  let texwords = split(split(system(cmd . tex), "\n")[0], '+')[0]
+  let cmd = 'texcount.pl -quiet -nocol -1 -utf8 -incbib '
+  let texchars = split(split(system(cmd . '-char ' . tex . noerr), "\n")[0], '+')[0]
+  let texwords = split(split(system(cmd . tex . noerr), "\n")[0], '+')[0]
   let pdf = join(split(tex, '\.')[0:-2], '.').'.pdf'
   if filereadable(pdf)
     let cmd = 'pdftotext ' . pdf . ' /dev/stdout | wc -mw'
@@ -356,7 +431,7 @@ function! luc.tex.count(file) range "{{{3
     echo pdfwords 'words and' pdfchars 'chars in file' pdf
   endif
   return
-  let tc = '!texcount -nosub '
+  let tc = '!texcount.pl -nosub '
   let wc = '!pdftotext %:r.pdf /dev/stdout | wc -mw '
   if a:char == 'char'
     let tc .= '-char '
@@ -616,12 +691,6 @@ augroup LucLatexSuiteSettings "{{{3
   " Tex_Menus are disabled and empty files are treated as LaTeX with
   " tex_flavor='latex'
   autocmd FileType tex
-	\ if has('mac')|let g:Tex_ViewRule_pdf = 'open -a Preview'|endif|
-	\ let g:Tex_UseMakefile = 1|
-	\ let g:Tex_CompileRule_pdf = 'latexmk -silent -pv -pdf $*'|
-	\ let g:Tex_SmartQuoteOpen = '„'|
-	\ let g:Tex_SmartQuoteClose = '“'|
-	\ let g:Tex_Env_quote = "\\begin{quote}\<CR>,,<++>`` \\cite[S.~<++>]{<++>}\<CR>\\end{quote}"|
 	\ setlocal grepprg=grep\ -nH\ $*|
 	\
   " force grep to display filename.
@@ -636,12 +705,9 @@ augroup LucLatexSuiteSettings "{{{3
   "let Tex_FoldedEnvironments .= 'keywords,abstract,titlepage'
   "let Tex_FoldedEnvironments .= 'item,enum,display'
   "let Tex_FoldedMisc = 'comments,item,preamble,<<<'
+  " let g:Tex_FoldedMisc = 'comments,item,preamble,<<<,slide'
   "let Tex_FoldedEnvironments .= '*'
   "let Tex_FoldedSections = 'part,chapter,section,subsection,subsubsection,paragraph'
-  " dont use latexsuite folding
-  "let Tex_FoldedEnvironments=''
-  "let Tex_FoldedMisc=''
-  "let Tex_FoldedSections=''
   "
   "let g:Tex_UseUtfMenus=1
 augroup END
@@ -724,8 +790,8 @@ endif
 nmap <Leader>w :call luc.misc.HandleURI(luc.misc.searchStringForURI(getline('.')))<CR>
 
 " easy compilation {{{2
-nmap <silent> <F2>        :sil up <BAR> call luc.compiler.generic('', 0)<CR>
-imap <silent> <F2>   <C-O>:sil up <BAR> call luc.compiler.generic('', 0)<CR>
+nmap <silent> <F2>        :sil up <BAR> call luc.compiler.generic2('')<CR>
+imap <silent> <F2>   <C-O>:sil up <BAR> call luc.compiler.generic2('')<CR>
 nmap <silent> <D-F2>      :sil up <BAR> call luc.compiler.generic('', 1)<CR>
 imap <silent> <D-F2> <C-O>:sil up <BAR> call luc.compiler.generic('', 1)<CR>
 
@@ -1243,6 +1309,38 @@ let g:Tex_Menus = 0
 let g:tex_flavor = 'latex'
 " The other settings for vim-latex are in the LucLatexSuiteSettings
 " autocmdgroup.
+if has('mac') | let g:Tex_ViewRule_pdf = 'open -a Preview' | endif
+let g:Tex_UseMakefile = 1
+let g:Tex_CompileRule_pdf = 'latexmk -silent -pv -pdf $*'
+let g:Tex_SmartQuoteOpen = '„'
+let g:Tex_SmartQuoteClose = '“'
+let g:Tex_Env_quote = "\\begin{quote}\<CR>,,<++>`` \\cite[S.~<++>]{<++>}\<CR>\\end{quote}"
+" the variable Tex_FoldedEnvironments holds the beginnings of names of
+" environments which should be folded.  The innermost environments should come
+" first.
+let g:Tex_FoldedEnvironments  = 'verbatim'
+let g:Tex_FoldedEnvironments .= ',comment'
+let g:Tex_FoldedEnvironments .= ',eq'
+let g:Tex_FoldedEnvironments .= ',gather'
+let g:Tex_FoldedEnvironments .= ',align'
+let g:Tex_FoldedEnvironments .= ',figure'
+let g:Tex_FoldedEnvironments .= ',table'
+" environments for structure of mathematical texts (they can contain other
+" stuff)
+let g:Tex_FoldedEnvironments .= ',th'
+let g:Tex_FoldedEnvironments .= ',satz'
+let g:Tex_FoldedEnvironments .= ',def'
+let g:Tex_FoldedEnvironments .= ',lem'
+let g:Tex_FoldedEnvironments .= ',rem'
+let g:Tex_FoldedEnvironments .= ',bem'
+let g:Tex_FoldedEnvironments .= ',proof'
+" quotes can contain other stuff
+let g:Tex_FoldedEnvironments .= ',quot'
+" environments for the general document
+let g:Tex_FoldedEnvironments .= ',thebibliography'
+let g:Tex_FoldedEnvironments .= ',keywords'
+let g:Tex_FoldedEnvironments .= ',abstract'
+let g:Tex_FoldedEnvironments .= ',titlepage'
 
 " plugins: lisp/scheme {{{2
 
