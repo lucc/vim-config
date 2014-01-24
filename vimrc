@@ -756,8 +756,7 @@ augroup END
 
 augroup LucDelMenus
   autocmd!
-  autocmd VimEnter *
-	\ aunmenu *
+  autocmd VimEnter * aunmenu *
 augroup END
 
 " user defined commands and mappings {{{1
@@ -871,7 +870,8 @@ set dictionary+=spell
 set dictionary+=~/.vim/dictionary/*
 
 " options: terminal stuff {{{1
-if $TERM_PROGRAM == 'iTerm.app'
+"if $TERM_PROGRAM == 'iTerm.app'
+if !has('gui_running')
   set t_Co=256
 endif
 
