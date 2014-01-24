@@ -141,6 +141,14 @@ function! LucOpenPdfOrPreview (check, file, go_back) " {{{2
   endif
 endfunction
 
+function! LucActivatePreview() " {{{2
+  silent !osascript -e 'tell app "Preview" to activate'
+  silent call foreground()
+  "let version = system('defaults read loginwindow SystemVersionStampAsString')
+  "if split(version, '.')[1] == '9'
+"
+endfunction
+
 " user defined commands and mappings {{{1
 
 nmap ß :windo set rightleft!<CR>
@@ -159,10 +167,14 @@ if has("gui_macvim")
   imap <silent> <D-c>  <C-o>"*yy
   vmap <silent> <D-c>  "*y
   " open pdfs for tex files
-  nmap <silent> <F3>   :call LucOpenPdfOrPreview(0, '', 1)<CR>
-  imap <silent> <F3>   <C-O>:call LucOpenPdfOrPreview(0, '', 1)<CR>
-  nmap <silent> <D-F3> :call LucOpenPdfOrPreview(1, '', 1)<CR>
-  imap <silent> <D-F3> <C-O>:call LucOpenPdfOrPreview(1, '', 1)<CR>
+  "nmap <silent> <F3>   :call LucOpenPdfOrPreview(0, '', 1)<CR>
+  "imap <silent> <F3>   <C-O>:call LucOpenPdfOrPreview(0, '', 1)<CR>
+  "nmap <silent> <D-F3> :call LucOpenPdfOrPreview(1, '', 1)<CR>
+  "imap <silent> <D-F3> <C-O>:call LucOpenPdfOrPreview(1, '', 1)<CR>
+  nmap <silent> <F3>   :call LucActivatePreview()<CR>
+  imap <silent> <F3>   <C-O>:call LucActivatePreview()<CR>
+  nmap <silent> <d-F3>   <d-f2>:call LucActivatePreview()<CR>
+  imap <silent> <d-F3>   <C-O><d-f2>:call LucActivatePreview()<CR>
   " mouse gestures
   nmap <silent> <SwipeLeft>  :pop<CR>
   nmap <silent> <SwipeRight> :tag<CR>
