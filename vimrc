@@ -783,6 +783,8 @@ if has('gui_macvim')
   inoremap æ \|
   cnoremap œ \
   cnoremap æ \|
+  inoremap <D-s> <C-O>:silent update<CR>
+  noremap  <D-s>      :silent update<CR>
 endif
 
 " open URLs {{{2
