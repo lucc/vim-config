@@ -418,7 +418,7 @@ function! luc.tex.count(file) range "{{{3
   else
     return No_File_Found
   endif
-  let cmd = 'texcount.pl -quiet -nocol -1 -utf8 -incbib '
+  let cmd = 'texcount -quiet -nocol -1 -utf8 -incbib '
   let texchars = split(split(system(cmd . '-char ' . tex . noerr), "\n")[0], '+')[0]
   let texwords = split(split(system(cmd . tex . noerr), "\n")[0], '+')[0]
   let pdf = join(split(tex, '\.')[0:-2], '.').'.pdf'
@@ -431,7 +431,7 @@ function! luc.tex.count(file) range "{{{3
     echo pdfwords 'words and' pdfchars 'chars in file' pdf
   endif
   return
-  let tc = '!texcount.pl -nosub '
+  let tc = '!texcount -nosub '
   let wc = '!pdftotext %:r.pdf /dev/stdout | wc -mw '
   if a:char == 'char'
     let tc .= '-char '
