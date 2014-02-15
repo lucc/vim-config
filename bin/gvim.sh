@@ -65,13 +65,13 @@ else
   # trying to implement long options
   for arg; do
     case "$arg" in
+      --editor) CMD=tab
+	new_args=("${new_args[@]}" '+call luc.misc.RemoteEditor(0)');;
       --info) CMD=info;;
       --man) CMD=man;;
       --perldoc|--perl|--pl) CMD=perldoc;;
       --php) CMD=php;;
       --pydoc|--python|--py) CMD=pydoc;;
-      --remote) CMD=tab
-	new_args=("${new_args[@]}" '+call luc.misc.RemoteEditor(0)');;
       --stdin) SAVE_STDIN=true; CMD=${CMD:-tab};;
       --tab) CMD=tab WAIT=true;;
       *) new_args=("${new_args[@]}" "$arg");;
