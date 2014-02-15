@@ -12,6 +12,7 @@ endif
 
 " TODO
 let s:fonts = [
+      \ ['menlo for powerline',      12, 25],
       \ ['menlo',                    12, 25],
       \ ['monospace',                10, 25],
       \ ['inconsolata',              14, 30],
