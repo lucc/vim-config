@@ -1039,7 +1039,6 @@ let s:plugins = {
 		\ 'latexsuite': 1,
 		\ 'neocompl': 0,
 		\ 'omnicppcomplete': 0,
-		\ 'powerline': 0,
 		\ 'syntastic': 1,
 		\ 'taglist': 1,
 		\ 'vimshell': 0,
@@ -1082,14 +1081,15 @@ let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 "Bundle 'IComplete'
 "Bundle 'cppcomplete'
 
-Bundle 'Valloric/YouCompleteMe'
-let g:ycm_filetype_blacklist = {}
-let g:ycm_complete_in_comments = 1
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_seed_identifiers_with_syntax = 1
-let g:ycm_autoclose_preview_window_after_completion = 0
-
+if has('gui_macvim')
+  Bundle 'Valloric/YouCompleteMe'
+  let g:ycm_filetype_blacklist = {}
+  let g:ycm_complete_in_comments = 1
+  let g:ycm_collect_identifiers_from_comments_and_strings = 1
+  let g:ycm_collect_identifiers_from_tags_files = 1
+  let g:ycm_seed_identifiers_with_syntax = 1
+  let g:ycm_autoclose_preview_window_after_completion = 0
+endif
 
 "Bundle 'javacomplete'
 
@@ -1391,6 +1391,8 @@ Bundle 'Python-Syntax-Folding'
 " syntax highlighting
 Bundle 'icalendar.vim'
 
+" plugins: fish (shell) {{{2
+Bundle 'aliva/vim-fish'
 " plugins: shell in Vim {{{1
 
 if s:plugins['vimshell']
@@ -1609,11 +1611,8 @@ Bundle 'Raimondi/delimitMate'
 Bundle 'paredit.vim'
 
 " plugins: unsorted {{{1
-if s:plugins['powerline']
-  Bundle 'Lokaltog/vim-powerline'
-  Bundle 'Lokaltog/powerline'
-endif
-
+Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+Bundle 'pix/vim-known_hosts'
 Bundle 'ack.vim'
 
 "Bundle 'browser.vim'
