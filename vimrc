@@ -776,6 +776,13 @@ augroup LucDelMenus
   autocmd VimEnter * aunmenu *
 augroup END
 
+augroup LucLocalAutoCd "{{{2
+  autocmd!
+  autocmd BufEnter ~/uni/**     lcd ~/uni
+  autocmd BufEnter ~/.config/** lcd ~/.config
+  autocmd BufEnter ~/src/**     lcd ~/src
+augroup END
+
 " user defined commands and mappings {{{1
 
 " editing {{{2
