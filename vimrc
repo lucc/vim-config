@@ -771,7 +771,7 @@ augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd BufWrite * silent %substitute/\s\+$//e
 augroup END
 
-augroup LucDelMenus
+augroup LucDelMenus "{{{2
   autocmd!
   autocmd VimEnter * aunmenu *
 augroup END
@@ -868,8 +868,8 @@ set confirm
 set textwidth=78
 set shiftwidth=2
 set number
-" scroll when the courser is 5 lines from the border line
-set scrolloff=5
+" scroll when the courser is 2 lines from the border line
+set scrolloff=2
 set shortmess=
 set nostartofline
 set encoding=utf-8
@@ -1089,12 +1089,12 @@ let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_max_files = 0
 let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\v(\/private|\/var|\/tmp|\/Users\/luc\/(flac|Musik.*|img))',
+      \ 'dir':  '\v(\/private|\/var|\/tmp|\/Users\/luc\/(audio|img))',
       \ }
 "let g:ctrlp_root_markers = ['makefile', 'Makefile', 'latexmkrc']
 
 " mappings for the plugin
-let g:ctrlp_map = '<c-space>'
+let g:ctrlp_map = '<C-Space>'
 let g:ctrlp_cmd = 'CtrlPMRU'
 inoremap <C-Space> <C-O>:CtrlPMRU<CR>
 
@@ -1639,6 +1639,7 @@ Bundle 'paredit.vim'
 
 " plugins: unsorted {{{1
 Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+set noshowmode
 Bundle 'pix/vim-known_hosts'
 Bundle 'ack.vim'
 
