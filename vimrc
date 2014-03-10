@@ -37,6 +37,9 @@ filetype plugin indent on
 let mapleader = ','
 " a directory/namespace for user defined functions
 let luc = {}
+" a dir of servers and directories to put backups with the function defined
+" below.
+let s:servers = {'math': 'vim-buffer-bk', 'ifi': 'vim-buffer-bk'}
 
 " user defined functions {{{1
 
@@ -649,6 +652,20 @@ function! luc.misc.GetVisualSelection() "{{{3
   let lines[-1] = lines[-1][: col2 - 2]
   let lines[0] = lines[0][col1 - 1:]
   return join(lines, "\n")
+endfunction
+
+function! luc.misc.BackupCurrentBuffer() "{{{3
+  " this function uses the variable s:servers and saves the current buffer via
+  " scp
+  let l:file = expand('%:p')
+  let l:time = strftime('%F-%H-%M')
+  for l:server in keys(s:servers)
+    let l:path = s:servers[l:server].'/'.l:time
+    execute
+	  \ 'silent'
+	  \ '!(ssh' l:server 'mkdir -p' l:path '&&'
+	  \ 'scp %' l:server.':'.l:path ') &'
+  endfor
 endfunction
 
 " old functions {{{2
