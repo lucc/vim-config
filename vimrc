@@ -809,7 +809,7 @@ imap <SwipeDown> G
 
 " misc {{{2
 
-nmap <Leader>d "=strftime('%F')<CR>p
+"nmap <Leader>d "=strftime('%F')<CR>p
 
 " use ß to clear the screen if you want privacy for a moment
 nmap ß :!clear<CR>
@@ -821,12 +821,14 @@ nmap ß :!clear<CR>
 "command! DiffOrig vne | se bt=nofile | r # | 0d_ | difft | wincmd p | difft
 
 "command! Helptags call LucUpdateAllHelptags()
-command! DislikeCS call s:LucLikeColorscheme(-1)
-command! LikeCS call s:LucLikeColorscheme(1)
+"command! DislikeCS call s:LucLikeColorscheme(-1)
+"command! LikeCS call s:LucLikeColorscheme(1)
 
-nmap <D-+> :call s:LucLikeColorscheme(1)\|call LucSelectRandomColorscheme()<CR>
-nmap <D--> :call s:LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
-nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
+"nmap <D-+> :call s:LucLikeColorscheme(1)\|call LucSelectRandomColorscheme()<CR>
+"nmap <D--> :call s:LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
+"nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
+
+nnoremap <silent> <F11> :sil up<BAR>cal luc.compiler.generic2('')<BAR>cal luc.misc.BackupCurrentBuffer()<BAR>redr<CR>
 
 " options: basic {{{1
 

@@ -160,13 +160,14 @@ if has("gui_macvim")
   " fullscreen
   nmap <D-CR> :call LucToggleFullscreenFunction(0)<CR>
   imap <D-CR> <C-O>:call LucToggleFullscreenFunction(0)<CR>
-  nmap <D-F12> :call luc.gui.toggleFontsize()<CR>
+  nmap <F12> :call luc.gui.toggleFontsize()<CR>
+  imap <F12> <C-O>:call luc.gui.toggleFontsize()<CR>
   " copy and paste like the mac osx default
   nmap <silent> <D-v>  "*p
   imap <silent> <D-v>  <C-r>*
   nmap <silent> <D-c>  "*yy
   imap <silent> <D-c>  <C-o>"*yy
-  vmap <silent> <D-c>  "*y
+  vmap <silent> <D-c>  "*ygv
   " open pdfs for tex files
   "nmap <silent> <F3>   :call LucOpenPdfOrPreview(0, '', 1)<CR>
   "imap <silent> <F3>   <C-O>:call LucOpenPdfOrPreview(0, '', 1)<CR>
@@ -174,8 +175,8 @@ if has("gui_macvim")
   "imap <silent> <D-F3> <C-O>:call LucOpenPdfOrPreview(1, '', 1)<CR>
   nmap <silent> <F3>   :call LucActivatePreview()<CR>
   imap <silent> <F3>   <C-O>:call LucActivatePreview()<CR>
-  nmap <silent> <d-F3>   <d-f2>:call LucActivatePreview()<CR>
-  imap <silent> <d-F3>   <C-O><d-f2>:call LucActivatePreview()<CR>
+  nmap <silent> <D-F3>   <D-F2>:call LucActivatePreview()<CR>
+  imap <silent> <D-F3>   <C-O><D-F2>:call LucActivatePreview()<CR>
   " mouse gestures
   nmap <silent> <SwipeLeft>  :pop<CR>
   nmap <silent> <SwipeRight> :tag<CR>
