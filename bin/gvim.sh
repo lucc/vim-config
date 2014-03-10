@@ -1,91 +1,114 @@
 #!/bin/sh
+# vim: foldmethod=marker
 
 # A script to use gvim as a replacement for different programs like man and
 # info or to call a gvim server.
 
-# find a vim server
-#PROG=`basename "$0" | tr ' ' _`
+# variables {{{1
 TMP=`mktemp -t $PROG.$$.XXXXXX`
-#WAIT=false
 SAVE_STDIN=false
+CMD=tab
+
+# start gvim in the background if no vim server is running {{{1
 if [ -z "`vim --serverlist`" ]; then
   gvim &
 fi
 
-CMD=tab
-
-# other functions
-save_stdin () { cat > $TMP; }
-
-# wrapper functions for basic interaction with Vim
-#vimserver ()  { vim --servername "$SERVER" "$@"; }
-#call ()       { vimserver --remote-expr "$@"; }
-foreground () { wait_server && vim --remote-expr 'foreground()' >/dev/null; }
-#send ()       { vimserver --remote-send "<C-\><C-N>$*"; }
-tab ()        { wait_server && vim --remote-tab-wait-silent "$@"; }
+# functions {{{1
+# wait for the vimserver to be available {{{2
 wait_server () {
-  vim -u NONE --cmd 'while serverlist() == "" | sleep 100m | endwhile | quit'
+  # this does not need any other options to silence the process b/c --cmd will
+  # execute the code very early
+  vim --cmd 'while serverlist() == "" | sleep 100m | endwhile' "$@"
 }
 
-# generic function to open documentation
+# try to put the server vim in the foreground {{{2
+foreground () {
+  wait_server \
+    --cmd 'let server = split(serverlist())[0]' \
+    --cmd 'call remote_foreground(server)' \
+    --cmd quit
+}
+
+# open a new tab in the server {{{2
+tab () {
+  wait_server --cmd quit
+  vim --remote-tab-wait-silent "$@"
+}
+
+
+# generic function to open documentation {{{2
 doc () {
   if [ $# -eq 0 ]; then
     echo Topic needed >&2
     exit 2
   fi
-  call "luc.man.tabopen('"$1"', '"${@:2}"')" > /dev/null
-  #foreground
-}
-doc () {
-  if [ $# -eq 0 ]; then
-    echo Topic needed >&2
-    exit 2
-  fi
-  vim -u NONE --cmd "
-    while serverlist() == ''
-      sleep 100m
-    endwhile
-    let s = split(serverlist())[0]
-    call remote_expr(s, 'luc.man.tabopen(\"$1\", \"${@:2}\")')
-    call remote_foreground(s)
-    quit
-  " >/dev/null 2>&1 &
+  wait_server \
+    --cmd 'let server = split(serverlist())[0]' \
+    --cmd "call remote_expr(server, 'luc.man.tabopen(\"$1\", \"${@:2}\")')" \
+    --cmd 'call remote_foreground(server)' \
+    --cmd quit
 }
 
-# wrapper functions for individual help systems
+# wrapper functions for individual help systems {{{2
 info    () { doc i   "$@"; }
 man     () { doc man "$@"; }
 perldoc () { doc pl  "$@"; }
 php     () { doc php "$@"; }
 pydoc   () { doc py  "$@"; }
 
+# parse the command line {{{1
 if [ $# -eq 0 ]; then
   CMD=foreground
 else
   # trying to implement long options
   for arg; do
     case "$arg" in
-      --editor) CMD=tab
-	new_args=("${new_args[@]}" '+call luc.misc.RemoteEditor(0)');;
-      --info) CMD=info;;
-      --man) CMD=man;;
-      --perldoc|--perl|--pl) CMD=perldoc;;
-      --php) CMD=php;;
-      --pydoc|--python|--py) CMD=pydoc;;
-      --stdin) SAVE_STDIN=true; CMD=${CMD:-tab};;
-      --tab) CMD=tab WAIT=true;;
-      *) new_args=("${new_args[@]}" "$arg");;
+      --editor)
+	# be an editor, to be used with $EDITOR
+	CMD=tab
+	new_args=("${new_args[@]}" '+call luc.misc.RemoteEditor(0)')
+	;;
+      --info)
+	# emulate info(1)
+	CMD=info
+	;;
+      --man)
+	# emulate man(1)
+	CMD=man
+	;;
+      --perldoc|--perl|--pl)
+	# emulate perldoc(1)
+	CMD=perldoc
+	;;
+      --php)
+	CMD=php
+	;;
+      --pydoc|--python|--py)
+	# emulate pydoc(1)
+	CMD=pydoc
+	;;
+      --stdin)
+	# read input from stdin
+	SAVE_STDIN=true; CMD=${CMD:-tab}
+	;;
+      --tab)
+	# open a new tab in the server
+	CMD=tab
+	;;
+      *)
+	# pass this argument to vim directly
+	new_args=("${new_args[@]}" "$arg")
+	;;
     esac
   done
 fi
 
-shift $(($OPTIND - 1))
-
+# do stuff {{{1
 if $SAVE_STDIN; then
-  save_stdin
+  # save stdin to a temp file (see :h --remote and :h --)
+  cat > "$TMP"
   new_args=("${new_args[@]}" "$TMP")
 fi
 
-#$CMD "$@"
-#$WAIT && wait
 $CMD "${new_args[@]}"
