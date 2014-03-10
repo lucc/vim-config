@@ -602,19 +602,19 @@ function! luc.misc.RemoteEditor(mail) "{{{3
   " non forking edior. One can also set the environment variable EDITOR with
   " EDITOR='vim --remote-tab-wait-silent +call\ luc.misc.RemoteEditor()'
 
-  " the command to hide MacVim (use with system())
-  let s:applescript = 'osascript -e "tell application \"System Events\"' .
-	\ ' to set visible of process \"MacVim\" to false" &'
-
-  " use an autocommand to move MacVim to the background when leaving the
-  " buffer
-  augroup RemoteEditor
-    autocmd BufDelete <buffer> silent call system(s:applescript)|redraw!
-  augroup END
+  if has('gui_macvim')
+    " use an autocommand to move MacVim to the background when leaving the
+    " buffer
+    augroup RemoteEditor
+      autocmd BufDelete <buffer> macaction hide:
+    augroup END
+  endif
 
   " define some custom commands to quit the buffer
   command -bang -buffer -bar QuitRemoteEditor confirm bdelete<bang>
-  command -bang -buffer -bar HideRemoteEditor silent call system(applescript)
+  if has('gui_macvim')
+    command -bang -buffer -bar HideRemoteEditor macaction hide:
+  endif
 
   cnoreabbrev <buffer> q        bdelete
   cnoreabbrev <buffer> qu       bdelete
