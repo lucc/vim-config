@@ -1296,6 +1296,8 @@ endif
 "Bundle 'snipMate'
 " snippy_plugin.vba.gz
 Bundle 'SirVer/ultisnips'
+" Snippets are separated from the engine:
+Bundle 'honza/vim-snippets'
 let g:UltiSnipsExpandTrigger = '<C-F>'
 let g:UltiSnipsJumpForwardTrigger = '<C-F>'
 "let g:UltiSnipsJumpBackwardTrigger = '<C-Tab>'
