@@ -48,7 +48,7 @@ if !has_key(luc, 'compiler')
   let luc.compiler = {}
 endif
 
-function! luc.compiler.generic(target, override) dict "{{{3
+function! LucCompilerGeneric(target, override) "{{{3
   " Try to build stuff depending on some parameters.  What will be built is
   " decided by a:target and if absent the current file.  First a makefile is
   " searched for in the directory %:h and above.  If one is found it is used
@@ -130,7 +130,7 @@ function! luc.compiler.generic(target, override) dict "{{{3
   return error
 endfunction
 
-function! luc.compiler.generic2(target) dict "{{{3
+function! LucCompilerGeneric2(target) "{{{3
   " Try to build the current file automatically.  If a:target is not specified
   " and there is a compiler function available in g:luc.compiler it will be
   " used to find out how to compile the current file.  If a:target is
@@ -226,7 +226,7 @@ if !has_key(luc, 'man')
   let luc.man = {}
 endif
 
-function! luc.man.open(...) "{{{3
+function! LucManOpen(...) "{{{3
   " try to find a manpage
   if &filetype == 'man' && a:0 == 0
     execute 'RMan' expand('<cword>')
@@ -239,13 +239,13 @@ function! luc.man.open(...) "{{{3
     echohl None
     return
   endif
-  map <buffer> K :call luc.man.open()<CR>
-  map <buffer> K :call luc.man.open()<CR>
-  vmap <buffer> K :call luc.man.open(luc.misc.GetVisualSelection())<CR>
-  vmap <buffer> K :call luc.man.open(luc.misc.GetVisualSelection())<CR>
+  map <buffer> K :call LucManOpen()<CR>
+  map <buffer> K :call LucManOpen()<CR>
+  vmap <buffer> K :call LucManOpen(LucMiscGetVisualSelection())<CR>
+  vmap <buffer> K :call LucManOpen(LucMiscGetVisualSelection())<CR>
 endfunction
 
-function! luc.man.tabopen(type, string) "{{{3
+function! LucManOpenTab(type, string) "{{{3
   " look up string in the documentation for type
   if a:type =~ 'man\|m'
     let suffix = 'man'
@@ -267,14 +267,14 @@ function! luc.man.tabopen(type, string) "{{{3
   redraw
 endfunction
 
-function! luc.man.completeTopics(ArgLead, CmdLine, CursorPos) "{{{3
+function! LucManCompleteTopics(ArgLead, CmdLine, CursorPos) "{{{3
   let paths = tr(system('man -w'), ":\n", "  ")
   "let paths = "/usr/share/man/man9"
   return system('find ' . paths .
 	\ ' -type f | sed "s#.*/##;s/\.gz$//;s/\.[0-9]\{1,\}//" | sort -u')
 endfunction
 
-function! luc.man.helptags() "{{{3
+function! LucManHelptags() "{{{3
 "function! LucUpdateAllHelptags()
   for item in map(split(&runtimepath, ','), 'v:val . "/doc"')
     if isdirectory(item)
@@ -289,23 +289,23 @@ if !has_key(luc, 'color')
   let luc.color = {}
 endif
 
-function! luc.color.find() "{{{3
+function! LucColorFind() "{{{3
   "return LucFlattenList(filter(map(split(&rtp, ','),
   "      \ 'glob(v:val .  "/**/colors/*.vim", 0, 1)'), 'v:val != []'))
   return sort(map(split(globpath(&rtp, 'colors/*.vim'), '\n'),
         \ 'split(v:val, "/")[-1][0:-5]'))
 endfunction
 
-function! luc.color.selectRandom() "{{{3
+function! LucColorSelectRandom() "{{{3
   let colorschemes = s:LucFindAllColorschemes()
-  let this = colorschemes[luc.random(0,len(colorschemes)-1)]
+  let this = colorschemes[LucRandom(0,len(colorschemes)-1)]
   execute 'colorscheme' this
   redraw
   let g:colors_name = this
   echo g:colors_name
 endfunction
 
-function! luc.color.like(val) "{{{3
+function! LucColorLike(val) "{{{3
   let fname = glob('~/.vim/colorscheme-ratings')
   let cfiles = map(readfile(fname), 'split(v:val)')
   for item in cfiles
@@ -318,7 +318,7 @@ function! luc.color.like(val) "{{{3
   echo g:colors_name
 endfunction
 
-function! luc.random(start, end) "{{{3
+function! LucRandom(start, end) "{{{3
   return (system('echo $RANDOM') % (a:end - a:start + 1)) + a:start
   " code by Kazuo on vim@vim.org
   python from random import randint
@@ -326,13 +326,13 @@ function! luc.random(start, end) "{{{3
   execute 'python command("return %d" % randint('.a:start.','.a:end.'))'
 endfun
 
-function! luc.flattenList(list) "{{{3
+function! LucFlattenList(list) "{{{3
   " Code from bairui@#vim.freenode
   " https://gist.github.com/3322468
   let val = []
   for elem in a:list
     if type(elem) == type([])
-      call extend(val, luc.flattenList(elem))
+      call extend(val, LucFlattenList(elem))
     else
       call add(val, elem)
     endif
@@ -368,7 +368,7 @@ if !has_key(luc, 'tex')
   let luc.tex = {}
 endif
 
-function! luc.tex.formatBib() "{{{3
+function! LucTexFormatBib() "{{{3
   " format bibentries in the current file
 
   " define a local helper function
@@ -392,14 +392,15 @@ function! luc.tex.formatBib() "{{{3
   " format lines in the entries
   %substitute/^\s*\([A-Za-z]\+\)\s*=\s*["{]\(.*\)["}],$/\=d.g(submatch(1), submatch(2))/
 endfunction
-function! luc.tex.doc() "{{{3
+
+function! LucTexDoc() "{{{3
 "function! LucTexDocFunction()
   " call the texdoc programm with the word under the cursor or the selected
   " text.
   silent execute '!texdoc' expand("<cword>")
 endfunction
 
-function! luc.tex.saveFolds() "{{{3
+function! LucTexSaveFolds() "{{{3
 "function! s:LucLatexSaveFolds()
   let l:old = &viewoptions
   set viewoptions=folds
@@ -407,7 +408,7 @@ function! luc.tex.saveFolds() "{{{3
   let &viewoptions = l:old
 endfunction
 
-function! luc.tex.count(file) range "{{{3
+function! LucTexCount(file) range "{{{3
 "function! LucLatexCount(file) range
   let noerr = ' 2>/dev/null'
   if type(a:file) == type(0)
@@ -454,7 +455,7 @@ if !has_key(luc, 'misc')
   let luc.misc = {}
 endif
 
-function! luc.misc.findBaseDir() "{{{3
+function! LucMiscFindBaseDir() "{{{3
   " files which indicate a suitable base directory
   let indicator_files = [
                       \ 'makefile',
@@ -509,7 +510,7 @@ function! luc.misc.findBaseDir() "{{{3
   return matches[0][0]
 endfunction
 
-function! luc.misc.searchStringForURI(string) "{{{3
+function! LucMiscSearchStringForURI(string) "{{{3
   " function to find an URI in a string
   " thanks to  http://vim.wikia.com/wiki/VimTip306
   return matchstr(a:string, '[a-z]\+:\/\/[^ >,;:]\+')
@@ -518,7 +519,7 @@ function! luc.misc.searchStringForURI(string) "{{{3
   "return matchstr(a:string, '[a-z]*:\/\/[^ >,;:]*')
 endfunction
 
-function! luc.misc.HandleURI(uri) "{{{3
+function! LucMiscHandleURI(uri) "{{{3
   " function to find an URI on the current line and open it.
 
   " first find a browser
@@ -555,7 +556,7 @@ function! luc.misc.HandleURI(uri) "{{{3
   silent execute '!' browser uri
 endfunction
 
-function! luc.misc.InsertStatuslineColor(mode) "{{{3
+function! LucMiscInsertStatuslineColor(mode) "{{{3
   " function to change the color of the statusline depending on the mode
   " this version is from http://vim.wikia.com/wiki/VimTip1287
   if     a:mode == 'i'
@@ -569,7 +570,7 @@ function! luc.misc.InsertStatuslineColor(mode) "{{{3
   endif
 endfunction
 
-function! luc.misc.FindNextSpellError() "{{{3
+function! LucMiscFindNextSpellError() "{{{3
   " A function to jump to the next spelling error
   setlocal spell
   "if spellbadword(expand('<cword>')) == ['', '']
@@ -577,8 +578,7 @@ function! luc.misc.FindNextSpellError() "{{{3
   "endif
 endfunction
 
-
-function! luc.misc.CheckIfBufferIsNew(...) "{{{3
+function! LucMiscCheckIfBufferIsNew(...) "{{{3
   " check if the buffer with number a:1 is new.  That is to say, if it as
   " no name and is empty.  If a:1 is not supplied 1 is used.
   " find the buffer nr to check
@@ -600,10 +600,10 @@ endfunction
 " see:
 "http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
 "
-function! luc.misc.RemoteEditor(mail) "{{{3
+function! LucMiscRemoteEditor(mail) "{{{3
   " a function to be called by a client who wishes to use a vim server as an
   " non forking edior. One can also set the environment variable EDITOR with
-  " EDITOR='vim --remote-tab-wait-silent +call\ luc.misc.RemoteEditor()'
+  " EDITOR='vim --remote-tab-wait-silent +call\ LucMiscRemoteEditor()'
 
   if has('gui_macvim')
     " use an autocommand to move MacVim to the background when leaving the
@@ -641,7 +641,7 @@ function! luc.misc.RemoteEditor(mail) "{{{3
   endif
 endfunction
 
-function! luc.misc.GetVisualSelection() "{{{3
+function! LucMiscGetVisualSelection() "{{{3
   " This function is copied from http://stackoverflow.com/questions/1533565/
   " FIXME: This seems to exclude the last character from the selection.
   let [lnum1, col1] = getpos("'<")[1:2]
@@ -693,10 +693,10 @@ augroup END
 augroup LucLatex "{{{3
   autocmd!
   autocmd FileType tex
-	\ nmap <buffer> K :call luc.tex.doc()<CR>|
-	\ nnoremap <buffer> gG :call luc.tex.count('')<CR>|
+	\ nmap <buffer> K :call LucTexDoc()<CR>|
+	\ nnoremap <buffer> gG :call LucTexCount('')<CR>|
 	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex|
-	\ vnoremap <buffer> gG :call luc.tex.count('')<CR>|
+	\ vnoremap <buffer> gG :call LucTexCount('')<CR>|
 	\
 augroup END
 
@@ -753,7 +753,7 @@ augroup END
 augroup LucSession "{{{2
   autocmd!
   autocmd VimEnter *
-	\ if luc.misc.CheckIfBufferIsNew(1) |
+	\ if LucMiscCheckIfBufferIsNew(1) |
 	\   bwipeout 1 |
 	\   doautocmd BufRead,BufNewFile |
 	\ endif
@@ -763,7 +763,7 @@ augroup END
 "  autocmd!
 "  " FIXME: still buggy
 "  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
-"	\ execute 'lcd' luc.misc.findBaseDir()
+"	\ execute 'lcd' LucMiscFindBaseDir()
 "augroup END
 
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
@@ -799,8 +799,8 @@ inoremap <C-U> <C-G>u<C-U>
 inoremap <C-W> <C-G>u<C-W>
 
 " easy spell checking
-inoremap <C-s> <C-o>:call luc.misc.FindNextSpellError()<CR><C-x><C-s>
-nnoremap <C-s>      :call luc.misc.FindNextSpellError()<CR>z=
+inoremap <C-s> <C-o>:call LucMiscFindNextSpellError()<CR><C-x><C-s>
+nnoremap <C-s>      :call LucMiscFindNextSpellError()<CR>z=
 
 if has('gui_macvim')
   inoremap œ \
@@ -812,13 +812,13 @@ if has('gui_macvim')
 endif
 
 " open URLs {{{2
-nmap <Leader>w :call luc.misc.HandleURI(luc.misc.searchStringForURI(getline('.')))<CR>
+nmap <Leader>w :call LucMiscHandleURI(LucMiscSearchStringForURI(getline('.')))<CR>
 
 " easy compilation {{{2
-nmap <silent> <F2>        :sil up <BAR> call luc.compiler.generic2('')<CR>
-imap <silent> <F2>   <C-O>:sil up <BAR> call luc.compiler.generic2('')<CR>
-nmap <silent> <D-F2>      :sil up <BAR> call luc.compiler.generic('', 1)<CR>
-imap <silent> <D-F2> <C-O>:sil up <BAR> call luc.compiler.generic('', 1)<CR>
+nmap <silent> <F2>        :sil up <BAR> call LucCompilerGeneric2('')<CR>
+imap <silent> <F2>   <C-O>:sil up <BAR> call LucCompilerGeneric2('')<CR>
+nmap <silent> <D-F2>      :sil up <BAR> call LucCompilerGeneric('', 1)<CR>
+imap <silent> <D-F2> <C-O>:sil up <BAR> call LucCompilerGeneric('', 1)<CR>
 
 " moveing around {{{2
 nmap <C-Tab>        gt
@@ -852,7 +852,7 @@ nmap ß :!clear<CR>
 "nmap <D--> :call s:LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
 "nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
 
-nnoremap <silent> <F11> :sil up<BAR>cal luc.compiler.generic2('')<BAR>cal luc.misc.BackupCurrentBuffer()<BAR>redr<CR>
+nnoremap <silent> <F11> :sil up<BAR>cal LucCompilerGeneric2('')<BAR>cal luc.misc.BackupCurrentBuffer()<BAR>redr<CR>
 
 " options: basic {{{1
 
@@ -990,8 +990,8 @@ set wildmenu
 " " change highlighting when mode changes
 " augroup LucStatusLine
 "   autocmd!
-"   autocmd InsertEnter * call luc.misc.InsertStatuslineColor(v:insertmode)
-"   autocmd InsertLeave * call luc.misc.InsertStatuslineColor('n')
+"   autocmd InsertEnter * call LucMiscInsertStatuslineColor(v:insertmode)
+"   autocmd InsertLeave * call LucMiscInsertStatuslineColor('n')
 " augroup END
 " " now we set the colors for the statusline
 " " in the most simple case

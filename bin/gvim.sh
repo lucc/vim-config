@@ -45,7 +45,7 @@ doc () {
   fi
   wait_server \
     --cmd 'let server = split(serverlist())[0]' \
-    --cmd "call remote_expr(server, 'luc.man.tabopen(\"$1\", \"${@:2}\")')" \
+    --cmd "call remote_expr(server, 'LucManOpenTab(\"$1\", \"${@:2}\")')" \
     --cmd 'call remote_foreground(server)' \
     --cmd quit
 }
@@ -67,7 +67,7 @@ else
       --editor)
 	# be an editor, to be used with $EDITOR
 	CMD=tab
-	new_args=("${new_args[@]}" '+call luc.misc.RemoteEditor(0)')
+	new_args=("${new_args[@]}" '+call LucMiscRemoteEditor(0)')
 	;;
       --info)
 	# emulate info(1)
