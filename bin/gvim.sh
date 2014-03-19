@@ -73,6 +73,11 @@ else
 	# emulate info(1)
 	CMD=info
 	;;
+      --mail)
+	# like --editor for emails
+	CMD=tab
+	new_args=("${new_args[@]}" '+call LucMiscRemoteEditor(1)')
+	;;
       --man)
 	# emulate man(1)
 	CMD=man
