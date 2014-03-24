@@ -519,43 +519,6 @@ function! LucMiscSearchStringForURI(string) "{{{3
   "return matchstr(a:string, '[a-z]*:\/\/[^ >,;:]*')
 endfunction
 
-function! LucMiscHandleURI(uri) "{{{3
-  " function to find an URI on the current line and open it.
-
-  " first find a browser
-  let browser = ''
-  let choises = [
-	\ expand($BROWSER),
-	\ 'firefox',
-	\ 'elinks',
-	\ 'links',
-	\ 'w3m',
-	\ 'lynx',
-	\ 'wget',
-	\ 'curl',
-	\ '',
-	\ ]
-  if has('mac')
-    " this only works on Mac OS X
-    let browser = 'open'
-  else
-    for browser in choises
-      if executable(browser) | break | endif
-    endfor
-  endif
-
-  " without browser or uri, bail out
-  if browser == '' || a:uri == ''
-    echoerr "Can't find a suitable browser or URI."
-    return
-  endif
-
-  " everything set: open the uri
-  echo 'Visiting' a:uri '...'
-  let uri = substitute(shellescape(a:uri), '[%#]', '\\&', 'g')
-  silent execute '!' browser uri
-endfunction
-
 function! LucMiscInsertStatuslineColor(mode) "{{{3
   " function to change the color of the statusline depending on the mode
   " this version is from http://vim.wikia.com/wiki/VimTip1287
@@ -812,7 +775,7 @@ if has('gui_macvim')
 endif
 
 " open URLs {{{2
-nmap <Leader>w :call LucMiscHandleURI(LucMiscSearchStringForURI(getline('.')))<CR>
+nmap <Leader>w :call openbrowser#open(LucMiscSearchStringForURI(getline('.')))<CR>
 
 " easy compilation {{{2
 nmap <silent> <F2>        :sil up <BAR> call LucCompilerGeneric2('')<CR>
@@ -1642,6 +1605,10 @@ Bundle 'paredit.vim'
 " plugins: unsorted {{{1
 Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 set noshowmode
+
+Bundle 'tyru/open-browser.vim'
+
+
 Bundle 'pix/vim-known_hosts'
 Bundle 'ack.vim'
 
