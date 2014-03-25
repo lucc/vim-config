@@ -448,6 +448,49 @@ function! LucTexCount(file) range "{{{2
   execute wc '2>/dev/null'
 endfunction
 
+" functions: server {{{1
+function! LucServerSetup() "{{{2
+  if has('gui_running')
+    " try to be the server
+    call LucServerViminfoSetup(!LucServerRunning())
+  else
+    " don't try to be the server
+    call LucServerViminfoSetup(0)
+  "if serverlist == ""
+    " there is no server running
+  endif
+endfunction
+
+function! LucServerRunning() "{{{2
+  " check if another vim server is already running
+  return serverlist() != ""
+endfunction
+
+function! LucServerViminfoSetup(server) "{{{2
+  if a:server
+    " options: viminfo
+    " default: '100,<50,s10,h
+    set viminfo='100,<50,s10,h,%,n~/.vim/viminfo
+    " the flag ' is for filenames for marks
+    set viminfo='100
+    " the flag < is the nummber of lines saved per register
+    set viminfo+=<50
+    " max size saved for registers in kb
+    set viminfo+=s10
+    " disable hlsearch
+    set viminfo+=h
+    " remember (whole) buffer list
+    set viminfo+=%
+    " name of the viminfo file
+    set viminfo+=n~/.vim/viminfo
+    " load a static viminfo file with a file list
+    rviminfo ~/.vim/default-buffer-list.viminfo
+  else
+    " if we are not running as the server do not use the viminfo file.  We
+    " probably only want to edit one file quickly from the command line.
+    set viminfo=
+  endif
+endfunction
 
 function! LucMiscRemoteEditor(mail) "{{{2
   " a function to be called by a client who wishes to use a vim server as an
@@ -572,6 +615,9 @@ function! luc.old.loadScpBuffers() "{{{2
   badd scp://ifi/.profile_local
   badd scp://lg/.bash_profile
 endfunction
+
+" setup for server vim {{{1
+call LucServerSetup()
 
 " user defined autocommands {{{1
 
@@ -921,25 +967,6 @@ set wildignore+=*.tar,*.tgz,*.tbz2,*.tar.gz,*.tar.bz2
 "set wildignore+=migrations                    " Django migrations
 set wildignore+=*.pyc                          " Python byte code
 "set wildignore+=*.orig                        " Merge resolution files
-
-
-" options: viminfo {{{1
-" default: '100,<50,s10,h
-set viminfo='100,<50,s10,h,%,n~/.vim/viminfo
-" the flag ' is for filenames for marks
-set viminfo='100
-" the flag < is the nummber of lines saved per register
-set viminfo+=<50
-" max size saved for registers in kb
-set viminfo+=s10
-" disable hlsearch
-set viminfo+=h
-" remember (whole) buffer list
-set viminfo+=%
-" name of the viminfo file
-set viminfo+=n~/.vim/viminfo
-" load a static viminfo file with a file list
-rviminfo ~/.vim/default-buffer-list.viminfo
 
 " plugins: management with vundle {{{1
 " I manage plugins with vundle.  In order to easyly test plugins I keep a
