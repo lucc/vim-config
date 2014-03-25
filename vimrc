@@ -41,14 +41,12 @@ let luc = {}
 " below.
 let s:servers = {'math': 'vim-buffer-bk', 'ifi': 'vim-buffer-bk'}
 
-" user defined functions {{{1
-
-" compiler functions {{{2
+" functions: compiler {{{1
 if !has_key(luc, 'compiler')
   let luc.compiler = {}
 endif
 
-function! LucCompilerGeneric(target, override) "{{{3
+function! LucCompilerGeneric(target, override) "{{{2
   " Try to build stuff depending on some parameters.  What will be built is
   " decided by a:target and if absent the current file.  First a makefile is
   " searched for in the directory %:h and above.  If one is found it is used
@@ -130,7 +128,7 @@ function! LucCompilerGeneric(target, override) "{{{3
   return error
 endfunction
 
-function! LucCompilerGeneric2(target) "{{{3
+function! LucCompilerGeneric2(target) "{{{2
   " Try to build the current file automatically.  If a:target is not specified
   " and there is a compiler function available in g:luc.compiler it will be
   " used to find out how to compile the current file.  If a:target is
@@ -204,29 +202,29 @@ function! LucCompilerGeneric2(target) "{{{3
   return error
 endfunction
 
-function! luc.compiler.ant(target) dict "{{{3
+function! luc.compiler.ant(target) dict "{{{2
   return 'ant' . (a:target == '' ? '' : ' ' . a:target)
 endfunction
 
-function! luc.compiler.make(target) dict "{{{3
+function! luc.compiler.make(target) dict "{{{2
   return 'make' . (a:target == '' ? '' : ' ' . a:target)
 endfunction
 
-function! luc.compiler.markdown(sourcefile) dict "{{{3
+function! luc.compiler.markdown(sourcefile) dict "{{{2
   let target = fnamemodify(a:sourcefile, ':r').'.html'
   return 'multimarkdown --full --smart --output='.target.' '.a:sourcefile
 endfunction
 
-function! luc.compiler.tex(sourcefile) dict "{{{3
+function! luc.compiler.tex(sourcefile) dict "{{{2
   return 'latexmk -silent ' . a:sourcefile
 endfunction
 
-" help and documentation functions {{{2
+" functions: help and documentation {{{1
 if !has_key(luc, 'man')
   let luc.man = {}
 endif
 
-function! LucManOpen(...) "{{{3
+function! LucManOpen(...) "{{{2
   " try to find a manpage
   if &filetype == 'man' && a:0 == 0
     execute 'RMan' expand('<cword>')
@@ -245,7 +243,7 @@ function! LucManOpen(...) "{{{3
   vmap <buffer> K :call LucManOpen(LucMiscGetVisualSelection())<CR>
 endfunction
 
-function! LucManOpenTab(type, string) "{{{3
+function! LucManOpenTab(type, string) "{{{2
   " look up string in the documentation for type
   if a:type =~ 'man\|m'
     let suffix = 'man'
@@ -267,14 +265,14 @@ function! LucManOpenTab(type, string) "{{{3
   redraw
 endfunction
 
-function! LucManCompleteTopics(ArgLead, CmdLine, CursorPos) "{{{3
+function! LucManCompleteTopics(ArgLead, CmdLine, CursorPos) "{{{2
   let paths = tr(system('man -w'), ":\n", "  ")
   "let paths = "/usr/share/man/man9"
   return system('find ' . paths .
 	\ ' -type f | sed "s#.*/##;s/\.gz$//;s/\.[0-9]\{1,\}//" | sort -u')
 endfunction
 
-function! LucManHelptags() "{{{3
+function! LucManHelptags() "{{{2
 "function! LucUpdateAllHelptags()
   for item in map(split(&runtimepath, ','), 'v:val . "/doc"')
     if isdirectory(item)
@@ -284,19 +282,19 @@ function! LucManHelptags() "{{{3
   endfor
 endfunction
 
-" color scheme functions {{{2
+" functions: color scheme {{{1
 if !has_key(luc, 'color')
   let luc.color = {}
 endif
 
-function! LucColorFind() "{{{3
+function! LucColorFind() "{{{2
   "return LucFlattenList(filter(map(split(&rtp, ','),
   "      \ 'glob(v:val .  "/**/colors/*.vim", 0, 1)'), 'v:val != []'))
   return sort(map(split(globpath(&rtp, 'colors/*.vim'), '\n'),
         \ 'split(v:val, "/")[-1][0:-5]'))
 endfunction
 
-function! LucColorSelectRandom() "{{{3
+function! LucColorSelectRandom() "{{{2
   let colorschemes = s:LucFindAllColorschemes()
   let this = colorschemes[LucRandom(0,len(colorschemes)-1)]
   execute 'colorscheme' this
@@ -305,7 +303,7 @@ function! LucColorSelectRandom() "{{{3
   echo g:colors_name
 endfunction
 
-function! LucColorLike(val) "{{{3
+function! LucColorLike(val) "{{{2
   let fname = glob('~/.vim/colorscheme-ratings')
   let cfiles = map(readfile(fname), 'split(v:val)')
   for item in cfiles
@@ -318,7 +316,7 @@ function! LucColorLike(val) "{{{3
   echo g:colors_name
 endfunction
 
-function! LucRandom(start, end) "{{{3
+function! LucRandom(start, end) "{{{2
   return (system('echo $RANDOM') % (a:end - a:start + 1)) + a:start
   " code by Kazuo on vim@vim.org
   python from random import randint
@@ -326,7 +324,7 @@ function! LucRandom(start, end) "{{{3
   execute 'python command("return %d" % randint('.a:start.','.a:end.'))'
 endfun
 
-function! LucFlattenList(list) "{{{3
+function! LucFlattenList(list) "{{{2
   " Code from bairui@#vim.freenode
   " https://gist.github.com/3322468
   let val = []
@@ -341,7 +339,7 @@ function! LucFlattenList(list) "{{{3
   return val
 endfunction
 
-"function! luc.color.remove() "{{{3
+"function! luc.color.remove() "{{{2
 "  " what does this do?
 "  if !exists('g:colors_name')
 "    echoerr 'The variable g:colors_name is not set!'
@@ -363,12 +361,12 @@ endfunction
 "  endif
 "endfunction
 
-" latex functions {{{2
+" functions: latex {{{1
 if !has_key(luc, 'tex')
   let luc.tex = {}
 endif
 
-function! LucTexFormatBib() "{{{3
+function! LucTexFormatBib() "{{{2
   " format bibentries in the current file
 
   " define a local helper function
@@ -393,14 +391,14 @@ function! LucTexFormatBib() "{{{3
   %substitute/^\s*\([A-Za-z]\+\)\s*=\s*["{]\(.*\)["}],$/\=d.g(submatch(1), submatch(2))/
 endfunction
 
-function! LucTexDoc() "{{{3
+function! LucTexDoc() "{{{2
 "function! LucTexDocFunction()
   " call the texdoc programm with the word under the cursor or the selected
   " text.
   silent execute '!texdoc' expand("<cword>")
 endfunction
 
-function! LucTexSaveFolds() "{{{3
+function! LucTexSaveFolds() "{{{2
 "function! s:LucLatexSaveFolds()
   let l:old = &viewoptions
   set viewoptions=folds
@@ -408,7 +406,7 @@ function! LucTexSaveFolds() "{{{3
   let &viewoptions = l:old
 endfunction
 
-function! LucTexCount(file) range "{{{3
+function! LucTexCount(file) range "{{{2
 "function! LucLatexCount(file) range
   let noerr = ' 2>/dev/null'
   if type(a:file) == type(0)
@@ -450,120 +448,8 @@ function! LucTexCount(file) range "{{{3
   execute wc '2>/dev/null'
 endfunction
 
-" misc functions {{{2
-if !has_key(luc, 'misc')
-  let luc.misc = {}
-endif
 
-function! LucMiscFindBaseDir() "{{{3
-  " files which indicate a suitable base directory
-  let indicator_files = [
-                      \ 'makefile',
-                      \ 'build.xml',
-                      \ ]
-  let indicator_dirs = [
-                     \ '~/uni',
-                     \ '~/.vim',
-		     \ ]
-  let matches = []
-  let path = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
-  let cwd = getcwd()
-  " look at directory of the current buffer
-  while ! empty(path)
-    let dir = '/' . join(path, '/')
-    for file in indicator_files
-      if filereadable(dir . '/' . file)
-	call add(matches, [dir, file])
-      endif
-    endfor
-    if dir == cwd
-      if empty(matches) || matches[-1][0] != cwd
-	call add(matches, [cwd, ''])
-      endif
-    endif
-    unlet path[-1]
-  endwhile
-  " look at the working directory
-  let path = split(cwd, '/')
-  while ! empty(path)
-    let dir = '/' . join(path, '/')
-    for file in indicator_files
-      if filereadable(dir . '/' . file)
-	call add(matches, [dir, file])
-      endif
-    endfor
-    if dir == cwd
-      if empty(matches) || matches[-1][0] != cwd
-	call add(matches, [cwd, ''])
-      endif
-    endif
-    unlet path[-1]
-  endwhile
-  " fallback value
-  if empty(matches)
-    call add(matches, ['/', ''])
-  endif
-  "if len(matches) == 1
-  "  return matches[0][0]
-  "endif
-  " not optimal jet:
-  return matches[0][0]
-endfunction
-
-function! LucMiscSearchStringForURI(string) "{{{3
-  " function to find an URI in a string
-  " thanks to  http://vim.wikia.com/wiki/VimTip306
-  return matchstr(a:string, '[a-z]\+:\/\/[^ >,;:]\+')
-  " alternatives:
-  "return matchstr(a:string, '\(http://\|www\.\)[^ ,;\t]*')
-  "return matchstr(a:string, '[a-z]*:\/\/[^ >,;:]*')
-endfunction
-
-function! LucMiscInsertStatuslineColor(mode) "{{{3
-  " function to change the color of the statusline depending on the mode
-  " this version is from http://vim.wikia.com/wiki/VimTip1287
-  if     a:mode == 'i'
-    highlight StatusLine guibg=DarkGreen   ctermbg=DarkGreen
-  elseif a:mode == 'r'
-    highlight StatusLine guibg=DarkMagenta ctermbg=DarkMagenta
-  elseif a:mode == 'n'
-    highlight StatusLine guibg=DarkBlue    ctermbg=DarkBlue
-  else
-    highlight statusline guibg=DarkRed     ctermbg=DarkRed
-  endif
-endfunction
-
-function! LucMiscFindNextSpellError() "{{{3
-  " A function to jump to the next spelling error
-  setlocal spell
-  "if spellbadword(expand('<cword>')) == ['', '']
-    normal ]s
-  "endif
-endfunction
-
-function! LucMiscCheckIfBufferIsNew(...) "{{{3
-  " check if the buffer with number a:1 is new.  That is to say, if it as
-  " no name and is empty.  If a:1 is not supplied 1 is used.
-  " find the buffer nr to check
-  let number = a:0 ? a:1 : 1
-  " save current and alternative buffer
-  let current = bufnr('%')
-  let alternative = bufnr('#')
-  let value = 0
-  " check buffer name
-  if bufexists(number) && bufname(number) == ''
-    silent! execute 'buffer' number
-    let value = line('$') == 1 && getline(1) == ''
-    silent! execute 'buffer' alternative
-    silent! execute 'buffer' current
-  endif
-  return value
-endfunction
-
-" see:
-"http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
-"
-function! LucMiscRemoteEditor(mail) "{{{3
+function! LucMiscRemoteEditor(mail) "{{{2
   " a function to be called by a client who wishes to use a vim server as an
   " non forking edior. One can also set the environment variable EDITOR with
   " EDITOR='vim --remote-tab-wait-silent +call\ LucMiscRemoteEditor()'
@@ -604,7 +490,65 @@ function! LucMiscRemoteEditor(mail) "{{{3
   endif
 endfunction
 
-function! LucMiscGetVisualSelection() "{{{3
+" functions: misc {{{1
+if !has_key(luc, 'misc')
+  let luc.misc = {}
+endif
+
+function! LucMiscSearchStringForURI(string) "{{{2
+  " function to find an URI in a string
+  " thanks to  http://vim.wikia.com/wiki/VimTip306
+  return matchstr(a:string, '[a-z]\+:\/\/[^ >,;:]\+')
+  " alternatives:
+  "return matchstr(a:string, '\(http://\|www\.\)[^ ,;\t]*')
+  "return matchstr(a:string, '[a-z]*:\/\/[^ >,;:]*')
+endfunction
+
+function! LucMiscInsertStatuslineColor(mode) "{{{2
+  " function to change the color of the statusline depending on the mode
+  " this version is from http://vim.wikia.com/wiki/VimTip1287
+  if     a:mode == 'i'
+    highlight StatusLine guibg=DarkGreen   ctermbg=DarkGreen
+  elseif a:mode == 'r'
+    highlight StatusLine guibg=DarkMagenta ctermbg=DarkMagenta
+  elseif a:mode == 'n'
+    highlight StatusLine guibg=DarkBlue    ctermbg=DarkBlue
+  else
+    highlight statusline guibg=DarkRed     ctermbg=DarkRed
+  endif
+endfunction
+
+function! LucMiscFindNextSpellError() "{{{2
+  " A function to jump to the next spelling error
+  setlocal spell
+  "if spellbadword(expand('<cword>')) == ['', '']
+    normal ]s
+  "endif
+endfunction
+
+function! LucMiscCheckIfBufferIsNew(...) "{{{2
+  " check if the buffer with number a:1 is new.  That is to say, if it as
+  " no name and is empty.  If a:1 is not supplied 1 is used.
+  " find the buffer nr to check
+  let number = a:0 ? a:1 : 1
+  " save current and alternative buffer
+  let current = bufnr('%')
+  let alternative = bufnr('#')
+  let value = 0
+  " check buffer name
+  if bufexists(number) && bufname(number) == ''
+    silent! execute 'buffer' number
+    let value = line('$') == 1 && getline(1) == ''
+    silent! execute 'buffer' alternative
+    silent! execute 'buffer' current
+  endif
+  return value
+endfunction
+
+" see:
+"http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
+"
+function! LucMiscGetVisualSelection() "{{{2
   " This function is copied from http://stackoverflow.com/questions/1533565/
   " FIXME: This seems to exclude the last character from the selection.
   let [lnum1, col1] = getpos("'<")[1:2]
@@ -617,26 +561,12 @@ function! LucMiscGetVisualSelection() "{{{3
   return join(lines, "\n")
 endfunction
 
-function! luc.misc.BackupCurrentBuffer() "{{{3
-  " this function uses the variable s:servers and saves the current buffer via
-  " scp
-  let l:file = expand('%:p')
-  let l:time = strftime('%F-%H-%M')
-  for l:server in keys(s:servers)
-    let l:path = s:servers[l:server].'/'.l:time
-    execute
-	  \ 'silent'
-	  \ '!(ssh' l:server 'mkdir -p' l:path '&&'
-	  \ 'scp %' l:server.':'.l:path ') &'
-  endfor
-endfunction
-
-" old functions {{{2
+" functions: old {{{1
 if !has_key(luc, 'old')
   let luc.old = {}
 endif
 
-function! luc.old.loadScpBuffers() "{{{3
+function! luc.old.loadScpBuffers() "{{{2
   badd scp://math/.profile
   badd scp://ifi/.profile
   badd scp://ifi/.profile_local
@@ -726,7 +656,7 @@ augroup END
 "  autocmd!
 "  " FIXME: still buggy
 "  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
-"	\ execute 'lcd' LucMiscFindBaseDir()
+"	\ execute 'lcd' pyeval('backup_base_dir_vim_reapper()')
 "augroup END
 
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
@@ -815,7 +745,7 @@ nmap ß :!clear<CR>
 "nmap <D--> :call s:LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
 "nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
 
-nnoremap <silent> <F11> :sil up<BAR>cal LucCompilerGeneric2('')<BAR>cal luc.misc.BackupCurrentBuffer()<BAR>redr<CR>
+nnoremap <silent> <F11> :sil up<BAR>cal LucCompilerGeneric2('')<BAR>call pyeval('backup_current_buffer()')<BAR>redr<CR>
 
 " options: basic {{{1
 
