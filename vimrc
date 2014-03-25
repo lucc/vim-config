@@ -1037,12 +1037,12 @@ let s:plugins = {
 filetype off
 set runtimepath+=~/.vim/bundle/vundle
 call vundle#rc()
-Bundle 'gmarik/vundle'
-"Bundle 'lucc/vundle'
+Plugin 'gmarik/vundle'
+"Plugin 'lucc/vundle'
 
 " plugins: buffer and file management {{{1
 
-Bundle 'kien/ctrlp.vim'
+Plugin 'kien/ctrlp.vim'
 
 " How the plugin should manage the cache
 "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
@@ -1062,19 +1062,19 @@ let g:ctrlp_cmd = 'CtrlPMRU'
 inoremap <C-Space> <C-O>:CtrlPMRU<CR>
 
 " Use the compiled C-version for speed improvements
-Bundle 'JazzCore/ctrlp-cmatcher'
+Plugin 'JazzCore/ctrlp-cmatcher'
 let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 
 
 " plugins: completion {{{1
-"Bundle 'IComplete'
-"Bundle 'cppcomplete'
-"Bundle 'javacomplete'
+"Plugin 'IComplete'
+"Plugin 'cppcomplete'
+"Plugin 'javacomplete'
 let s:plugins['completion'] = 'ycm'
 
 if s:plugins['completion'] == 'ycm' " {{{2
   if has('gui_macvim')
-    Bundle 'Valloric/YouCompleteMe'
+    Plugin 'Valloric/YouCompleteMe'
     let g:ycm_filetype_blacklist = {}
     let g:ycm_complete_in_comments = 1
     let g:ycm_collect_identifiers_from_comments_and_strings = 1
@@ -1084,11 +1084,11 @@ if s:plugins['completion'] == 'ycm' " {{{2
     let g:ycm_autoclose_preview_window_after_completion = 0
   endif
 elseif s:plugins['completion'] == 'neo' " {{{2
-  Bundle 'Shougo/neocomplete.vim'
-  Bundle 'Shougo/context_filetype.vim'
-  Bundle 'Shougo/vimproc'
-  "Bundle 'Shougo/neocomplcache.vim'
-  "Bundle 'Shougo/neosnippet'
+  Plugin 'Shougo/neocomplete.vim'
+  Plugin 'Shougo/context_filetype.vim'
+  Plugin 'Shougo/vimproc'
+  "Plugin 'Shougo/neocomplcache.vim'
+  "Plugin 'Shougo/neosnippet'
   let g:neocomplete#enable_at_startup = 1 " necessary
   let g:neocomplete#enable_refresh_always = 1 " heavy
 
@@ -1191,7 +1191,7 @@ elseif s:plugins['completion'] == 'neo' " {{{2
 "  \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
   """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 elseif s:plugins['completion'] == 'omni' "{{{2
-  Bundle 'OmniCppComplete'
+  Plugin 'OmniCppComplete'
   "http://www.vim.org/scripts/script.php?script_id=1520
   if version >= 7
     " OmniCompletion see ``:help compl-omni''
@@ -1213,7 +1213,7 @@ elseif s:plugins['completion'] == 'omni' "{{{2
     imap <C-TAB> <C-x><C-o>
   endif
 elseif s:plugins['completion'] == 'autocomplpop' "{{{2
-  Bundle 'AutoComplPop'
+  Plugin 'AutoComplPop'
   " do not start popup menu after curser moved.
   "let g:acp_mappingDriven = 1
   "let g:acp_behaviorKeywordCommand = '<tab>'
@@ -1256,11 +1256,11 @@ elseif s:plugins['completion'] == 'autocomplpop' "{{{2
 endif
 
 " plugins: snippets {{{1
-"Bundle 'snipMate'
+"Plugin 'snipMate'
 " snippy_plugin.vba.gz
-Bundle 'SirVer/ultisnips'
+Plugin 'SirVer/ultisnips'
 " Snippets are separated from the engine:
-Bundle 'honza/vim-snippets'
+Plugin 'honza/vim-snippets'
 let g:UltiSnipsExpandTrigger = '<C-F>'
 let g:UltiSnipsJumpForwardTrigger = '<C-F>'
 "let g:UltiSnipsJumpBackwardTrigger = '<C-Tab>'
@@ -1271,7 +1271,7 @@ let g:UltiSnipsJumpForwardTrigger = '<C-F>'
 let g:UltiSnipsJumpBackwardTrigger = '<SID>NOT_DEFINED'
 
 " plugins: syntastic {{{1
-Bundle 'scrooloose/syntastic'
+Plugin 'scrooloose/syntastic'
 let g:syntastic_mode_map = {
       \ 'mode': 'active',
       \ 'active_filetypes': [],
@@ -1280,23 +1280,23 @@ let g:syntastic_mode_map = {
 
 " plugins: languages {{{1
 
-Bundle 'applescript.vim'
+Plugin 'applescript.vim'
 
 " plugins: LaTeX {{{2
 
 " 3109 LatexBox.vmb
-"Bundle 'coot/atp_vim'
-"Bundle 'LaTeX-functions'
-"Bundle 'latextags'
-"Bundle 'TeX-9'
-"Bundle 'tex.vim'
-"Bundle 'tex_autoclose.vim'
+"Plugin 'coot/atp_vim'
+"Plugin 'LaTeX-functions'
+"Plugin 'latextags'
+"Plugin 'TeX-9'
+"Plugin 'tex.vim'
+"Plugin 'tex_autoclose.vim'
 
-"Bundle 'auctex.vim'
-Bundle 'LaTeX-Help'
+"Plugin 'auctex.vim'
+Plugin 'LaTeX-Help'
 
 " Vim-latex aka LaTeX-Suite {{{3
-Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
+Plugin 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
 let g:ngerman_package_file = 1
 let g:Tex_Menus = 0
 " this has to be lower case!
@@ -1339,80 +1339,80 @@ let g:Tex_FoldedEnvironments .= ',titlepage'
 " plugins: lisp/scheme {{{2
 
 " lisp/scheme interaction {{3
-Bundle 'slimv.vim'
-"Bundle 'tslime.vim'
-Bundle 'davidmfoley/tslime.vim'
-Bundle 'Limp'
+Plugin 'slimv.vim'
+"Plugin 'tslime.vim'
+Plugin 'davidmfoley/tslime.vim'
+Plugin 'Limp'
 
 " plugins: markdown {{{2
 " unconditionally binds <Leader>f and <Leader>r (also in insert mode=bad for
 " latex)
-"Bundle 'vim-pandoc/vim-markdownfootnotes'
+"Plugin 'vim-pandoc/vim-markdownfootnotes'
 
 " strange folding
-"Bundle 'plasticboy/vim-markdown'
-"Bundle   'hallison/vim-markdown'
+"Plugin 'plasticboy/vim-markdown'
+"Plugin   'hallison/vim-markdown'
 
 " strange autocmd which run a lot
-"Bundle 'suan/vim-instant-markdown'
+"Plugin 'suan/vim-instant-markdown'
 
 " good folding uses expr
-Bundle 'nelstrom/vim-markdown-folding'
+Plugin 'nelstrom/vim-markdown-folding'
 let g:markdown_fold_style = 'nested'
 
 " strange folding?
-"Bundle 'tpope/vim-markdown'
+"Plugin 'tpope/vim-markdown'
 
 " plugins: comma separated values (csv) {{{2
-"Bundle 'csv.vim'
-"Bundle 'csv-reader'
-"Bundle 'CSVTK'
-"Bundle 'rcsvers.vim'
-"Bundle 'csv-color'
-"Bundle 'CSV-delimited-field-jumper'
+"Plugin 'csv.vim'
+"Plugin 'csv-reader'
+"Plugin 'CSVTK'
+"Plugin 'rcsvers.vim'
+"Plugin 'csv-color'
+"Plugin 'CSV-delimited-field-jumper'
 
 " plugins: python {{{2
 
-"Bundle 'python_fold_compact'
-"Bundle 'jpythonfold.vim'
-Bundle 'Python-Syntax-Folding'
-"Bundle 'klen/python-mode'
+"Plugin 'python_fold_compact'
+"Plugin 'jpythonfold.vim'
+Plugin 'Python-Syntax-Folding'
+"Plugin 'klen/python-mode'
 
 " plugins: iCal {{{2
 
 " syntax highlighting
-Bundle 'icalendar.vim'
+Plugin 'icalendar.vim'
 
 " plugins: fish (shell) {{{2
-Bundle 'aliva/vim-fish'
+Plugin 'aliva/vim-fish'
 " plugins: shell in Vim {{{1
 
 if s:plugins['vimshell']
-  Bundle 'Shougo/vimproc'
-  Bundle 'Shougo/vimshell.vim'
+  Plugin 'Shougo/vimproc'
+  Plugin 'Shougo/vimshell.vim'
   map <D-F11> :VimShellPop<cr>
   let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
 endif
-"Bundle 'Conque-Shell'
+"Plugin 'Conque-Shell'
 
 " to be tested (shell in gvim)
-"Bundle 'ervandew/screen'
-Bundle 'https://bitbucket.org/fboender/bexec.git'
-Bundle 'pydave/AsyncCommand'
-"Bundle 'vimsh.tar.gz'
-"Bundle 'xolox/vim-shell'
+"Plugin 'ervandew/screen'
+Plugin 'https://bitbucket.org/fboender/bexec.git'
+Plugin 'pydave/AsyncCommand'
+"Plugin 'vimsh.tar.gz'
+"Plugin 'xolox/vim-shell'
 
-"Bundle 'vimux'
+"Plugin 'vimux'
 
 " plugins: tags {{{1
-"Bundle 'ttags'
-"Bundle 'xolox/vim-easytags'
+"Plugin 'ttags'
+"Plugin 'xolox/vim-easytags'
 
-" Bundle 'taglist-plus' {{{2
-Bundle 'taglist-plus'
+" Plugin 'taglist-plus' {{{2
+Plugin 'taglist-plus'
 
 if s:plugins['taglist'] "{{{2
-  Bundle 'taglist.vim'
+  Plugin 'taglist.vim'
   "let Tlist_Auto_Highlight_Tag        =
   "let Tlist_Auto_Open                 =
   let Tlist_Auto_Update               = 1
@@ -1524,7 +1524,7 @@ if has('cscope')
     " run ``ctags **/.*[ch]'' to produce the file ``tags''.
     " these headers are used:
     " http://www.vim.org/scripts/script.php?script_id=2358
-    "Bundle 'tags-for-std-cpp-STL-streams-...'
+    "Plugin 'tags-for-std-cpp-STL-streams-...'
     set tags+=~/.vim/tags/usr_include.tags
     set tags+=~/.vim/tags/usr_include_cpp.tags
     set tags+=~/.vim/tags/usr_local_include.tags
@@ -1538,51 +1538,51 @@ else
 endif
 
 " Tags Bookmarks {{{3
-"Bundle 'a-new-txt2tags-syntax'
-"Bundle 'gtags-multiwindow-browsing'
-"Bundle 'utags'
-"Bundle 'ctags_cache'
-"Bundle 'Intelligent-Tags'
-"Bundle 'Find-XML-Tags'
-"Bundle 'ProjectCTags'
-"Bundle 'cHiTags'
-"Bundle 'easytags.vim'
-"Bundle 'loadtags'
-"Bundle 'OmniTags'
-"Bundle 'tags-for-std-cpp-STL-streams-...'
-"Bundle 'ctags.exe'
-"Bundle 'ttags'
-"Bundle 'undo_tags'
-"Bundle 'GtagsClient'
-"Bundle 'projtags.vim'
-"Bundle 'tagscan'
-"Bundle 'TagsParser'
-"Bundle 'tagSetting.vim'
-"Bundle 'switchtags.vim'
-"Bundle 'tagselect'
-"Bundle 'DoTagStuff'
-"Bundle 'txt2tags'
-"Bundle 'txt2tags-menu'
-"Bundle 'gtags.vim'
-"Bundle 'tagsubmenu'
-"Bundle 'ctags.vim'
-"Bundle 'vtags_def'
-"Bundle 'vtags'
-"Bundle 'latextags'
-"Bundle 'ctags.vim'
-"Bundle 'TagsBase.zip'
-"Bundle 'functags.vim'
-"Bundle 'aux2tags.vim'
-"Bundle 'dtags'
-"Bundle 'TagsMenu.zip'
-"Bundle 'ctags.vim'
+"Plugin 'a-new-txt2tags-syntax'
+"Plugin 'gtags-multiwindow-browsing'
+"Plugin 'utags'
+"Plugin 'ctags_cache'
+"Plugin 'Intelligent-Tags'
+"Plugin 'Find-XML-Tags'
+"Plugin 'ProjectCTags'
+"Plugin 'cHiTags'
+"Plugin 'easytags.vim'
+"Plugin 'loadtags'
+"Plugin 'OmniTags'
+"Plugin 'tags-for-std-cpp-STL-streams-...'
+"Plugin 'ctags.exe'
+"Plugin 'ttags'
+"Plugin 'undo_tags'
+"Plugin 'GtagsClient'
+"Plugin 'projtags.vim'
+"Plugin 'tagscan'
+"Plugin 'TagsParser'
+"Plugin 'tagSetting.vim'
+"Plugin 'switchtags.vim'
+"Plugin 'tagselect'
+"Plugin 'DoTagStuff'
+"Plugin 'txt2tags'
+"Plugin 'txt2tags-menu'
+"Plugin 'gtags.vim'
+"Plugin 'tagsubmenu'
+"Plugin 'ctags.vim'
+"Plugin 'vtags_def'
+"Plugin 'vtags'
+"Plugin 'latextags'
+"Plugin 'ctags.vim'
+"Plugin 'TagsBase.zip'
+"Plugin 'functags.vim'
+"Plugin 'aux2tags.vim'
+"Plugin 'dtags'
+"Plugin 'TagsMenu.zip'
+"Plugin 'ctags.vim'
 
-" plugins: manpages {{{1
-"Bundle 'info.vim'
+" plugins: man pages {{{1
+"Plugin 'info.vim'
 
-" Bundle 'ManPageView' {{{2
+" Plugin 'ManPageView' {{{2
 " TODO
-"Bundle 'ManPageView'
+"Plugin 'ManPageView'
 " http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
 " manually installed: open above url and execute :UseVimaball
 " display manpages in a vertical split (other options 'only', 'hsplit',
@@ -1599,74 +1599,85 @@ let g:manpageview_winopen = 'reuse'
 
 " plugins: parenthesis and quotes {{{1
 
-Bundle 'Raimondi/delimitMate'
-Bundle 'paredit.vim'
+Plugin 'Raimondi/delimitMate'
+Plugin 'paredit.vim'
+Plugin 'tpope/vim-surround'
 
-" plugins: unsorted {{{1
-Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
-set noshowmode
+" plugins: motion {{{1
+Plugin 'Lokaltog/vim-easymotion'
 
-Bundle 'tyru/open-browser.vim'
-
-
-Bundle 'pix/vim-known_hosts'
-Bundle 'ack.vim'
-
-"Bundle 'browser.vim'
-"Bundle 'calendar.vim'
-
-" buggy!
-Bundle 'matchit.zip'
-
-Bundle 'VimRepress'
-"Bundle 'connermcd/VimRepress'
-"Bundle 'blogit.vim'
-
-Bundle 'ZoomWin'
-Bundle 'AndrewRadev/linediff.vim'
-
-" plugins: git stuff {{{1
-"Bundle 'tpope/vim-git'
-Bundle 'tpope/vim-fugitive'
+" plugins: vcs stuff {{{1
+"Plugin 'tpope/vim-git'
+Plugin 'tpope/vim-fugitive'
+Plugin 'ludovicchabant/vim-lawrencium'
+Plugin 'mhinz/vim-signify'
+let g:signify_disable_by_default = 1
+" use :SignifyToggle to activate
 
 " plugins: colors {{{1
 " list all colorschemes with: globpath(&rtp,'colors/*.vim')
 
-Bundle 'altercation/vim-colors-solarized'
+Plugin 'altercation/vim-colors-solarized'
 let g:solarized_menu = 0
 
-Bundle 'w0ng/vim-hybrid'
-Bundle 'chriskempson/vim-tomorrow-theme'
-Bundle 'nanotech/jellybeans.vim'
-Bundle 'kalt.vim'
-Bundle 'kaltex.vim'
-Bundle 'textmate16.vim'
-"Bundle 'vibrantink'
-Bundle 'tortex'
-Bundle 'tomasr/molokai'
-Bundle 'jonathanfilip/vim-lucius'
+" old unused colors {{{2
+"Plugin 'w0ng/vim-hybrid'
+"Plugin 'chriskempson/vim-tomorrow-theme'
+"Plugin 'nanotech/jellybeans.vim'
+"Plugin 'kalt.vim'
+"Plugin 'kaltex.vim'
+"Plugin 'textmate16.vim'
+""Plugin 'vibrantink'
+"Plugin 'tortex'
+"Plugin 'tomasr/molokai'
+"Plugin 'jonathanfilip/vim-lucius'
+"
+"Plugin 'ScrollColors'
+"
+""Plugin 'molokai'
+"Plugin 'Colour-Sampler-Pack'
+""Plugin 'pyte'
+""Plugin 'dw_colors'
+""Plugin 'Zenburn'
+""Plugin 'desert-warm-256'
+""Plugin 'tango-desert.vim'
+""Plugin 'desertEx'
+""Plugin 'darkerdesert'
+""Plugin 'DesertedOceanBurnt'
+""Plugin 'desertedocean.vim'
+""Plugin 'desertedocean.vim'
+""Plugin 'desert256.vim'
+""Plugin 'desert.vim'
+""Plugin 'eclm_wombat.vim'
+""Plugin 'wombat256.vim'
+""Plugin 'Wombat'
+""Plugin 'oceandeep'
 
-Bundle 'ScrollColors'
+" plugins: unsorted {{{1
+Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+set noshowmode
 
-"Bundle 'molokai'
-Bundle 'Colour-Sampler-Pack'
-"Bundle 'pyte'
-"Bundle 'dw_colors'
-"Bundle 'Zenburn'
-"Bundle 'desert-warm-256'
-"Bundle 'tango-desert.vim'
-"Bundle 'desertEx'
-"Bundle 'darkerdesert'
-"Bundle 'DesertedOceanBurnt'
-"Bundle 'desertedocean.vim'
-"Bundle 'desertedocean.vim'
-"Bundle 'desert256.vim'
-"Bundle 'desert.vim'
-"Bundle 'eclm_wombat.vim'
-"Bundle 'wombat256.vim'
-"Bundle 'Wombat'
-"Bundle 'oceandeep'
+Plugin 'tyru/open-browser.vim'
 
+
+Plugin 'pix/vim-known_hosts'
+Plugin 'ack.vim'
+
+"Plugin 'browser.vim'
+"Plugin 'calendar.vim'
+
+" buggy!
+Plugin 'matchit.zip'
+
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'sjl/gundo.vim'
+
+Plugin 'VimRepress'
+"Plugin 'connermcd/VimRepress'
+"Plugin 'blogit.vim'
+
+Plugin 'ZoomWin'
+Plugin 'AndrewRadev/linediff.vim'
 
 " last steps {{{1
 
