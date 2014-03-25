@@ -664,11 +664,6 @@ augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd BufWrite * silent %substitute/\s\+$//e
 augroup END
 
-augroup LucDelMenus "{{{2
-  autocmd!
-  autocmd VimEnter * aunmenu *
-augroup END
-
 augroup LucLocalAutoCd "{{{2
   autocmd!
   autocmd BufEnter ~/uni/**     lcd ~/uni

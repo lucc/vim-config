@@ -145,6 +145,13 @@ function! LucActivatePreview() " {{{2
 "
 endfunction
 
+" user defined autocommands {{{1
+
+augroup LucDelMenus "{{{2
+  autocmd!
+  autocmd VimEnter * aunmenu *
+augroup END
+
 " user defined commands and mappings {{{1
 
 nmap ß :windo set rightleft!<CR>
