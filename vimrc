@@ -11,14 +11,16 @@
 set nocompatible
 
 " see if some important features are present else do not load the file
-if !(   has('autocmd') &&
-      \ has('gui')     &&
-      \ has('mouse')   &&
-      \ has('syntax')
-      \ ) || version < 700
-  echoerr "This version of Vim lacks many features, please update!"
-  finish
-endif
+"if version < 700 ||
+"      \ (!(
+"      \   has('autocmd') &&
+"      \   has('gui')     &&
+"      \   has('mouse')   &&
+"      \   has('syntax')
+"      \ ) && !has('neovim'))
+"  echoerr "This version of Vim lacks many features, please update!"
+"  finish
+"endif
 
 " Do not load many of the GUI menus.  This has to happen before 'syntax on'
 " and 'filetype ...'
