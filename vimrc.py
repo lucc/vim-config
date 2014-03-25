@@ -6,70 +6,76 @@ import os
 #import random.randint
 import vim
 import subprocess
+import time
+import threading
 
-#def find_base_dir(cur=vim.current.buffer.name):
-#    '''
-#    Find a good "base" directory under some file.  Look for makefiles and vsc
-#    repositories and the like.
-#
-#    cur:      the filename to be used as a starting point
-#    returns:  the absolute path to the best base directory
-#
-#    '''
-#    indicator_files = [
-#                       'makefile',
-#                       'build.xml',
-#                       ]
-#    indicator_dirs = [
-#                      '~/uni',
-#                      '~/.vim',
-#		      ]
-#    pass
-#    matches = []
-#    # from here on it is vim code
-#    path = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
-#    cwd = os.getcwd()
-#    # look at directory of the current buffer
-#    while path is not []:
-#        dir = '/' . join(path, '/')
-#    for file in indicator_files
-#      if filereadable(dir . '/' . file)
-#        call add(matches, [dir, file])
-#      endif
-#    endfor
-#    if dir == cwd
-#      if empty(matches) || matches[-1][0] != cwd
-#        call add(matches, [cwd, ''])
-#      endif
-#    endif
-#    unlet path[-1]
-#    endwhile
-#    # look at the working directory
-#    let path = split(cwd, '/')
-#    while ! empty(path)
-#    let dir = '/' . join(path, '/')
-#    for file in indicator_files
-#      if filereadable(dir . '/' . file)
-#        call add(matches, [dir, file])
-#      endif
-#    endfor
-#    if dir == cwd
-#      if empty(matches) || matches[-1][0] != cwd
-#        call add(matches, [cwd, ''])
-#      endif
-#    endif
-#    unlet path[-1]
-#    endwhile
-#    # fallback value
-#    if empty(matches)
-#    call add(matches, ['/', ''])
-#    endif
-#    #if len(matches) == 1
-#    #  return matches[0][0]
-#    #endif
-#    # not optimal jet:
-#    return matches[0][0]
+def backup_current_buffer():
+    """Save a backup of the current vim buffer via scp."""
 
+    servers = {'math': 'vim-buffer-bk', 'ifi': 'vim-buffer-bk'}
+    filename = vim.current.buffer.name
+    mytime = time.strftime('%Y-%m-%d-%H-%M')
+
+    def helper_function(server, path):
+        subprocess.call(['ssh', server, 'mkdir', '-p', path])
+        subprocess.call(['scp', filename, server+':'+path])
+
+    for server in servers.keys():
+        path = os.path.join(servers[server], mytime)
+        # TODO
+        #x = threading.Thread(target=helper_function, args=(server, path))
+        #x.start()
+        subprocess.call('(ssh ' + server + ' mkdir -p ' + path + ' && scp ' +
+                filename + ' ' + server + ':' + path + ') &', shell=True)
+
+def find_base_dir_vim_wrapper(cur=None):
+    if cur is None:
+        cur = vim.current.buffer.name
+    return find_base_dir(cur)
+
+def find_base_dir(filename):
+    '''
+    Find a good "base" directory under some file.  Look for makefiles and vsc
+    repositories and the like.
+
+    filename: the filename to be used as a starting point
+    returns:  the absolute path to the best base directory
+    '''
+    indicator_files = [
+                       'makefile',
+                       'build.xml',
+                       ]
+    indicator_dirs = [
+                      '~/uni',
+                      '~/.vim',
+		      ]
+    indicator_dirs = [os.path.expanduser(x) for x in indicator_dirs]
+    matches = []
+    # look at directory of the current buffer and the working directory
+    for cur in [os.path.dirname(filename), os.path.realpath(os.path.curdir)]:
+        path = cur
+        stopper = False
+        while stopper != '':
+            for indicator in indicator_files:
+                if os.path.exists(os.path.join(path, indicator)):
+                    matches.append((path, indicator))
+            for directory in indicator_dirs:
+                if path == directory:
+                    matches.append((path, ''))
+            path, stopper = os.path.split(path)
+    # fallback value
+    if matches == []:
+        matches.append(('/', ''))
+    #if len(matches) == 1
+    #  return matches[0][0]
+    #endif
+    # TODO not optimal yet
+    return matches[0][0]
+
+def search_for_uri_vim_wrapper(pos=None):
+    if pos is None:
+        pos = vim.current.window.cursor
+    return search_for_uri(pos)
 
 def search_for_uri(pos):
     """Search for an uri around pos in the current buffer
@@ -80,10 +86,9 @@ def search_for_uri(pos):
     """
     pass
 
-
 def tex_count_vim_wrapper(filename=None):
     if filename is None:
-        filename=vim.current.buffer.name
+        filename = vim.current.buffer.name
     tex_count(filename)
 
 def tex_count(filename):
@@ -119,3 +124,60 @@ def tex_count(filename):
                 stdin=p1.stdout).split()
         # TODO filename in display is to long
         print pdf_words, 'words and', pdf_chars, 'chars in file', pdf
+
+
+##############################################################################
+# Code taken from other people
+##############################################################################
+
+"""parseUrls.py  A regular expression that detects HTTP urls.
+
+Danny Yoo (dyoo@hkn.eecs.berkeley.edu)
+
+This is only a small sample of tchrist's very nice tutorial on
+regular expressions.  See:
+
+    http://www.perl.com/doc/FMTEYEWTK/regexps.html
+
+for more details.
+
+Note: this properly detects strings like "http://python.org.", with a
+period at the end of the string."""
+
+
+import re
+
+def grabUrls(text):
+    """Given a text string, returns all the urls we can find in it."""
+    return url_re.findall(text)
+
+
+urls = '(?: %s)' % '|'.join("""http telnet gopher file wais ftp""".split())
+ltrs = r'\w'
+gunk = r'/#~:.?+=&%@!\-'
+punc = r'.:?\-'
+any = "%(ltrs)s%(gunk)s%(punc)s" % { 'ltrs' : ltrs,
+                                     'gunk' : gunk,
+                                     'punc' : punc }
+
+url = r"""
+    \b                            # start at word boundary
+        %(urls)s    :             # need resource and a colon
+        [%(any)s]  +?             # followed by one or more
+                                  #  of any valid character, but
+                                  #  be conservative and take only
+                                  #  what you need to....
+    (?=                           # look-ahead non-consumptive assertion
+            [%(punc)s]*           # either 0 or more punctuation
+            (?:   [^%(any)s]      #  followed by a non-url char
+                |                 #   or end of the string
+                  $
+            )
+    )
+    """ % {'urls' : urls,
+           'any' : any,
+           'punc' : punc }
+
+url_re = re.compile(url, re.VERBOSE | re.MULTILINE)
+
+
