@@ -977,12 +977,8 @@ set wildignore+=*.pyc                          " Python byte code
 " scatterd ofer the file and not centralized.  Also some plugins need further
 " configuration which is put in the if statements.
 let s:plugins = {
-		\ 'autocomplpop': 0,
 		\ 'ctrlp': 1,
 		\ 'latexsuite': 1,
-		\ 'neocompl': 0,
-		\ 'omnicppcomplete': 0,
-		\ 'syntastic': 1,
 		\ 'taglist': 1,
 		\ 'vimshell': 0,
 		\ }
@@ -996,7 +992,7 @@ Plugin 'gmarik/vundle'
 
 " plugins: buffer and file management {{{1
 
-Plugin 'kien/ctrlp.vim'
+Plugin 'kien/ctrlp.vim' "{{{3
 
 " How the plugin should manage the cache
 "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
@@ -1015,10 +1011,9 @@ let g:ctrlp_map = '<C-Space>'
 let g:ctrlp_cmd = 'CtrlPMRU'
 inoremap <C-Space> <C-O>:CtrlPMRU<CR>
 
-" Use the compiled C-version for speed improvements
+" Use the compiled C-version for speed improvements "{{{3
 Plugin 'JazzCore/ctrlp-cmatcher'
 let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
-
 
 " plugins: completion {{{1
 "Plugin 'IComplete'
@@ -1214,7 +1209,7 @@ endif
 " snippy_plugin.vba.gz
 Plugin 'SirVer/ultisnips'
 " Snippets are separated from the engine:
-Plugin 'honza/vim-snippets'
+Plugin 'honza/vim-snippets' "{{{3
 let g:UltiSnipsExpandTrigger = '<C-F>'
 let g:UltiSnipsJumpForwardTrigger = '<C-F>'
 "let g:UltiSnipsJumpBackwardTrigger = '<C-Tab>'
@@ -1249,8 +1244,7 @@ Plugin 'applescript.vim'
 "Plugin 'auctex.vim'
 Plugin 'LaTeX-Help'
 
-" Vim-latex aka LaTeX-Suite {{{3
-Plugin 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
+Plugin 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex' "{{{3
 let g:ngerman_package_file = 1
 let g:Tex_Menus = 0
 " this has to be lower case!
@@ -1291,8 +1285,6 @@ let g:Tex_FoldedEnvironments .= ',abstract'
 let g:Tex_FoldedEnvironments .= ',titlepage'
 
 " plugins: lisp/scheme {{{2
-
-" lisp/scheme interaction {{3
 Plugin 'slimv.vim'
 "Plugin 'tslime.vim'
 Plugin 'davidmfoley/tslime.vim'
@@ -1339,8 +1331,8 @@ Plugin 'icalendar.vim'
 
 " plugins: fish (shell) {{{2
 Plugin 'aliva/vim-fish'
-" plugins: shell in Vim {{{1
 
+" plugins: shell in Vim {{{1
 if s:plugins['vimshell']
   Plugin 'Shougo/vimproc'
   Plugin 'Shougo/vimshell.vim'
@@ -1362,8 +1354,7 @@ Plugin 'pydave/AsyncCommand'
 "Plugin 'ttags'
 "Plugin 'xolox/vim-easytags'
 
-" Plugin 'taglist-plus' {{{2
-Plugin 'taglist-plus'
+Plugin 'taglist-plus' "{{{2
 
 if s:plugins['taglist'] "{{{2
   Plugin 'taglist.vim'
@@ -1534,9 +1525,8 @@ endif
 " plugins: man pages {{{1
 "Plugin 'info.vim'
 
-" Plugin 'ManPageView' {{{2
+"Plugin 'ManPageView' "{{{2
 " TODO
-"Plugin 'ManPageView'
 " http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
 " manually installed: open above url and execute :UseVimaball
 " display manpages in a vertical split (other options 'only', 'hsplit',
@@ -1564,14 +1554,17 @@ Plugin 'Lokaltog/vim-easymotion'
 "Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'ludovicchabant/vim-lawrencium'
-Plugin 'mhinz/vim-signify'
+Plugin 'mhinz/vim-signify' "{{{3
 let g:signify_disable_by_default = 1
 " use :SignifyToggle to activate
 
 " plugins: colors {{{1
 " list all colorschemes with: globpath(&rtp,'colors/*.vim')
 
-Plugin 'altercation/vim-colors-solarized'
+"Plugin 'ScrollColors'
+"Plugin 'Colour-Sampler-Pack'
+
+Plugin 'altercation/vim-colors-solarized' "{{{3
 let g:solarized_menu = 0
 
 " old unused colors {{{2
@@ -1586,10 +1579,8 @@ let g:solarized_menu = 0
 "Plugin 'tomasr/molokai'
 "Plugin 'jonathanfilip/vim-lucius'
 "
-"Plugin 'ScrollColors'
 "
 ""Plugin 'molokai'
-"Plugin 'Colour-Sampler-Pack'
 ""Plugin 'pyte'
 ""Plugin 'dw_colors'
 ""Plugin 'Zenburn'
@@ -1612,7 +1603,6 @@ Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 set noshowmode
 
 Plugin 'tyru/open-browser.vim'
-
 
 Plugin 'pix/vim-known_hosts'
 Plugin 'ack.vim'
