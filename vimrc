@@ -1021,17 +1021,19 @@ let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 "Plugin 'javacomplete'
 let s:plugins['completion'] = 'ycm'
 
-if s:plugins['completion'] == 'ycm' " {{{2
-  if has('gui_macvim')
-    Plugin 'Valloric/YouCompleteMe'
-    let g:ycm_filetype_blacklist = {}
-    let g:ycm_complete_in_comments = 1
-    let g:ycm_collect_identifiers_from_comments_and_strings = 1
-    let g:ycm_collect_identifiers_from_tags_files = 1
-    let g:ycm_seed_identifiers_with_syntax = 1
-    let g:ycm_add_preview_to_completeopt = 1
-    let g:ycm_autoclose_preview_window_after_completion = 0
-  endif
+if s:plugins['completion'] == 'ycm' && has('gui_macvim') " {{{2
+  Plugin 'Valloric/YouCompleteMe'
+  let g:ycm_filetype_blacklist = {}
+  let g:ycm_complete_in_comments = 1
+  let g:ycm_collect_identifiers_from_comments_and_strings = 1
+  let g:ycm_collect_identifiers_from_tags_files = 1
+  let g:ycm_seed_identifiers_with_syntax = 1
+  let g:ycm_add_preview_to_completeopt = 1
+  let g:ycm_autoclose_preview_window_after_completion = 0
+
+  Plugin 'bjoernd/vim-ycm-tex', {'name': 'YouCompleteMe/python/ycm/completers/tex'}
+  let g:ycm_semantic_triggers = {'tex': ['\ref{','\cite{']}
+
 elseif s:plugins['completion'] == 'neo' " {{{2
   Plugin 'Shougo/neocomplete.vim'
   Plugin 'Shougo/context_filetype.vim'
@@ -1138,70 +1140,6 @@ elseif s:plugins['completion'] == 'neo' " {{{2
 "  " https://github.com/c9s/perlomni.vim
 "  let g:neocomplcache_omni_patterns.perl =
 "  \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
-elseif s:plugins['completion'] == 'omni' "{{{2
-  Plugin 'OmniCppComplete'
-  "http://www.vim.org/scripts/script.php?script_id=1520
-  if version >= 7
-    " OmniCompletion see ``:help compl-omni''
-    " thanks to http://vim.wikia.com/wiki/C%2B%2B_code_completion
-    let OmniCpp_NamespaceSearch = 1
-    let OmniCpp_GlobalScopeSearch = 1
-    let OmniCpp_ShowAccess = 1
-    let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-    let OmniCpp_MayCompleteDot = 1      " autocomplete after .
-    let OmniCpp_MayCompleteArrow = 1    " autocomplete after ->
-    let OmniCpp_MayCompleteScope= 1    " autocomplete after ::
-    let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-    " automatically open and close the popup menu / preview window
-    augroup LucOmniCppCompete
-      autocmd!
-      autocmd CursorMovedI,InsertLeave * if pumvisible() == 0|sil! pclose|endif
-    augroup END
-    set completeopt=menu,longest,preview
-    imap <C-TAB> <C-x><C-o>
-  endif
-elseif s:plugins['completion'] == 'autocomplpop' "{{{2
-  Plugin 'AutoComplPop'
-  " do not start popup menu after curser moved.
-  "let g:acp_mappingDriven = 1
-  "let g:acp_behaviorKeywordCommand = '<tab>'
-
-  " From the help file:
-  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""{{{
-  " snipMate's Trigger Completion ~
-  "
-  " snipMate's trigger completion enables you to complete a snippet trigger
-  " provided by snipMate plugin
-  " (http://www.vim.org/scripts/script.php?script_id=2540) and expand it.
-  "
-  "
-  " To enable auto-popup for this completion, add following function to
-  " plugin/snipMate.vim:
-  " >
-  "   fun! GetSnipsInCurrentScope()
-  "     let snips = {}
-  "     for scope in [bufnr('%')] + split(&ft, '\.') + ['_']
-  "       call extend(snips, get(s:snippets, scope, {}), 'keep')
-  "       call extend(snips, get(s:multi_snips, scope, {}), 'keep')
-  "     endfor
-  "     return snips
-  "   endf
-  " <
-  " And set |g:acp_behaviorSnipmateLength| option to 1.
-  "
-  " There is the restriction on this auto-popup, that the word before cursor
-  " must consist only of uppercase characters.
-  "
-  "                                                            *acp-perl-omni*
-  " Perl Omni-Completion ~
-  "
-  " AutoComplPop supports perl-completion.vim
-  " (http://www.vim.org/scripts/script.php?script_id=2852).
-  "
-  " To enable auto-popup for this completion, set
-  " |g:acp_behaviorPerlOmniLength| option to 0 or more.
-  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 endif
 
 " plugins: snippets {{{1
