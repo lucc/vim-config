@@ -748,7 +748,7 @@ if has('gui_macvim')
 endif
 
 " open URLs {{{2
-nmap <Leader>w :call openbrowser#open(LucMiscSearchStringForURI(getline('.')))<CR>
+nmap <Leader>w :call OpenBrowser(LucMiscSearchStringForURI(getline('.')))<CR>
 
 " easy compilation {{{2
 nmap <silent> <F2>        :sil up <BAR> call LucCompilerGeneric2('')<CR>
