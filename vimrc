@@ -241,8 +241,8 @@ function! LucManOpen(...) "{{{2
   endif
   map <buffer> K :call LucManOpen()<CR>
   map <buffer> K :call LucManOpen()<CR>
-  vmap <buffer> K :call LucManOpen(LucMiscGetVisualSelection())<CR>
-  vmap <buffer> K :call LucManOpen(LucMiscGetVisualSelection())<CR>
+  vmap <buffer> K :call LucManOpen(LucGetVisualSelection())<CR>
+  vmap <buffer> K :call LucManOpen(LucGetVisualSelection())<CR>
 endfunction
 
 function! LucManOpenTab(type, string) "{{{2
@@ -540,6 +540,28 @@ if !has_key(luc, 'misc')
   let luc.misc = {}
 endif
 
+function! LucMiscCapitalize(text) " {{{2
+  return substitute(a:text, '\v<(\w)(\w*)>', '\u\1\L\2', 'g')
+endfunction
+
+function! LucMiscCapitalizeOperatorFunction(type) "{{{2
+  " this function is partly copied from the vim help about g@
+  let sel_save = &selection
+  let saved_register = @@
+  let &selection = "inclusive"
+  if a:type == 'line'
+    silent execute "normal! '[V']y"
+  elseif a:type == 'block'
+    silent execute "normal! `[\<C-V>`]y"
+  else
+    silent execute "normal! `[v`]y"
+  endif
+  let @@ = LucMiscCapitalize(@@)
+  normal gvp
+  let &selection = sel_save
+  let @@ = saved_register
+endfunction
+
 function! LucMiscSearchStringForURI(string) "{{{2
   " function to find an URI in a string
   " thanks to  http://vim.wikia.com/wiki/VimTip306
@@ -593,17 +615,17 @@ endfunction
 " see:
 "http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
 "
-function! LucMiscGetVisualSelection() "{{{2
-  " This function is copied from http://stackoverflow.com/questions/1533565/
-  " FIXME: This seems to exclude the last character from the selection.
-  let [lnum1, col1] = getpos("'<")[1:2]
-  "let [lnum1, col1] = getpos("v")[1:2]
-  let [lnum2, col2] = getpos("'>")[1:2]
-  "let [lnum2, col2] = getpos(".")[1:2]
-  let lines = getline(lnum1, lnum2)
-  let lines[-1] = lines[-1][: col2 - 2]
-  let lines[0] = lines[0][col1 - 1:]
-  return join(lines, "\n")
+function! LucGetVisualSelection() "{{{2
+  let saved_register = @@
+  let current = getpos('.')
+  call setpos('.', getpos("'<"))
+  execute 'normal' visualmode()
+  call setpos('.', getpos("'>"))
+  normal y
+  let return_value = @@
+  let @@ = saved_register
+  call setpos('.', current)
+  return return_value
 endfunction
 
 " functions: old {{{1
@@ -738,6 +760,11 @@ inoremap <C-W> <C-G>u<C-W>
 inoremap <C-s> <C-o>:call LucMiscFindNextSpellError()<CR><C-x><C-s>
 nnoremap <C-s>      :call LucMiscFindNextSpellError()<CR>z=
 
+" capitalize text
+vmap gc "=LucMiscCapitalize(LucGetVisualSelection())<CR>p
+nmap gc :set operatorfunc=LucMiscCapitalizeOperatorFunction<CR>g@
+
+" bla
 if has('gui_macvim')
   inoremap œ \
   inoremap æ \|
