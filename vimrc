@@ -855,6 +855,7 @@ set spelllang=de,en
 if &spellfile == ''
   set spellfile+=~/.vim/spell/de.utf-8.add
   set spellfile+=~/.vim/spell/en.utf-8.add
+  set spellfile+=~/.vim/spell/names.utf-8.add
 endif
 set nospell
 
