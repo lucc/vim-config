@@ -741,12 +741,12 @@ augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd BufWrite * silent %substitute/\s\+$//e
 augroup END
 
-augroup LucLocalAutoCd "{{{2
-  autocmd!
-  autocmd BufEnter ~/uni/**     lcd ~/uni
-  autocmd BufEnter ~/.config/** lcd ~/.config
-  autocmd BufEnter ~/src/**     lcd ~/src
-augroup END
+"augroup LucLocalAutoCd "{{{2
+"  autocmd!
+"  autocmd BufEnter ~/uni/**     lcd ~/uni
+"  autocmd BufEnter ~/.config/** lcd ~/.config
+"  autocmd BufEnter ~/src/**     lcd ~/src
+"augroup END
 
 " user defined commands and mappings {{{1
 
@@ -1012,9 +1012,7 @@ set wildignore+=*.pyc                          " Python byte code
 " scatterd ofer the file and not centralized.  Also some plugins need further
 " configuration which is put in the if statements.
 let s:plugins = {
-		\ 'ctrlp': 1,
 		\ 'latexsuite': 1,
-		\ 'taglist': 1,
 		\ 'vimshell': 0,
 		\ }
 
@@ -1027,24 +1025,42 @@ Plugin 'gmarik/vundle'
 
 " plugins: buffer and file management {{{1
 
-Plugin 'kien/ctrlp.vim' "{{{3
+Plugin 'kien/ctrlp.vim' "{{{2
 
-" How the plugin should manage the cache
+" cache {{{3
 "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
 let g:ctrlp_clear_cache_on_exit = 0
 
-" What files to display or ignore
+" ignore/include/exclude patterns {{{3
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_max_files = 0
 let g:ctrlp_custom_ignore = {
       \ 'dir':  '\v(\/private|\/var|\/tmp|\/Users\/luc\/(audio|img))',
       \ }
-"let g:ctrlp_root_markers = ['makefile', 'Makefile', 'latexmkrc']
+let g:ctrlp_root_markers = [
+      \ 'makefile',
+      \ 'Makefile',
+      \ ]
+"      \ 'latexmkrc',
 
-" mappings for the plugin
+" extensions {{{3
+let g:ctrlp_extensions = [
+      \ 'tag',
+      \ 'buffertag',
+      \ 'quickfix',
+      \ 'dir',
+      \ 'undo',
+      \ 'line',
+      \ 'changes',
+      \]
+      "\ 'rtscript',
+      "\ 'mixed',
+      "\ 'bookmarkdir',
+
+" mappings {{{3
 let g:ctrlp_map = '<C-Space>'
-let g:ctrlp_cmd = 'CtrlPMRU'
-inoremap <C-Space> <C-O>:CtrlPMRU<CR>
+let g:ctrlp_cmd = 'CtrlPMixed'
+inoremap <C-Space> <C-O>:CtrlPMixed<CR>
 
 " Use the compiled C-version for speed improvements "{{{3
 Plugin 'JazzCore/ctrlp-cmatcher'
@@ -1308,57 +1324,122 @@ Plugin 'icalendar.vim'
 Plugin 'aliva/vim-fish'
 
 " plugins: shell in Vim {{{1
-if s:plugins['vimshell']
-  Plugin 'Shougo/vimproc'
-  Plugin 'Shougo/vimshell.vim'
-  map <D-F11> :VimShellPop<cr>
-  let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
-endif
-"Plugin 'Conque-Shell'
 
-" to be tested (shell in gvim)
+" notes {{{2
+"Plugin 'Conque-Shell'
 "Plugin 'ervandew/screen'
-Plugin 'https://bitbucket.org/fboender/bexec.git'
-Plugin 'pydave/AsyncCommand'
 "Plugin 'vimsh.tar.gz'
 "Plugin 'xolox/vim-shell'
-
 "Plugin 'vimux'
+
+"Plugin 'Shougo/vimshell.vim' "{{{2
+"Plugin 'Shougo/vimproc'
+"map <D-F11> :VimShellPop<cr>
+"let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
+
+" to be tested (shell in gvim) {{{2
+Plugin 'https://bitbucket.org/fboender/bexec.git'
+Plugin 'pydave/AsyncCommand'
 
 " plugins: tags {{{1
 "Plugin 'ttags'
-"Plugin 'xolox/vim-easytags'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-easytags'
+let g:easytags_by_filetype = '~/.cache/vim-easytag'
+let g:easytags_ignored_filetypes = ''
 
-Plugin 'taglist-plus' "{{{2
+" TODO
+"Plugin 'ctags.vim'
+"Plugin 'latextags'
+"Plugin 'TagsBase.zip'
+"Plugin 'aux2tags.vim'
+"Plugin 'TagsMenu.zip'
+"Plugin 'PreviewTag.vim'
+"Plugin 'ProjectTag'
+"Plugin 'ProjectCTags'
+"Plugin 'tagmaster'
+"Plugin 'loadtags'
+"Plugin 'OmniTags'
+"Plugin 'https://bitbucket.org/abudden/tagsignature'
+"Plugin 'https://bitbucket.org/abudden/taghighlight'
+"Plugin 'TagManager-BETA'
+"Plugin 'tags-for-std-cpp-STL-streams-...'
+"Plugin 'previewtag'
+"Plugin 'majutsushi/tagbar'
+"Plugin 'ttagecho'
+"Plugin 'ttags'
+"Plugin 'taglist-plus'
+"Plugin 'GtagsClient'
+"Plugin 'projtags.vim'
+"Plugin '0scan'
+"Plugin 'TagsParser'
+"Plugin 'tagSetting.vim'
+"Plugin 'switchtags.vim'
+"Plugin 'AutoTag'
+"Plugin 'listtag'
+"Plugin 'tagselect'
+"Plugin 'gtags.vim'
+"Plugin 'tagMenu'
+"Plugin 'bahejl/Intelligent_Tags'
+"Plugin 'tagsubmenu'
+"Plugin 'abadcafe/ctags_cache'
+"Plugin 'tagexplorer.vim'
+"Plugin 'tagfinder.vim'
 
-if s:plugins['taglist'] "{{{2
-  Plugin 'taglist.vim'
-  "let Tlist_Auto_Highlight_Tag        =
-  "let Tlist_Auto_Open                 =
-  let Tlist_Auto_Update               = 1
-  let Tlist_Close_On_Select           = 1
-  let Tlist_Compact_Format            = 1
-  "let Tlist_Ctags_Cmd                 =
-  let Tlist_Display_Prototype         = 1
-  "let Tlist_Display_Tag_Scope         =
-  "let Tlist_Enable_Fold_Column        =
-  let Tlist_Exit_OnlyWindow           = 1
-  let Tlist_File_Fold_Auto_Close      = 1
-  let Tlist_GainFocus_On_ToggleOpen   = 1
-  "let Tlist_Highlight_Tag_On_BufEnter =
-  "let Tlist_Inc_Winwidth              =
-  "let Tlist_Max_Submenu_Items         =
-  "let Tlist_Max_Tag_Length            =
-  "let Tlist_Process_File_Always       =
-  "let Tlist_Show_Menu                 = 1
-  "let Tlist_Show_One_File             =
-  "let Tlist_Sort_Type                 =
-  "let Tlist_Use_Horiz_Window          =
-  let Tlist_Use_Right_Window          = 1
-  "let Tlist_Use_SingleClick           =
-  "let Tlist_WinHeight                 =
-  let Tlist_WinWidth                  = 75
-endif
+Plugin 'taglist.vim' "{{{2
+
+" Automatically highlight the current tag in the taglist.
+"let g:Tlist_Auto_Highlight_Tag = <++>
+" Open the taglist window when Vim starts.
+"let g:Tlist_Auto_Open = <++>
+" Automatically update the taglist to include newly edited files.
+let g:Tlist_Auto_Update = 1
+" Close the taglist window when a file or tag is selected.
+let g:Tlist_Close_On_Select = 1
+" Remove extra information and blank lines from the taglist window.
+let g:Tlist_Compact_Format = 1
+" Specifies the path to the ctags utility.
+"let g:Tlist_Ctags_Cmd =
+" Show prototypes and not tags in the taglist window.
+let g:Tlist_Display_Prototype = 1
+" Show tag scope next to the tag name.
+"let g:Tlist_Display_Tag_Scope =
+" Show the fold indicator column in the taglist window.
+"let g:Tlist_Enable_Fold_Column =
+" Close Vim if the taglist is the only window.
+let g:Tlist_Exit_OnlyWindow = 1
+" Close tag folds for inactive buffers.
+let g:Tlist_File_Fold_Auto_Close = 1
+" Jump to taglist window on open.
+let g:Tlist_GainFocus_On_ToggleOpen = 1
+" On entering a buffer, automatically highlight the current tag.
+"let g:Tlist_Highlight_Tag_On_BufEnter =
+" Increase the Vim window width to accommodate the taglist window.
+"let g:Tlist_Inc_Winwidth =
+" Maximum number of items in a tags sub-menu.
+"let g:Tlist_Max_Submenu_Items =
+" Maximum tag length used in a tag menu entry.
+"let g:Tlist_Max_Tag_Length =
+" Process files even when the taglist window is closed.
+"let g:Tlist_Process_File_Always =
+" Display the tags menu.
+"let g:Tlist_Show_Menu =
+" Show tags for the current buffer only.
+"let g:Tlist_Show_One_File =
+" Sort method used for arranging the tags.
+"let g:Tlist_Sort_Type = " TODO
+" Use a horizontally split window for the taglist window.
+let g:Tlist_Use_Horiz_Window = 0
+" Place the taglist window on the right side.
+let g:Tlist_Use_Right_Window = 1
+" Single click on a tag jumps to it.
+"let g:Tlist_Use_SingleClick =
+" Horizontally split taglist window height.
+"let g:Tlist_WinHeight =
+" Vertically split taglist window width.
+let g:Tlist_WinWidth = 75
+" Hide extra tag data produced by jsctags.
+"let g:Tlist_javascript_Hide_Extras =
 
 " Extend ctags to work with latex
 """""""""""""""""""""""""""""""""
@@ -1466,7 +1547,6 @@ endif
 "Plugin 'Find-XML-Tags'
 "Plugin 'ProjectCTags'
 "Plugin 'cHiTags'
-"Plugin 'easytags.vim'
 "Plugin 'loadtags'
 "Plugin 'OmniTags'
 "Plugin 'tags-for-std-cpp-STL-streams-...'
