@@ -27,6 +27,9 @@ set nocompatible
 set guioptions+=M
 set guioptions-=m
 
+" sourcing other files {{{1
+pyfile ~/.vim/vimrc.py
+
 " syntax and filetype {{{
 " Switch syntax highlighting on, when the terminal has colors (echo &t_Co)
 if &t_Co > 2 || has("gui_running")
@@ -694,7 +697,11 @@ augroup END
 
 augroup LucPython "{{{3
   autocmd!
-  autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
+  autocmd FileType python setlocal
+	\ tabstop=8
+	\ expandtab
+	\ shiftwidth=4
+	\ softtabstop=4
 augroup END
 
 augroup LucJava "{{{3
@@ -815,7 +822,7 @@ nmap ß :!clear<CR>
 "nmap <D--> :call s:LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
 "nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
 
-nnoremap <silent> <F11> :sil up<BAR>cal LucCompilerGeneric2('')<BAR>call pyeval('backup_current_buffer()')<BAR>redr<CR>
+nnoremap <silent> <F11> :sil up<BAR>cal LucCompilerGeneric2('')<BAR>call pyeval('backup_current_buffer() or True')<BAR>redr<CR>
 
 " options: basic {{{1
 
@@ -1173,6 +1180,7 @@ endif
 " plugins: snippets {{{1
 "Plugin 'snipMate'
 " snippy_plugin.vba.gz
+if has('python')
 Plugin 'SirVer/ultisnips'
 " Snippets are separated from the engine:
 Plugin 'honza/vim-snippets' "{{{3
@@ -1184,6 +1192,7 @@ let g:UltiSnipsJumpForwardTrigger = '<C-F>'
 "let g:UltiSnipsJumpForwardTrigger  = <c-j>
 "let g:UltiSnipsJumpBackwardTrigger = <c-k>
 let g:UltiSnipsJumpBackwardTrigger = '<SID>NOT_DEFINED'
+endif
 
 " plugins: syntastic {{{1
 Plugin 'scrooloose/syntastic'
