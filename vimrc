@@ -545,6 +545,21 @@ if !has_key(luc, 'misc')
   let luc.misc = {}
 endif
 
+function! LucMiscTime(cmd1, cmd2, count) " {{{2
+  let time1 = localtime()
+  for i in range(a:count)
+    silent execute a:cmd1
+  endfor
+  let time2 = localtime()
+  for i in range(a:count)
+    silent execute a:cmd2
+  endfor
+  let time3 = localtime()
+  echo 'Running' a:count 'repetitions of ...'
+  echo a:cmd1 ' -> ' time2-time1 'sec'
+  echo a:cmd2 ' -> ' time3-time2 'sec'
+endfunction
+
 function! LucMiscCapitalize(text) " {{{2
   return substitute(a:text, '\v<(\w)(\w*)>', '\u\1\L\2', 'g')
 endfunction
@@ -565,6 +580,18 @@ function! LucMiscCapitalizeOperatorFunction(type) "{{{2
   normal gvp
   let &selection = sel_save
   let @@ = saved_register
+endfunction
+
+function! LucMiscGotoDefinition(string) "{{{2
+  try
+    execute 'cscope find g' string
+  catch
+    try
+      execute 'tags' string
+    catch
+      normal gd
+    endtry
+  endtry
 endfunction
 
 function! LucMiscSearchStringForURI(string) "{{{2
