@@ -1045,12 +1045,11 @@ let s:plugins = {
 		\ 'vimshell': 0,
 		\ }
 
-" Managing plugins with Vundle (https://github.com/gmarik/vundle)
+" Managing plugins with Vundle (https://github.com/gmarik/Vundle.vim)
 filetype off
-set runtimepath+=~/.vim/bundle/vundle
-call vundle#rc()
-Plugin 'gmarik/vundle'
-"Plugin 'lucc/vundle'
+set runtimepath+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'gmarik/Vundle.vim'
 
 " plugins: buffer and file management {{{1
 Plugin 'kien/ctrlp.vim'
@@ -1743,20 +1742,9 @@ Plugin 'AndrewRadev/linediff.vim'
 
 " last steps {{{1
 
-" switch on filezype detection after defining all Bundles
+call vundle#end()
+" switch on filetype detection after defining all Bundles
 filetype plugin indent on
-
-" fix the runtimepath mess that vundle creates {{{2
-set runtimepath-=~/.vim
-set runtimepath-=~/.vim/after
-set runtimepath-=$VIM/vimfiles
-set runtimepath-=$VIM/runtime
-set runtimepath-=$VIM/vimfiles/after
-set runtimepath^=$VIM/runtime
-set runtimepath^=$VIM/vimfiles
-set runtimepath^=~/.vim
-set runtimepath+=$VIM/vimfiles/after
-set runtimepath+=~/.vim/after
 
 " {{{2 Set colors for the terminal.  If the GUI is running the colorscheme
 "      will be set in gvimrc.
