@@ -28,7 +28,8 @@ set guioptions+=M
 set guioptions-=m
 
 " sourcing other files {{{1
-pyfile ~/.vim/vimrc.py
+if has('python') | pyfile ~/.vim/vimrc.py
+endif
 
 " syntax and filetype {{{
 " Switch syntax highlighting on, when the terminal has colors (echo &t_Co)
@@ -455,20 +456,21 @@ endfunction
 
 " functions: server {{{1
 function! LucServerSetup() "{{{2
-  if has('gui_running')
-    " try to be the server
-    call LucServerViminfoSetup(!LucServerRunning())
-  else
-    " don't try to be the server
-    call LucServerViminfoSetup(0)
-  "if serverlist == ""
-    " there is no server running
-  endif
+  call LucServerViminfoSetup(!LucServerRunning())
+  "if has('neovim')
+  "  call LucServerViminfoSetup()
+  "elseif has('gui_running')
+  "  " try to be the server
+  "  call LucServerViminfoSetup(!LucServerRunning())
+  "else
+  "  " don't try to be the server
+  "  call LucServerViminfoSetup(0)
+  "endif
 endfunction
 
 function! LucServerRunning() "{{{2
   " check if another vim server is already running
-  return serverlist() != ""
+  return !empty(has('clientserver') ? serverlist() : system('vim --serverlist'))
 endfunction
 
 function! LucServerViminfoSetup(server) "{{{2
@@ -1339,7 +1341,7 @@ Plugin 'aliva/vim-fish'
 
 " to be tested (shell in gvim) {{{2
 Plugin 'https://bitbucket.org/fboender/bexec.git'
-Plugin 'pydave/AsyncCommand'
+if has('clientserver') | Plugin 'pydave/AsyncCommand' | endif
 
 " plugins: tags {{{1
 "Plugin 'ttags'
@@ -1654,8 +1656,10 @@ let g:solarized_menu = 0
 ""Plugin 'oceandeep'
 
 " plugins: unsorted {{{1
+if has('python')
 Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 set noshowmode
+endif
 
 Plugin 'tyru/open-browser.vim'
 
