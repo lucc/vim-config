@@ -741,7 +741,7 @@ augroup END
 
 augroup LucMail "{{{3
   autocmd!
-  autocmd FileType mail setlocal textwidth=72
+  autocmd FileType mail setlocal textwidth=72 spell
 augroup END
 
 augroup LucMan "{{{3
