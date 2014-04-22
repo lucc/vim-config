@@ -32,7 +32,10 @@ def find_base_dir_vim_wrapper(cur=None):
         cur = vim.current.buffer.name
     return find_base_dir(cur)
 
-def find_base_dir(filename):
+
+def find_base_dir(filename,
+        indicator_files=('makefile', 'build.xml'),
+        indicator_dirs=('~/uni', '~/.vim')):
     '''
     Find a good "base" directory under some file.  Look for makefiles and vsc
     repositories and the like.
@@ -40,14 +43,6 @@ def find_base_dir(filename):
     filename: the filename to be used as a starting point
     returns:  the absolute path to the best base directory
     '''
-    indicator_files = [
-                       'makefile',
-                       'build.xml',
-                       ]
-    indicator_dirs = [
-                      '~/uni',
-                      '~/.vim',
-		      ]
     indicator_dirs = [os.path.expanduser(x) for x in indicator_dirs]
     matches = []
     # look at directory of the current buffer and the working directory
