@@ -9,6 +9,7 @@ import subprocess
 import time
 import threading
 
+
 def backup_current_buffer():
     """Save a backup of the current vim buffer via scp."""
 
@@ -16,17 +17,15 @@ def backup_current_buffer():
     filename = vim.current.buffer.name
     mytime = time.strftime('%Y-%m-%d-%H-%M')
 
-    def helper_function(server, path):
+    def helper_function(server, filename, path):
         subprocess.call(['ssh', server, 'mkdir', '-p', path])
         subprocess.call(['scp', filename, server+':'+path])
 
     for server in servers.keys():
         path = os.path.join(servers[server], mytime)
-        # TODO
-        #x = threading.Thread(target=helper_function, args=(server, path))
-        #x.start()
-        subprocess.call('(ssh ' + server + ' mkdir -p ' + path + ' && scp ' +
-                filename + ' ' + server + ':' + path + ') &', shell=True)
+        threading.Thread(target=helper_function,
+                args=(server, filename, path)).start()
+
 
 def find_base_dir_vim_wrapper(cur=None):
     if cur is None:
@@ -90,6 +89,7 @@ def tex_count_vim_wrapper(filename=None):
     if filename is None:
         filename = vim.current.buffer.name
     tex_count(filename)
+
 
 def tex_count(filename):
     """Count the words and characters in a tex and its pdf file.  Prints a
