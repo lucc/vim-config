@@ -28,10 +28,11 @@ set guioptions+=M
 set guioptions-=m
 
 " sourcing other files {{{1
-if has('python') | pyfile ~/.vim/vimrc.py
+if has('python')
+  pyfile ~/.vim/vimrc.py
 endif
 
-" syntax and filetype {{{
+" syntax and filetype {{{1
 " Switch syntax highlighting on, when the terminal has colors (echo &t_Co)
 if &t_Co > 2 || has("gui_running")
   syntax enable
@@ -41,16 +42,9 @@ filetype plugin indent on
 
 " user defined variables {{{1
 let mapleader = ','
-" a directory/namespace for user defined functions
-let luc = {}
-" a dir of servers and directories to put backups with the function defined
-" below.
-let s:servers = {'math': 'vim-buffer-bk', 'ifi': 'vim-buffer-bk'}
 
 " functions: compiler {{{1
-if !has_key(luc, 'compiler')
-  let luc.compiler = {}
-endif
+let compiler = {}
 
 function! LucCompilerGeneric(target, override) "{{{2
   " Try to build stuff depending on some parameters.  What will be built is
@@ -61,27 +55,18 @@ function! LucCompilerGeneric(target, override) "{{{2
   " latexmk will be executed and no makefile will be searched.
 
   " local variables
-  let bdir = expand('%:h')
-  let bfile = expand('%:t')
-  let Fun = function('function')
   let functionname = ''
   let path = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
   let dir = ''
-  let error = 0
-
-  " old local variables
-  let cmd   = ''
 
   " try to find a makefile and set dir and cmd
   while ! empty(path)
     let dir = '/' . join(path, '/')
     if filereadable(dir . '/makefile') || filereadable(dir . '/Makefile')
-      "let Fun = g:luc.compiler.make
       let functionname = 'make'
       let argument = a:target
       let path = []
     elseif filereadable(dir . '/build.xml')
-      "let Fun = g:luc.compiler.ant
       let functionname = 'ant'
       let argument = a:target
       let path = []
@@ -91,27 +76,25 @@ function! LucCompilerGeneric(target, override) "{{{2
   endwhile
 
   " if no makefile was found or override was asked for try to use latex
-  "if a:override || Fun == function('function') " && &filetype == 'tex' && a:target == ''
   if a:override || functionname == ''
-    if has_key(g:luc.compiler, &filetype)
+    if has_key(g:compiler, &filetype)
       let functionname = &filetype
-      "execute 'let Fun = g:luc.compiler.' . &filetype
-      let argument = bfile
-      let dir = bdir
+      let argument = expand('%:t')
+      let dir = expand('%:h')
     else
       echoerr 'Not able to compile anything.'
       let error = 1
     endif
   endif
 
-  " execute the command in the proper directory
-  "if Fun == function('function')
+  " if no filetype function or makefile was found return with an error
   if functionname == ''
     echoerr 'Not able to compile anything. (2)'
     let error = 1
+  " else execute the command in the proper directory
   else
     execute 'cd' dir
-    execute 'let cmd = g:luc.compiler.' . functionname . '(argument)'
+    execute 'let cmd = g:compiler.' . functionname . '(argument)'
     let dir = fnamemodify(getcwd(), ':~:.')
     let dir = dir == '' ? '~' : dir
     echo 'Running' cmd 'in' dir
@@ -123,28 +106,20 @@ function! LucCompilerGeneric(target, override) "{{{2
     let error = ! v:shell_error
   endif
 
-  "if &filetype == 'tex'
-  "  silent ! ( sleep 3 && killall -HUP mupdf ) &
-  "endif
-
-  " redraw the screen to get rid of unneded "press enter" prompts
-  redraw
-
-  " return shell errors
+  redraw " to get rid of unneded 'press enter' prompts
   return error
 endfunction
 
 function! LucCompilerGeneric2(target) "{{{2
   " Try to build the current file automatically.  If a:target is not specified
-  " and there is a compiler function available in g:luc.compiler it will be
-  " used to find out how to compile the current file.  If a:target is
-  " specified or there is no compiler function a makefile will be searched.
+  " and there is a compiler function available in g:compiler it will be used
+  " to find out how to compile the current file.  If a:target is specified or
+  " there is no compiler function a makefile will be searched.
 
   " local variables
   let functionname = ''
   let path = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
   let dir = ''
-  "let error = 0
 
   " type check
   if type(a:target) != type('string')
@@ -152,8 +127,8 @@ function! LucCompilerGeneric2(target) "{{{2
     return TypeError
   endif
 
-  " look at g:luc.compiler to find a function for &filetype
-  if has_key(g:luc.compiler, &filetype)
+  " look at g:compiler to find a function for &filetype
+  if has_key(g:compiler, &filetype)
     let functionname = &filetype
     let argument = expand('%:t') " file of this buffer
     let dir = expand('%:h') " directory of this buffer
@@ -189,7 +164,7 @@ function! LucCompilerGeneric2(target) "{{{2
   " else execute the command in the proper directory
   else
     execute 'cd' dir
-    execute 'let cmd = g:luc.compiler.' . functionname . '(argument)'
+    execute 'let cmd = g:compiler.' . functionname . '(argument)'
     let dir = fnamemodify(getcwd(), ':~:.')
     let dir = dir == '' ? '~' : dir
     echo 'Running' cmd 'in' dir
@@ -201,35 +176,28 @@ function! LucCompilerGeneric2(target) "{{{2
     let error = ! v:shell_error
   endif
 
-  " redraw the screen to get rid of unneded "press enter" prompts
-  redraw
-
-  " return shell errors
+  redraw " to get rid of unneded 'press enter' prompts
   return error
 endfunction
 
-function! luc.compiler.ant(target) dict "{{{2
+function! compiler.ant(target) dict "{{{2
   return 'ant' . (a:target == '' ? '' : ' ' . a:target)
 endfunction
 
-function! luc.compiler.make(target) dict "{{{2
+function! compiler.make(target) dict "{{{2
   return 'make' . (a:target == '' ? '' : ' ' . a:target)
 endfunction
 
-function! luc.compiler.markdown(sourcefile) dict "{{{2
+function! compiler.markdown(sourcefile) dict "{{{2
   let target = fnamemodify(a:sourcefile, ':r').'.html'
   return 'multimarkdown --full --smart --output='.target.' '.a:sourcefile
 endfunction
 
-function! luc.compiler.tex(sourcefile) dict "{{{2
+function! compiler.tex(sourcefile) dict "{{{2
   return 'latexmk -silent ' . a:sourcefile
 endfunction
 
 " functions: help and documentation {{{1
-if !has_key(luc, 'man')
-  let luc.man = {}
-endif
-
 function! LucManOpen(...) "{{{2
   " try to find a manpage
   if &filetype == 'man' && a:0 == 0
@@ -289,10 +257,6 @@ function! LucManHelptags() "{{{2
 endfunction
 
 " functions: color scheme {{{1
-if !has_key(luc, 'color')
-  let luc.color = {}
-endif
-
 function! LucColorFind() "{{{2
   "return LucFlattenList(filter(map(split(&rtp, ','),
   "      \ 'glob(v:val .  "/**/colors/*.vim", 0, 1)'), 'v:val != []'))
@@ -345,33 +309,8 @@ function! LucFlattenList(list) "{{{2
   return val
 endfunction
 
-"function! luc.color.remove() "{{{2
-"  " what does this do?
-"  if !exists('g:colors_name')
-"    echoerr 'The variable g:colors_name is not set!'
-"    return
-"  else
-"    let file = globpath(&rtp, 'colors/' . g:colors_name . '.vim')
-"    if file == ''
-"      echoerr 'Can not find colorscheme ' . g:colors_name . '!'
-"      return
-"    elseif !exists('g:remove_files')
-"      let g:remove_files = [file]
-"    elseif type(g:remove_files) != type([])
-"      echoerr 'g:remove_files is not a list!'
-"      return
-"    else
-"      call add(g:remove_files, file)
-"      return file
-"    endif
-"  endif
-"endfunction
 
 " functions: latex {{{1
-if !has_key(luc, 'tex')
-  let luc.tex = {}
-endif
-
 function! LucTexFormatBib() "{{{2
   " format bibentries in the current file
 
@@ -541,10 +480,6 @@ function! LucMiscRemoteEditor(mail) "{{{2
 endfunction
 
 " functions: misc {{{1
-if !has_key(luc, 'misc')
-  let luc.misc = {}
-endif
-
 function! LucMiscTime(cmd1, cmd2, count) " {{{2
   let time1 = localtime()
   for i in range(a:count)
@@ -661,15 +596,35 @@ function! LucGetVisualSelection() "{{{2
 endfunction
 
 " functions: old {{{1
-if !has_key(luc, 'old')
-  let luc.old = {}
-endif
+let old = {}
 
-function! luc.old.loadScpBuffers() "{{{2
+function! old.loadScpBuffers() "{{{2
   badd scp://math/.profile
   badd scp://ifi/.profile
   badd scp://ifi/.profile_local
   badd scp://lg/.bash_profile
+endfunction
+
+function! old.color_remove() "{{{2
+  " what does this do?
+  if !exists('g:colors_name')
+    echoerr 'The variable g:colors_name is not set!'
+    return
+  else
+    let file = globpath(&rtp, 'colors/' . g:colors_name . '.vim')
+    if file == ''
+      echoerr 'Can not find colorscheme ' . g:colors_name . '!'
+      return
+    elseif !exists('g:remove_files')
+      let g:remove_files = [file]
+    elseif type(g:remove_files) != type([])
+      echoerr 'g:remove_files is not a list!'
+      return
+    else
+      call add(g:remove_files, file)
+      return file
+    endif
+  endif
 endfunction
 
 " setup for server vim {{{1
