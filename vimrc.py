@@ -66,10 +66,12 @@ def find_base_dir(filename,
     # TODO not optimal yet
     return matches[0][0]
 
+
 def search_for_uri_vim_wrapper(pos=None):
     if pos is None:
         pos = vim.current.window.cursor
     return search_for_uri(pos)
+
 
 def search_for_uri(pos):
     """Search for an uri around pos in the current buffer
@@ -79,6 +81,7 @@ def search_for_uri(pos):
 
     """
     pass
+
 
 def tex_count_vim_wrapper(filename=None):
     if filename is None:
@@ -119,6 +122,156 @@ def tex_count(filename):
                 stdin=p1.stdout).split()
         # TODO filename in display is to long
         print pdf_words, 'words and', pdf_chars, 'chars in file', pdf
+
+
+def compile_generic(target):
+    filetype = vim.eval('&filetype')
+    if 'compile_' + filetype in dir():
+        compiler = eval('compile_' + filetype)
+    else:
+        raise KeyError
+    compiler(target, filetype, vim.current.buffer.name)
+    base = find_base_dir(vim.current.buffer.name)
+
+    pass
+
+
+#def compile_generic_2(target):
+#    # TODO
+#    '''Try to build the current file automatically.  If target is not
+#    specified and there is a compiler function available in g:luc.compiler it
+#    will be used to find out how to compile the current file.  If a:target is
+#    specified or there is no compiler function a makefile will be searched.'''
+#
+#    # local variables
+#    functionname = ''
+#    path = os.path.dirname(vim.current.buffer.name)
+#    #path = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
+#    dir = ''
+#    filetype = vim.eval('&filetype')
+#    #error = 0
+#
+#    # type check
+#    if type(target) != str:
+#        raise TypeError
+#
+#    # look at g:luc.compiler to find a function for &filetype
+#    if has_key(g:luc.compiler, &filetype)
+#    let functionname = &filetype
+#    let argument = expand('%:t') " file of this buffer
+#    let dir = expand('%:h') " directory of this buffer
+#    endif
+#
+#    # if a target was specified override the filetype compiler or if no filetype
+#    # compiler was found, use ant or make
+#    if a:target != '' || functionname == ''
+#    let functionname = ''
+#    let argument = ''
+#    let dir = ''
+#    # try to find a makefile and set dir and functionname
+#    while ! empty(path)
+#      let dir = '/' . join(path, '/')
+#      if filereadable(dir . '/makefile') || filereadable(dir . '/Makefile')
+#        let functionname = 'make'
+#        let argument = a:target
+#        let path = []
+#      elseif filereadable(dir . '/build.xml')
+#        let functionname = 'ant'
+#        let argument = a:target
+#        let path = []
+#      else
+#        unlet path[-1]
+#      endif
+#    endwhile
+#    endif
+#
+#    # if no filetype function or makefile was found return with an error
+#    if functionname == ''
+#    echoerr 'Not able to compile anything. (2)'
+#    let error = 1
+#    # else execute the command in the proper directory
+#    else
+#    execute 'cd' dir
+#    execute 'let cmd = g:luc.compiler.' . functionname . '(argument)'
+#    let dir = fnamemodify(getcwd(), ':~:.')
+#    let dir = dir == '' ? '~' : dir
+#    echo 'Running' cmd 'in' dir
+#    silent execute '!' cmd '&'
+#    cd -
+#    if v:shell_error
+#      echoerr 'Compilation returned ' . v:shell_error . '.'
+#    endif
+#    let error = ! v:shell_error
+#    endif
+#
+#    # redraw the screen to get rid of unneded "press enter" prompts
+#    redraw
+#
+#    # return shell errors
+#    return error
+#    pass
+
+
+def compile_java(target):
+    arguments = ['ant']
+    if type(target) is str and target != '':
+        arguments.append(target)
+    return arguments
+
+
+def compile_make(target):
+    arguments = ['make']
+    if type(target) is str and target != '':
+        arguments.append(target)
+    return arguments
+
+
+def compile_markdown(target):
+    return [
+        'multimarkdown',
+        '--full',
+        '--smart',
+        '--output='+os.path.splitext(target)[0]+'.html',
+        target
+        ]
+
+
+def compile_tex(target):
+    return ['latexmk', '-silent', target]
+
+class Compiler():
+    '''base class to compile files'''
+
+    indicator_files = ('makefile', 'build.xml')
+    indicator_dirs = ('~/uni', '~/.vim')
+    filetype = None
+    args = []
+
+    def __init__(self, filetype):
+        pass
+
+    def compile(self):
+        pass
+
+    def find_base_dir():
+        pass
+
+class CompilerMarkdown(Compiler):
+    def _create_args(taget):
+        return [
+            'multimarkdown',
+            '--full',
+            '--smart',
+            '--output='+os.path.splitext(target)[0]+'.html',
+            target
+            ]
+    pass
+class CompilerJava(Compiler):
+    pass
+class CompilerTex(Compiler):
+    pass
+class CompilerMake(Compiler):
+    pass
 
 
 ##############################################################################
