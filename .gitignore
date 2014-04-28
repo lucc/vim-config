@@ -20,3 +20,4 @@ vimshell
 
 startuptime
 .tb.vimrc.tags
+autoload/test.vim

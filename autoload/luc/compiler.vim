@@ -64,7 +64,7 @@ function! luc#compiler#generic(target, override)
   return error
 endfunction
 
-function! luc#compilr#generic2(target) "{{{2
+function! luc#compiler#generic2(target) "{{{2
   " Try to build the current file automatically.  If a:target is not specified
   " and there is a compiler function available in g:compiler it will be used
   " to find out how to compile the current file.  If a:target is specified or

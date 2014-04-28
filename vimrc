@@ -43,438 +43,12 @@ filetype plugin indent on
 " user defined variables {{{1
 let mapleader = ','
 
-" functions: help and documentation {{{1
-function! LucManOpen(...) "{{{2
-  " try to find a manpage
-  if &filetype == 'man' && a:0 == 0
-    execute 'RMan' expand('<cword>')
-  elseif a:0 > 0
-    execute 'TMan\ ' . join(a:000)
-    execute 'RMan\ ' . join(a:000)
-  else
-    echohl Error
-    echo 'Topic missing.'
-    echohl None
-    return
-  endif
-  map <buffer> K :call LucManOpen()<CR>
-  map <buffer> K :call LucManOpen()<CR>
-  vmap <buffer> K :call LucManOpen(LucGetVisualSelection())<CR>
-  vmap <buffer> K :call LucManOpen(LucGetVisualSelection())<CR>
-endfunction
-
-function! LucManOpenTab(type, string) "{{{2
-  " look up string in the documentation for type
-  if a:type =~ 'man\|m'
-    let suffix = 'man'
-  elseif a:type =~ 'info\|i'
-    let suffix = 'i'
-  elseif a:type =~ 'perldoc\|perl\|pl'
-    let suffix = 'pl'
-  elseif a:type =~ 'php'
-    let suffix = 'php'
-  elseif a:type =~ 'pydoc\|python\|py'
-    let suffix = 'py'
-  else
-    let suffix = 'man'
-  endif
-  execute 'TMan' a:string . '.' . suffix
-  " there seems to be a bug in :Man and :TMan
-  execute 'RMan' a:string . '.' . suffix
-  call foreground()
-  redraw
-endfunction
-
-function! LucManCompleteTopics(ArgLead, CmdLine, CursorPos) "{{{2
-  let paths = tr(system('man -w'), ":\n", "  ")
-  "let paths = "/usr/share/man/man9"
-  return system('find ' . paths .
-	\ ' -type f | sed "s#.*/##;s/\.gz$//;s/\.[0-9]\{1,\}//" | sort -u')
-endfunction
-
-function! LucManHelptags() "{{{2
-"function! LucUpdateAllHelptags()
-  for item in map(split(&runtimepath, ','), 'v:val . "/doc"')
-    if isdirectory(item)
-      "echo  'helptags' item
-      execute 'helptags' item
-    endif
-  endfor
-endfunction
-
-" functions: color scheme {{{1
-function! LucColorFind() "{{{2
-  "return LucFlattenList(filter(map(split(&rtp, ','),
-  "      \ 'glob(v:val .  "/**/colors/*.vim", 0, 1)'), 'v:val != []'))
-  return sort(map(split(globpath(&rtp, 'colors/*.vim'), '\n'),
-        \ 'split(v:val, "/")[-1][0:-5]'))
-endfunction
-
-function! LucColorSelectRandom() "{{{2
-  let colorschemes = s:LucFindAllColorschemes()
-  let this = colorschemes[LucRandom(0,len(colorschemes)-1)]
-  execute 'colorscheme' this
-  redraw
-  let g:colors_name = this
-  echo g:colors_name
-endfunction
-
-function! LucColorLike(val) "{{{2
-  let fname = glob('~/.vim/colorscheme-ratings')
-  let cfiles = map(readfile(fname), 'split(v:val)')
-  for item in cfiles
-    if item[0] == g:colors_name
-      let item[1] += a:val
-      break
-    endif
-  endfor
-  call writefile(map(cfiles, 'join(v:val)'), fname)
-  echo g:colors_name
-endfunction
-
-function! LucRandom(start, end) "{{{2
-  return (system('echo $RANDOM') % (a:end - a:start + 1)) + a:start
-  " code by Kazuo on vim@vim.org
-  python from random import randint
-  python from vim import command
-  execute 'python command("return %d" % randint('.a:start.','.a:end.'))'
-endfun
-
-function! LucFlattenList(list) "{{{2
-  " Code from bairui@#vim.freenode
-  " https://gist.github.com/3322468
-  let val = []
-  for elem in a:list
-    if type(elem) == type([])
-      call extend(val, LucFlattenList(elem))
-    else
-      call add(val, elem)
-    endif
-    unlet elem
-  endfor
-  return val
-endfunction
-
-
-" functions: latex {{{1
-function! LucTexFormatBib() "{{{2
-  " format bibentries in the current file
-
-  " define a local helper function
-  let d = {}
-  let dist = 18
-  function! d.f(type, key)
-    let dist = 18
-    let factor = dist - 2 - strlen(a:type)
-    return '@' . a:type . '{' . printf('%'.factor.'s', ' ') . a:key . ','
-  endfunction
-  function! d.g(key, value)
-    let dist = 18
-    let factor = dist - 4 - strlen(a:key)
-    return '  ' . a:key . printf('%'.factor.'s', ' ') . '= "' . a:value . '",'
-  endfunction
-
-  " format the line with "@type{key,"
-  %substitute/^@\([a-z]\+\)\s*{\s*\([a-z0-9.:-]\+\),\s*$/\=d.f(submatch(1), submatch(2))/
-  " format lines wit closing brackets
-  %substitute/^\s*}\s*$/}/
-  " format lines in the entries
-  %substitute/^\s*\([A-Za-z]\+\)\s*=\s*["{]\(.*\)["}],$/\=d.g(submatch(1), submatch(2))/
-endfunction
-
-function! LucTexDoc() "{{{2
-"function! LucTexDocFunction()
-  " call the texdoc programm with the word under the cursor or the selected
-  " text.
-  silent execute '!texdoc' expand("<cword>")
-endfunction
-
-function! LucTexSaveFolds() "{{{2
-"function! s:LucLatexSaveFolds()
-  let l:old = &viewoptions
-  set viewoptions=folds
-  mkview
-  let &viewoptions = l:old
-endfunction
-
-function! LucTexCount(file) range "{{{2
-"function! LucLatexCount(file) range
-  let noerr = ' 2>/dev/null'
-  if type(a:file) == type(0)
-    let tex = bufname(a:file)
-  elseif type(a:file) == type("")
-    if a:file == ""
-      let tex = expand("%")
-    else
-      let tex = a:file
-    endif
-  else
-    return No_File_Found
-  endif
-  let cmd = 'texcount -quiet -nocol -1 -utf8 -incbib '
-  let texchars = split(split(system(cmd . '-char ' . tex . noerr), "\n")[0], '+')[0]
-  let texwords = split(split(system(cmd . tex . noerr), "\n")[0], '+')[0]
-  let pdf = join(split(tex, '\.')[0:-2], '.').'.pdf'
-  if filereadable(pdf)
-    let cmd = 'pdftotext ' . pdf . ' /dev/stdout | wc -mw'
-    let [pdfwords, pdfchars] = split(system(cmd))
-  endif
-  echo texwords 'words and' texchars 'chars in file' tex
-  if exists('pdfwords')
-    echo pdfwords 'words and' pdfchars 'chars in file' pdf
-  endif
-  return
-  let tc = '!texcount -nosub '
-  let wc = '!pdftotext %:r.pdf /dev/stdout | wc -mw '
-  if a:char == 'char'
-    let tc .= '-char '
-    let wc .= '-m'
-  endif
-  if a:firstline == a:lastline
-    let tc .= '%'
-  else
-    let tc = a:firstline . ',' . a:lastline . 'write ' . tc . '-'
-  endif
-  execute tc
-  execute wc '2>/dev/null'
-endfunction
-
-" functions: server {{{1
-function! LucServerSetup() "{{{2
-  call LucServerViminfoSetup(!LucServerRunning())
-  "if has('neovim')
-  "  call LucServerViminfoSetup()
-  "elseif has('gui_running')
-  "  " try to be the server
-  "  call LucServerViminfoSetup(!LucServerRunning())
-  "else
-  "  " don't try to be the server
-  "  call LucServerViminfoSetup(0)
-  "endif
-endfunction
-
-function! LucServerRunning() "{{{2
-  " check if another vim server is already running
-  return !empty(has('clientserver') ? serverlist() : system('vim --serverlist'))
-endfunction
-
-function! LucServerViminfoSetup(server) "{{{2
-  if a:server
-    " options: viminfo
-    " default: '100,<50,s10,h
-    set viminfo='100,<50,s10,h,%,n~/.vim/viminfo
-    " the flag ' is for filenames for marks
-    set viminfo='100
-    " the flag < is the nummber of lines saved per register
-    set viminfo+=<50
-    " max size saved for registers in kb
-    set viminfo+=s10
-    " disable hlsearch
-    set viminfo+=h
-    " remember (whole) buffer list
-    set viminfo+=%
-    " name of the viminfo file
-    set viminfo+=n~/.vim/viminfo
-    " load a static viminfo file with a file list
-    rviminfo ~/.vim/default-buffer-list.viminfo
-  else
-    " if we are not running as the server do not use the viminfo file.  We
-    " probably only want to edit one file quickly from the command line.
-    set viminfo=
-  endif
-endfunction
-
-function! LucMiscRemoteEditor(mail) "{{{2
-  " a function to be called by a client who wishes to use a vim server as an
-  " non forking edior. One can also set the environment variable EDITOR with
-  " EDITOR='vim --remote-tab-wait-silent +call\ LucMiscRemoteEditor()'
-
-  if has('gui_macvim')
-    " use an autocommand to move MacVim to the background when leaving the
-    " buffer
-    augroup RemoteEditor
-      autocmd BufDelete <buffer> macaction hide:
-    augroup END
-  endif
-
-  " define some custom commands to quit the buffer
-  command -bang -buffer -bar QuitRemoteEditor confirm bdelete<bang>
-  if has('gui_macvim')
-    command -bang -buffer -bar HideRemoteEditor macaction hide:
-  endif
-
-  cnoreabbrev <buffer> q        bdelete
-  cnoreabbrev <buffer> qu       bdelete
-  cnoreabbrev <buffer> qui      bdelete
-  cnoreabbrev <buffer> quit     bdelete
-  cnoreabbrev <buffer> wq       write  <bar> bdelete
-  cnoreabbrev <buffer> x        update <bar> bdelete
-  cnoreabbrev <buffer> xi       update <bar> bdelete
-  cnoreabbrev <buffer> xit      update <bar> bdelete
-  cnoreabbrev <buffer> exi      update <bar> bdelete
-  cnoreabbrev <buffer> exit     update <bar> bdelete
-  nnoremap <buffer> ZZ         :update<bar>bdelete<CR>
-  nnoremap <buffer> ZQ         :bdelete!<CR>
-  nnoremap <buffer> <c-w><c-q> :bdelete<CR>
-  nnoremap <buffer> <c-w>q     :bdelete<CR>
-
-  if a:mail == 1
-    /^$
-    normal vGzo
-    redraw!
-  endif
-endfunction
-
-" functions: misc {{{1
-function! LucMiscTime(cmd1, cmd2, count) " {{{2
-  let time1 = localtime()
-  for i in range(a:count)
-    silent execute a:cmd1
-  endfor
-  let time2 = localtime()
-  for i in range(a:count)
-    silent execute a:cmd2
-  endfor
-  let time3 = localtime()
-  echo 'Running' a:count 'repetitions of ...'
-  echo a:cmd1 ' -> ' time2-time1 'sec'
-  echo a:cmd2 ' -> ' time3-time2 'sec'
-endfunction
-
-function! LucMiscCapitalize(text) " {{{2
-  return substitute(a:text, '\v<(\w)(\w*)>', '\u\1\L\2', 'g')
-endfunction
-
-function! LucMiscCapitalizeOperatorFunction(type) "{{{2
-  " this function is partly copied from the vim help about g@
-  let sel_save = &selection
-  let saved_register = @@
-  let &selection = "inclusive"
-  if a:type == 'line'
-    silent execute "normal! '[V']y"
-  elseif a:type == 'block'
-    silent execute "normal! `[\<C-V>`]y"
-  else
-    silent execute "normal! `[v`]y"
-  endif
-  let @@ = LucMiscCapitalize(@@)
-  normal gvp
-  let &selection = sel_save
-  let @@ = saved_register
-endfunction
-
-function! LucMiscGotoDefinition(string) "{{{2
-  try
-    execute 'cscope find g' string
-  catch
-    try
-      execute 'tags' string
-    catch
-      normal gd
-    endtry
-  endtry
-endfunction
-
-function! LucMiscSearchStringForURI(string) "{{{2
-  " function to find an URI in a string
-  " thanks to  http://vim.wikia.com/wiki/VimTip306
-  return matchstr(a:string, '[a-z]\+:\/\/[^ >,;:]\+')
-  " alternatives:
-  "return matchstr(a:string, '\(http://\|www\.\)[^ ,;\t]*')
-  "return matchstr(a:string, '[a-z]*:\/\/[^ >,;:]*')
-endfunction
-
-function! LucMiscInsertStatuslineColor(mode) "{{{2
-  " function to change the color of the statusline depending on the mode
-  " this version is from http://vim.wikia.com/wiki/VimTip1287
-  if     a:mode == 'i'
-    highlight StatusLine guibg=DarkGreen   ctermbg=DarkGreen
-  elseif a:mode == 'r'
-    highlight StatusLine guibg=DarkMagenta ctermbg=DarkMagenta
-  elseif a:mode == 'n'
-    highlight StatusLine guibg=DarkBlue    ctermbg=DarkBlue
-  else
-    highlight statusline guibg=DarkRed     ctermbg=DarkRed
-  endif
-endfunction
-
-function! LucMiscFindNextSpellError() "{{{2
-  " A function to jump to the next spelling error
-  setlocal spell
-  "if spellbadword(expand('<cword>')) == ['', '']
-    normal ]s
-  "endif
-endfunction
-
-function! LucMiscCheckIfBufferIsNew(...) "{{{2
-  " check if the buffer with number a:1 is new.  That is to say, if it as
-  " no name and is empty.  If a:1 is not supplied 1 is used.
-  " find the buffer nr to check
-  let number = a:0 ? a:1 : 1
-  " save current and alternative buffer
-  let current = bufnr('%')
-  let alternative = bufnr('#')
-  let value = 0
-  " check buffer name
-  if bufexists(number) && bufname(number) == ''
-    silent! execute 'buffer' number
-    let value = line('$') == 1 && getline(1) == ''
-    silent! execute 'buffer' alternative
-    silent! execute 'buffer' current
-  endif
-  return value
-endfunction
-
-" see:
-"http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
-"
-function! LucGetVisualSelection() "{{{2
-  let saved_register = @@
-  let current = getpos('.')
-  call setpos('.', getpos("'<"))
-  execute 'normal' visualmode()
-  call setpos('.', getpos("'>"))
-  normal y
-  let return_value = @@
-  let @@ = saved_register
-  call setpos('.', current)
-  return return_value
-endfunction
-
-" functions: old {{{1
-let old = {}
-
-function! old.loadScpBuffers() "{{{2
-  badd scp://math/.profile
-  badd scp://ifi/.profile
-  badd scp://ifi/.profile_local
-  badd scp://lg/.bash_profile
-endfunction
-
-function! old.color_remove() "{{{2
-  " what does this do?
-  if !exists('g:colors_name')
-    echoerr 'The variable g:colors_name is not set!'
-    return
-  else
-    let file = globpath(&rtp, 'colors/' . g:colors_name . '.vim')
-    if file == ''
-      echoerr 'Can not find colorscheme ' . g:colors_name . '!'
-      return
-    elseif !exists('g:remove_files')
-      let g:remove_files = [file]
-    elseif type(g:remove_files) != type([])
-      echoerr 'g:remove_files is not a list!'
-      return
-    else
-      call add(g:remove_files, file)
-      return file
-    endif
-  endif
-endfunction
+" functions {{{1
+" These are only the functions needed to start up vim.  The other functions
+" are in the autoload directory.
 
 " setup for server vim {{{1
-call LucServerSetup()
+call luc#server#setup()
 
 " user defined autocommands {{{1
 
@@ -489,10 +63,10 @@ augroup END
 augroup LucLatex "{{{3
   autocmd!
   autocmd FileType tex
-	\ nmap <buffer> K :call LucTexDoc()<CR>|
-	\ nnoremap <buffer> gG :call LucTexCount('')<CR>|
+	\ nmap <buffer> K :call luc#tex#doc()<CR>|
+	\ nnoremap <buffer> gG :call luc#tex#count('')<CR>|
 	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex|
-	\ vnoremap <buffer> gG :call LucTexCount('')<CR>|
+	\ vnoremap <buffer> gG :call luc#tex#count('')<CR>|
 	\
 augroup END
 
@@ -558,7 +132,7 @@ augroup END
 augroup LucSession "{{{2
   autocmd!
   autocmd VimEnter *
-	\ if LucMiscCheckIfBufferIsNew(1) |
+	\ if luc#check_if_buffer_is_new(1) |
 	\   bwipeout 1 |
 	\   doautocmd BufRead,BufNewFile |
 	\ endif
@@ -599,12 +173,12 @@ inoremap <C-U> <C-G>u<C-U>
 inoremap <C-W> <C-G>u<C-W>
 
 " easy spell checking
-inoremap <C-s> <C-o>:call LucMiscFindNextSpellError()<CR><C-x><C-s>
-nnoremap <C-s>      :call LucMiscFindNextSpellError()<CR>z=
+inoremap <C-s> <C-o>:call luc#find_next_spell_error()<CR><C-x><C-s>
+nnoremap <C-s>      :call luc#find_next_spell_error()<CR>z=
 
 " capitalize text
-vmap gc "=LucMiscCapitalize(LucGetVisualSelection())<CR>p
-nmap gc :set operatorfunc=LucMiscCapitalizeOperatorFunction<CR>g@
+vmap gc "=luc#capitalize(luc#get_visual_selection())<CR>p
+nmap gc :set operatorfunc=luc#capitalize_operator_function<CR>g@
 
 " bla
 if has('gui_macvim')
@@ -617,7 +191,7 @@ if has('gui_macvim')
 endif
 
 " open URLs {{{2
-nmap <Leader>w :call OpenBrowser(LucMiscSearchStringForURI(getline('.')))<CR>
+nmap <Leader>w :call OpenBrowser(lucmiscsearchstringforuri(getline('.')))<CR>
 
 " easy compilation {{{2
 nmap <silent> <F2>        :sil up <BAR> call luc#compiler#generic2('')<CR>
