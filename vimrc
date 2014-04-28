@@ -704,6 +704,11 @@ augroup LucMan "{{{3
   autocmd FileType man stopinsert | setlocal nospell
 augroup END
 
+augroup LucGitCommit "{{{3
+  autocmd!
+  autocmd FileType gitcommit setlocal spell
+augroup END
+
 augroup LucSession "{{{2
   autocmd!
   autocmd VimEnter *
