@@ -120,45 +120,12 @@ function! luc#search_string_for_uri(string) "{{{2
   "return matchstr(a:string, '[a-z]*:\/\/[^ >,;:]*')
 endfunction
 
-function! luc#insert_status_line_color(mode) "{{{2
-  " function to change the color of the statusline depending on the mode
-  " this version is from http://vim.wikia.com/wiki/VimTip1287
-  if     a:mode == 'i'
-    highlight StatusLine guibg=DarkGreen   ctermbg=DarkGreen
-  elseif a:mode == 'r'
-    highlight StatusLine guibg=DarkMagenta ctermbg=DarkMagenta
-  elseif a:mode == 'n'
-    highlight StatusLine guibg=DarkBlue    ctermbg=DarkBlue
-  else
-    highlight statusline guibg=DarkRed     ctermbg=DarkRed
-  endif
-endfunction
-
 function! luc#find_next_spell_error() "{{{2
   " A function to jump to the next spelling error
   setlocal spell
   "if spellbadword(expand('<cword>')) == ['', '']
     normal ]s
   "endif
-endfunction
-
-function! luc#check_if_buffer_is_new(...) "{{{2
-  " check if the buffer with number a:1 is new.  That is to say, if it as
-  " no name and is empty.  If a:1 is not supplied 1 is used.
-  " find the buffer nr to check
-  let number = a:0 ? a:1 : 1
-  " save current and alternative buffer
-  let current = bufnr('%')
-  let alternative = bufnr('#')
-  let value = 0
-  " check buffer name
-  if bufexists(number) && bufname(number) == ''
-    silent! execute 'buffer' number
-    let value = line('$') == 1 && getline(1) == ''
-    silent! execute 'buffer' alternative
-    silent! execute 'buffer' current
-  endif
-  return value
 endfunction
 
 " see:

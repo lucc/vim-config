@@ -44,11 +44,86 @@ filetype plugin indent on
 let mapleader = ','
 
 " functions {{{1
-" These are only the functions needed to start up vim.  The other functions
-" are in the autoload directory.
+
+function! s:check_if_buffer_is_new(...) "{{{2
+  " check if the buffer with number a:1 is new.  That is to say, if it as
+  " no name and is empty.  If a:1 is not supplied 1 is used.
+  " find the buffer nr to check
+  let number = a:0 ? a:1 : 1
+  " save current and alternative buffer
+  let current = bufnr('%')
+  let alternative = bufnr('#')
+  let value = 0
+  " check buffer name
+  if bufexists(number) && bufname(number) == ''
+    silent! execute 'buffer' number
+    let value = line('$') == 1 && getline(1) == ''
+    silent! execute 'buffer' alternative
+    silent! execute 'buffer' current
+  endif
+  return value
+endfunction
+
+function! s:insert_status_line_color(mode) "{{{2
+  " function to change the color of the statusline depending on the mode
+  " this version is from http://vim.wikia.com/wiki/VimTip1287
+  if     a:mode == 'i'
+    highlight StatusLine guibg=DarkGreen   ctermbg=DarkGreen
+  elseif a:mode == 'r'
+    highlight StatusLine guibg=DarkMagenta ctermbg=DarkMagenta
+  elseif a:mode == 'n'
+    highlight StatusLine guibg=DarkBlue    ctermbg=DarkBlue
+  else
+    highlight statusline guibg=DarkRed     ctermbg=DarkRed
+  endif
+endfunction
+
+function! s:server_setup() "{{{2
+  call s:viminfo_setup(!s:server_running())
+  "if has('neovim')
+  "  call LucServerViminfoSetup()
+  "elseif has('gui_running')
+  "  " try to be the server
+  "  call LucServerViminfoSetup(!LucServerRunning())
+  "else
+  "  " don't try to be the server
+  "  call LucServerViminfoSetup(0)
+  "endif
+endfunction
+
+function! s:server_running() "{{{2
+  " check if another vim server is already running
+  return !empty(has('clientserver') ? serverlist() : system('vim --serverlist'))
+endfunction
+
+function! s:viminfo_setup(server) "{{{2
+  if a:server
+    " options: viminfo
+    " default: '100,<50,s10,h
+    set viminfo='100,<50,s10,h,%,n~/.vim/viminfo
+    " the flag ' is for filenames for marks
+    set viminfo='100
+    " the flag < is the nummber of lines saved per register
+    set viminfo+=<50
+    " max size saved for registers in kb
+    set viminfo+=s10
+    " disable hlsearch
+    set viminfo+=h
+    " remember (whole) buffer list
+    set viminfo+=%
+    " name of the viminfo file
+    set viminfo+=n~/.vim/viminfo
+    " load a static viminfo file with a file list
+    rviminfo ~/.vim/default-buffer-list.viminfo
+  else
+    " if we are not running as the server do not use the viminfo file.  We
+    " probably only want to edit one file quickly from the command line.
+    set viminfo=
+  endif
+endfunction
 
 " setup for server vim {{{1
-call luc#server#setup()
+call s:server_setup()
 
 " user defined autocommands {{{1
 
@@ -132,7 +207,7 @@ augroup END
 augroup LucSession "{{{2
   autocmd!
   autocmd VimEnter *
-	\ if luc#check_if_buffer_is_new(1) |
+	\ if s:check_if_buffer_is_new(1) |
 	\   bwipeout 1 |
 	\   doautocmd BufRead,BufNewFile |
 	\ endif
@@ -370,8 +445,8 @@ set wildmenu
 " " change highlighting when mode changes
 " augroup LucStatusLine
 "   autocmd!
-"   autocmd InsertEnter * call LucMiscInsertStatuslineColor(v:insertmode)
-"   autocmd InsertLeave * call LucMiscInsertStatuslineColor('n')
+"   autocmd InsertEnter * call s:insert_status_line_color(v:insertmode)
+"   autocmd InsertLeave * call s:insert_status_line_color('n')
 " augroup END
 " " now we set the colors for the statusline
 " " in the most simple case
