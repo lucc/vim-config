@@ -182,6 +182,7 @@ augroup LucSession "{{{2
 	\ if s:check_if_buffer_is_new(1) |
 	\   bwipeout 1 |
 	\   doautocmd BufRead,BufNewFile |
+	\   redraw! |
 	\ endif
 augroup END
 
@@ -256,6 +257,9 @@ nmap <SwipeUp>   gg
 imap <SwipeUp>   gg
 nmap <SwipeDown> G
 imap <SwipeDown> G
+
+nnoremap ' `
+nnoremap ` '
 
 " misc {{{2
 
@@ -461,6 +465,18 @@ set wildignore+=*.tar,*.tgz,*.tbz2,*.tar.gz,*.tar.bz2
 set wildignore+=*.pyc                          " Python byte code
 "set wildignore+=*.orig                        " Merge resolution files
 
+" setting variables for special settings
+"let g:vimsyn_folding  = 'a' " augroups
+"let g:vimsyn_folding .= 'f' " fold functions
+"let g:vimsyn_folding .= 'm' " fold mzscheme script
+"let g:vimsyn_folding .= 'p' " fold perl     script
+"let g:vimsyn_folding .= 'P' " fold python   script
+"let g:vimsyn_folding .= 'r' " fold ruby     script
+"let g:vimsyn_folding .= 't' " fold tcl      script
+
+
+
+
 " plugins: management with vundle {{{1
 " I manage plugins with vundle.  In order to easyly test plugins I keep a
 " dictionary to store a flag depending on which the plugin should be loaded or
@@ -549,7 +565,7 @@ if has('python') " -> Youcompleteme {{{2
   Plugin 'bjoernd/vim-ycm-tex', {'name': 'YouCompleteMe/python/ycm/completers/tex'}
   let g:ycm_semantic_triggers = {'tex': ['\ref{','\cite{']}
 
-else " -> neocomplete and neocomplcache {{{2
+else             " -> neocomplete and neocomplcache {{{2
   " settings which are uniform for both neocomplete and neocomplcache
   Plugin 'Shougo/vimproc'
   Plugin 'Shougo/context_filetype.vim'
@@ -586,7 +602,7 @@ else " -> neocomplete and neocomplcache {{{2
     " In default, completes from all buffers.
     let g:neocomplete#same_filetypes._ = '_'
 
-  else " -> neocomplcache {{{3
+  else          " -> neocomplcache {{{3
     Plugin 'Shougo/neocomplcache.vim'
     let g:neocomplcache_enable_at_startup = 1 " necessary
     let g:neocomplcache_enable_refresh_always = 1 " heavy
@@ -834,9 +850,12 @@ Plugin 'aliva/vim-fish'
 
 " plugins: shell in Vim {{{1
 
+Plugin 'ervandew/screen'
+let g:ScreenImpl = 'Tmux'
+let g:ScreenShellTerminal = 'iTerm.app'
+
 " notes {{{2
 "Plugin 'Conque-Shell'
-"Plugin 'ervandew/screen'
 "Plugin 'vimsh.tar.gz'
 "Plugin 'xolox/vim-shell'
 "Plugin 'vimux'
