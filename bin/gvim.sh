@@ -36,7 +36,6 @@ tab () {
   vim --remote-tab-wait-silent "$@"
 }
 
-
 # generic function to open documentation {{{2
 doc () {
   if [ $# -eq 0 ]; then
@@ -67,7 +66,7 @@ else
       --editor)
 	# be an editor, to be used with $EDITOR
 	CMD=tab
-	new_args=("${new_args[@]}" '+call LucMiscRemoteEditor(0)')
+	new_args=("${new_args[@]}" '+call luc#remote_editor(0)')
 	;;
       --info)
 	# emulate info(1)
@@ -76,7 +75,7 @@ else
       --mail)
 	# like --editor for emails
 	CMD=tab
-	new_args=("${new_args[@]}" '+call LucMiscRemoteEditor(1)')
+	new_args=("${new_args[@]}" '+call luc#remote_editor(1)')
 	;;
       --man)
 	# emulate man(1)
