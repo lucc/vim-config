@@ -1,11 +1,3 @@
-function! luc#random(start, end) "{{{2
-  return (system('echo $RANDOM') % (a:end - a:start + 1)) + a:start
-  " code by Kazuo on vim@vim.org
-  python from random import randint
-  python from vim import command
-  execute 'python command("return %d" % randint('.a:start.','.a:end.'))'
-endfun
-
 function! luc#flatten_list(list) "{{{2
   " Code from bairui@#vim.freenode
   " https://gist.github.com/3322468
@@ -93,7 +85,7 @@ function! luc#capitalize_operator_function(type) "{{{2
   else
     silent execute "normal! `[v`]y"
   endif
-  let @@ = LucMiscCapitalize(@@)
+  let @@ = luc#capitalize(@@)
   normal gvp
   let &selection = sel_save
   let @@ = saved_register
@@ -109,15 +101,6 @@ function! luc#goto_definition(string) "{{{2
       normal gd
     endtry
   endtry
-endfunction
-
-function! luc#search_string_for_uri(string) "{{{2
-  " function to find an URI in a string
-  " thanks to  http://vim.wikia.com/wiki/VimTip306
-  return matchstr(a:string, '[a-z]\+:\/\/[^ >,;:]\+')
-  " alternatives:
-  "return matchstr(a:string, '\(http://\|www\.\)[^ ,;\t]*')
-  "return matchstr(a:string, '[a-z]*:\/\/[^ >,;:]*')
 endfunction
 
 function! luc#find_next_spell_error() "{{{2
@@ -143,34 +126,33 @@ function! luc#get_visual_selection() "{{{2
   return return_value
 endfunction
 
-" functions: old {{{1
-let old = {}
+function! luc#format_bib() "{{{2
+  " format bibentries in the current file
 
-function! old.loadScpBuffers() "{{{2
-  badd scp://math/.profile
-  badd scp://ifi/.profile
-  badd scp://ifi/.profile_local
-  badd scp://lg/.bash_profile
+  " define a local helper function
+  let d = {}
+  let dist = 18
+  function! d.f(type, key)
+    let dist = 18
+    let factor = dist - 2 - strlen(a:type)
+    return '@' . a:type . '{' . printf('%'.factor.'s', ' ') . a:key . ','
+  endfunction
+  function! d.g(key, value)
+    let dist = 18
+    let factor = dist - 4 - strlen(a:key)
+    return '  ' . a:key . printf('%'.factor.'s', ' ') . '= "' . a:value . '",'
+  endfunction
+
+  " format the line with "@type{key,"
+  %substitute/^@\([a-z]\+\)\s*{\s*\([a-z0-9.:-]\+\),\s*$/\=d.f(submatch(1), submatch(2))/
+  " format lines wit closing brackets
+  %substitute/^\s*}\s*$/}/
+  " format lines in the entries
+  %substitute/^\s*\([A-Za-z]\+\)\s*=\s*["{]\(.*\)["}],$/\=d.g(submatch(1), submatch(2))/
 endfunction
 
-function! old.color_remove() "{{{2
-  " what does this do?
-  if !exists('g:colors_name')
-    echoerr 'The variable g:colors_name is not set!'
-    return
-  else
-    let file = globpath(&rtp, 'colors/' . g:colors_name . '.vim')
-    if file == ''
-      echoerr 'Can not find colorscheme ' . g:colors_name . '!'
-      return
-    elseif !exists('g:remove_files')
-      let g:remove_files = [file]
-    elseif type(g:remove_files) != type([])
-      echoerr 'g:remove_files is not a list!'
-      return
-    else
-      call add(g:remove_files, file)
-      return file
-    endif
-  endif
+function! luc#tex_doc() "{{{2
+  " call the texdoc programm with the word under the cursor or the selected
+  " text.
+  silent execute '!texdoc' expand("<cword>")
 endfunction

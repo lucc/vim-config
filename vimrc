@@ -138,10 +138,10 @@ augroup END
 augroup LucLatex "{{{3
   autocmd!
   autocmd FileType tex
-	\ nmap <buffer> K :call luc#tex#doc()<CR>|
-	\ nnoremap <buffer> gG :call luc#tex#count('')<CR>|
+	\ nmap <buffer> K :call luc#tex_doc()<CR>|
+	\ nnoremap <buffer> gG :py tex_count_vim_wrapper()<CR>|
 	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex|
-	\ vnoremap <buffer> gG :call luc#tex#count('')<CR>|
+	\ vnoremap <buffer> gG :py tex_count_vim_wrapper()<CR>|
 	\ setlocal grepprg=grep\ -nH\ $*| " needed for latex suite
 	\
 augroup END
@@ -239,7 +239,7 @@ if has('gui_macvim')
 endif
 
 " open URLs {{{2
-nmap <Leader>w :call OpenBrowser(lucmiscsearchstringforuri(getline('.')))<CR>
+nmap <Leader>w :call OpenBrowser(pyeval('search_uri_vim()'))<CR>
 
 " easy compilation {{{2
 nmap <silent> <F2>        :sil up <BAR> call luc#compiler#generic2('')<CR>

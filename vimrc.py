@@ -8,6 +8,7 @@ import vim
 import subprocess
 import time
 import threading
+import bisect
 
 
 def backup_current_buffer():
@@ -81,6 +82,47 @@ def search_for_uri(pos):
 
     """
     pass
+
+
+def search_uri_vim():
+    'Search for uri in the current line in vim.'
+    return search_string_for_uri(vim.current.line)
+
+
+def search_string_for_uri(string):
+    '''Search string for an URI.  Return the URI if found, else return NONE'''
+    # thanks to  http://vim.wikia.com/wiki/VimTip306
+    match = re.search(r'[a-z]+://[^ >,;:]+', string)
+    # alternatives:
+    # r'\(http://\|www\.\)[^ ,;\t]*'
+    # r'[a-z]*:\/\/[^ >,;:]*'
+    if match:
+        return match.group(0)
+    return ''
+
+
+def string_map_generator(generator):
+    '''A generator to yield a string for every item in another generator.
+    This is just a helper to check efficiently.'''
+    for item in generator:
+        yield str(item)
+
+
+def man_page_topics_for_completion(arg_lead, cmd_line, cursor_position):
+    paths = subprocess.check_output(['man', '-w']).decode().strip().split(':')
+    all = []
+    for path in paths:
+        for dirpath, dirnames, filenames in os.walk(path):
+            for filename in filenames:
+                #remove some suffixes
+                norm = filename.split('.')
+                if norm[-1] == 'gz':
+                    norm = norm[:-1]
+                if norm[-1] in '0123456789' or norm[-1] in ['3pm']:
+                    norm = norm[:-1]
+                bisect.insort_right(all, '.'.join(norm))
+    # TODO: only return unique paths
+    return all
 
 
 def tex_count_vim_wrapper(filename=None):
@@ -329,3 +371,4 @@ url = r"""
 url_re = re.compile(url, re.VERBOSE | re.MULTILINE)
 
 
+# unused

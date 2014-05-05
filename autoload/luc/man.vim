@@ -40,10 +40,7 @@ function! luc#man#open_tab(type, string) "{{{2
 endfunction
 
 function! luc#man#complete_topics(ArgLead, CmdLine, CursorPos) "{{{2
-  let paths = tr(system('man -w'), ":\n", "  ")
-  "let paths = "/usr/share/man/man9"
-  return system('find ' . paths .
-	\ ' -type f | sed "s#.*/##;s/\.gz$//;s/\.[0-9]\{1,\}//" | sort -u')
+  return pyeval('man_page_topics_for_completion('.a:ArgLead.','.a:CmdLine.','.a:CursorPos.')')
 endfunction
 
 function! luc#man#help_tags() "{{{2
@@ -53,4 +50,3 @@ function! luc#man#help_tags() "{{{2
     endif
   endfor
 endfunction
-
