@@ -138,64 +138,64 @@ augroup END
 augroup LucLatex "{{{3
   autocmd!
   autocmd FileType tex
-	\ nmap <buffer> K :call luc#tex_doc()<CR>|
-	\ nnoremap <buffer> gG :py tex_count_vim_wrapper()<CR>|
-	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex|
-	\ vnoremap <buffer> gG :py tex_count_vim_wrapper()<CR>|
-	\ setlocal grepprg=grep\ -nH\ $*| " needed for latex suite
+	\ setlocal spell dictionary+=%:h/**/*.bib,%:h/**/*.tex |
+	\ setlocal grepprg=grep\ -nH\ $* | " needed for latex suite
+	\ nnoremap <buffer> K  :call luc#tex_doc()<CR>             |
+	\ nnoremap <buffer> gG :python tex_count_vim_wrapper()<CR> |
+	\ vnoremap <buffer> gG :python tex_count_vim_wrapper()<CR> |
 	\
 augroup END
 
 augroup LucPython "{{{3
   autocmd!
-  autocmd FileType python setlocal
-	\ tabstop=8
-	\ expandtab
-	\ shiftwidth=4
-	\ softtabstop=4
+  autocmd FileType python
+	\ setlocal
+	\   tabstop=8
+	\   expandtab
+	\   shiftwidth=4
+	\   softtabstop=4
 augroup END
 
 augroup LucJava "{{{3
   autocmd!
-  "autocmd Filetype java setlocal omnifunc=javacomplete#Complete
-  autocmd Filetype java setlocal makeprg=cd\ %:h\ &&\ javac\ %:t
+  autocmd Filetype java
+	\ setlocal makeprg=cd\ %:h\ &&\ javac\ %:t
+        " setlocal omnifunc=javacomplete#Complete
 augroup END
 
 augroup LucMail "{{{3
   autocmd!
-  autocmd FileType mail setlocal textwidth=72 spell
+  autocmd FileType mail
+	\ setlocal textwidth=72 spell
 augroup END
 
 augroup LucMan "{{{3
   autocmd!
-  autocmd FileType man stopinsert | setlocal nospell
+  autocmd FileType man
+	\ stopinsert |
+	\ setlocal nospell
 augroup END
 
 augroup LucGitCommit "{{{3
   autocmd!
-  autocmd FileType gitcommit setlocal spell
+  autocmd FileType gitcommit
+	\ setlocal spell
 augroup END
 
 augroup LucSession "{{{2
   autocmd!
   autocmd VimEnter *
 	\ if s:check_if_buffer_is_new(1) |
-	\   bwipeout 1 |
+	\   bwipeout 1                   |
 	\   doautocmd BufRead,BufNewFile |
-	\   redraw! |
+	\   redraw!                      |
 	\ endif
 augroup END
 
-"augroup LucLocalWindowCD "{{{2
-"  autocmd!
-"  " FIXME: still buggy
-"  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
-"	\ execute 'lcd' pyeval('backup_base_dir_vim_reapper()')
-"augroup END
-
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd!
-  autocmd BufWrite * silent %substitute/\s\+$//e
+  autocmd BufWrite *
+	\ silent %substitute/\s\+$//e
 augroup END
 
 "augroup LucLocalAutoCd "{{{2
@@ -203,6 +203,13 @@ augroup END
 "  autocmd BufEnter ~/uni/**     lcd ~/uni
 "  autocmd BufEnter ~/.config/** lcd ~/.config
 "  autocmd BufEnter ~/src/**     lcd ~/src
+"augroup END
+
+"augroup LucLocalWindowCD "{{{2
+"  autocmd!
+"  " FIXME: still buggy
+"  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
+"	\ execute 'lcd' pyeval('backup_base_dir_vim_reapper()')
 "augroup END
 
 " user defined commands and mappings {{{1
