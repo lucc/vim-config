@@ -708,21 +708,27 @@ else             " -> neocomplete and neocomplcache {{{2
 endif
 
 " plugins: snippets {{{1
-"Plugin 'snipMate'
-" snippy_plugin.vba.gz
+
 if has('python')
-Plugin 'SirVer/ultisnips'
-" Snippets are separated from the engine:
-Plugin 'honza/vim-snippets' "{{{3
-let g:UltiSnipsExpandTrigger = '<C-F>'
-let g:UltiSnipsJumpForwardTrigger = '<C-F>'
-"let g:UltiSnipsJumpBackwardTrigger = '<C-Tab>'
-"let g:UltiSnipsExpandTrigger       = <tab>
-"let g:UltiSnipsListSnippets        = <c-tab>
-"let g:UltiSnipsJumpForwardTrigger  = <c-j>
-"let g:UltiSnipsJumpBackwardTrigger = <c-k>
-let g:UltiSnipsJumpBackwardTrigger = '<SID>NOT_DEFINED'
+  Plugin 'SirVer/ultisnips'
+  let g:UltiSnipsExpandTrigger = '<C-F>'
+  let g:UltiSnipsJumpForwardTrigger = '<C-F>'
+  "let g:UltiSnipsJumpBackwardTrigger = '<C-Tab>'
+  "let g:UltiSnipsExpandTrigger       = <tab>
+  "let g:UltiSnipsListSnippets        = <c-tab>
+  "let g:UltiSnipsJumpForwardTrigger  = <c-j>
+  "let g:UltiSnipsJumpBackwardTrigger = <c-k>
+  let g:UltiSnipsJumpBackwardTrigger = '<SID>NOT_DEFINED'
+else
+  " snipmate and dependencies
+  Plugin 'MarcWeber/vim-addon-mw-utils'
+  Plugin 'tomtom/tlib_vim'
+  Plugin 'garbas/vim-snipmate'
 endif
+
+" Snippets are separated from the engine:
+Plugin 'honza/vim-snippets'
+Plugin 'rbonvall/snipmate-snippets-bib'
 
 " plugins: syntastic {{{1
 Plugin 'scrooloose/syntastic'
