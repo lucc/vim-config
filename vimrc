@@ -1,29 +1,12 @@
 " vimrc file by luc {{{1
 " vi: set foldmethod=marker spelllang=en:
-" Credits:
-" * Many thanks to Bram for the excellent example vimrc
-" *
 
 " start (things to do first) {{{1
 
-" Use Vim settings, rather then Vi settings (much better!).  This must be
-" first, because it changes other options as a side effect.
+" don't be vi compatible, this has to be first b/c it changes other options
 set nocompatible
 
-" see if some important features are present else do not load the file
-"if version < 700 ||
-"      \ (!(
-"      \   has('autocmd') &&
-"      \   has('gui')     &&
-"      \   has('mouse')   &&
-"      \   has('syntax')
-"      \ ) && !has('neovim'))
-"  echoerr "This version of Vim lacks many features, please update!"
-"  finish
-"endif
-
-" Do not load many of the GUI menus.  This has to happen before 'syntax on'
-" and 'filetype ...'
+" Don't load menus.  This has to happen before 'syntax on' and 'filetype ...'
 set guioptions+=M
 set guioptions-=m
 
@@ -33,11 +16,7 @@ if has('python')
 endif
 
 " syntax and filetype {{{1
-" Switch syntax highlighting on, when the terminal has colors (echo &t_Co)
-if &t_Co > 2 || has("gui_running")
-  syntax enable
-endif
-" Enable file type detection and language-dependent indenting.
+syntax enable
 filetype plugin indent on
 
 " user defined variables {{{1
@@ -45,10 +24,11 @@ let mapleader = ','
 
 " functions {{{1
 
+" Check if a buffer is new.  That is to say, if it as no name and is empty.
+"
+" a:1    -- the buffer number to check, 1 is used if absent
+" return -- 1 if the buffer is new, else 0
 function! s:check_if_buffer_is_new(...) "{{{2
-  " check if the buffer with number a:1 is new.  That is to say, if it as
-  " no name and is empty.  If a:1 is not supplied 1 is used.
-  " find the buffer nr to check
   let number = a:0 ? a:1 : 1
   " save current and alternative buffer
   let current = bufnr('%')
@@ -64,9 +44,11 @@ function! s:check_if_buffer_is_new(...) "{{{2
   return value
 endfunction
 
+" Change the color of the statusline depending on the current mode.  This
+" version is from http://vim.wikia.com/wiki/VimTip1287
+"
+" mode -- has to be like v:insertmode
 function! s:insert_status_line_color(mode) "{{{2
-  " function to change the color of the statusline depending on the mode
-  " this version is from http://vim.wikia.com/wiki/VimTip1287
   if     a:mode == 'i'
     highlight StatusLine guibg=DarkGreen   ctermbg=DarkGreen
   elseif a:mode == 'r'
@@ -80,19 +62,10 @@ endfunction
 
 function! s:server_setup() "{{{2
   call s:viminfo_setup(!s:server_running())
-  "if has('neovim')
-  "  call LucServerViminfoSetup()
-  "elseif has('gui_running')
-  "  " try to be the server
-  "  call LucServerViminfoSetup(!LucServerRunning())
-  "else
-  "  " don't try to be the server
-  "  call LucServerViminfoSetup(0)
-  "endif
 endfunction
 
+" Check if another vim server is already running.
 function! s:server_running() "{{{2
-  " check if another vim server is already running
   return !empty(has('clientserver') ? serverlist() : system('vim --serverlist'))
 endfunction
 
