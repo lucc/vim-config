@@ -569,8 +569,12 @@ if has('python') " -> Youcompleteme {{{2
   let g:ycm_seed_identifiers_with_syntax = 1
   let g:ycm_add_preview_to_completeopt = 1
   let g:ycm_autoclose_preview_window_after_completion = 0
+
   Plugin 'bjoernd/vim-ycm-tex', {'name': 'YouCompleteMe/python/ycm/completers/tex'}
   let g:ycm_semantic_triggers = {'tex': ['\ref{','\cite{']}
+
+  "Plugin 'c9s/vimomni.vim'
+  "Plugin 'tek/vim-ycm-vim'
 
 else             " -> neocomplete and neocomplcache {{{2
   " settings which are uniform for both neocomplete and neocomplcache
@@ -614,6 +618,7 @@ else             " -> neocomplete and neocomplcache {{{2
     let g:neocomplcache_enable_at_startup = 1 " necessary
     let g:neocomplcache_enable_refresh_always = 1 " heavy
     let g:neocomplcache_enable_fuzzy_completion = 1 " heavy
+    let g:neocomplcache_temporary_dir = expand('~/.cache/neocomplcache')
     " what is this?
     if !exists('g:neocomplcache_keyword_patterns')
       let g:neocomplcache_keyword_patterns = {}
@@ -622,14 +627,13 @@ else             " -> neocomplete and neocomplcache {{{2
     if !exists('g:neocompcache_same_filetypes')
       let g:neocomplcache_same_filetypes = {}
     endif
-    " In c buffers, completes from cpp and d buffers.
-    let g:neocomplcache_same_filetypes.c = 'cpp,d'
-    " In cpp buffers, completes from c buffers.
-    let g:neocomplcache_same_filetypes.cpp = 'c'
-    " In gitconfig buffers, completes from all buffers.
+    " mappings from which additional filetypes to fetch completions; '_' means
+    " 'all' or 'default'
+    let g:neocomplcache_same_filetypes.c         = 'cpp,d'
+    let g:neocomplcache_same_filetypes.cpp       = 'c'
     let g:neocomplcache_same_filetypes.gitconfig = '_'
-    " In default, completes from all buffers.
-    let g:neocomplcache_same_filetypes._ = '_'
+    let g:neocomplcache_same_filetypes._         = '_'
+
   "  " Define dictionary.
   "  let g:neocomplcache_dictionary_filetype_lists = {
   "      \ 'default' : '',
