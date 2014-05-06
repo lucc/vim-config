@@ -1,4 +1,4 @@
-snippet article "The default header for an article" i
+snippet article "The default header for an article" !b
 \documentclass[a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -64,20 +64,32 @@ $0
 \end{document}
 endsnippet
 
+snippet mini "a minimal document" b
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[${1:ngerman}]{babel}
+\author{Lucas Hoffmann}
+\title{$2}
+\begin{document}
+$0
+\end{document}
+endsnippet
+
 snippet rezept "Ein Rezept für mein Kochbuch" !b
 \begin{rezept}{${1:Name}}{${2:von wem?}}
 
-\index{$7}
+\index{$3}
 
-\begin{zutaten}[${3:reicht für ...}]
-  $4
+\begin{zutaten}[${4:reicht für ...}]
+  $5
 \end{zutaten}
 
 \zubereitung
 
 \begin{enumerate}
-  \item $5
   \item $6
+  \item $7
 \end{enumerate}
 
 \end{rezept}
