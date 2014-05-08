@@ -205,8 +205,9 @@ inoremap <C-s> <C-o>:call luc#find_next_spell_error()<CR><C-x><C-s>
 nnoremap <C-s>      :call luc#find_next_spell_error()<CR>z=
 
 " capitalize text
-vmap gc "=luc#capitalize(luc#get_visual_selection())<CR>p
-nmap gc :set operatorfunc=luc#capitalize_operator_function<CR>g@
+vmap gc  "=luc#capitalize(luc#get_visual_selection())<CR>p
+nmap gc  :set operatorfunc=luc#capitalize_operator_function<CR>g@
+nmap gcc gciw
 
 " bla
 if has('gui_macvim')
