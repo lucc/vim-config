@@ -726,6 +726,7 @@ Plugin 'applescript.vim'
 
 " original vim settings for latex
 let g:tex_fold_enabled = 1
+let g:tex_flavor = 'latex'
 
 " 3109 LatexBox.vmb
 "Plugin 'coot/atp_vim'
@@ -742,8 +743,7 @@ Plugin 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex' "{{{3
 let g:ngerman_package_file = 1
 let g:Tex_Menus = 0
 "let g:Tex_UseUtfMenus = 1
-" this has to be lower case!
-let g:tex_flavor = 'latex'
+
 " The other settings for vim-latex are in the LucLatexSuiteSettings
 " autocmdgroup.
 if has('mac') | let g:Tex_ViewRule_pdf = 'open -a Preview' | endif
@@ -751,7 +751,7 @@ let g:Tex_UseMakefile = 1
 let g:Tex_CompileRule_pdf = 'latexmk -silent -pv -pdf $*'
 let g:Tex_SmartQuoteOpen = '„'
 let g:Tex_SmartQuoteClose = '“'
-let g:Tex_Env_quote = "\\begin{quote}\<CR>,,<++>`` \\cite[S.~<++>]{<++>}\<CR>\\end{quote}"
+"let g:Tex_Env_quote = "\\begin{quote}\<CR>,,<++>`` \\cite[S.~<++>]{<++>}\<CR>\\end{quote}"
 " the variable Tex_FoldedEnvironments holds the beginnings of names of
 " environments which should be folded.  The innermost environments should come
 " first.
@@ -793,9 +793,6 @@ let g:Tex_FoldedEnvironments .= ',titlepage'
 " alternative 3
   "let Tex_FoldedEnvironments .= '*'
   "let Tex_FoldedSections = 'part,chapter,section,subsection,subsubsection,paragraph'
-
-  autocmd FileType tex
-	\ setlocal grepprg=grep\ -nH\ $*
 
 " plugins: lisp/scheme {{{2
 Plugin 'slimv.vim'
