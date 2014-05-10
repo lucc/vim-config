@@ -829,9 +829,8 @@ let g:markdown_fold_style = 'nested'
 
 " plugins: python {{{2
 
-"Plugin 'python_fold_compact'
-"Plugin 'jpythonfold.vim'
-Plugin 'Python-Syntax-Folding'
+Plugin 'sunsol/vim_python_fold_compact'
+"Plugin 'Python-Syntax-Folding'
 "Plugin 'klen/python-mode'
 
 " plugins: iCal {{{2
