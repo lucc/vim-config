@@ -220,7 +220,7 @@ if has('gui_macvim')
 endif
 
 " open URLs {{{2
-nmap <Leader>w :call OpenBrowser(pyeval('search_uri_vim()'))<CR>
+nmap <Leader>w :python for url in grabUrls(vim.current.line): webbrowser.open(url)<CR>
 
 " easy compilation {{{2
 nmap <silent> <F2>        :sil up <BAR> python compile_generic('')<CR>
@@ -1180,7 +1180,8 @@ Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 set noshowmode
 endif
 
-Plugin 'tyru/open-browser.vim'
+"Plugin 'tyru/open-browser.vim'
+"can be replaced by python webbrowser.open()
 
 Plugin 'pix/vim-known_hosts'
 Plugin 'ack.vim'

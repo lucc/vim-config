@@ -2,13 +2,15 @@
 vimrc.py file by luc.  This file should be loaded from vimrc with :pyfile.
 '''
 
-import os
 #import random.randint
-import vim
-import subprocess
-import time
-import threading
 import bisect
+import os
+import re
+import subprocess
+import threading
+import time
+import vim
+import webbrowser
 
 
 def backup_current_buffer():
@@ -68,37 +70,6 @@ def find_base_dir(filename,
     return matches[0][0]
 
 
-def search_for_uri_vim_wrapper(pos=None):
-    if pos is None:
-        pos = vim.current.window.cursor
-    return search_for_uri(pos)
-
-
-def search_for_uri(pos):
-    """Search for an uri around pos in the current buffer
-
-    :pos: the position in the current buffer in vim
-    :returns: the uri or Null
-
-    """
-    pass
-
-
-def search_uri_vim():
-    'Search for uri in the current line in vim.'
-    return search_string_for_uri(vim.current.line)
-
-
-def search_string_for_uri(string):
-    '''Search string for an URI.  Return the URI if found, else return NONE'''
-    # thanks to  http://vim.wikia.com/wiki/VimTip306
-    match = re.search(r'[a-z]+://[^ >,;:]+', string)
-    # alternatives:
-    # r'\(http://\|www\.\)[^ ,;\t]*'
-    # r'[a-z]*:\/\/[^ >,;:]*'
-    if match:
-        return match.group(0)
-    return ''
 
 
 def string_map_generator(generator):
@@ -399,21 +370,16 @@ def compile_tex(target, filetype, filename):
 
 class Compiler():
     '''base class to compile files'''
-
     indicator_files = ('makefile', 'build.xml')
     indicator_dirs = ('~/uni', '~/.vim')
     filetype = None
     args = []
-
     def __init__(self, filetype):
         pass
-
     def compile(self):
         pass
-
     def find_base_dir():
         pass
-
 class CompilerMarkdown(Compiler):
     def _create_args(taget):
         return [
@@ -424,67 +390,49 @@ class CompilerMarkdown(Compiler):
             target
             ]
     pass
-class CompilerJava(Compiler):
-    pass
-class CompilerTex(Compiler):
-    pass
-class CompilerMake(Compiler):
-    pass
 
 
 ##############################################################################
 # Code taken from other people
 ##############################################################################
 
-"""parseUrls.py  A regular expression that detects HTTP urls.
-
-Danny Yoo (dyoo@hkn.eecs.berkeley.edu)
-
-This is only a small sample of tchrist's very nice tutorial on
-regular expressions.  See:
-
-    http://www.perl.com/doc/FMTEYEWTK/regexps.html
-
-for more details.
-
-Note: this properly detects strings like "http://python.org.", with a
-period at the end of the string."""
-
-
-import re
-
 def grabUrls(text):
-    """Given a text string, returns all the urls we can find in it."""
+    '''Given a text string, returns all the urls we can find in it.
+
+    Danny Yoo (dyoo@hkn.eecs.berkeley.edu)
+
+    This is only a small sample of tchrist's very nice tutorial on regular
+    expressions.  See http://www.perl.com/doc/FMTEYEWTK/regexps.html for more
+    details.
+
+    Note: this properly detects strings like "http://python.org.", with a
+    period at the end of the string."""
+    '''
+
+    urls = '(?: %s)' % '|'.join("""http telnet gopher file wais ftp""".split())
+    ltrs = r'\w'
+    gunk = r'/#~:.?+=&%@!\-'
+    punc = r'.:?\-'
+    any = ltrs+gunk+punc
+
+    url = r"""
+        \b                    # start at word boundary
+        %(urls)s    :         # need resource and a colon
+        [%(any)s]  +?         # followed by one or more of any valid
+                              #  character, but be conservative and take only
+                              #  what you need to....
+        (?=                   # look-ahead non-consumptive assertion
+            [%(punc)s]*       # either 0 or more punctuation
+            (?:[^%(any)s]|$)  #  followed by a non-url char or end of the
+                              #  string
+        )
+        """ % {'urls' : urls, 'any' : any, 'punc' : punc }
+
+    url_re = re.compile(url, re.VERBOSE | re.MULTILINE)
+
     return url_re.findall(text)
-
-
-urls = '(?: %s)' % '|'.join("""http telnet gopher file wais ftp""".split())
-ltrs = r'\w'
-gunk = r'/#~:.?+=&%@!\-'
-punc = r'.:?\-'
-any = "%(ltrs)s%(gunk)s%(punc)s" % { 'ltrs' : ltrs,
-                                     'gunk' : gunk,
-                                     'punc' : punc }
-
-url = r"""
-    \b                            # start at word boundary
-        %(urls)s    :             # need resource and a colon
-        [%(any)s]  +?             # followed by one or more
-                                  #  of any valid character, but
-                                  #  be conservative and take only
-                                  #  what you need to....
-    (?=                           # look-ahead non-consumptive assertion
-            [%(punc)s]*           # either 0 or more punctuation
-            (?:   [^%(any)s]      #  followed by a non-url char
-                |                 #   or end of the string
-                  $
-            )
-    )
-    """ % {'urls' : urls,
-           'any' : any,
-           'punc' : punc }
-
-url_re = re.compile(url, re.VERBOSE | re.MULTILINE)
-
-
-# unused
+    # old ideas:
+    # match = re.search(r'[a-z]+://[^ >,;:]+', string)
+    # alternatives:
+    # r'\(http://\|www\.\)[^ ,;\t]*'
+    # r'[a-z]*:\/\/[^ >,;:]*'
