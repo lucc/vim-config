@@ -156,3 +156,25 @@ function! luc#tex_doc() "{{{2
   " text.
   silent execute '!texdoc' expand("<cword>")
 endfunction
+
+function! luc#resize_gui() " {{{2
+  " function to put the gvim window on the left of the screen
+  set nofullscreen
+  set guioptions-=T
+  winpos 0 0
+  let &guifont = s:normalfonts
+  set lines=999
+  set columns=85
+  "redraw!
+endfunction
+
+function! s:select_font(big) "{{{2
+  " Select a font and set it
+  let delim = ''
+  if has('gui_macvim')
+    let s:delim = ':h'
+  elseif has('gui_gtk2')
+    let s:delim = ' '
+  endif
+  " TODO
+endfunction

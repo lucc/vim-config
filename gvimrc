@@ -34,7 +34,7 @@ endif
 function! <SID>toggle_fullscreen() " {{{2
   " function to toggle fullscreen mode
   if &fullscreen
-    call luc#gui#resize()
+    call luc#resize_gui()
   else
     set fullscreen
   endif
