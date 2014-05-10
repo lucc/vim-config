@@ -223,8 +223,8 @@ endif
 nmap <Leader>w :call OpenBrowser(pyeval('search_uri_vim()'))<CR>
 
 " easy compilation {{{2
-nmap <silent> <F2>        :sil up <BAR> call luc#compiler#generic2('')<CR>
-imap <silent> <F2>   <C-O>:sil up <BAR> call luc#compiler#generic2('')<CR>
+nmap <silent> <F2>        :sil up <BAR> python compile_generic('')<CR>
+imap <silent> <F2>   <C-O>:sil up <BAR> python compile_generic('')<CR>
 nmap <silent> <D-F2>      :sil up <BAR> call luc#compiler#generic('', 1)<CR>
 imap <silent> <D-F2> <C-O>:sil up <BAR> call luc#compiler#generic('', 1)<CR>
 
