@@ -1,18 +1,3 @@
-function! luc#flatten_list(list) "{{{2
-  " Code from bairui@#vim.freenode
-  " https://gist.github.com/3322468
-  let val = []
-  for elem in a:list
-    if type(elem) == type([])
-      call extend(val, luc#flatten_list(elem))
-    else
-      call add(val, elem)
-    endif
-    unlet elem
-  endfor
-  return val
-endfunction
-
 function! luc#remote_editor(mail) "{{{2
   " a function to be called by a client who wishes to use a vim server as an
   " non forking edior. One can also set the environment variable EDITOR with
@@ -91,18 +76,6 @@ function! luc#capitalize_operator_function(type) "{{{2
   let @@ = saved_register
 endfunction
 
-function! luc#goto_definition(string) "{{{2
-  try
-    execute 'cscope find g' string
-  catch
-    try
-      execute 'tags' string
-    catch
-      normal gd
-    endtry
-  endtry
-endfunction
-
 function! luc#find_next_spell_error() "{{{2
   " A function to jump to the next spelling error
   setlocal spell
@@ -166,6 +139,33 @@ function! luc#resize_gui() " {{{2
   set lines=999
   set columns=85
   "redraw!
+endfunction
+
+function! s:flatten_list(list) "{{{2
+  " Code from bairui@#vim.freenode
+  " https://gist.github.com/3322468
+  let val = []
+  for elem in a:list
+    if type(elem) == type([])
+      call extend(val, luc#flatten_list(elem))
+    else
+      call add(val, elem)
+    endif
+    unlet elem
+  endfor
+  return val
+endfunction
+
+function! s:goto_definition(string) "{{{2
+  try
+    execute 'cscope find g' string
+  catch
+    try
+      execute 'tags' string
+    catch
+      normal gd
+    endtry
+  endtry
 endfunction
 
 function! s:select_font(big) "{{{2
