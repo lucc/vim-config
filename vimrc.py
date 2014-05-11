@@ -13,6 +13,10 @@ import vim
 import webbrowser
 
 
+def tex_doc(word='lshort'):
+    threading.Thread(target=subprocess.call, args=(['texdoc', word])).start()
+
+
 def backup_current_buffer():
     '''Save a backup of the current vim buffer via scp.'''
 

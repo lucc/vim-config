@@ -154,7 +154,7 @@ endfunction
 function! luc#tex_doc() "{{{2
   " call the texdoc programm with the word under the cursor or the selected
   " text.
-  silent execute '!texdoc' expand("<cword>")
+  silent execute '!texdoc' expand("<cword>") '&'
 endfunction
 
 function! luc#resize_gui() " {{{2
