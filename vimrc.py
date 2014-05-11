@@ -14,7 +14,7 @@ import webbrowser
 
 
 def backup_current_buffer():
-    """Save a backup of the current vim buffer via scp."""
+    '''Save a backup of the current vim buffer via scp.'''
 
     servers = {'math': 'vim-buffer-bk', 'ifi': 'vim-buffer-bk'}
     filename = vim.current.buffer.name
@@ -103,9 +103,8 @@ def tex_count_vim_wrapper(filename=None):
 
 
 def tex_count(filename):
-    """Count the words and characters in a tex and its pdf file.  Prints a
-    small report about the counts.
-    """
+    '''Count the words and characters in a tex and its pdf file.  Prints a
+    small report about the counts.'''
 
     # fist the tex file
     texcount = ['texcount', '-quiet', '-nocol', '-1', '-utf8', '-incbib']
@@ -116,25 +115,18 @@ def tex_count(filename):
         tex_words = tex_words.split()[0].split('+')[0]
         tex_chars = subprocess.check_output(texcount+[charopt, filename])
         tex_chars = tex_chars.split()[0].split('+')[0]
-        # TODO filename in display is to long
         print tex_words, 'words and', tex_chars, 'chars in file', filename
 
     # second, the pdf
-    # TODO more robust
     pdf = os.path.splitext(filename)[0] + '.pdf'
-    #if os.path.splitext(filename)[1] != '.tex':
-    #    #raise Exception()
-    #    return False
-    #else:
-    #    pdf = os.path.splitext(filename)[0] + '.pdf'
 
     if os.path.exists(pdf):
         p1 = subprocess.Popen(['pdftotext', pdf, '/dev/stdout'],
                 stdout=subprocess.PIPE)
         pdf_words, pdf_chars = subprocess.check_output(['wc', '-m', '-w'],
                 stdin=p1.stdout).split()
-        # TODO filename in display is to long
         print pdf_words, 'words and', pdf_chars, 'chars in file', pdf
+
 
 def open_pdf_vim_wrapper():
     threading.Thread(target=open_pdf_or_preview_app).start()
@@ -265,12 +257,12 @@ def shellquote(s):
     return "'" + s.replace("'", "'\\''") + "'"
 
 def compile_generic_2(target):
-     ## TODO
-     #'''Try to build the current file automatically.  If target is not
-     #specified and there is a compiler function available in g:luc.compiler it
-     #will be used to find out how to compile the current file.  If a:target is
-     #specified or there is no compiler function a makefile will be searched.'''
-     #
+     '''Try to build the current file automatically.  If target is not
+     specified and there is a compiler function available in g:luc.compiler it
+     will be used to find out how to compile the current file.  If a:target is
+     specified or there is no compiler function a makefile will be
+     searched.'''
+
      ## local variables
      #functionname = ''
      #path = os.path.dirname(vim.current.buffer.name)
@@ -406,16 +398,15 @@ def grabUrls(text):
     details.
 
     Note: this properly detects strings like "http://python.org.", with a
-    period at the end of the string."""
-    '''
+    period at the end of the string.'''
 
-    urls = '(?: %s)' % '|'.join("""http telnet gopher file wais ftp""".split())
+    urls = '(?: %s)' % '|'.join('''http https telnet gopher file wais ftp'''.split())
     ltrs = r'\w'
     gunk = r'/#~:.?+=&%@!\-'
     punc = r'.:?\-'
     any = ltrs+gunk+punc
 
-    url = r"""
+    url = r'''
         \b                    # start at word boundary
         %(urls)s    :         # need resource and a colon
         [%(any)s]  +?         # followed by one or more of any valid
@@ -426,7 +417,7 @@ def grabUrls(text):
             (?:[^%(any)s]|$)  #  followed by a non-url char or end of the
                               #  string
         )
-        """ % {'urls' : urls, 'any' : any, 'punc' : punc }
+        ''' % {'urls' : urls, 'any' : any, 'punc' : punc }
 
     url_re = re.compile(url, re.VERBOSE | re.MULTILINE)
 
