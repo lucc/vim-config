@@ -108,15 +108,14 @@ augroup LucLilypond "{{{3
 	\ setlocal dictionary+=~/.vim/syntax/lilypond-words
 augroup END
 
-augroup LucLatex "{{{3
+augroup LucTex "{{{3
   autocmd!
   autocmd FileType tex
-	\ setlocal spell dictionary+=%:h/**/*.bib,%:h/**/*.tex |
-	\ setlocal grepprg=grep\ -nH\ $* | " needed for latex suite
-	\ nnoremap <buffer> K  :call luc#tex_doc()<CR>             |
-	\ nnoremap <buffer> gG :python tex_count_vim_wrapper()<CR> |
-	\ vnoremap <buffer> gG :python tex_count_vim_wrapper()<CR> |
-	\
+	\ setlocal spell dictionary+=%:h/**/*.bib,%:h/**/*.tex|
+	\ setlocal grepprg=grep\ -nH\ $*|
+	\ nnoremap <buffer> K  :call luc#tex_doc()<CR>|
+	\ nnoremap <buffer> gG :python tex_count_vim_wrapper()<CR>|
+	\ vnoremap <buffer> gG :python tex_count_vim_wrapper()<CR>
 augroup END
 
 augroup LucPython "{{{3
