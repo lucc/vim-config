@@ -360,61 +360,7 @@ set formatoptions+=j " remove comment leader when joining lines
 set formatoptions+=l " do not break lines which are already long
 
 " options: satusline {{{1
-
-" many thanks to
-"   http://vim.wikia.com/wiki/Writing_a_valid_statusline
-"   https://wincent.com/wiki/Set_the_Vim_statusline
-"   http://winterdom.com/2007/06/vimstatusline
-"   http://got-ravings.blogspot.com/2008/08/
-
-" some examples
-"set statusline=last\ changed\ %{strftime(\"%c\",getftime(expand(\"%:p\")))}
-
-" my old versions:
-"set statusline=%t%m%r[%{&ff}][%{&fenc}]%y[ASCII=\%03.3b]%=[%c%V,%l/%L][%p%%]
-"set statusline=%t%m%r[%{&fenc},%{&ff}%Y][ASCII=x%02.2B]%=[%c%V,%l/%L][%P]
-"set statusline=%t[%M%R%H][%{strlen(&fenc)?&fenc:'none'},%{&ff}%Y]
-"set statusline+=[ASCII=x%02.2B]%=%{strftime(\"%Y-%m-%d\ %H:%M\")}
-"set statusline+=\ [%c%V,%l/%L][%P]
-
-" current version
-set statusline=%t                                  " tail of the filename
-set statusline+=\ %([%M%R%H]\ %)                   " group for mod., ro. & help
-set statusline+=[
-set statusline+=%{strlen(&fenc)?&fenc:'none'},     " display fileencoding
-set statusline+=%{&fileformat}                     " filetype (unix/windows)
-set statusline+=%Y                                 " filetype (c/sh/vim/...)
-set statusline+=%{fugitive#statusline()}           " info about git
-set statusline+=]
-set statusline+=\ [ASCII=x%02B]                    " ASCII code of char
-set statusline+=\ %=                               " rubber space
-set statusline+=[%{strftime('%R')}]                " clock
-set statusline+=\ [%c%V,%l/%L]                     " position in file
-set statusline+=\ [%P]                             " percent of above
-set statusline+=%(\ %{SyntasticStatuslineFlag()}%) " see :h syntastic
-
-" always display the statusline
-set laststatus=2
-" use the wildmenu inside the status line
-set wildmenu
-
-" " change highlighting when mode changes
-" augroup LucStatusLine
-"   autocmd!
-"   autocmd InsertEnter * call s:insert_status_line_color(v:insertmode)
-"   autocmd InsertLeave * call s:insert_status_line_color('n')
-" augroup END
-" " now we set the colors for the statusline
-" " in the most simple case
-" highlight StatusLine term=reverse
-" " for color terminal
-" highlight StatusLine cterm=bold,reverse
-" highlight StatusLine ctermbg=1
-" " for the gui
-" "highlight StatusLine gui=bold
-" highlight StatusLine guibg=DarkBlue
-" highlight StatusLine guifg=background
-
+" see below at airline config
 " options: tabline {{{1
 " we could do something similar for tabs.
 " see :help 'tabline'
@@ -424,7 +370,8 @@ set wildmenu
 "set tabline+=\ %{len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))}
 "set tabline+=%=%{strftime('%a\ %F\ %R')}
 
-" options: wildignore {{{1
+" options: wildmenu and wildignore {{{1
+set wildmenu
 set wildmode=longest:full,full
 set wildignore+=.hg,.git,.svn                  " Version control
 set wildignore+=*.aux,*.out,*.toc,*.idx,*.fls  " LaTeX intermediate files
@@ -445,7 +392,7 @@ set wildignore+=*.tar,*.tgz,*.tbz2,*.tar.gz,*.tar.bz2
 set wildignore+=*.pyc                          " Python byte code
 "set wildignore+=*.orig                        " Merge resolution files
 
-" setting variables for special settings
+" setting variables for special settings {{{1
 "let g:vimsyn_folding  = 'a' " augroups
 "let g:vimsyn_folding .= 'f' " fold functions
 "let g:vimsyn_folding .= 'm' " fold mzscheme script
@@ -454,21 +401,8 @@ set wildignore+=*.pyc                          " Python byte code
 "let g:vimsyn_folding .= 'r' " fold ruby     script
 "let g:vimsyn_folding .= 't' " fold tcl      script
 
-
-
-
 " plugins: management with vundle {{{1
-" I manage plugins with vundle.  In order to easyly test plugins I keep a
-" dictionary to store a flag depending on which the plugin should be loaded or
-" not.  One could also comment the the line loading the plugin, but these are
-" scatterd ofer the file and not centralized.  Also some plugins need further
-" configuration which is put in the if statements.
-let s:plugins = {
-		\ 'latexsuite': 1,
-		\ 'vimshell': 0,
-		\ }
-
-" Managing plugins with Vundle (https://github.com/gmarik/Vundle.vim)
+" https://github.com/gmarik/Vundle.vim
 filetype off
 set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -1173,12 +1107,56 @@ let g:solarized_menu = 0
 ""Plugin 'Wombat'
 ""Plugin 'oceandeep'
 
-" plugins: unsorted {{{1
+" plugins: statusline {{{1
+
 if has('python')
-Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
-set noshowmode
+  Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+  " the documentation of powerline is not in Vim format but only available at
+  " https://powerline.readthedocs.org/
+else
+  Plugin 'bling/vim-airline'
+  "Plugin 'bling/vim-bufferline'
+  let g:airline_powerline_fonts = 1
+  "let g:airline#extensions#tabline#enabled = 1
 endif
 
+" vim options related to the statusline {{{2
+set noshowmode   " do not display the current mode in the command line
+set laststatus=2 " always display the statusline
+
+" old manual statusline {{{2
+" many thanks to
+"   http://vim.wikia.com/wiki/Writing_a_valid_statusline
+"   https://wincent.com/wiki/Set_the_Vim_statusline
+"   http://winterdom.com/2007/06/vimstatusline
+"   http://got-ravings.blogspot.com/2008/08/
+
+" version 1
+"set statusline=%t%m%r[%{&ff}][%{&fenc}]%y[ASCII=\%03.3b]%=[%c%V,%l/%L][%p%%]
+" version 2
+"set statusline=%t%m%r[%{&fenc},%{&ff}%Y][ASCII=x%02.2B]%=[%c%V,%l/%L][%P]
+" version 3
+"set statusline=%t[%M%R%H][%{strlen(&fenc)?&fenc:'none'},%{&ff}%Y]
+"set statusline+=[ASCII=x%02.2B]%=%{strftime(\"%Y-%m-%d\ %H:%M\")}
+"set statusline+=\ [%c%V,%l/%L][%P]
+" version 4
+"set statusline=%t\ %([%M%R%H]\ %)[%{strlen(&fenc)?&fenc:'none'},
+"set statusline+=%{&fileformat}%Y%{fugitive#statusline()}]\ [ASCII=x%02B]\ %=
+"set statusline+=[%{strftime('%R')}]\ [%c%V,%l/%L]\ [%P]%(
+"set statusline+=\ %{SyntasticStatuslineFlag()}%)
+
+" " change highlighting when mode changes
+" augroup LucStatusLine
+"   autocmd!
+"   autocmd InsertEnter * call s:insert_status_line_color(v:insertmode)
+"   autocmd InsertLeave * call s:insert_status_line_color('n')
+" augroup END
+" " now we set the colors for the statusline
+" highlight StatusLine term=reverse cterm=bold,reverse ctermbg=1
+" "highlight StatusLine gui=bold
+" highlight StatusLine guibg=DarkBlue guifg=background
+
+" plugins: unsorted {{{1
 "Plugin 'tyru/open-browser.vim'
 "can be replaced by python webbrowser.open()
 
