@@ -796,217 +796,20 @@ Plugin 'https://bitbucket.org/fboender/bexec.git'
 if has('clientserver') | Plugin 'pydave/AsyncCommand' | endif
 
 " plugins: tags {{{1
-"Plugin 'ttags'
+" Easytags will automatically create and update tags files and set the 'tags'
+" option per file type.  Tag navigation can be done with the CTRL-P plugin.
+" All these settings are dependent on the file ~/.ctags.
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-easytags'
-let g:easytags_by_filetype = '~/.cache/vim-easytag'
+let g:easytags_file = '~/.cache/tags'
+"let g:easytags_by_filetype = '~/.cache/vim-easytag'
 let g:easytags_ignored_filetypes = ''
-
-Plugin 'taglist.vim' "{{{2
-
-" Automatically highlight the current tag in the taglist.
-"let g:Tlist_Auto_Highlight_Tag = <++>
-" Open the taglist window when Vim starts.
-"let g:Tlist_Auto_Open = <++>
-" Automatically update the taglist to include newly edited files.
-let g:Tlist_Auto_Update = 1
-" Close the taglist window when a file or tag is selected.
-let g:Tlist_Close_On_Select = 1
-" Remove extra information and blank lines from the taglist window.
-let g:Tlist_Compact_Format = 1
-" Specifies the path to the ctags utility.
-"let g:Tlist_Ctags_Cmd =
-" Show prototypes and not tags in the taglist window.
-let g:Tlist_Display_Prototype = 1
-" Show tag scope next to the tag name.
-"let g:Tlist_Display_Tag_Scope =
-" Show the fold indicator column in the taglist window.
-"let g:Tlist_Enable_Fold_Column =
-" Close Vim if the taglist is the only window.
-let g:Tlist_Exit_OnlyWindow = 1
-" Close tag folds for inactive buffers.
-let g:Tlist_File_Fold_Auto_Close = 1
-" Jump to taglist window on open.
-let g:Tlist_GainFocus_On_ToggleOpen = 1
-" On entering a buffer, automatically highlight the current tag.
-"let g:Tlist_Highlight_Tag_On_BufEnter =
-" Increase the Vim window width to accommodate the taglist window.
-"let g:Tlist_Inc_Winwidth =
-" Maximum number of items in a tags sub-menu.
-"let g:Tlist_Max_Submenu_Items =
-" Maximum tag length used in a tag menu entry.
-"let g:Tlist_Max_Tag_Length =
-" Process files even when the taglist window is closed.
-"let g:Tlist_Process_File_Always =
-" Display the tags menu.
-"let g:Tlist_Show_Menu =
-" Show tags for the current buffer only.
-"let g:Tlist_Show_One_File =
-" Sort method used for arranging the tags.
-"let g:Tlist_Sort_Type = " TODO
-" Use a horizontally split window for the taglist window.
-let g:Tlist_Use_Horiz_Window = 0
-" Place the taglist window on the right side.
-let g:Tlist_Use_Right_Window = 1
-" Single click on a tag jumps to it.
-"let g:Tlist_Use_SingleClick =
-" Horizontally split taglist window height.
-"let g:Tlist_WinHeight =
-" Vertically split taglist window width.
-let g:Tlist_WinWidth = 75
-" Hide extra tag data produced by jsctags.
-"let g:Tlist_javascript_Hide_Extras =
-
-" Extend ctags to work with latex
-"""""""""""""""""""""""""""""""""
-" This is strongly dependent on the file ~/.ctags and the definitions therein.
-" See ctags(1) for a description of the format.
-" The variable tlist_tex_settings is a semicolon separated list of key:val
-" pairs. The first item is no such pair but only the language name used by
-" ctags. The key is a single letter used by ctags as "kind" of the tag, the
-" val is a word used by tlist to categorice the tags in the tlist window.
-"let tlist_tex_settings='tex;b:bibitem;c:command;l:label;s:sections;t:subsections;u:subsubsections'
-"let tlist_tex_settings='tex;c:chapters;s:sections;u:subsections;b:subsubsections;p:parts;P:paragraphs;G:subparagraphs'
-let tlist_tex_settings='latex;s:structure;g:graphic+listing;l:label;r:ref;b:bib'
-
-nmap <silent> <F4> :silent TlistToggle<CR>
-"augroup LucTagList
-"  autocmd!
-"  autocmd BufEnter *.tex let Tlist_Ctags_Cmd = expand('~/.vim/ltags')
-"  autocmd BufLeave *.tex let Tlist_Ctags_Cmd = 'ctags'
-"augroup END
-
-" Ctags and Cscope {{{2
-" always search for a tags file from $PWD down to '/'.
-set tags=./tags,tags;/
-
-" try to use Cscope
-if has('cscope')
-  set nocsverb
-  if has('quickfix') | set cscopequickfix=s-,c-,d-,i-,t-,e- | endif
-  " search cscope database first (1 = ``tags first'')
-  set cscopetagorder=0
-  set cscopetag
-  " {{{ these lines are copied from
-  " http://cscope.sourceforge.net/cscope_maps.vim and modified by me. Many
-  " thanks to the Cscope guys.
-  " The commands are defided into three prefixes:
-  "
-  " 	CTRL-_		show querry in current window
-  " 	CTRL-@		show querry in horizontal split
-  " 	CTRL-@ CTRL-@	show querry in vertival split
-  "
-  " (NOTE: CTRL-@ can also be typed as CTRL-<SPACE>
-  " The querry is determind by the last character of the map. Like this:
-  "
-  " 	's'   symbol: find all references to the token under cursor
-  " 	'g'   global: find global definition(s) of the token under cursor
-  " 	'c'   calls:  find all calls to the function name under cursor
-  " 	't'   text:   find all instances of the text under cursor
-  " 	'e'   egrep:  egrep search for the word under cursor
-  " 	'f'   file:   open the filename under cursor
-  " 	'i'   includes: find files that include the filename under cursor
-  " 	'd'   called: find functions that function under cursor calls
-  "nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-  "nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  "nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>
-  "nmap <C-@>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  "nmap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
-  "nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  "nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
-  " End of http://cscope.sourceforge.net/cscope_maps.vim stuff }}}
-  if $CSCOPE_DB != ""
-    cscope add $CSCOPE_DB
-  elseif filereadable('cscope.out')
-    cscope add cscope.out
-  else
-    " no database so use Ctags instead (unset cscope options)
-    " run ``ctags **/.*[ch]'' to produce the file ``tags''.
-    " these headers are used:
-    " http://www.vim.org/scripts/script.php?script_id=2358
-    "Plugin 'tags-for-std-cpp-STL-streams-...'
-    set tags+=~/.vim/tags/usr_include.tags
-    set tags+=~/.vim/tags/usr_include_cpp.tags
-    set tags+=~/.vim/tags/usr_local_include.tags
-    set tags+=~/.vim/tags/usr_local_include_boost.tags
-    set tags+=~/.vim/tags/cpp.tags
-    set nocscopetag
-  endif
-  set cscopeverbose
-else
-  "call s:ctag_fallback()
+let g:easytags_python_enabled = 1
+if !exists('g:easytags_languages')
+  let g:easytags_languages = {}
 endif
-
-" Tags Bookmarks {{{3
-"Plugin '0scan'
-"Plugin 'AutoTag'
-"Plugin 'DoTagStuff'
-"Plugin 'Find-XML-Tags'
-"Plugin 'GtagsClient'
-"Plugin 'Intelligent-Tags'
-"Plugin 'OmniTags'
-"Plugin 'PreviewTag.vim'
-"Plugin 'ProjectCTags'
-"Plugin 'ProjectTag'
-"Plugin 'TagManager-BETA'
-"Plugin 'TagsBase.zip'
-"Plugin 'TagsMenu.zip'
-"Plugin 'TagsParser'
-"Plugin 'a-new-txt2tags-syntax'
-"Plugin 'abadcafe/ctags_cache'
-"Plugin 'aux2tags.vim'
-"Plugin 'bahejl/Intelligent_Tags'
-"Plugin 'cHiTags'
-"Plugin 'ctags.exe'
-"Plugin 'ctags.vim'
-"Plugin 'ctags_cache'
-"Plugin 'dtags'
-"Plugin 'functags.vim'
-"Plugin 'gtags-multiwindow-browsing'
-"Plugin 'gtags.vim'
-"Plugin 'https://bitbucket.org/abudden/tagsignature'
-"Plugin 'latextags'
-"Plugin 'listtag'
-"Plugin 'loadtags'
-"Plugin 'majutsushi/tagbar'
-"Plugin 'previewtag'
-"Plugin 'projtags.vim'
-"Plugin 'switchtags.vim'
-"Plugin 'tagMenu'
-"Plugin 'tagSetting.vim'
-"Plugin 'tagexplorer.vim'
-"Plugin 'tagfinder.vim'
-"Plugin 'taglist-plus'
-"Plugin 'tagmaster'
-"Plugin 'tags-for-std-cpp-STL-streams-...'
-"Plugin 'tagscan'
-"Plugin 'tagselect'
-"Plugin 'tagsubmenu'
-"Plugin 'ttagecho'
-"Plugin 'ttags'
-"Plugin 'txt2tags'
-"Plugin 'txt2tags-menu'
-"Plugin 'undo_tags'
-"Plugin 'utags'
-"Plugin 'vtags'
-"Plugin 'vtags_def'
+let g:easytags_languages.latex = {}
+let g:easytags_languages.markdown = {}
 
 " plugins: man pages {{{1
 "Plugin 'info.vim'
@@ -1161,6 +964,9 @@ Plugin 'AndrewRadev/linediff.vim'
 call vundle#end()
 " switch on filetype detection after defining all Bundles
 filetype plugin indent on
+
+" settings for easytags which need the runtimepath set properly {{{2
+call xolox#easytags#map_filetypes('tex', 'latex')
 
 " {{{2 Set colors for the terminal.  If the GUI is running the colorscheme
 "      will be set in gvimrc.
