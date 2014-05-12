@@ -430,13 +430,13 @@ let g:ctrlp_root_markers = [
 " extensions {{{2
 let g:ctrlp_extensions = [
       \ 'tag',
-      \ 'buffertag',
       \ 'quickfix',
       \ 'dir',
       \ 'undo',
-      \ 'line',
       \ 'changes',
       \]
+      "\ 'buffertag',
+      "\ 'line',
       "\ 'rtscript',
       "\ 'mixed',
       "\ 'bookmarkdir',
@@ -941,7 +941,8 @@ set laststatus=2 " always display the statusline
 "can be replaced by python webbrowser.open()
 
 Plugin 'pix/vim-known_hosts'
-Plugin 'ack.vim'
+Plugin 'mileszs/ack.vim'
+Plugin 'rking/ag.vim'
 
 "Plugin 'browser.vim'
 "Plugin 'calendar.vim'
