@@ -13,6 +13,20 @@ import vim
 import webbrowser
 
 
+def autogit(filename, directory=None):
+    '''Commit a file to a git repository.'''
+    if directory is None:
+        directory = os.path.dirname(filename)
+    head_ref = subprocess.check_output(
+            ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+            cwd=directory).strip()
+    if head_ref in ['autocommit', 'autocmd']:
+        subprocess.call(['git', 'commit', '--all', '--no-edit',
+                '--message', 'automatically commited by vimrc.py'],
+                cwd=directory)
+    return 0 # bad practice but needed for vim
+
+
 def tex_doc(word='lshort'):
     threading.Thread(target=subprocess.call, args=(['texdoc', word])).start()
 

@@ -21,6 +21,7 @@ filetype plugin indent on
 
 " user defined variables {{{1
 let mapleader = ','
+let s:do_autogit = 1
 
 " functions {{{1
 
@@ -170,6 +171,13 @@ augroup LucRemoveWhiteSpaceAtEOL "{{{2
 	\ silent %substitute/\s\+$//e
 augroup END
 
+augroup LucAutoGit "{{{2
+  autocmd!
+  autocmd BufWritePost ~/.config/**/*
+	\ if s:do_autogit | call pyeval('autogit(vim.current.buffer.name)') | endif
+	"\ silent python threading.Thread(target=autogit, args=(vim.current.buffer.name)).start()
+augroup END
+
 "augroup LucLocalAutoCd "{{{2
 "  autocmd!
 "  autocmd BufEnter ~/uni/**     lcd ~/uni
@@ -263,6 +271,10 @@ nmap ß :!clear<CR>
 "nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
 
 nnoremap <silent> <F11> :sil up<BAR>cal luc#compiler#generic2('')<BAR>call pyeval('backup_current_buffer() or True')<BAR>redr<CR>
+
+command StartAutoGit let s:do_autogit = 1
+command StopAutoGit  let s:do_autogit = 0
+command ToggleAutoGit let s:do_autogit = !s:do_autogit
 
 " options: basic {{{1
 
