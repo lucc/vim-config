@@ -36,7 +36,7 @@ def backup_current_buffer():
 
     servers = {'math': 'vim-buffer-bk', 'ifi': 'vim-buffer-bk'}
     filename = vim.current.buffer.name
-    mytime = time.strftime('%Y-%m-%d-%H-%M')
+    mytime = time.strftime('%Y/%m/%d/%H/%M')
 
     def helper_function(server, filename, path):
         subprocess.call(['ssh', server, 'mkdir', '-p', path])
