@@ -117,7 +117,9 @@ def man_page_topics_for_completion(arg_lead, cmd_line, cursor_position):
 def tex_count_vim_wrapper(filename=None):
     if filename is None:
         filename = vim.current.buffer.name
-    tex_count(filename)
+    width = vim.current.window.width - 1
+    for text in tex_count(filename):
+        print text[0:width]
 
 
 def tex_count(filename):
@@ -133,7 +135,8 @@ def tex_count(filename):
         tex_words = tex_words.split()[0].split('+')[0]
         tex_chars = subprocess.check_output(texcount+[charopt, filename])
         tex_chars = tex_chars.split()[0].split('+')[0]
-        print tex_words, 'words and', tex_chars, 'chars in file', filename
+        #yield '%s words and %s chars in file %s.' % (tex_words, tex_chars, filename)
+        yield tex_words+' words and '+tex_chars+' chars in file '+filename+'.'
 
     # second, the pdf
     pdf = os.path.splitext(filename)[0] + '.pdf'
@@ -143,7 +146,8 @@ def tex_count(filename):
                 stdout=subprocess.PIPE)
         pdf_words, pdf_chars = subprocess.check_output(['wc', '-m', '-w'],
                 stdin=p1.stdout).split()
-        print pdf_words, 'words and', pdf_chars, 'chars in file', pdf
+        #yield '%i words and %i chars in file %s.' % (pdf_words, pdf_chars, pdf)
+        yield pdf_words+' words and '+pdf_chars+' chars in file '+pdf+'.'
 
 
 def open_pdf_vim_wrapper():
