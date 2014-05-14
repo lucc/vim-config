@@ -256,6 +256,10 @@ nnoremap ` '
 " use ß to clear the screen if you want privacy for a moment
 nmap ß :!clear<CR>
 
+" always search very magic
+"nnoremap / /\v
+"nnoremap ? ?\v
+
 " From the .vimrc example file:
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
@@ -949,6 +953,9 @@ set laststatus=2 " always display the statusline
 " highlight StatusLine guibg=DarkBlue guifg=background
 
 " plugins: unsorted {{{1
+Plugin 'coot/CRDispatcher'
+Plugin 'coot/EnchantedVim'
+
 "Plugin 'tyru/open-browser.vim'
 "can be replaced by python webbrowser.open()
 
