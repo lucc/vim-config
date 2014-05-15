@@ -957,8 +957,8 @@ set laststatus=2 " always display the statusline
 " highlight StatusLine guibg=DarkBlue guifg=background
 
 " plugins: unsorted {{{1
-Plugin 'coot/CRDispatcher'
-Plugin 'coot/EnchantedVim'
+"Plugin 'coot/CRDispatcher'
+"Plugin 'coot/EnchantedVim'
 
 "Plugin 'tyru/open-browser.vim'
 "can be replaced by python webbrowser.open()
