@@ -174,8 +174,9 @@ augroup END
 augroup LucAutoGit "{{{2
   autocmd!
   autocmd BufWritePost ~/.config/**/*
-	\ if s:do_autogit | call pyeval('autogit(vim.current.buffer.name)') | endif
-	"\ silent python threading.Thread(target=autogit, args=(vim.current.buffer.name)).start()
+	\ if s:do_autogit                |
+	\   call pyeval('autogit_vim()') |
+	\ endif
 augroup END
 
 "augroup LucLocalAutoCd "{{{2
