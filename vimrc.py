@@ -13,6 +13,13 @@ import vim
 import webbrowser
 
 
+def autogit_vim():
+    '''Wrapper around autogit() to be called from vim.'''
+    filename = vim.current.buffer.name
+    threading.Thread(target=autogit, args=(filename,)).start()
+    return 0
+
+
 def autogit(filename, directory=None):
     '''Commit a file to a git repository.'''
     if directory is None:
