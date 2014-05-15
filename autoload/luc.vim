@@ -124,12 +124,6 @@ function! luc#format_bib() "{{{2
   %substitute/^\s*\([A-Za-z]\+\)\s*=\s*["{]\(.*\)["}],$/\=d.g(submatch(1), submatch(2))/
 endfunction
 
-function! luc#tex_doc() "{{{2
-  " call the texdoc programm with the word under the cursor or the selected
-  " text.
-  silent execute '!texdoc' expand("<cword>") '&'
-endfunction
-
 function! luc#resize_gui() " {{{2
   " function to put the gvim window on the left of the screen
   set nofullscreen

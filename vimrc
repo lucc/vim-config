@@ -25,7 +25,8 @@ let s:do_autogit = 1
 
 " functions {{{1
 
-" Check if a buffer is new.  That is to say, if it as no name and is empty.
+" Check if a buffer is new. {{{2
+" That is to say, if it as no name and is empty.
 "
 " a:1    -- the buffer number to check, 1 is used if absent
 " return -- 1 if the buffer is new, else 0
@@ -45,8 +46,8 @@ function! s:check_if_buffer_is_new(...) "{{{2
   return value
 endfunction
 
-" Change the color of the statusline depending on the current mode.  This
-" version is from http://vim.wikia.com/wiki/VimTip1287
+" Change the color of the statusline depending on the current mode. {{{2
+" This version is from http://vim.wikia.com/wiki/VimTip1287
 "
 " mode -- has to be like v:insertmode
 function! s:insert_status_line_color(mode) "{{{2
@@ -65,7 +66,7 @@ function! s:server_setup() "{{{2
   call s:viminfo_setup(!s:server_running())
 endfunction
 
-" Check if another vim server is already running.
+" Check if another vim server is already running. {{{2
 function! s:server_running() "{{{2
   return !empty(has('clientserver') ? serverlist() : system('vim --serverlist'))
 endfunction
@@ -103,6 +104,12 @@ call s:server_setup()
 
 " FileType autocommands {{{2
 
+augroup LucMarkdown "{{{3
+  autocmd!
+  autocmd FileType markdown
+	\ setlocal spell
+augroup END
+
 augroup LucLilypond "{{{3
   autocmd!
   autocmd FileType lilypond
@@ -112,9 +119,13 @@ augroup END
 augroup LucTex "{{{3
   autocmd!
   autocmd FileType tex
-	\ setlocal spell dictionary+=%:h/**/*.bib,%:h/**/*.tex|
-	\ setlocal grepprg=grep\ -nH\ $*|
-	\ nnoremap <buffer> K  :call luc#tex_doc()<CR>|
+	\ setlocal
+	\   spell
+	\   dictionary+=%:h/**/*.bib,%:h/**/*.tex
+	\   grepprg=grep\ -nH\ $*
+	\ |
+	\ nnoremap <buffer> K
+	\   :call pyeval('tex.doc("""'.expand('<cword>').'""") or 1')<CR>|
 	\ nnoremap <buffer> gG :python tex_count_vim_wrapper()<CR>|
 	\ vnoremap <buffer> gG :python tex_count_vim_wrapper()<CR>
 augroup END
@@ -173,9 +184,13 @@ augroup END
 
 augroup LucAutoGit "{{{2
   autocmd!
-  autocmd BufWritePost ~/.config/**/*
+  autocmd BufWritePost ~/.config/**,~/src/shell/**
 	\ if s:do_autogit                |
 	\   call pyeval('autogit_vim()') |
+	\ endif
+  autocmd BufWritePost ~/uni/philosophie/magisterarbeit/**
+	\ if s:do_autogit                    |
+	\   call pyeval('autogit_vim(None)') |
 	\ endif
 augroup END
 
@@ -228,13 +243,15 @@ if has('gui_macvim')
 endif
 
 " open URLs {{{2
-nmap <Leader>w :python for url in grabUrls(vim.current.line): webbrowser.open(url)<CR>
+nmap <Leader>w :python for url in strings.urls(vim.current.line): webbrowser.open(url)<CR>
 
 " easy compilation {{{2
-nmap <silent> <F2>        :sil up <BAR> python compile_generic('')<CR>
-imap <silent> <F2>   <C-O>:sil up <BAR> python compile_generic('')<CR>
-nmap <silent> <D-F2>      :sil up <BAR> call luc#compiler#generic('', 1)<CR>
-imap <silent> <D-F2> <C-O>:sil up <BAR> call luc#compiler#generic('', 1)<CR>
+nmap <silent> <F2>        :silent update <BAR> python compiler.generic('')<CR>
+imap <silent> <F2>   <C-O>:silent update <BAR> python compiler.generic('')<CR>
+nmap <silent> <D-F2>
+      \      :silent update <BAR> call luc#compiler#generic('', 1)<CR>
+imap <silent> <D-F2>
+      \ <C-O>:silent update <BAR> call luc#compiler#generic('', 1)<CR>
 
 " moveing around {{{2
 nmap <C-Tab>        gt
@@ -277,9 +294,9 @@ nmap ß :!clear<CR>
 
 nnoremap <silent> <F11> :sil up<BAR>cal luc#compiler#generic2('')<BAR>call pyeval('backup_current_buffer() or True')<BAR>redr<CR>
 
-command StartAutoGit let s:do_autogit = 1
-command StopAutoGit  let s:do_autogit = 0
-command ToggleAutoGit let s:do_autogit = !s:do_autogit
+command! StartAutoGit let s:do_autogit = 1
+command! StopAutoGit  let s:do_autogit = 0
+command! ToggleAutoGit let s:do_autogit = !s:do_autogit
 
 " options: basic {{{1
 
@@ -483,10 +500,6 @@ if has('python')
 endif
 
 " plugins: completion {{{1
-"Plugin 'IComplete'
-"Plugin 'cppcomplete'
-"Plugin 'javacomplete'
-
 if has('python') " -> Youcompleteme {{{2
   Plugin 'Valloric/YouCompleteMe'
   let g:ycm_filetype_blacklist = {}
@@ -517,7 +530,8 @@ else             " -> neocomplete and neocomplcache {{{2
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
   " <TAB> completion.
-  inoremap <expr> <TAB>  pumvisible() ? '<C-n>' : '<TAB>'
+  inoremap <expr> <TAB>    pumvisible() ? '<C-n>' : '<TAB>'
+  inoremap <expr> <S-TAB>  pumvisible() ? '<C-n>' : '<S-TAB>'
 
   if has('lua') " -> neocomplete {{{3
     Plugin 'Shougo/neocomplete.vim'
@@ -660,9 +674,9 @@ Plugin 'rbonvall/snipmate-snippets-bib'
 " plugins: syntastic {{{1
 Plugin 'scrooloose/syntastic'
 let g:syntastic_mode_map = {
-      \ 'mode': 'active',
+      \ 'mode': 'passive',
       \ 'active_filetypes': [],
-      \ 'passive_filetypes': ['tex']
+      \ 'passive_filetypes': []
       \ }
 let g:syntastic_check_on_wq = 0
 let g:syntastic_error_symbol = '✗'
