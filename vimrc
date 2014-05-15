@@ -436,7 +436,7 @@ let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_max_files = 0
 let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\v(\/private|\/var|\/tmp|\/Users\/luc\/(audio|img))',
+      \ 'dir':  '\v(\/private|\/var|\/tmp|\/Users\/luc\/(audio|img|flac))',
       \ }
 let g:ctrlp_root_markers = [
       \ 'makefile',
@@ -448,10 +448,10 @@ let g:ctrlp_root_markers = [
 let g:ctrlp_extensions = [
       \ 'tag',
       \ 'quickfix',
-      \ 'dir',
       \ 'undo',
       \ 'changes',
       \]
+      "\ 'dir',
       "\ 'buffertag',
       "\ 'line',
       "\ 'rtscript',
@@ -462,16 +462,19 @@ let g:ctrlp_extensions = [
 let g:ctrlp_cmd = 'CtrlPMRU'
 if has('gui_running')
   let g:ctrlp_map = '<C-Space>'
-  inoremap <C-Space> <C-O>:CtrlPMRU<CR>
 else
+  " In the terminal <c-space> doesn't work but sadly <F1> is also mapped by
+  " latex-suite so we have to overwrite that.
   let g:ctrlp_map = '<F1>'
-  inoremap <F1> <C-O>:CtrlPMRU<CR>
   augroup LucCtrlP
     autocmd!
-    autocmd BufEnter,WinEnter * nnoremap <F1> :CtrlPMRU<CR>
-    autocmd BufEnter,WinEnter * inoremap <F1> <C-O>:CtrlPMRU<CR>
+    autocmd BufEnter,WinEnter *
+	  \ execute 'nnoremap' g:ctrlp_map      ':' g:ctrlp_cmd '<CR>'
+    autocmd BufEnter,WinEnter *
+	  \ execute 'inoremap' g:ctrlp_map '<C-O>:' g:ctrlp_cmd '<CR>'
   augroup END
 endif
+execute 'inoremap' g:ctrlp_map '<C-O>:' g:ctrlp_cmd '<CR>'
 
 " Use the compiled C-version for speed improvements "{{{2
 if has('python')
