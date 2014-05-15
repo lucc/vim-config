@@ -13,30 +13,35 @@ import vim
 import webbrowser
 
 
+# some wrapper functions to be called from vim
+
 def autogit_vim():
     '''Wrapper around autogit() to be called from vim.'''
     filename = vim.current.buffer.name
     threading.Thread(target=autogit, args=(filename,)).start()
-    return 0
+    return 0 # bad practice but needed for vim's pyeval()
 
 
-def autogit(filename, directory=None):
-    '''Commit a file to a git repository.'''
-    if directory is None:
-        directory = os.path.dirname(filename)
-    head_ref = subprocess.check_output(
-            ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
-            cwd=directory).strip()
-    if head_ref in ['autocommit', 'autocmd']:
-        subprocess.call(['git', 'commit', '--all', '--no-edit',
-                '--message', 'automatically commited by vimrc.py'],
-                cwd=directory)
-    return 0 # bad practice but needed for vim
+def find_base_dir_vim_wrapper(cur=None):
+    if cur is None:
+        cur = vim.current.buffer.name
+    return find_base_dir(cur)
 
 
-def tex_doc(word='lshort'):
-    threading.Thread(target=subprocess.call, args=(['texdoc', word])).start()
+def open_pdf_vim_wrapper():
+    threading.Thread(target=open_pdf_or_preview_app).start()
 
+
+def tex_count_vim_wrapper(filename=None):
+    if filename is None:
+        filename = vim.current.buffer.name
+    width = vim.current.window.width - 1
+    for text in tex_count(filename):
+        print text[0:width]
+
+
+pass
+# functions which depend on the vim module directly
 
 def backup_current_buffer():
     '''Save a backup of the current vim buffer via scp.'''
@@ -55,110 +60,20 @@ def backup_current_buffer():
                 args=(server, filename, path)).start()
 
 
-def find_base_dir_vim_wrapper(cur=None):
-    if cur is None:
-        cur = vim.current.buffer.name
-    return find_base_dir(cur)
-
-
-def find_base_dir(filename,
-        indicator_files=('makefile', 'build.xml'),
-        indicator_dirs=('~/uni', '~/.vim')):
-    '''
-    Find a good "base" directory under some file.  Look for makefiles and vsc
-    repositories and the like.
-
-    filename: the filename to be used as a starting point
-    returns:  the absolute path to the best base directory
-    '''
-    indicator_dirs = [os.path.expanduser(x) for x in indicator_dirs]
-    matches = []
-    # look at directory of the current buffer and the working directory
-    for cur in [os.path.dirname(filename), os.path.realpath(os.path.curdir)]:
-        path = cur
-        stopper = False
-        while stopper != '':
-            for indicator in indicator_files:
-                if os.path.exists(os.path.join(path, indicator)):
-                    matches.append((path, indicator))
-            for directory in indicator_dirs:
-                if path == directory:
-                    matches.append((path, ''))
-            path, stopper = os.path.split(path)
-    # fallback value
-    if matches == []:
-        matches.append(('/', ''))
-    #if len(matches) == 1
-    #  return matches[0][0]
-    #endif
-    # TODO not optimal yet
-    return matches[0][0]
-
-
-
-
-def string_map_generator(generator):
-    '''A generator to yield a string for every item in another generator.
-    This is just a helper to check efficiently.'''
-    for item in generator:
-        yield str(item)
-
-
-def man_page_topics_for_completion(arg_lead, cmd_line, cursor_position):
-    paths = subprocess.check_output(['man', '-w']).decode().strip().split(':')
-    all = []
-    for path in paths:
-        for dirpath, dirnames, filenames in os.walk(path):
-            for filename in filenames:
-                #remove some suffixes
-                norm = filename.split('.')
-                if norm[-1] == 'gz':
-                    norm = norm[:-1]
-                if norm[-1] in '0123456789' or norm[-1] in ['3pm']:
-                    norm = norm[:-1]
-                bisect.insort_right(all, '.'.join(norm))
-    # TODO: only return unique paths
-    return all
-
-
-def tex_count_vim_wrapper(filename=None):
-    if filename is None:
-        filename = vim.current.buffer.name
-    width = vim.current.window.width - 1
-    for text in tex_count(filename):
-        print text[0:width]
-
-
-def tex_count(filename):
-    '''Count the words and characters in a tex and its pdf file.  Prints a
-    small report about the counts.'''
-
-    # fist the tex file
-    texcount = ['texcount', '-quiet', '-nocol', '-1', '-utf8', '-incbib']
-    charopt = '-char'
-
-    if os.path.exists(filename):
-        tex_words = subprocess.check_output(texcount+[filename])
-        tex_words = tex_words.split()[0].split('+')[0]
-        tex_chars = subprocess.check_output(texcount+[charopt, filename])
-        tex_chars = tex_chars.split()[0].split('+')[0]
-        #yield '%s words and %s chars in file %s.' % (tex_words, tex_chars, filename)
-        yield tex_words+' words and '+tex_chars+' chars in file '+filename+'.'
-
-    # second, the pdf
-    pdf = os.path.splitext(filename)[0] + '.pdf'
-
-    if os.path.exists(pdf):
-        p1 = subprocess.Popen(['pdftotext', pdf, '/dev/stdout'],
-                stdout=subprocess.PIPE)
-        pdf_words, pdf_chars = subprocess.check_output(['wc', '-m', '-w'],
-                stdin=p1.stdout).split()
-        #yield '%i words and %i chars in file %s.' % (pdf_words, pdf_chars, pdf)
-        yield pdf_words+' words and '+pdf_chars+' chars in file '+pdf+'.'
-
-
-def open_pdf_vim_wrapper():
-    threading.Thread(target=open_pdf_or_preview_app).start()
+def compile_generic(target):
+    filetype = vim.eval('&filetype')
+    if 'compile_' + filetype in globals():
+        compiler = eval('compile_' + filetype)
+    else:
+        raise KeyError
+    dirname, args = compiler(target, filetype, vim.current.buffer.name)
+    base = find_base_dir(vim.current.buffer.name)
+    string = ''
+    for arg in args:
+        string = ' '.join([string, shellquote(arg)])
+    string = 'cd ' + shellquote(dirname) + ' && ' + string
+    print 'Executing', ' '.join(args), 'in', dirname
+    subprocess.check_call(string, shell=True, stdout=None, stderr=None)
 
 
 def open_pdf_or_preview_app(check=False, filename=None, go_back=True):
@@ -256,27 +171,119 @@ def open_pdf_or_preview_app(check=False, filename=None, go_back=True):
     #endfunction
 
 
+pass
+# independent functions
+
+def autogit(filename, directory=None):
+    '''Commit a file to a git repository.'''
+    if directory is None:
+        directory = os.path.dirname(filename)
+    head_ref = subprocess.check_output(
+            ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+            cwd=directory).strip()
+    if head_ref in ['autocommit', 'autocmd']:
+        subprocess.call(['git', 'commit', '--all', '--no-edit',
+                '--message', 'automatically commited by vimrc.py'],
+                cwd=directory)
+
+
+def tex_doc(word='lshort'):
+    threading.Thread(target=subprocess.call, args=(['texdoc', word])).start()
+
+
+def find_base_dir(filename,
+        indicator_files=('makefile', 'build.xml'),
+        indicator_dirs=('~/uni', '~/.vim')):
+    '''
+    Find a good "base" directory under some file.  Look for makefiles and vsc
+    repositories and the like.
+
+    filename: the filename to be used as a starting point
+    returns:  the absolute path to the best base directory
+    '''
+    indicator_dirs = [os.path.expanduser(x) for x in indicator_dirs]
+    matches = []
+    # look at directory of the current buffer and the working directory
+    for cur in [os.path.dirname(filename), os.path.realpath(os.path.curdir)]:
+        path = cur
+        stopper = False
+        while stopper != '':
+            for indicator in indicator_files:
+                if os.path.exists(os.path.join(path, indicator)):
+                    matches.append((path, indicator))
+            for directory in indicator_dirs:
+                if path == directory:
+                    matches.append((path, ''))
+            path, stopper = os.path.split(path)
+    # fallback value
+    if matches == []:
+        matches.append(('/', ''))
+    #if len(matches) == 1
+    #  return matches[0][0]
+    #endif
+    # TODO not optimal yet
+    return matches[0][0]
+
+
+
+
+def string_map_generator(generator):
+    '''A generator to yield a string for every item in another generator.
+    This is just a helper to check efficiently.'''
+    for item in generator:
+        yield str(item)
+
+
+def man_page_topics_for_completion(arg_lead, cmd_line, cursor_position):
+    paths = subprocess.check_output(['man', '-w']).decode().strip().split(':')
+    all = []
+    for path in paths:
+        for dirpath, dirnames, filenames in os.walk(path):
+            for filename in filenames:
+                #remove some suffixes
+                norm = filename.split('.')
+                if norm[-1] == 'gz':
+                    norm = norm[:-1]
+                if norm[-1] in '0123456789' or norm[-1] in ['3pm']:
+                    norm = norm[:-1]
+                bisect.insort_right(all, '.'.join(norm))
+    # TODO: only return unique paths
+    return all
+
+
+def tex_count(filename):
+    '''Count the words and characters in a tex and its pdf file.  Prints a
+    small report about the counts.'''
+
+    # fist the tex file
+    texcount = ['texcount', '-quiet', '-nocol', '-1', '-utf8', '-incbib']
+    charopt = '-char'
+
+    if os.path.exists(filename):
+        tex_words = subprocess.check_output(texcount+[filename])
+        tex_words = tex_words.split()[0].split('+')[0]
+        tex_chars = subprocess.check_output(texcount+[charopt, filename])
+        tex_chars = tex_chars.split()[0].split('+')[0]
+        #yield '%s words and %s chars in file %s.' % (tex_words, tex_chars, filename)
+        yield tex_words+' words and '+tex_chars+' chars in file '+filename+'.'
+
+    # second, the pdf
+    pdf = os.path.splitext(filename)[0] + '.pdf'
+
+    if os.path.exists(pdf):
+        p1 = subprocess.Popen(['pdftotext', pdf, '/dev/stdout'],
+                stdout=subprocess.PIPE)
+        pdf_words, pdf_chars = subprocess.check_output(['wc', '-m', '-w'],
+                stdin=p1.stdout).split()
+        #yield '%i words and %i chars in file %s.' % (pdf_words, pdf_chars, pdf)
+        yield pdf_words+' words and '+pdf_chars+' chars in file '+pdf+'.'
+
+
 def activate_preview():
     treading.Thread(target=subprocess.call,
             args=(['open', '-a', 'Preview'])).start()
     #let version = system('defaults read loginwindow SystemVersionStampAsString')
     #if split(version, '.')[1] == '9'
-
-
-def compile_generic(target):
-    filetype = vim.eval('&filetype')
-    if 'compile_' + filetype in globals():
-        compiler = eval('compile_' + filetype)
-    else:
-        raise KeyError
-    dirname, args = compiler(target, filetype, vim.current.buffer.name)
-    base = find_base_dir(vim.current.buffer.name)
-    string = ''
-    for arg in args:
-        string = ' '.join([string, shellquote(arg)])
-    string = 'cd ' + shellquote(dirname) + ' && ' + string
-    print 'Executing', ' '.join(args), 'in', dirname
-    subprocess.check_call(string, shell=True, stdout=None, stderr=None)
 
 
 def shellquote(s):
@@ -456,3 +463,11 @@ def grabUrls(text):
     # alternatives:
     # r'\(http://\|www\.\)[^ ,;\t]*'
     # r'[a-z]*:\/\/[^ >,;:]*'
+
+pass
+# helper functions
+
+def thread(target, args):
+    '''Wrapper to call threading.Thread().start() directly.'''
+    threading.Thread(target=target, args=args).start()
+
