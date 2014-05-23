@@ -3,8 +3,6 @@
 
 " user defined variables {{{1
 
-"set guifont=DejaVu\ Sans\ Mono\ 9
-
 " TODO
 let s:fonts = [
       \ ['menlo for powerline',      12, 25],
