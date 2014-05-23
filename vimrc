@@ -237,6 +237,13 @@ nmap <silent> <D-F2>
 imap <silent> <D-F2>
       \ <C-O>:silent update <BAR> call luc#compiler#generic('', 1)<CR>
 
+" backup current buffer
+nnoremap <silent> <F11>
+      \ :silent update <BAR>
+      \ call luc#compiler#generic2('') <BAR>
+      \ call pyeval('backup_current_buffer() or True') <BAR>
+      \ redraw <CR>
+
 " moveing around {{{2
 nmap <C-Tab>        gt
 imap <C-Tab>   <C-O>gt
@@ -276,7 +283,6 @@ nmap ß :!clear<CR>
 "nmap <D--> :call s:LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
 "nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
 
-nnoremap <silent> <F11> :sil up<BAR>cal luc#compiler#generic2('')<BAR>call pyeval('backup_current_buffer() or True')<BAR>redr<CR>
 
 command! StartAutoGit let s:do_autogit = 1
 command! StopAutoGit  let s:do_autogit = 0
