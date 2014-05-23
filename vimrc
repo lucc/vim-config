@@ -871,7 +871,6 @@ let g:solarized_menu = 0
 "Plugin 'tomasr/molokai'
 "Plugin 'jonathanfilip/vim-lucius'
 "
-"
 ""Plugin 'molokai'
 ""Plugin 'pyte'
 ""Plugin 'dw_colors'
@@ -908,29 +907,13 @@ set noshowmode   " do not display the current mode in the command line
 set laststatus=2 " always display the statusline
 
 " plugins: unsorted {{{1
-"Plugin 'coot/CRDispatcher'
-"Plugin 'coot/EnchantedVim'
-
-"Plugin 'tyru/open-browser.vim'
-"can be replaced by python webbrowser.open()
-
 Plugin 'pix/vim-known_hosts'
 Plugin 'mileszs/ack.vim'
 Plugin 'rking/ag.vim'
-
-"Plugin 'browser.vim'
-"Plugin 'calendar.vim'
-
-" buggy!
-Plugin 'matchit.zip'
-
+Plugin 'matchit.zip' " buggy!
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'sjl/gundo.vim'
-
-Plugin 'VimRepress'
-"Plugin 'connermcd/VimRepress'
-"Plugin 'blogit.vim'
-
+Plugin 'VimRepress' "https://bitbucket.org/pentie/vimrepress
 Plugin 'ZoomWin'
 Plugin 'AndrewRadev/linediff.vim'
 
