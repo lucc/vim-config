@@ -745,9 +745,6 @@ Plugin 'Limp'
 "Plugin 'plasticboy/vim-markdown'
 "Plugin   'hallison/vim-markdown'
 
-" strange autocmd which run a lot
-"Plugin 'suan/vim-instant-markdown'
-
 " good folding uses expr
 Plugin 'nelstrom/vim-markdown-folding'
 let g:markdown_fold_style = 'nested'
