@@ -46,22 +46,6 @@ function! s:check_if_buffer_is_new(...) "{{{2
   return value
 endfunction
 
-" Change the color of the statusline depending on the current mode. {{{2
-" This version is from http://vim.wikia.com/wiki/VimTip1287
-"
-" mode -- has to be like v:insertmode
-function! s:insert_status_line_color(mode) "{{{2
-  if     a:mode == 'i'
-    highlight StatusLine guibg=DarkGreen   ctermbg=DarkGreen
-  elseif a:mode == 'r'
-    highlight StatusLine guibg=DarkMagenta ctermbg=DarkMagenta
-  elseif a:mode == 'n'
-    highlight StatusLine guibg=DarkBlue    ctermbg=DarkBlue
-  else
-    highlight statusline guibg=DarkRed     ctermbg=DarkRed
-  endif
-endfunction
-
 function! s:server_setup() "{{{2
   call s:viminfo_setup(!s:server_running())
 endfunction
@@ -937,38 +921,6 @@ endif
 " vim options related to the statusline {{{2
 set noshowmode   " do not display the current mode in the command line
 set laststatus=2 " always display the statusline
-
-" old manual statusline {{{2
-" many thanks to
-"   http://vim.wikia.com/wiki/Writing_a_valid_statusline
-"   https://wincent.com/wiki/Set_the_Vim_statusline
-"   http://winterdom.com/2007/06/vimstatusline
-"   http://got-ravings.blogspot.com/2008/08/
-
-" version 1
-"set statusline=%t%m%r[%{&ff}][%{&fenc}]%y[ASCII=\%03.3b]%=[%c%V,%l/%L][%p%%]
-" version 2
-"set statusline=%t%m%r[%{&fenc},%{&ff}%Y][ASCII=x%02.2B]%=[%c%V,%l/%L][%P]
-" version 3
-"set statusline=%t[%M%R%H][%{strlen(&fenc)?&fenc:'none'},%{&ff}%Y]
-"set statusline+=[ASCII=x%02.2B]%=%{strftime(\"%Y-%m-%d\ %H:%M\")}
-"set statusline+=\ [%c%V,%l/%L][%P]
-" version 4
-"set statusline=%t\ %([%M%R%H]\ %)[%{strlen(&fenc)?&fenc:'none'},
-"set statusline+=%{&fileformat}%Y%{fugitive#statusline()}]\ [ASCII=x%02B]\ %=
-"set statusline+=[%{strftime('%R')}]\ [%c%V,%l/%L]\ [%P]%(
-"set statusline+=\ %{SyntasticStatuslineFlag()}%)
-
-" " change highlighting when mode changes
-" augroup LucStatusLine
-"   autocmd!
-"   autocmd InsertEnter * call s:insert_status_line_color(v:insertmode)
-"   autocmd InsertLeave * call s:insert_status_line_color('n')
-" augroup END
-" " now we set the colors for the statusline
-" highlight StatusLine term=reverse cterm=bold,reverse ctermbg=1
-" "highlight StatusLine gui=bold
-" highlight StatusLine guibg=DarkBlue guifg=background
 
 " plugins: unsorted {{{1
 "Plugin 'coot/CRDispatcher'
