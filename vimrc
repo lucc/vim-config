@@ -263,16 +263,6 @@ nnoremap ` '
 " use ß to clear the screen if you want privacy for a moment
 nmap ß :!clear<CR>
 
-" From the .vimrc example file:
-" Convenient command to see the difference between the current buffer and the
-" file it was loaded from, thus the changes you made.
-" Only define it when not defined already.
-"command! DiffOrig vne | se bt=nofile | r # | 0d_ | difft | wincmd p | difft
-
-"command! Helptags call LucUpdateAllHelptags()
-"command! DislikeCS call s:LucLikeColorscheme(-1)
-"command! LikeCS call s:LucLikeColorscheme(1)
-
 command! StartAutoGit let s:do_autogit = 1
 command! StopAutoGit  let s:do_autogit = 0
 command! ToggleAutoGit let s:do_autogit = !s:do_autogit
