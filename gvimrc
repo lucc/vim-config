@@ -108,16 +108,3 @@ else
   set background=dark
 endif
 colorscheme solarized
-
-
-" other {{{1
-
-if has('gui_macvim')
-  " fix $PATH on Mac OS X
-  for item in readfile(expand('~/.config/env/PATH'))
-    let item = expand(item)
-    if !($PATH =~ item)
-      let $PATH = item . ':' . $PATH
-    endif
-  endfor
-endif
