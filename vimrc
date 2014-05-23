@@ -687,7 +687,6 @@ let g:Tex_UseMakefile = 1
 let g:Tex_CompileRule_pdf = 'latexmk -silent -pv -pdf $*'
 let g:Tex_SmartQuoteOpen = '„'
 let g:Tex_SmartQuoteClose = '“'
-"let g:Tex_Env_quote = "\\begin{quote}\<CR>,,<++>`` \\cite[S.~<++>]{<++>}\<CR>\\end{quote}"
 " the variable Tex_FoldedEnvironments holds the beginnings of names of
 " environments which should be folded.  The innermost environments should come
 " first.
