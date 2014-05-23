@@ -362,8 +362,6 @@ set formatoptions+=r " insert comment leader when hitting <enter>
 set formatoptions+=j " remove comment leader when joining lines
 set formatoptions+=l " do not break lines which are already long
 
-" options: satusline {{{1
-" see below at airline config
 " options: tabline {{{1
 " we could do something similar for tabs.
 " see :help 'tabline'
