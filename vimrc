@@ -260,14 +260,8 @@ nnoremap ` '
 
 " misc {{{2
 
-"nmap <Leader>d "=strftime('%F')<CR>p
-
 " use ß to clear the screen if you want privacy for a moment
 nmap ß :!clear<CR>
-
-" always search very magic
-"nnoremap / /\v
-"nnoremap ? ?\v
 
 " From the .vimrc example file:
 " Convenient command to see the difference between the current buffer and the
@@ -278,11 +272,6 @@ nmap ß :!clear<CR>
 "command! Helptags call LucUpdateAllHelptags()
 "command! DislikeCS call s:LucLikeColorscheme(-1)
 "command! LikeCS call s:LucLikeColorscheme(1)
-
-"nmap <D-+> :call s:LucLikeColorscheme(1)\|call LucSelectRandomColorscheme()<CR>
-"nmap <D--> :call s:LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
-"nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
-
 
 command! StartAutoGit let s:do_autogit = 1
 command! StopAutoGit  let s:do_autogit = 0
