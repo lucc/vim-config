@@ -48,6 +48,13 @@ def tex_count_vim_wrapper(filename=None):
         print text[0:width]
 
 
+def compile():
+    '''Compile the current file.'''
+    cls = compilercollection.find_compiler(vim.current.buffer.name)
+    compiler = cls(vim.current.buffer.name)
+    threading.Thread(target=compiler.run).start()
+
+
 pass
 # functions which depend on the vim module directly
 

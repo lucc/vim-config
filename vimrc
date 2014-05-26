@@ -230,17 +230,12 @@ endif
 nmap <Leader>w :python for url in strings.urls(vim.current.line): webbrowser.open(url)<CR>
 
 " easy compilation {{{2
-nmap <silent> <F2>        :silent update <BAR> python compiler.generic('')<CR>
-imap <silent> <F2>   <C-O>:silent update <BAR> python compiler.generic('')<CR>
-nmap <silent> <D-F2>
-      \      :silent update <BAR> call luc#compiler#generic('', 1)<CR>
-imap <silent> <D-F2>
-      \ <C-O>:silent update <BAR> call luc#compiler#generic('', 1)<CR>
+nmap <silent> <F2>        :silent update <BAR> python compile()<CR>
+imap <silent> <F2>   <C-O>:silent update <BAR> python compile()<CR>
 
 " backup current buffer
 nnoremap <silent> <F11>
       \ :silent update <BAR>
-      \ call luc#compiler#generic2('') <BAR>
       \ call pyeval('backup_current_buffer() or True') <BAR>
       \ redraw <CR>
 
