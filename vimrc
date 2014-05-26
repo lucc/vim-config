@@ -11,8 +11,8 @@ set guioptions+=M
 set guioptions-=m
 
 " sourcing other files {{{1
-if has('python')
-  pyfile ~/.vim/vimrc.py
+if has('python3')
+  py3file ~/.vim/vimrc.py
 endif
 
 " syntax and filetype {{{1
