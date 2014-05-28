@@ -13,7 +13,7 @@ import sys
 import webbrowser
 
 # importing private modules
-sys.path.append(os.path.expanduser('~/src/shell/python'))
+#sys.path.append(os.path.expanduser('~/src/shell/python'))
 import compilercollection
 import fs
 import git
