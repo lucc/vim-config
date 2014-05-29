@@ -25,27 +25,6 @@ let s:do_autogit = 1
 
 " functions {{{1
 
-" Check if a buffer is new. {{{2
-" That is to say, if it as no name and is empty.
-"
-" a:1    -- the buffer number to check, 1 is used if absent
-" return -- 1 if the buffer is new, else 0
-function! s:check_if_buffer_is_new(...) "{{{2
-  let number = a:0 ? a:1 : 1
-  " save current and alternative buffer
-  let current = bufnr('%')
-  let alternative = bufnr('#')
-  let value = 0
-  " check buffer name
-  if bufexists(number) && bufname(number) == ''
-    silent! execute 'buffer' number
-    let value = line('$') == 1 && getline(1) == ''
-    silent! execute 'buffer' alternative
-    silent! execute 'buffer' current
-  endif
-  return value
-endfunction
-
 function! s:server_setup() "{{{2
   call s:viminfo_setup(!s:server_running())
 endfunction
@@ -153,7 +132,7 @@ augroup END
 augroup LucSession "{{{2
   autocmd!
   autocmd VimEnter *
-	\ if s:check_if_buffer_is_new(1) |
+	\ if argc() == 0                 |
 	\   bwipeout 1                   |
 	\   doautocmd BufRead,BufNewFile |
 	\   redraw!                      |
