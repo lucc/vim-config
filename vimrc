@@ -53,6 +53,10 @@ function! s:viminfo_setup(server) "{{{2
     set viminfo+=n~/.vim/viminfo
     " load a static viminfo file with a file list
     rviminfo ~/.vim/default-buffer-list.viminfo
+    " set up an argument list to prevent the empty buffer at start up
+    if argc() == 0
+      execute 'args' bufname(2)
+    endif
   else
     " if we are not running as the server do not use the viminfo file.  We
     " probably only want to edit one file quickly from the command line.
@@ -127,16 +131,6 @@ augroup LucGitCommit "{{{3
   autocmd!
   autocmd FileType gitcommit
 	\ setlocal spell
-augroup END
-
-augroup LucSession "{{{2
-  autocmd!
-  autocmd VimEnter *
-	\ if argc() == 0                 |
-	\   bwipeout 1                   |
-	\   doautocmd BufRead,BufNewFile |
-	\   redraw!                      |
-	\ endif
 augroup END
 
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
