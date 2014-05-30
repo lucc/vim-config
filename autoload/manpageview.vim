@@ -1,7 +1,7 @@
 " manpagevim : extra commands for manual-handling
 " Author:	Charles E. Campbell
-" Date:		Apr 08, 2013
-" Version:	25l	 ASTRO-ONLY
+" Date:		Mar 04, 2014
+" Version:	25n	 ASTRO-ONLY
 "
 " Please read :help manpageview for usage, options, etc
 "
@@ -14,7 +14,7 @@
 if &cp || exists("g:loaded_manpageview")
  finish
 endif
-let g:loaded_manpageview = "v25l"
+let g:loaded_manpageview = "v25n"
 if v:version < 702
  echohl WarningMsg
  echo "***warning*** this version of manpageview needs vim 7.2 or later"
@@ -48,10 +48,11 @@ endif
 " Default Variable Values: {{{1
 "DechoWF "Set up default variable values:"
 if has("unix") || has("win32unix")
- let s:nostderr= " 2>/dev/null"
+ let s:nostderr= ' 2>/dev/null'
 else
  let s:nostderr= ""
 endif
+"call Decho('..s:nostderr='.s:nostderr)
 if !exists("g:manpageview_iconv")
  if executable("iconv")
   let s:iconv= "iconv -c"
@@ -64,15 +65,19 @@ endif
 if s:iconv != ""
  let s:iconv= s:nostderr."| ".s:iconv
 endif
+"call Decho('..s:iconv='.s:iconv)
 if !exists("g:manpageview_pgm") && executable("man")
  let g:manpageview_pgm= "man"
 endif
+"call Decho('..g:manpageview_pgm='.g:manpageview_pgm)
 if !exists("g:manpageview_multimanpage")
  let g:manpageview_multimanpage= 1
 endif
+"call Decho('..g:manpageview_multimanpage='.g:manpageview_multimanpage)
 if !exists("g:manpageview_options")
  let g:manpageview_options= ""
 endif
+"call Decho('..g:manpageview_options='.g:manpageview_options)
 if !exists("g:manpageview_pgm_i") && executable("info")
 " DechoWF "installed info help support via manpageview"
  let g:manpageview_pgm_i     = "info"
@@ -166,6 +171,9 @@ fun! manpageview#ManPageView(...) range
   set lz
   let manpageview_fname = expand("%")
   call s:MPVSaveSettings()
+  if exists("s:specialhandler")
+   unlet s:specialhandler
+  endif
 
   " ---------------------------------------------------------------------
   " parse arguments for topic and booknumber {{{3
@@ -248,7 +256,7 @@ fun! manpageview#ManPageView(...) range
   if topic =~ '\.'
    let ext = substitute(topic,'^.*\.','','e')
   endif
-  if exists("g:manpageview_pgm_gl") && topic =~ '^gl'
+  if exists("g:manpageview_pgm_gl") && topic =~ '^gl\>'
    let ext = "gl"
   endif
 
@@ -260,47 +268,55 @@ fun! manpageview#ManPageView(...) range
    " filetype: vim
    if &ft == "vim"
 "	DechoWF "(ManPageView) special vim handler"
-	let retval= manpageview#ManPageVim(topic)
+    let s:specialhandler = "vim"
+    let retval           = manpageview#ManPageVim(topic)
 "	call Dret("manpageview#ManPageView ".retval)
 	return retval
 
    " filetype: perl
    elseif &ft == "perl" || &ft == "perldoc"
 "	DechoWF "(ManPageView) special perl handler"
-   	let ext = "pl"
+    let s:specialhandler = "perl"
+    let ext              = "pl"
 
    " filetype:  php
    elseif &ft == "php" || &ft == "manphp"
 "	DechoWF "(ManPageView) special php handler"
-   	let ext = "php"
+    let s:specialhandler = "php"
+    let ext              = "php"
 
 	" filetype:  python
    elseif &ft == "python" || &ft == "pydoc"
 "	DechoWF "(ManPageView) special python handler"
-   	let ext = "py"
+    let s:specialhandler = "python"
+    let ext              = "py"
 
    " filetype: info
    elseif &ft == "info"
 "	DechoWF "(ManPageView) special info handler"
-	let ext= "i"
+    let s:specialhandler = "info"
+    let ext              = "i"
 
    " filetype: tex
    elseif &ft == "tex"
 "	DechoWF "(ManPageView) special tex handler"
-    let ext= "tex"
-    let retval= manpageview#ManPageTexLookup(0,topic)
+    let s:specialhandler = "tex"
+    let ext              = "tex"
+    let retval = manpageview#ManPageTexLookup(0,topic)
 "    call Dret("manpageview#ManPageView ".retval)
     return retval
    endif
 
   elseif ext == "vim"
 "   DechoWF "(ManPageView) special vim handler"
-   let retval= manpageview#ManPageVim(substitute(topic,'\.vim$','',''))
+   let s:specialhandler = "vim"
+   let retval           = manpageview#ManPageVim(substitute(topic,'\.vim$','',''))
 "   call Dret("manpageview#ManPageView ".retval)
    return retval
 
   elseif ext == "tex"
-   let retval= manpageview#ManPageTexLookup(0,substitute(topic,'\.tex$',"",""))
+   let s:specialhandler = "tex"
+   let retval           = manpageview#ManPageTexLookup(0,substitute(topic,'\.tex$',"",""))
 "   call Dret("manpageview#ManPageView ".retval)
    return retval
   endif
@@ -636,17 +652,17 @@ fun! manpageview#ManPageView(...) range
 "	 DechoWF "(ManPageView) ‣iopt   <".(exists("iopt")?    iopt    : 'n/a').">"
 "	 DechoWF "(ManPageView) ‣mpb    <".(exists("mpb")?     mpb     : 'n/a').">"
 "	 DechoWF "(ManPageView) ‣topic  <".(exists("topic")?   topic   : 'n/a').">"
-"	 DechoWF "(ManPageView) ‣s:iconv<".(exists("s:iconv")? s:iconv : 'n/a').">"
+"	 call Decho("(ManPageView) ‣s:iconv<".(exists("s:iconv")? s:iconv : 'n/a').">")
 "	 call Decho('(ManPageView) ‣s:nostderr="'.s:nostderr.'"')
 	 if exists("g:mpvcmd")
-"	  DechoWF "(ManPageView) ‣mpvcmd: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." ".g:mpvcmd.s:nostderr
+"	  call Decho("(ManPageView) ‣mpvcmd: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." ".g:mpvcmd.s:nostderr)
       exe cmdmod."r!".pgm." ".iopt." ".mpb." ".g:mpvcmd.s:nostderr
 	  unlet g:mpvcmd
 	 elseif nospace
-"	  DechoWF "(ManPageView) ‣nospace=".nospace.":  exe sil! ".cmdmod."r!".pgm.iopt.mpb.topic.(exists("s:iconv")? s:iconv : "").s:nostderr
+"	  call Decho("(ManPageView) ‣nospace=".nospace.":  exe sil! ".cmdmod."r!".pgm.iopt.mpb.topic.(exists("s:iconv")? s:iconv : "").s:nostderr)
 	  exe cmdmod."r!".pgm.iopt.mpb.shellescape(topic,1).(exists("s:iconv")? s:iconv : "").s:nostderr
      elseif has("win32")
-"	  DechoWF "(ManPageView) ‣win32: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." \"".topic."\" ".(exists("s:iconv")? s:iconv : "").s:nostderr
+"	  call Decho("(ManPageView) ‣win32: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." \"".topic."\" ".(exists("s:iconv")? s:iconv : "").s:nostderr)
 	  exe cmdmod."r!".pgm." ".iopt." ".mpb." ".shellescape(topic,1).(exists("s:iconv")? " ".s:iconv : "").s:nostderr
 	 else
 "	  call Decho("(ManPageView) ‣normal: exe ".cmdmod."r!".pgm." ".iopt." ".mpb." '".topic."' ".(exists("s:iconv")? s:iconv : "").s:nostderr)
@@ -1258,8 +1274,18 @@ fun! manpageview#ManPageVim(topic)
     exe "help ".fnameescape(a:topic)
    endif
   else
+
    " Man
+  try
    exe "help ".fnameescape(a:topic)
+  catch /^Vim\%((\a\+)\)\=:E149/
+   echohl WarningMsg
+   echomsg "***warning*** unable to find man page on <".a:topic.">"
+    \ ((exists("s:specialhandler"))? "using special handler for ".s:specialhandler : "")
+   echohl None
+   sleep 2
+  endtry
+
   endif
 
 "  call Dret("manpageview#ManPageVim")
@@ -1455,6 +1481,7 @@ fun! manpageview#BookSearch(direction)
   unlet s:mpv_booksearch
   let &lz= keeplz
   if retval < 0
+   " restore man page to the one prior to the search
    call manpageview#ManPageView(curbknum,curtopic)
    echohl WarningMsg
    echomsg "***warning*** unable to find man page on <".topic."> with a ".((a:direction > 0)? "larger" : "smaller")." book number"
