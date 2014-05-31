@@ -141,7 +141,7 @@ augroup END
 
 augroup LucAutoGit "{{{2
   autocmd!
-  autocmd BufWritePost ~/.config/**,~/src/shell/**
+  autocmd BufWritePost ~/.config/**,~/src/shell/**,~/.homesick/repos/**
 	\ if s:do_autogit                |
 	\   call pyeval('autogit_vim()') |
 	\ endif
@@ -342,24 +342,68 @@ set formatoptions+=l " do not break lines which are already long
 " options: wildmenu and wildignore {{{1
 set wildmenu
 set wildmode=longest:full,full
-set wildignore+=.hg,.git,.svn                  " Version control
-set wildignore+=*.aux,*.out,*.toc,*.idx,*.fls  " LaTeX intermediate files
-set wildignore+=*.fdb_latexmk                  " LaTeXmk files
-set wildignore+=*.pdf,*.dvi,*.ps,*.djvu        " binary documents (latex)
-set wildignore+=*.odt,*.doc,*.docx             " office text documents
-set wildignore+=*.ods,*.xls,*.xlsx             " office spreadsheets
-set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg " binary images
-set wildignore+=*.mp3,*.flac                   " music
-set wildignore+=.*.sw?                         " Vim swap files
-set wildignore+=.DS_Store,*.dmg                " OSX bullshit
-set wildignore+=*.o,*.obj,*.exe,*.dll          " compiled object files
-set wildignore+=*.class                        " java class files
-set wildignore+=*.spl                          " compiled spell word lists
-set wildignore+=*.tar,*.tgz,*.tbz2,*.tar.gz,*.tar.bz2
-"set wildignore+=*.luac                        " Lua byte code
-"set wildignore+=migrations                    " Django migrations
-set wildignore+=*.pyc                          " Python byte code
-"set wildignore+=*.orig                        " Merge resolution files
+
+" version control {{{2
+set wildignore+=.git
+set wildignore+=.hg
+set wildignore+=.svn
+"set wildignore+=*.orig " Merge resolution files
+
+" latex intermediate files {{{2
+set wildignore+=*.aux
+set wildignore+=*.fdb_latexmk
+set wildignore+=*.fls
+set wildignore+=*.idx
+set wildignore+=*.out
+set wildignore+=*.toc
+
+" binary documents and office documents {{{2
+set wildignore+=*.djvu
+set wildignore+=*.doc   " Microsoft Word
+set wildignore+=*.docx  " Microsoft Word
+set wildignore+=*.dvi
+set wildignore+=*.ods   " Open Document spreadsheet
+set wildignore+=*.odt   " Open Document spreadsheet template
+set wildignore+=*.pdf
+set wildignore+=*.ps
+set wildignore+=*.xls   " Microsoft Excel
+set wildignore+=*.xlsx  " Microsoft Excel
+
+" binary images {{{2
+set wildignore+=*.bmp
+set wildignore+=*.gif
+set wildignore+=*.jpeg
+set wildignore+=*.jpg
+set wildignore+=*.png
+
+" music {{{2
+set wildignore+=*.mp3
+set wildignore+=*.flac
+
+" special vim files {{{2
+set wildignore+=.*.sw? " Vim swap files
+set wildignore+=*.spl  " compiled spell word lists
+
+" OS specific files {{{2
+set wildignore+=.DS_Store
+
+" compiled and binary files {{{2
+set wildignore+=*.class " java
+set wildignore+=*.dll   " windows libraries
+set wildignore+=*.exe   " windows executeables
+set wildignore+=*.o     " object files
+set wildignore+=*.obj   " ?
+set wildignore+=*.pyc   " Python byte code
+set wildignore+=*.luac  " Lua byte code
+
+" unsuported archives and images {{{2
+set wildignore+=*.dmg
+set wildignore+=*.iso
+set wildignore+=*.tar
+set wildignore+=*.tar.bz2
+set wildignore+=*.tar.gz
+set wildignore+=*.tbz2
+set wildignore+=*.tgz
 
 " setting variables for special settings {{{1
 "let g:vimsyn_folding  = 'a' " augroups
@@ -868,10 +912,15 @@ endif
 set noshowmode   " do not display the current mode in the command line
 set laststatus=2 " always display the statusline
 
+" plugins: searching {{{1
+if executeable('ag')
+  Plugin 'rking/ag.vim'
+elseif executeable('ack')
+  Plugin 'mileszs/ack.vim'
+endif
+
 " plugins: unsorted {{{1
 Plugin 'pix/vim-known_hosts'
-Plugin 'mileszs/ack.vim'
-Plugin 'rking/ag.vim'
 Plugin 'matchit.zip' " buggy!
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'sjl/gundo.vim'

@@ -60,19 +60,19 @@ augroup END
 nmap ß :windo set rightleft!<CR>
 if has("gui_macvim")
   " tabs
-  nmap <S-D-CR> <C-W>T
+  nmap <S-D-CR>      <C-W>T
   imap <S-D-CR> <C-O><C-W>T
   " fullscreen
-  nmap <D-CR> :call <SID>toggle_fullscreen()<CR>
+  nmap <D-CR>      :call <SID>toggle_fullscreen()<CR>
   imap <D-CR> <C-O>:call <SID>toggle_fullscreen()<CR>
-  nmap <F12> :call <SID>toggle_font_size()<CR>
-  imap <F12> <C-O>:call <SID>toggle_font_size()<CR>
+  nmap <F12>       :call <SID>toggle_font_size()<CR>
+  imap <F12>  <C-O>:call <SID>toggle_font_size()<CR>
   " copy and paste like the mac osx default
-  nmap <silent> <D-v>  "*p
+  nmap <silent> <D-v>       "*p
   imap <silent> <D-v>  <C-r>*
-  nmap <silent> <D-c>  "*yy
+  nmap <silent> <D-c>       "*yy
   imap <silent> <D-c>  <C-o>"*yy
-  vmap <silent> <D-c>  "*ygv
+  vmap <silent> <D-c>       "*ygv
   " open pdfs for tex files
   "nmap <silent> <F3>   :call LucOpenPdfOrPreview(0, '', 1)<CR>
   "imap <silent> <F3>   <C-O>:call LucOpenPdfOrPreview(0, '', 1)<CR>
@@ -102,9 +102,5 @@ if has("gui_macvim")
 endif
 
 " colorscheme {{{1
-if strftime('%H%M') > 700 && strftime('%H%M') < 2100
-  set background=light
-else
-  set background=dark
-endif
+set background=light
 colorscheme solarized
