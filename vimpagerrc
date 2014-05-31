@@ -4,7 +4,9 @@
 set noloadplugins
 
 set mouse=a
+set mouse=n
 
+"let vimpager_use_gvim = 1
 
 "fun! s:NextPage()
 "  exe "normal! \<C-F>"
