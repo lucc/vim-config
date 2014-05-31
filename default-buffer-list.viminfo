@@ -1,0 +1,57 @@
+# Value of 'encoding' when this file was written
+*encoding=utf-8
+
+# Buffer list:
+%~/TODO	0	0
+
+# vim config files
+%~/src/dotfiles/vim/vimrc	0	0
+%~/src/dotfiles/vim/gvimrc	0	0
+
+# other config files
+%~/.latexmkrc	0	0
+%~/.mailcap	0	0
+%~/.mailcheckrc	0	0
+%~/.mime.types	0	0
+%~/.pentadactylrc	0	0
+%~/.rtorrent.rc	0	0
+%~/.tmux.conf	0	0
+
+# security config files 
+%~/.fetchmailrc	0	0
+%~/.mailfilter	0	0
+%~/.mutt/muttrc	0	0
+%~/.secure/gpg/gpg.conf	0	0
+%~/.secure/netrc	0	0
+%~/.secure/ssh/config	0	0
+%~/.secure/xml	0	0
+
+# vim buffer list and other stuff
+%~/.vim/default-buffer-list.viminfo	0	0
+%~/.vim/notes	0	0
+%~/.vimpagerrc	0	0
+
+# further config files
+%~/.emacs.d/init.el	0	0
+%~/.config/env/INFOPATH	0	0
+%~/.config/env/PATH	0	0
+%~/.config/feh/keys	0	0
+%~/.config/feh/themes	0	0
+%~/.config/shell/aliases	0	0
+%~/.config/shell/envrc	0	0
+%~/.config/shell/inputrc	0	0
+%~/.config/shell/profile	0	0
+%~/.config/shell/zshenv	0	0
+%~/.config/shell/zshrc	0	0
+%~/etc/notizen.txt	0	0
+
+# remote files
+%ftp://ftp.lima-city.de/index.html	0	0
+%ftp://ftp.lima-city.de/files/dotfiles/index.php	0	0
+%scp://math/.profile	0	0
+%scp://ifi/.profile	0	0
+%scp://ifi/.profile_local	0	0
+%scp://lg/.bash_profile	0	0
+
+
+# vim: ft=viminfo
