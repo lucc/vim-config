@@ -1,0 +1,13 @@
+" ~/.vimpagerrc file by luc
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set noloadplugins
+
+set mouse=a
+
+
+"fun! s:NextPage()
+"  exe "normal! \<C-F>"
+"endfun
+
+" vim: syntax=vim
