@@ -1,0 +1,19 @@
+" ~/.vimpagerrc file by luc
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set noloadplugins
+
+set mouse=a
+set mouse=n
+
+set viminfo=""
+
+
+
+"let vimpager_use_gvim = 1
+
+"fun! s:NextPage()
+"  exe "normal! \<C-F>"
+"endfun
+
+" vim: syntax=vim
