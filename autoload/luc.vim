@@ -118,21 +118,10 @@ function! luc#format_bib() "{{{2
 
   " format the line with "@type{key,"
   %substitute/^@\([a-z]\+\)\s*{\s*\([a-z0-9.:-]\+\),\s*$/\=d.f(submatch(1), submatch(2))/
-  " format lines wit closing brackets
+  " format lines with closing brackets
   %substitute/^\s*}\s*$/}/
   " format lines in the entries
   %substitute/^\s*\([A-Za-z]\+\)\s*=\s*["{]\(.*\)["}],$/\=d.g(submatch(1), submatch(2))/
-endfunction
-
-function! luc#resize_gui() " {{{2
-  " function to put the gvim window on the left of the screen
-  set nofullscreen
-  set guioptions-=T
-  winpos 0 0
-  let &guifont = s:normalfonts
-  set lines=999
-  set columns=85
-  "redraw!
 endfunction
 
 function! s:flatten_list(list) "{{{2
@@ -160,6 +149,10 @@ function! s:goto_definition(string) "{{{2
       normal gd
     endtry
   endtry
+  " taken from
+  " http://www.artandlogic.com/blog/2013/06/vim-for-python-development/
+  " execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
+  " noautocmd
 endfunction
 
 function! s:select_font(big) "{{{2

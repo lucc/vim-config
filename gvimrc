@@ -29,10 +29,21 @@ if system('uname') == "Linux\n"
 endif
 
 " user defined functions {{{1
+function! s:resize_gui() " {{{2
+  " function to put the gvim window on the left of the screen
+  set nofullscreen
+  set guioptions-=T
+  winpos 0 0
+  let &guifont = s:normalfonts
+  set lines=999
+  set columns=85
+  "redraw!
+endfunction
+
 function! <SID>toggle_fullscreen() " {{{2
   " function to toggle fullscreen mode
   if &fullscreen
-    call luc#resize_gui()
+    call s:resize_gui()
   else
     set fullscreen
   endif

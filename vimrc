@@ -29,8 +29,8 @@ function! s:server_setup() "{{{2
   call s:viminfo_setup(!s:server_running())
 endfunction
 
-" Check if another vim server is already running. {{{2
 function! s:server_running() "{{{2
+  " Check if another vim server is already running.
   return !empty(has('clientserver') ? serverlist() : system('vim --serverlist'))
 endfunction
 
@@ -54,14 +54,21 @@ function! s:viminfo_setup(server) "{{{2
     " load a static viminfo file with a file list
     rviminfo ~/.vim/default-buffer-list.viminfo
     " set up an argument list to prevent the empty buffer at start up
-    if argc() == 0
-      execute 'args' bufname(2)
-    endif
+    "if argc() == 0
+    "  execute 'args' bufname(2)
+    "endif
   else
     " if we are not running as the server do not use the viminfo file.  We
     " probably only want to edit one file quickly from the command line.
     set viminfo=
   endif
+endfunction
+
+function! Luc_save_and_compile() " {{{2
+  let pos = getpos('.')
+  silent update
+  python compile()
+  call setpos('.', pos)
 endfunction
 
 " setup for server vim {{{1
@@ -136,7 +143,9 @@ augroup END
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd!
   autocmd BufWrite *
-	\ silent %substitute/\s\+$//e
+	\ let s:position = getpos('.')          |
+	\ silent keepjumps %substitute/\s\+$//e |
+	\ call setpos('.', s:position)          |
 augroup END
 
 augroup LucAutoGit "{{{2
@@ -199,17 +208,20 @@ if has('gui_macvim')
   noremap  <D-s>      :silent update<CR>
 endif
 
+" interactife fix for latex quotes in english files
+command! UnsetLaTeXQuotes unlet g:Tex_SmartQuoteOpen g:Tex_SmartQuoteClose
+
 " open URLs {{{2
 nmap <Leader>w :python for url in strings.urls(vim.current.line): webbrowser.open(url)<CR>
 
 " easy compilation {{{2
-nmap <silent> <F2>        :silent update <BAR> python compile()<CR>
-imap <silent> <F2>   <C-O>:silent update <BAR> python compile()<CR>
+nmap <silent> <F2>        :call Luc_save_and_compile()<CR>
+imap <silent> <F2>   <C-O>:call Luc_save_and_compile()<CR>
 
 " backup current buffer
 nnoremap <silent> <F11>
       \ :silent update <BAR>
-      \ call pyeval('backup_current_buffer() or True') <BAR>
+      \ call pyeval('backup_current_buffer()') <BAR>
       \ redraw <CR>
 
 " moveing around {{{2
@@ -718,6 +730,9 @@ let g:Tex_FoldedEnvironments .= ',bem'
 let g:Tex_FoldedEnvironments .= ',proof'
 " quotes can contain other stuff
 let g:Tex_FoldedEnvironments .= ',quot'
+" the beamer class has two top level environments
+let g:Tex_FoldedEnvironments .= ',block'
+let g:Tex_FoldedEnvironments .= ',frame'
 " environments for the general document
 let g:Tex_FoldedEnvironments .= ',thebibliography'
 let g:Tex_FoldedEnvironments .= ',keywords'
@@ -775,6 +790,9 @@ Plugin 'sunsol/vim_python_fold_compact'
 "Plugin 'Python-Syntax-Folding'
 "Plugin 'klen/python-mode'
 
+" svn checkout http://vimpdb.googlecode.com/svn/trunk/ vimpdb-read-only
+Plugin 'fs111/pydoc.vim'
+
 " plugins: iCal {{{2
 
 " syntax highlighting
@@ -810,6 +828,7 @@ if has('clientserver') | Plugin 'pydave/AsyncCommand' | endif
 " All these settings are dependent on the file ~/.ctags.
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-easytags'
+let g:easytags_updatetime_warn = 0
 let g:easytags_file = '~/.cache/tags'
 "let g:easytags_by_filetype = '~/.cache/vim-easytag'
 let g:easytags_ignored_filetypes = ''
@@ -913,11 +932,18 @@ set noshowmode   " do not display the current mode in the command line
 set laststatus=2 " always display the statusline
 
 " plugins: searching {{{1
-if executeable('ag')
-  Plugin 'rking/ag.vim'
-elseif executeable('ack')
+"if executable('ag')
+"  Plugin 'rking/ag.vim'
+"elseif executable('ack')
   Plugin 'mileszs/ack.vim'
-endif
+"endif
+
+" plugins: compiling {{{1
+Plugin 'tpope/vim-dispatch'
+
+Plugin 'xuhdev/SingleCompile'
+let g:SingleCompile_asyncrunmode = 'python'
+let g:SingleCompile_menumode = 0
 
 " plugins: unsorted {{{1
 Plugin 'pix/vim-known_hosts'

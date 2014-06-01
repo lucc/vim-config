@@ -2,6 +2,8 @@
 vimrc.py file by luc.  This file should be loaded from vimrc with :pyfile.
 '''
 
+from __future__ import print_function
+
 #import random.randint
 import bisect
 import os
@@ -45,7 +47,7 @@ def tex_count_vim_wrapper(filename=None):
         filename = vim.current.buffer.name
     width = vim.current.window.width - 1
     for text in tex.count(filename):
-        print text[0:width]
+        print(text[0:width])
 
 
 def compile():
@@ -54,9 +56,6 @@ def compile():
     compiler = cls(vim.current.buffer.name)
     threading.Thread(target=compiler.run).start()
 
-
-pass
-# functions which depend on the vim module directly
 
 def backup_current_buffer():
     '''Save a backup of the current vim buffer via scp.'''
@@ -67,6 +66,7 @@ def backup_current_buffer():
         path = os.path.join(servers[server], mytime)
         threading.Thread(target=ssh.background_scp, args=([filename], server,
                 path, True, True)).start()
+    return 0 # bad practice but needed for vim's pyeval()
 
 
 def open_pdf_or_preview_app(check=False, filename=None, go_back=True):
@@ -114,9 +114,6 @@ def open_pdf_or_preview_app(check=False, filename=None, go_back=True):
         vim.eval('foreground()')
 
 
-pass
-# independent functions
-
 def man_page_topics_for_completion(arg_lead, cmd_line, cursor_position):
     paths = subprocess.check_output(['man', '-w']).decode().strip().split(':')
     all = []
@@ -135,7 +132,7 @@ def man_page_topics_for_completion(arg_lead, cmd_line, cursor_position):
 
 
 def activate_preview():
-    treading.Thread(target=subprocess.call,
+    threading.Thread(target=subprocess.call,
             args=(['open', '-a', 'Preview'])).start()
     #let version = system('defaults read loginwindow SystemVersionStampAsString')
     #if split(version, '.')[1] == '9'
