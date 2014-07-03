@@ -1,0 +1,98 @@
+# Some tex templates by luc.
+
+snippet article "The default header for an article" !b
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[${1:ngerman}]{babel}
+
+\author{Lucas Hoffmann}
+\title{$2}
+
+\begin{document}
+%%fakesection titlepage
+\maketitle
+\renewcommand\abstractname{}
+\begin{abstract}
+% TODO
+\end{abstract}
+\vfill
+\tableofcontents
+\clearpage
+
+\section{Einleitung}
+$0
+
+%%fakesection Bibliographie
+\bibliographystyle{${3:alphadin}}
+\bibliography{${4:main}}
+\end{document}
+%%fakesection Notizen
+endsnippet
+
+snippet handout "A a handout for a short presentation" !b
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[${1:ngerman}]{babel}
+
+%\usepackage[
+%            top=3cm,hmargin=3cm,bottom=3.5cm
+%	   ]{geometry}
+%\usepackage{multicol}
+%\usepackage[
+%            small
+%           ]{titlesec}
+%\usepackage{enumerate}
+
+%\usepackage{amssymb}
+%\usepackage{amsmath}
+
+\pagestyle{empty}
+\author{Lucas Hoffmann}
+
+\begin{document}
+\begin{flushleft}
+%\footnotesize
+%\small
+${2:% Header}
+\end{flushleft}
+\begin{center}
+\bfseries
+\LARGE
+${3:Titel}
+\end{center}
+$0
+\end{document}
+endsnippet
+
+snippet mini "a minimal document" b
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[${1:ngerman}]{babel}
+\author{Lucas Hoffmann}
+\title{$2}
+\begin{document}
+$0
+\end{document}
+endsnippet
+
+snippet rezept "Ein Rezept für mein Kochbuch" !b
+\begin{rezept}{${1:Name}}{${2:von wem?}}
+
+\index{$3}
+
+\begin{zutaten}[${4:reicht für ...}]
+  $5
+\end{zutaten}
+
+\zubereitung
+
+\begin{enumerate}
+  \item $6
+  \item $7
+\end{enumerate}
+
+\end{rezept}
+endsnippet

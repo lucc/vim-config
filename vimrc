@@ -64,6 +64,15 @@ function! s:viminfo_setup(server) "{{{2
   endif
 endfunction
 
+function! s:tex_buffer_maps()
+  " Some maps for tex buffers.  They are collected in a function because
+  " putting :map into autocmds is error prone.
+  nnoremap <buffer> K
+	\ :call pyeval('tex.doc("""'.expand('<cword>').'""") or 1')<CR>
+  nnoremap <buffer> gG :python tex_count_vim_wrapper()<CR>
+  vnoremap <buffer> gG :python tex_count_vim_wrapper()<CR>
+endfunction
+
 function! Luc_save_and_compile() " {{{2
   let pos = getpos('.')
   silent update
@@ -96,12 +105,12 @@ augroup LucTex "{{{3
 	\ setlocal
 	\   spell
 	\   dictionary+=%:h/**/*.bib,%:h/**/*.tex
-	\   grepprg=grep\ -nH\ $*
-	\ |
-	\ nnoremap <buffer> K
-	\   :call pyeval('tex.doc("""'.expand('<cword>').'""") or 1')<CR>|
-	\ nnoremap <buffer> gG :python tex_count_vim_wrapper()<CR>|
-	\ vnoremap <buffer> gG :python tex_count_vim_wrapper()<CR>
+	\   grepprg=grep\ -nH\ $*                 |
+	\ call s:tex_buffer_maps()                |
+	\ if pyeval('check_for_english_babel()')  |
+	\   let b:Tex_SmartQuoteOpen = '“'        |
+	\   let b:Tex_SmartQuoteClose = '”'       |
+	\ endif
 augroup END
 
 augroup LucPython "{{{3
@@ -509,7 +518,7 @@ if has('python') " -> Youcompleteme {{{2
 
 else             " -> neocomplete and neocomplcache {{{2
   " settings which are uniform for both neocomplete and neocomplcache
-  Plugin 'Shougo/vimproc'
+  "Plugin 'Shougo/vimproc' "only needed if not loaded elsewhere
   Plugin 'Shougo/context_filetype.vim'
   "Plugin 'Shougo/neosnippet'
 
@@ -656,6 +665,8 @@ else
   Plugin 'MarcWeber/vim-addon-mw-utils'
   Plugin 'tomtom/tlib_vim'
   Plugin 'garbas/vim-snipmate'
+  imap <C-F> <Plug>snipMateNextOrTrigger
+  smap <C-F> <Plug>snipMateNextOrTrigger
 endif
 
 " Snippets are separated from the engine:
@@ -813,10 +824,10 @@ let g:ScreenShellTerminal = 'iTerm.app'
 "Plugin 'xolox/vim-shell'
 "Plugin 'vimux'
 
-"Plugin 'Shougo/vimshell.vim' "{{{2
-"Plugin 'Shougo/vimproc'
+Plugin 'Shougo/vimshell.vim' "{{{2
+Plugin 'Shougo/vimproc'
 "map <D-F11> :VimShellPop<cr>
-"let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
+let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
 
 " to be tested (shell in gvim) {{{2
 Plugin 'https://bitbucket.org/fboender/bexec.git'

@@ -1,106 +1,64 @@
-snippet article "The default header for an article" !b
-\documentclass[a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[${1:ngerman}]{babel}
+# first include the lengthy templates:
+extends tex_templates
 
-\author{Lucas Hoffmann}
-\title{$2}
+global !p
+def find_babel_languages():
+    '''Return a list of babel languges for the current file.'''
+    for line in vim.current.buffer:
+        if line.startswith(r'\usepackage['):
+            match = re.match(r'^\\usepackage\[(.*)\]{babel}$', line)
+            if match:
+                return match.group(1).split(',')
+    return []
+def map_lang(lang):
+  if lang in ['de', 'german', 'ngerman']:
+      return 'gernam'
+  elif lang in ['en', 'english']:
+      return 'english'
+  else:
+      return 'unknown'
+def get_spellangs():
+    return vim.current.buffer.options['spelllang'].split(',')
+endglobal
 
-\begin{document}
-%%fakesection titlepage
-\maketitle
-\renewcommand\abstractname{}
-\begin{abstract}
-% TODO
-\end{abstract}
-\vfill
-\tableofcontents
-\clearpage
-
-\section{Einleitung}
-$0
-
-%%fakesection Bibliographie
-\bibliographystyle{${3:alphadin}}
-\bibliography{${4:main}}
-\end{document}
-%%fakesection Notizen
+# the strange python evals are only needed as long as completion of bib keys
+# does not work
+snippet "ci( (\S+))?" "a full featured \cite[]{} command" r
+\cite[`!p
+try: lang = find_babel_languages()[-1]
+except IndexError: lang = get_spellangs[1]
+lang = map_lang(lang)
+if lang == 'german':
+    snip.rv = 'S.~'
+elif lang == 'english':
+    snip.rv ='p.~'
+else:
+    snip.rv = 'S.~'`${1:pages}]{${2:`!p
+snip.rv = match.group(2) if match.group(1) is not None else "bibkey"`}}$0
 endsnippet
 
-snippet handout "A a handout for a short presentation" !b
-\documentclass[a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[${1:ngerman}]{babel}
-
-%\usepackage[
-%            top=3cm,hmargin=3cm,bottom=3.5cm
-%	   ]{geometry}
-%\usepackage{multicol}
-%\usepackage[
-%            small
-%           ]{titlesec}
-%\usepackage{enumerate}
-
-%\usepackage{amssymb}
-%\usepackage{amsmath}
-
-\pagestyle{empty}
-\author{Lucas Hoffmann}
-
-\begin{document}
-\begin{flushleft}
-%\footnotesize
-%\small
-${2:% Header}
-\end{flushleft}
-\begin{center}
-\bfseries
-\LARGE
-${3:Titel}
-\end{center}
-$0
-\end{document}
+snippet "cite( (\S+))" "a simple \cite{} command" r
+\cite{${1:`!p
+snip.rv = match.group(2) if match.group(1) is not None else "bibkey"`}}$0
 endsnippet
 
-snippet mini "a minimal document" b
-\documentclass[a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[${1:ngerman}]{babel}
-\author{Lucas Hoffmann}
-\title{$2}
-\begin{document}
-$0
-\end{document}
+snippet "nci( (\S))" "a \nocite{} command" r
+\nocite{${1:`!p
+snip.rv = match.group(2) if match.group(1) is not None else "bibkey"`}}$0
 endsnippet
 
-snippet rezept "Ein Rezept für mein Kochbuch" !b
-\begin{rezept}{${1:Name}}{${2:von wem?}}
-
-\index{$3}
-
-\begin{zutaten}[${4:reicht für ...}]
-  $5
-\end{zutaten}
-
-\zubereitung
-
-\begin{enumerate}
-  \item $6
-  \item $7
-\end{enumerate}
-
-\end{rezept}
+snippet nc "newcommand"
+\newcommand\\${1:cmd}[$2]{$3}$0
 endsnippet
 
-snippet ci "a full featured \cite[]{} command" !
-\cite[S.~$1]{$2}$0
+snippet "b(egin)?( (\S+))?" "begin{} / end{}" br
+\begin{${1:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "something"`}}
+	${2:${VISUAL}}
+\end{$1}$0
 endsnippet
-snippet cite "a simple \cite{} command" !
-\cite{$1}$0
-endsnippet
-snippet nci "a \nocite{} command" !
-\nocite{$1}$0
+
+snippet test "Description" b
+`!p snip.rv=1`
+`!p snip.rv=2`
 endsnippet

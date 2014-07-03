@@ -7,6 +7,7 @@ from __future__ import print_function
 #import random.randint
 import bisect
 import os
+import re
 import subprocess
 import threading
 import time
@@ -136,3 +137,22 @@ def activate_preview():
             args=(['open', '-a', 'Preview'])).start()
     #let version = system('defaults read loginwindow SystemVersionStampAsString')
     #if split(version, '.')[1] == '9'
+
+
+def check_for_english_babel():
+    ''' Check if the given buffer has a line matching
+    "\usepackage[english]{babel}".'''
+    for line in vim.current.buffer:
+        if line == r'\usepackage[english]{babel}':
+            return True
+    return False
+
+
+def find_babel_languages():
+    '''Return a list of babel languges for the current file.'''
+    for line in vim.current.buffer:
+        if line.startswith(r'\usepackage['):
+            match = re.match(r'^\\usepackage\[(.*)\]{babel}$', line)
+            if match:
+                return match.group(1).split(',')
+    return []
