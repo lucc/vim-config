@@ -40,6 +40,7 @@ function! luc#remote_editor(mail) "{{{2
 endfunction
 
 function! luc#time(cmd1, cmd2, count) " {{{2
+  " execute two ex commands count times each and print the duration
   let time1 = localtime()
   for i in range(a:count)
     silent execute a:cmd1
@@ -165,3 +166,63 @@ function! s:select_font(big) "{{{2
   endif
   " TODO
 endfunction
+
+function! luc#remove_last_bib_and_save()
+  $
+  ?^}$?+1
+  .,$delete
+  let g:i += 1
+  execute printf('%s%03d%s', 'sav /Users/luc/uni/new-', g:i, '.bib')
+endfunction
+
+let s:tip_ignore_file = expand('~/.cache/vim-tip.ignore')
+let s:last_tip = ''
+
+function! luc#all_help_tags()
+  " return a list of all help tags
+  let list = []
+  let ignore = readfile(s:tip_ignore_file)
+  for file in split(globpath(&runtimepath, 'doc/tags'))
+    for line in readfile(file)
+      let word = split(line)[0]
+      if index(ignore, word) == -1
+	call add(list, word)
+      endif
+    endfor
+    "call extend(list, map(readfile(file), 'split(v:val)[0]'))
+  endfor
+  return list
+endfunction
+
+function! luc#tip()
+  " display a random help topic
+  let list = luc#all_help_tags()
+  for line in readfile(s:tip_ignore_file)
+    call filter(list, 'v:val == line')
+  endfor
+  let s:last_tip = list[luc#random(0, len(list) - 1)]
+  return s:last_tip
+endfunction
+
+function! luc#ignore_tip()
+  " ignore the last tip for the future
+  let file = readfile(s:tip_ignore_file)
+  call add(file, s:last_tip)
+  call writefile(file, s:tip_ignore_file)
+endfunction
+com! HANS echo 'file is' s:tip_ignore_file 'last tip was' s:last_tip
+function! luc#random(start, end) "{{{2
+  return (system('echo $RANDOM') % (a:end - a:start + 1)) + a:start
+  " code by Kazuo on vim@vim.org
+  python from random import randint
+  python from vim import command
+  execute 'python command("return %d" % randint('.a:start.','.a:end.'))'
+endfun
+
+function! luc#open_tip()
+  execute 'help' luc#tip()
+  autocmd BufLeave <buffer> echo confirm('Skip this tip in the future?', '&Yes\n&no') == 1 && luc#ignore_tip()
+endfunction
+
+com! VimTip call luc#open_tip()
+

@@ -30,7 +30,6 @@ def autogit_vim(branches=['autocmd', 'autogit']):
     '''Wrapper around git.autogit() to be called from vim.'''
     directory = os.path.dirname(vim.current.buffer.name)
     threading.Thread(target=git.autogit, args=(directory, branches)).start()
-    return 0 # bad practice but needed for vim's pyeval()
 
 
 def find_base_dir_vim_wrapper(cur=None):
@@ -67,7 +66,6 @@ def backup_current_buffer():
         path = os.path.join(servers[server], mytime)
         threading.Thread(target=ssh.background_scp, args=([filename], server,
                 path, True, True)).start()
-    return 0 # bad practice but needed for vim's pyeval()
 
 
 def open_pdf_or_preview_app(check=False, filename=None, go_back=True):

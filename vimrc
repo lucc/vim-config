@@ -64,13 +64,18 @@ function! s:viminfo_setup(server) "{{{2
   endif
 endfunction
 
-function! s:tex_buffer_maps()
+function! s:tex_buffer_maps() "{{{2
   " Some maps for tex buffers.  They are collected in a function because
   " putting :map into autocmds is error prone.
   nnoremap <buffer> K
 	\ :call pyeval('tex.doc("""'.expand('<cword>').'""") or 1')<CR>
   nnoremap <buffer> gG :python tex_count_vim_wrapper()<CR>
   vnoremap <buffer> gG :python tex_count_vim_wrapper()<CR>
+endfunction
+
+function! s:autocd() "{{{2
+  " Cd to the directory of the current file.
+  cd %:h
 endfunction
 
 function! Luc_save_and_compile() " {{{2
@@ -158,15 +163,17 @@ augroup LucRemoveWhiteSpaceAtEOL "{{{2
 augroup END
 
 augroup LucAutoGit "{{{2
-  autocmd!
-  autocmd BufWritePost ~/.config/**,~/src/shell/**,~/.homesick/repos/**
-	\ if s:do_autogit                |
-	\   call pyeval('autogit_vim()') |
-	\ endif
-  autocmd BufWritePost ~/uni/philosophie/magisterarbeit/**
-	\ if s:do_autogit                    |
-	\   call pyeval('autogit_vim(None)') |
-	\ endif
+  if has('python')
+    autocmd!
+    autocmd BufWritePost ~/.config/**,~/src/shell/**,~/.homesick/repos/**
+	  \ if s:do_autogit                |
+	  \   call pyeval('autogit_vim() or 1') |
+	  \ endif
+    autocmd BufWritePost ~/uni/philosophie/magisterarbeit/**
+	  \ if s:do_autogit                    |
+	  \   call pyeval('autogit_vim(None) or 1') |
+	  \ endif
+  endif
 augroup END
 
 "augroup LucLocalAutoCd "{{{2
@@ -201,6 +208,7 @@ inoremap <C-W> <C-G>u<C-W>
 " easy spell checking
 inoremap <C-s> <C-o>:call luc#find_next_spell_error()<CR><C-x><C-s>
 nnoremap <C-s>      :call luc#find_next_spell_error()<CR>z=
+nnoremap <leader>s  :call luc#find_next_spell_error()<CR>zv
 
 " capitalize text
 vmap gc  "=luc#capitalize(luc#get_visual_selection())<CR>p
@@ -217,7 +225,7 @@ if has('gui_macvim')
   noremap  <D-s>      :silent update<CR>
 endif
 
-" interactife fix for latex quotes in english files
+" interactive fix for latex quotes in English files
 command! UnsetLaTeXQuotes unlet g:Tex_SmartQuoteOpen g:Tex_SmartQuoteClose
 
 " open URLs {{{2
@@ -230,7 +238,7 @@ imap <silent> <F2>   <C-O>:call Luc_save_and_compile()<CR>
 " backup current buffer
 nnoremap <silent> <F11>
       \ :silent update <BAR>
-      \ call pyeval('backup_current_buffer()') <BAR>
+      \ call pyeval('backup_current_buffer() or 1') <BAR>
       \ redraw <CR>
 
 " moveing around {{{2
@@ -238,6 +246,8 @@ nmap <C-Tab>        gt
 imap <C-Tab>   <C-O>gt
 nmap <C-S-Tab>      gT
 imap <C-S-Tab> <C-O>gT
+
+nmap <C-W><C-F> <C-W>f<C-W>L
 
 nmap <SwipeUp>   gg
 imap <SwipeUp>   gg
@@ -247,14 +257,25 @@ imap <SwipeDown> G
 nnoremap ' `
 nnoremap ` '
 
+command! AutoCd call s:autocd()
+
 " misc {{{2
 
 " use ß to clear the screen if you want privacy for a moment
 nmap ß :!clear<CR>
 
-command! StartAutoGit let s:do_autogit = 1
-command! StopAutoGit  let s:do_autogit = 0
-command! ToggleAutoGit let s:do_autogit = !s:do_autogit
+command! AutoGitStart  let s:do_autogit = 1
+command! AutoGitStop   let s:do_autogit = 0
+command! AutoGitToggle let s:do_autogit = !s:do_autogit
+command! AutoGitStatus echon 'AutoGit is ' |
+      \ if s:do_autogit                    |
+      \   echohl LucAutoGitRunning         |
+      \   echon 'running'                  |
+      \ else                               |
+      \   echohl LucAutoGitStopped         |
+      \   echon 'stopped'                  |
+      \ endif                              |
+      \ echohl None
 
 " options: basic {{{1
 
@@ -263,7 +284,7 @@ set autoindent
 set backspace=indent,eol,start
 set backup
 set backupdir=~/.vim/backup
-let &backupskip .= ',' . expand('$HOME') . '/.config/secure/*'
+let &backupskip .= ',' . expand('$HOME') . '/.*/**/secure/*'
 set hidden
 set history=2000
 set confirm
@@ -284,6 +305,9 @@ set virtualedit=block
 set diffopt=filler,vertical
 " default: blank,buffers,curdir,folds,help,options,tabpages,winsize
 set sessionoptions+=resize,winpos
+" use /bin/sh as shell to have a shell with a simple prompt TODO fix zsh
+" prompt
+set shell=/bin/sh
 
 " options: cpoptions {{{1
 set cpoptions+=$ " don't redraw the display while executing c, s, ... cmomands
@@ -749,6 +773,13 @@ let g:Tex_FoldedEnvironments .= ',thebibliography'
 let g:Tex_FoldedEnvironments .= ',keywords'
 let g:Tex_FoldedEnvironments .= ',abstract'
 let g:Tex_FoldedEnvironments .= ',titlepage'
+let g:Tex_FoldedSections = 'part'
+let g:Tex_FoldedSections .= ',chapter'
+let g:Tex_FoldedSections .= ',section'
+let g:Tex_FoldedSections .= ',subsection'
+let g:Tex_FoldedSections .= ',subsubsection'
+let g:Tex_FoldedSections .= ',paragraph'
+let g:Tex_FoldedSections .= ',subparagraph'
 " alternative 1
   "let Tex_FoldedEnvironments='*'
   "let Tex_FoldedEnvironments+=','
@@ -797,9 +828,10 @@ let g:markdown_fold_style = 'nested'
 
 " plugins: python {{{2
 
-Plugin 'sunsol/vim_python_fold_compact'
+"Plugin 'sunsol/vim_python_fold_compact'
 "Plugin 'Python-Syntax-Folding'
-"Plugin 'klen/python-mode'
+Plugin 'klen/python-mode'
+let g:pymode_rope = 0
 
 " svn checkout http://vimpdb.googlecode.com/svn/trunk/ vimpdb-read-only
 Plugin 'fs111/pydoc.vim'
@@ -819,7 +851,7 @@ let g:ScreenImpl = 'Tmux'
 let g:ScreenShellTerminal = 'iTerm.app'
 
 " notes {{{2
-"Plugin 'Conque-Shell'
+Plugin 'Conque-Shell'
 "Plugin 'vimsh.tar.gz'
 "Plugin 'xolox/vim-shell'
 "Plugin 'vimux'
@@ -839,6 +871,7 @@ if has('clientserver') | Plugin 'pydave/AsyncCommand' | endif
 " All these settings are dependent on the file ~/.ctags.
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-easytags'
+let g:easytags_async = 1
 let g:easytags_updatetime_warn = 0
 let g:easytags_file = '~/.cache/tags'
 "let g:easytags_by_filetype = '~/.cache/vim-easytag'
@@ -961,9 +994,14 @@ Plugin 'pix/vim-known_hosts'
 Plugin 'matchit.zip' " buggy!
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'sjl/gundo.vim'
-Plugin 'VimRepress' "https://bitbucket.org/pentie/vimrepress
+"Plugin 'VimRepress' "https://bitbucket.org/pentie/vimrepress
+Plugin 'lucc/VimRepress'
 Plugin 'ZoomWin'
 Plugin 'AndrewRadev/linediff.vim'
+if has('+python')
+  Plugin 'guyzmo/notmuch-abook'
+endif
+Plugin 'git://notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
 
 " last steps {{{1
 
@@ -972,11 +1010,19 @@ call vundle#end()
 filetype plugin indent on
 
 " settings for easytags which need the runtimepath set properly {{{2
-call xolox#easytags#map_filetypes('tex', 'latex')
+"call xolox#easytags#map_filetypes('tex', 'latex')
 
 " {{{2 Set colors for the terminal.  If the GUI is running the colorscheme
 "      will be set in gvimrc.
 if ! has('gui_running')
   set background=dark
   colorscheme solarized
+endif
+" define highlight groups after the colorscheme else they will be cleared
+highlight LucAutoGitRunning guifg=#719e07
+highlight LucAutoGitStopped guifg=#dc322f
+
+" neovim special code {{{1
+if has('neovim')
+  call jobstart('Greeting', 'growlnotify', ['--message', 'YEAH neovim rocks!', '--title', 'Hello Neovim'])
 endif
