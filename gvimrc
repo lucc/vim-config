@@ -112,15 +112,13 @@ if has("gui_macvim")
   set antialias
 endif
 
-" set $EDITOR for clientserver
+" TODO set $EDITOR for clientserver
 if has('clientserver') && v:servername != ''
   let $EDITOR = 'vim --servername=' . v:servername . ' --remote-tab-wait-silent'
-else
-  echomsg 'The server name is not yet set.'
 endif
 
 " colorscheme {{{1
-set background=light
+set background=dark
 colorscheme solarized
 " define highlight groups after the colorscheme else they will be cleared
 highlight LucAutoGitRunning guifg=#719e07

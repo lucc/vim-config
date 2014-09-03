@@ -1,15 +1,19 @@
 # first include the lengthy templates:
 extends tex_templates
+extends latex_suite_compat
 
 global !p
+import tex
 def find_babel_languages():
     '''Return a list of babel languges for the current file.'''
-    for line in vim.current.buffer:
-        if line.startswith(r'\usepackage['):
-            match = re.match(r'^\\usepackage\[(.*)\]{babel}$', line)
-            if match:
-                return match.group(1).split(',')
-    return []
+    return tex.find_babels(vim.current.buffer.name)
+#
+#    for line in vim.current.buffer:
+#        if line.startswith(r'\usepackage['):
+#            match = re.match(r'^\\usepackage\[(.*)\]{babel}$', line)
+#            if match:
+#                return match.group(1).split(',')
+#    return []
 def map_lang(lang):
   if lang in ['de', 'german', 'ngerman']:
       return 'gernam'
@@ -19,36 +23,67 @@ def map_lang(lang):
       return 'unknown'
 def get_spellangs():
     return vim.current.buffer.options['spelllang'].split(',')
+def biblatex():
+    '''Return True if biblatex is used for citations in the current vim
+    buffer.''',
+    def match(line):
+        return line.startswith(r'\usepackage') and endswith('{biblatex}\n')
+    def extract(line):
+        return True
+    return tex.parse_tex(vim.current.buffer.name, match, extract)
+#    for line in vim.current.buffer:
+#	if line.startswith(r'\usepackage'):
+#	    match = re.match(r'^\\usepackage(\[.*\])?{biblatex}$', line)
+#	    if match:
+#		return True
+#    return False
+def cond(index, string):
+    if t[index] != '': return string
+    else: return ''
 endglobal
 
 # the strange python evals are only needed as long as completion of bib keys
 # does not work
 snippet "ci( (\S+))?" "a full featured \cite[]{} command" r
-\cite[`!p
-try: lang = find_babel_languages()[-1]
-except IndexError: lang = get_spellangs[1]
-lang = map_lang(lang)
-if lang == 'german':
-    snip.rv = 'S.~'
-elif lang == 'english':
-    snip.rv ='p.~'
-else:
-    snip.rv = 'S.~'`${1:pages}]{${2:`!p
-snip.rv = match.group(2) if match.group(1) is not None else "bibkey"`}}$0
+\\`!p
+b = biblatex()
+snip.rv = ('auto' if b else '')`cite${1/.+/[/}${1:see}${1/.+/]/}${2/.+/[/}`!p
+if not b:
+    try: lang = find_babel_languages()[-1]
+    except IndexError: lang = get_spellangs[1]
+    lang = map_lang(lang)
+    if lang == 'german': snip.rv = 'S.~'
+    elif lang == 'english': snip.rv ='p.~'
+    else: snip.rv = 'S.~'`${2:pages}${2/.+/]/}{${3:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "bibkey"`}}$0
 endsnippet
 
-snippet "cite( (\S+))" "a simple \cite{} command" r
-\cite{${1:`!p
-snip.rv = match.group(2) if match.group(1) is not None else "bibkey"`}}$0
+snippet "citxt?( (\S+))?" "\textcite{} from biblatex" r
+\\textcite${1/.+/[/}${1:see}${1/.+/]/}${2/.+/[/}${2:pages}${2/.+/]/}{${3:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "bibkey"`}}$0
 endsnippet
 
-snippet "nci( (\S))" "a \nocite{} command" r
+snippet "citi( (\S+))?" "\citetitle{} from biblatex" r
+\\citetitle${1/.+/[/}${1:see}${1/.+/]/}${2/.+/[/}${2:pages}${2/.+/]/}{${3:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "bibkey"`}}$0
+endsnippet
+
+snippet "ciau( (\S+))?" "\citeauthor{} from biblatex" r
+\\citeauthor${1/.+/[/}${1:see}${1/.+/]/}${2/.+/[/}${2:pages}${2/.+/]/}{${3:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "bibkey"`}}$0
+endsnippet
+
+snippet "cino?( (\S))?" "a \nocite{} command" r
 \nocite{${1:`!p
-snip.rv = match.group(2) if match.group(1) is not None else "bibkey"`}}$0
+snip.rv = match.group(3) if match.group(2) is not None else "bibkey"`}}$0
 endsnippet
 
 snippet nc "newcommand"
-\newcommand\\${1:cmd}[$2]{$3}$0
+\newcommand\\${1:cmd}${2/.+/[/}${2:optargs}${2/.+/]/}{$3}$0
+endsnippet
+
+snippet up "use package" b
+\usepackage${1/.+/[/}${1:options}${1/.+/]/}{${2:package}}$0
 endsnippet
 
 snippet "b(egin)?( (\S+))?" "begin{} / end{}" br

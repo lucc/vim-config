@@ -12,3 +12,7 @@ field1 = "${2:mangatory}"
 ${3:field2 = "${4:optional}"
 }}
 endsnippet
+
+snippet bug2 "expand with tw=something short before that column"
+pretext `!p snip.rv = 'marker' if t[1] != '' else ''` ${1:replacemant} `!p snip.rv = 'marker' if t[1] != '' else ''` posttext
+endsnippet

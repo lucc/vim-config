@@ -12,9 +12,8 @@
 %~/.inputrc	0	0
 %~/.profile	0	0
 %~/.zshenv	0	0
-%~/.config/shell/zshrc	0	0
-%~/.config/shell/aliases	0	0
-%~/.config/shell/envrc	0	0
+%~/.homesick/repos/zsh/zshrc	0	0
+%~/.homesick/repos/zsh/aliases	0	0
 
 # other config files
 %~/.latexmkrc	0	0

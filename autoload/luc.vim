@@ -1,4 +1,6 @@
-function! luc#remote_editor(mail) "{{{2
+" vim: fdm=marker
+
+function! luc#remote_editor(mail) "{{{1
   " a function to be called by a client who wishes to use a vim server as an
   " non forking edior. One can also set the environment variable EDITOR with
   " EDITOR='vim --remote-tab-wait-silent +call\ LucMiscRemoteEditor()'
@@ -39,7 +41,7 @@ function! luc#remote_editor(mail) "{{{2
   endif
 endfunction
 
-function! luc#time(cmd1, cmd2, count) " {{{2
+function! luc#time(cmd1, cmd2, count) " {{{1
   " execute two ex commands count times each and print the duration
   let time1 = localtime()
   for i in range(a:count)
@@ -55,11 +57,11 @@ function! luc#time(cmd1, cmd2, count) " {{{2
   echo a:cmd2 ' -> ' time3-time2 'sec'
 endfunction
 
-function! luc#capitalize(text) " {{{2
+function! luc#capitalize(text) " {{{1
   return substitute(a:text, '\v<(\w)(\w*)>', '\u\1\L\2', 'g')
 endfunction
 
-function! luc#capitalize_operator_function(type) "{{{2
+function! luc#capitalize_operator_function(type) "{{{1
   " this function is partly copied from the vim help about g@
   let sel_save = &selection
   let saved_register = @@
@@ -77,7 +79,7 @@ function! luc#capitalize_operator_function(type) "{{{2
   let @@ = saved_register
 endfunction
 
-function! luc#find_next_spell_error() "{{{2
+function! luc#find_next_spell_error() "{{{1
   " A function to jump to the next spelling error
   setlocal spell
   "if spellbadword(expand('<cword>')) == ['', '']
@@ -87,7 +89,7 @@ endfunction
 
 " see:
 "http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
-function! luc#get_visual_selection() "{{{2
+function! luc#get_visual_selection() "{{{1
   let saved_register = @@
   let current = getpos('.')
   call setpos('.', getpos("'<"))
@@ -100,7 +102,7 @@ function! luc#get_visual_selection() "{{{2
   return return_value
 endfunction
 
-function! luc#format_bib() "{{{2
+function! luc#format_bib() "{{{1
   " format bibentries in the current file
 
   " define a local helper function
@@ -125,7 +127,7 @@ function! luc#format_bib() "{{{2
   %substitute/^\s*\([A-Za-z]\+\)\s*=\s*["{]\(.*\)["}],$/\=d.g(submatch(1), submatch(2))/
 endfunction
 
-function! s:flatten_list(list) "{{{2
+function! s:flatten_list(list) "{{{1
   " Code from bairui@#vim.freenode
   " https://gist.github.com/3322468
   let val = []
@@ -140,7 +142,7 @@ function! s:flatten_list(list) "{{{2
   return val
 endfunction
 
-function! s:goto_definition(string) "{{{2
+function! s:goto_definition(string) "{{{1
   try
     execute 'cscope find g' string
   catch
@@ -156,7 +158,7 @@ function! s:goto_definition(string) "{{{2
   " noautocmd
 endfunction
 
-function! s:select_font(big) "{{{2
+function! s:select_font(big) "{{{1
   " Select a font and set it
   let delim = ''
   if has('gui_macvim')
@@ -211,7 +213,7 @@ function! luc#ignore_tip()
   call writefile(file, s:tip_ignore_file)
 endfunction
 com! HANS echo 'file is' s:tip_ignore_file 'last tip was' s:last_tip
-function! luc#random(start, end) "{{{2
+function! luc#random(start, end) "{{{1
   return (system('echo $RANDOM') % (a:end - a:start + 1)) + a:start
   " code by Kazuo on vim@vim.org
   python from random import randint
@@ -226,3 +228,82 @@ endfunction
 
 com! VimTip call luc#open_tip()
 
+function! luc#wrap(text, pre, post) "{{{1
+  return a:pre . a:text . a:post
+endfunction
+function! luc#wrap_delim(text, delim) "{{{1
+  if a:delim == "'"
+    return luc#wrap(a:text, "'", "'")
+  elseif a:delim == '"'
+    return luc#wrap(a:text, '"', '"')
+  elseif a:delim == '(' || a:delim == ')'
+    return luc#wrap(a:text, '(', ')')
+  elseif a:delim == '[' || a:delim == ']'
+    return luc#wrap(a:text, '[', ']')
+  elseif a:delim == '{' || a:delim == '}'
+    return luc#wrap(a:text, '{', '}')
+  elseif a:delim == '<' || a:delim == '>'
+    return luc#wrap(a:text, '<', '>')
+  elseif a:delim == '$'
+    return luc#wrap(a:text, '$', '$')
+  elseif a:delim == '$$'
+    return luc#wrap(a:text, '$$', '$$')
+  elseif a:delim == '\(' || a:delim == '\)'
+    return luc#wrap(a:text, '\(', '\)')
+  elseif a:delim == '\[' || a:delim == '\]'
+    return luc#wrap(a:text, '\[', '\]')
+  endif
+endfunction
+function! luc#wrap_tex(text, wrapper) "{{{1
+  if a:delim == "'"
+    return luc#wrap(a:text, "'", "'")
+  elseif a:delim == '"'
+    return luc#wrap(a:text, '"', '"')
+  elseif a:delim == '(' || a:delim == ')'
+    return luc#wrap(a:text, '(', ')')
+  elseif a:delim == '[' || a:delim == ']'
+    return luc#wrap(a:text, '[', ']')
+  elseif a:delim == '{' || a:delim == '}'
+    return luc#wrap(a:text, '{', '}')
+  elseif a:delim == '<' || a:delim == '>'
+    return luc#wrap(a:text, '<', '>')
+  elseif a:delim == '$'
+    return luc#wrap(a:text, '$', '$')
+  elseif a:delim == '$$'
+    return luc#wrap(a:text, '$$', '$$')
+  elseif a:delim == '\(' || a:delim == '\)'
+    return luc#wrap(a:text, '\(', '\)')
+  elseif a:delim == '\[' || a:delim == '\]'
+    return luc#wrap(a:text, '\[', '\]')
+  endif
+  let cmd = a:command
+  if cmd[0] != '\'
+    let cmd = '\' . cmd
+  endif
+  "let cmd = split(cmd, '\zs')
+  if split(cmd, '\zs')[-1] == '{'
+    return luc#wrap(a:text, cmd, '}')
+  elseif split(cmd, '\zs')[-2:-1] == ['{', '}']
+    return luc.wrap(a:text, join(split(cmd, '\zs')[0:-2], ''), '}')
+  else
+    return luc#wrap(a:text, cmd . '{', '}')
+  endif
+endfunction
+function! luc#wrap_operator(type) "{{{1
+  " this function is partly copied from the vim help about g@
+  let sel_save = &selection
+  let saved_register = @@
+  let &selection = "inclusive"
+  if a:type == 'line'
+    silent execute "normal! '[V']y"
+  elseif a:type == 'block'
+    silent execute "normal! `[\<C-V>`]y"
+  else
+    silent execute "normal! `[v`]y"
+  endif
+  let x = input('Wrap with: ')
+  let @@ = luc#wrap_tex_command(@@, x)
+  normal gvp
+  let &selection = sel_save
+  let @@ = saved_register
+endfunction

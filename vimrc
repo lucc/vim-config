@@ -10,8 +10,13 @@ set nocompatible
 set guioptions+=M
 set guioptions-=m
 
-" sourcing other files {{{1
+" set up python {{{1
+if has('nvim')
+  runtime! plugin/python_setup.vim
+endif
 if has('python')
+  python import vim
+  python if vim.VIM_SPECIAL_PATH not in sys.path: sys.path.append(vim.VIM_SPECIAL_PATH)
   pyfile ~/.vim/vimrc.py
 endif
 
@@ -31,7 +36,8 @@ endfunction
 
 function! s:server_running() "{{{2
   " Check if another vim server is already running.
-  return !empty(has('clientserver') ? serverlist() : system('vim --serverlist'))
+  return !empty(has('clientserver') ? serverlist() :
+	\ system('vim --serverlist'))
 endfunction
 
 function! s:viminfo_setup(server) "{{{2
@@ -69,8 +75,10 @@ function! s:tex_buffer_maps() "{{{2
   " putting :map into autocmds is error prone.
   nnoremap <buffer> K
 	\ :call pyeval('tex.doc("""'.expand('<cword>').'""") or 1')<CR>
-  nnoremap <buffer> gG :python tex_count_vim_wrapper()<CR>
-  vnoremap <buffer> gG :python tex_count_vim_wrapper()<CR>
+  nnoremap <buffer> gGG :python tex_count_vim_wrapper()<CR>
+  vnoremap <buffer> gGG :python tex_count_vim_wrapper()<CR>
+  nnoremap <buffer> gG :python tex_count_vim_wrapper(wait=True)<CR>
+  vnoremap <buffer> gG :python tex_count_vim_wrapper(wait=True)<CR>
 endfunction
 
 function! s:autocd() "{{{2
@@ -115,7 +123,8 @@ augroup LucTex "{{{3
 	\ if pyeval('check_for_english_babel()')  |
 	\   let b:Tex_SmartQuoteOpen = '“'        |
 	\   let b:Tex_SmartQuoteClose = '”'       |
-	\ endif
+	\ endif                                   |
+	\ let b:surround_99 = "\\\1command\1{\r}"
 augroup END
 
 augroup LucPython "{{{3
@@ -138,7 +147,9 @@ augroup END
 augroup LucMail "{{{3
   autocmd!
   autocmd FileType mail
-	\ setlocal textwidth=72 spell
+	\ setlocal textwidth=72 spell |
+	\ silent! /^$/,$ foldopen     |
+	\ /^$
 augroup END
 
 augroup LucMan "{{{3
@@ -229,7 +240,10 @@ endif
 command! UnsetLaTeXQuotes unlet g:Tex_SmartQuoteOpen g:Tex_SmartQuoteClose
 
 " open URLs {{{2
-nmap <Leader>w :python for url in strings.urls(vim.current.line): webbrowser.open(url)<CR>
+python import strings
+python import webbrowser
+nmap <Leader>w :python for url in strings.urls(vim.current.line):
+      \ webbrowser.open(url)<CR>
 
 " easy compilation {{{2
 nmap <silent> <F2>        :call Luc_save_and_compile()<CR>
@@ -276,6 +290,13 @@ command! AutoGitStatus echon 'AutoGit is ' |
       \   echon 'stopped'                  |
       \ endif                              |
       \ echohl None
+
+" https://github.com/javyliu/javy_vimrc/blob/master/_vimrc
+"vmap // :<C-U>execute 'normal /' . luc#get_visual_selection()<CR>
+vmap // y/<C-r>"<CR>
+
+command! -nargs=1 -complete=customlist,luc#man#complete_topics
+      \ ManLuc TMan <args>.man
 
 " options: basic {{{1
 
@@ -534,7 +555,8 @@ if has('python') " -> Youcompleteme {{{2
   let g:ycm_add_preview_to_completeopt = 1
   let g:ycm_autoclose_preview_window_after_completion = 0
 
-  Plugin 'bjoernd/vim-ycm-tex', {'name': 'YouCompleteMe/python/ycm/completers/tex'}
+  Plugin 'bjoernd/vim-ycm-tex',
+	\ {'name': 'YouCompleteMe/python/ycm/completers/tex'}
   let g:ycm_semantic_triggers = {'tex': ['\ref{','\cite{']}
 
   "Plugin 'c9s/vimomni.vim'
@@ -630,7 +652,8 @@ else             " -> neocomplete and neocomplcache {{{2
   "  inoremap <expr><C-y>  neocomplcache#close_popup()
   "  inoremap <expr><C-e>  neocomplcache#cancel_popup()
   "  " Close popup by <Space>.
-  "  "inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
+  "  inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() :
+  "        \ "\<Space>"
   "
   "  " For cursor moving in insert mode(Not recommended)
   "  "inoremap <expr><Left>  neocomplcache#close_popup() . "\<Left>"
@@ -684,6 +707,14 @@ if has('python')
   "let g:UltiSnipsJumpForwardTrigger  = <c-j>
   "let g:UltiSnipsJumpBackwardTrigger = <c-k>
   let g:UltiSnipsJumpBackwardTrigger = '<SID>NOT_DEFINED'
+
+  if has('gui_running')
+    " new settings
+    let g:UltiSnipsExpandTrigger = '<A-Tab>'
+    let g:UltiSnipsJumpForwardTrigger = '<A-Tab>'
+    let g:UltiSnipsJumpBackwardTrigger = '<A-S-Tab>'
+    let g:UltiSnipsListSnippets = '<SID>NOT_DEFINED'
+  endif
 else
   " snipmate and dependencies
   Plugin 'MarcWeber/vim-addon-mw-utils'
@@ -718,7 +749,7 @@ Plugin 'applescript.vim'
 " plugins: LaTeX {{{2
 
 " original vim settings for latex
-let g:tex_fold_enabled = 1
+"let g:tex_fold_enabled = 1
 let g:tex_flavor = 'latex'
 
 " 3109 LatexBox.vmb
@@ -730,9 +761,9 @@ let g:tex_flavor = 'latex'
 "Plugin 'tex_autoclose.vim'
 
 "Plugin 'auctex.vim'
-Plugin 'LaTeX-Help'
 
-Plugin 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex' "{{{3
+Plugin 'git://git.code.sf.net/p/vim-latex/vim-latex' "{{{3
+"Plugin 'LaTeX-Help' " is included in vim-latex
 let g:ngerman_package_file = 1
 let g:Tex_Menus = 0
 "let g:Tex_UseUtfMenus = 1
@@ -747,54 +778,59 @@ let g:Tex_SmartQuoteClose = '“'
 " the variable Tex_FoldedEnvironments holds the beginnings of names of
 " environments which should be folded.  The innermost environments should come
 " first.
-let g:Tex_FoldedEnvironments  = 'verbatim'
-let g:Tex_FoldedEnvironments .= ',comment'
-let g:Tex_FoldedEnvironments .= ',eq'
-let g:Tex_FoldedEnvironments .= ',gather'
-let g:Tex_FoldedEnvironments .= ',align'
-let g:Tex_FoldedEnvironments .= ',figure'
-let g:Tex_FoldedEnvironments .= ',table'
+let s:TexFoldEnv = [ 'verbatim',
+	           \ 'comment',
+	           \ 'eq',
+	           \ 'gather',
+	           \ 'align',
+	           \ 'figure',
+	           \ 'table',
+	           \ ]
 " environments for structure of mathematical texts (they can contain other
 " stuff)
-let g:Tex_FoldedEnvironments .= ',th'
-let g:Tex_FoldedEnvironments .= ',satz'
-let g:Tex_FoldedEnvironments .= ',def'
-let g:Tex_FoldedEnvironments .= ',lem'
-let g:Tex_FoldedEnvironments .= ',rem'
-let g:Tex_FoldedEnvironments .= ',bem'
-let g:Tex_FoldedEnvironments .= ',proof'
+call extend(s:TexFoldEnv, [ 'th',
+			  \ 'satz',
+			  \ 'def',
+			  \ 'lem',
+			  \ 'rem',
+			  \ 'bem',
+			  \ 'proof',
+			  \ ])
 " quotes can contain other stuff
-let g:Tex_FoldedEnvironments .= ',quot'
+call extend(s:TexFoldEnv, ['quot',])
 " the beamer class has two top level environments
-let g:Tex_FoldedEnvironments .= ',block'
-let g:Tex_FoldedEnvironments .= ',frame'
+call extend(s:TexFoldEnv, [ 'block',
+			  \ 'frame',
+			  \])
 " environments for the general document
-let g:Tex_FoldedEnvironments .= ',thebibliography'
-let g:Tex_FoldedEnvironments .= ',keywords'
-let g:Tex_FoldedEnvironments .= ',abstract'
-let g:Tex_FoldedEnvironments .= ',titlepage'
-let g:Tex_FoldedSections = 'part'
-let g:Tex_FoldedSections .= ',chapter'
-let g:Tex_FoldedSections .= ',section'
-let g:Tex_FoldedSections .= ',subsection'
-let g:Tex_FoldedSections .= ',subsubsection'
-let g:Tex_FoldedSections .= ',paragraph'
-let g:Tex_FoldedSections .= ',subparagraph'
+call extend(s:TexFoldEnv, [ 'thebibliography',
+			  \ 'keywords',
+			  \ 'abstract',
+			  \ 'titlepage',
+			  \ ])
+let g:Tex_FoldedEnvironments = join(s:TexFoldEnv, ',')
+let s:TexFoldSec = [
+      \ 'part',
+      \ 'chapter',
+      \ 'section',
+      \ 'subsection',
+      \ 'subsubsection',
+      \ 'paragraph',
+      \ 'subparagraph',
+      \ ]
+let g:Tex_FoldedSections = join(s:TexFoldSec, ',')
 " alternative 1
-  "let Tex_FoldedEnvironments='*'
-  "let Tex_FoldedEnvironments+=','
-  "let Tex_FoldedEnvironments  = 'document,minipage,'
-  "let Tex_FoldedEnvironments .= 'di,lem,ivt,dc,'
-  "let Tex_FoldedEnvironments .= 'verbatim,comment,proof,eq,gather,'
-  "let Tex_FoldedEnvironments .= 'align,figure,table,thebibliography,'
-  "let Tex_FoldedEnvironments .= 'keywords,abstract,titlepage'
-  "let Tex_FoldedEnvironments .= 'item,enum,display'
-  "let Tex_FoldedMisc = 'comments,item,preamble,<<<'
+  "let s:TexFoldEnv = ['*', 'document', 'minipage', 'di', 'lem', 'ivt', 'dc',
+  "      \ 'verbatim', 'comment', 'proof', 'eq', 'gather', 'align', 'figure',
+  "      \ 'table', 'thebibliography', 'keywords', 'abstract', 'titlepage'
+  "      \ 'item', 'enum', 'display' ]
+  "let g:Tex_FoldedMisc = 'comments,item,preamble,<<<'
 " alternative 2
   " let g:Tex_FoldedMisc = 'comments,item,preamble,<<<,slide'
 " alternative 3
   "let Tex_FoldedEnvironments .= '*'
-  "let Tex_FoldedSections = 'part,chapter,section,subsection,subsubsection,paragraph'
+  "let Tex_FoldedSections =
+  "\ 'part,chapter,section,subsection,subsubsection,paragraph'
 
 " plugins: lisp/scheme {{{2
 Plugin 'slimv.vim'
@@ -960,7 +996,7 @@ let g:solarized_menu = 0
 
 " plugins: statusline {{{1
 
-if has('python')
+if has('python') && ! has('nvim')
   Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
   " the documentation of powerline is not in Vim format but only available at
   " https://powerline.readthedocs.org/
@@ -1023,6 +1059,7 @@ highlight LucAutoGitRunning guifg=#719e07
 highlight LucAutoGitStopped guifg=#dc322f
 
 " neovim special code {{{1
-if has('neovim')
-  call jobstart('Greeting', 'growlnotify', ['--message', 'YEAH neovim rocks!', '--title', 'Hello Neovim'])
+if has('nvim')
+  call jobstart('Greeting', 'growlnotify',
+	\ ['--message', 'YEAH neovim rocks!', '--title', 'Hello Neovim'])
 endif
