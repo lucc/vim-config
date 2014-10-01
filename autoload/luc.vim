@@ -307,3 +307,47 @@ function! luc#wrap_operator(type) "{{{1
   let &selection = sel_save
   let @@ = saved_register
 endfunction
+
+"function! luc#prefix() "{{{1
+"  let sel_save = &selection
+"  let saved_register = getreg('@', 1, 1)
+"  let saved_register_type = getregtype('@')
+"  let &selection = "inclusive"
+"  let minindent = 100000000
+"  for linenr in range(line("'<"), line("'>"))
+"    let minindent = min(minindent, indent(linenr))
+"  endfor
+"  for count in range(line("'>") - line("'<"))
+"    call append(thelist, text)
+"  endfor
+"  call setreg('@', thelist, 'b')
+"  call setpos([line("'<"), minindent])
+"  execute "normal <C-V>"
+"  call setpos([line("'>"), minindent])
+"  normal p
+"  call setreg('@', saved_register, saved_register_type)
+"endfunction
+
+function! luc#prefix(type) range "{{{1
+  if a:type == ""
+    let first = line("'<")
+    let last = line("'>")
+    let minindent = min([getpos("'<")[2], getpos("'>")[2]]) - 1
+  else
+    if a:type == 'line' || a:type == 'char'
+      let first = line("'[")
+      let last = line("']")
+    elseif a:type == 'visual' || a:type == 'v' || a:type == 'V'
+      let first = line("'<")
+      let last = line("'>")
+    else
+      echoerr 'Wrong argument:' a:type
+    endif
+    let minindent = min(map(range(first, last), 'indent(v:val)'))
+  endif
+  let range = first . ',' . last
+  let regex = '\v(.{' . minindent . '})(.*)'
+  let fmt = escape('%s' . &commentstring, '"\')
+  let subst = '\=printf("' . fmt . '", submatch(1), submatch(2))'
+  execute range . 's/' . regex . '/' . subst . '/'
+endfunction

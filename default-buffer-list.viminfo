@@ -17,21 +17,21 @@
 
 # other config files
 %~/.latexmkrc	0	0
-%~/.config/mime/mailcap	0	0
-%~/.config/mail/mailcheckrc	0	0
-%~/.config/mime/mime.types	0	0
+%~/.mailcap	0	0
+#%~/.config/mail/mailcheckrc	0	0
+%~/.mime.types	0	0
 %~/.pentadactyl/pentadactylrc	0	0
 %~/.rtorrent.rc	0	0
 %~/.tmux.conf	0	0
 
 # security config files
 %~/.fetchmailrc	0	0
-%~/.config/mail/mailfilter	0	0
+%~/.homesick/repos/mail/mailfilter	0	0
 %~/.mutt/muttrc	0	0
-%~/.gpg/gpg.conf	0	0
+%~/.gnupg/gpg.conf	0	0
 %~/.netrc	0	0
 %~/.ssh/config	0	0
-%~/.config/secure/xml	0	0
+%~/.homesick/repos/secure/yaml	0	0
 
 # vim buffer list and other stuff
 %~/.vim/default-buffer-list.viminfo	0	0
@@ -39,8 +39,6 @@
 
 # further config files
 %~/.emacs.d/init.el	0	0
-%~/.config/env/INFOPATH	0	0
-%~/.config/env/PATH	0	0
 %~/.config/feh/keys	0	0
 %~/.config/feh/themes	0	0
 

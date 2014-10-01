@@ -13,8 +13,9 @@ set guioptions-=m
 " set up python {{{1
 if has('nvim')
   runtime! plugin/python_setup.vim
-endif
-if has('python')
+  python import vim
+  pyfile ~/.vim/vimrc.py
+elseif has('python')
   python import vim
   python if vim.VIM_SPECIAL_PATH not in sys.path: sys.path.append(vim.VIM_SPECIAL_PATH)
   pyfile ~/.vim/vimrc.py
@@ -165,6 +166,15 @@ augroup LucGitCommit "{{{3
 	\ setlocal spell
 augroup END
 
+augroup LucQuickFix "{{{3
+  autocmd!
+  autocmd FileType qf
+	\ setlocal nowrap cursorline |
+	\ nnoremap <buffer> <ENTER> :.cc <BAR> cclose<CR>zx|
+	\ vnoremap <buffer> <ENTER> :<C-U>.cc <BAR> cclose<CR>zx|
+	\ nnoremap <buffer> <2-leftmouse> :.cc <BAR> cclose<CR>zx
+augroup END
+
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd!
   autocmd BufWrite *
@@ -179,10 +189,6 @@ augroup LucAutoGit "{{{2
     autocmd BufWritePost ~/.config/**,~/src/shell/**,~/.homesick/repos/**
 	  \ if s:do_autogit                |
 	  \   call pyeval('autogit_vim() or 1') |
-	  \ endif
-    autocmd BufWritePost ~/uni/philosophie/magisterarbeit/**
-	  \ if s:do_autogit                    |
-	  \   call pyeval('autogit_vim(None) or 1') |
 	  \ endif
   endif
 augroup END
@@ -225,6 +231,10 @@ nnoremap <leader>s  :call luc#find_next_spell_error()<CR>zv
 vmap gc  "=luc#capitalize(luc#get_visual_selection())<CR>p
 nmap gc  :set operatorfunc=luc#capitalize_operator_function<CR>g@
 nmap gcc gciw
+
+" prefix lines with &commentstring
+vmap <leader>p :call luc#prefix(visualmode())<CR>
+nmap <leader>p :set operatorfunc=luc#prefix<CR>g@
 
 " bla
 if has('gui_macvim')
@@ -537,12 +547,20 @@ else
   augroup END
 endif
 execute 'inoremap' g:ctrlp_map '<C-O>:' g:ctrlp_cmd '<CR>'
+if has('gui_macvim')
+  execute 'nnoremap' '<D-B>' ':CtrlPBuffer<CR>'
+  execute 'inoremap' '<D-B>' ':CtrlPBuffer<CR>'
+  execute 'nnoremap' '<D-F>' ':CtrlP<CR>'
+  execute 'inoremap' '<D-F>' ':CtrlP<CR>'
+  execute 'nnoremap' '<D-T>' ':CtrlPTag<CR>'
+  execute 'inoremap' '<D-T>' ':CtrlPTag<CR>'
+endif
 
 " Use the compiled C-version for speed improvements "{{{2
-if has('python')
-  Plugin 'JazzCore/ctrlp-cmatcher'
-  let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
-endif
+"if has('python')
+"  Plugin 'JazzCore/ctrlp-cmatcher'
+"  let g:ctrlp_match_func = {'match' : 'matcher#cmatch'}
+"endif
 
 " plugins: completion {{{1
 if has('python') " -> Youcompleteme {{{2
@@ -785,6 +803,8 @@ let s:TexFoldEnv = [ 'verbatim',
 	           \ 'align',
 	           \ 'figure',
 	           \ 'table',
+		   \ 'luc',
+		   \ 'dogma',
 	           \ ]
 " environments for structure of mathematical texts (they can contain other
 " stuff)
@@ -938,11 +958,16 @@ let g:manpageview_winopen = 'reuse'
 "  autocmd FileType c,cpp set cmdheight=2
 "augroup END
 
-" plugins: parenthesis and quotes {{{1
+" plugins: parenthesis, quotes, alignment {{{1
 
 Plugin 'Raimondi/delimitMate'
 Plugin 'paredit.vim'
 Plugin 'tpope/vim-surround'
+"Plugin 'kana/vim-textobj-indent.git'
+Plugin 'michaeljsmith/vim-indent-object.git'
+Plugin 'junegunn/vim-easy-align.git'
+vmap <Enter> <Plug>(EasyAlign)
+nmap <Leader>a <Plug>(EasyAlign)
 
 " plugins: motion {{{1
 Plugin 'Lokaltog/vim-easymotion'
@@ -1059,7 +1084,7 @@ highlight LucAutoGitRunning guifg=#719e07
 highlight LucAutoGitStopped guifg=#dc322f
 
 " neovim special code {{{1
-if has('nvim')
+if has('nvim') && has('gui_macvim')
   call jobstart('Greeting', 'growlnotify',
 	\ ['--message', 'YEAH neovim rocks!', '--title', 'Hello Neovim'])
 endif

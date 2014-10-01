@@ -5,6 +5,7 @@
 
 " TODO
 let s:fonts = [
+      \ ['meslo lg s for powerline', 12, 25],
       \ ['menlo for powerline',      12, 25],
       \ ['menlo',                    12, 25],
       \ ['monospace',                10, 25],
