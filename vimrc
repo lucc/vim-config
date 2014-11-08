@@ -12,7 +12,7 @@ set guioptions-=m
 
 " set up python {{{1
 if has('nvim')
-  runtime! plugin/python_setup.vim
+  runtime! python_setup.vim
   python import vim
   pyfile ~/.vim/vimrc.py
 elseif has('python')
@@ -735,7 +735,7 @@ if has('python')
   "let g:UltiSnipsJumpBackwardTrigger = <c-k>
   let g:UltiSnipsJumpBackwardTrigger = '<SID>NOT_DEFINED'
 
-  if has('gui_running')
+  if has('gui_running') && has('gui_macvim')
     " new settings
     let g:UltiSnipsExpandTrigger = '<A-Tab>'
     let g:UltiSnipsJumpForwardTrigger = '<A-Tab>'
