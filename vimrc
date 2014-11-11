@@ -10,15 +10,23 @@ set nocompatible
 set guioptions+=M
 set guioptions-=m
 
+" fix the runtimepath to conform to XDG a little bit
+set runtimepath-=~/.vim
+set runtimepath-=~/.vim/after
+set runtimepath+=~/.config/vim
+set runtimepath+=~/.config/vim/after
+let $MYGVIMRC = substitute($MYVIMRC, 'vimrc$', 'gvimrc', '')
+let $GVIMINIT = 'source $MYGVIMRC'
+
 " set up python {{{1
 if has('nvim')
   runtime! python_setup.vim
   python import vim
-  pyfile ~/.vim/vimrc.py
+  pyfile ~/.config/vim/vimrc.py
 elseif has('python')
   python import vim
   python if vim.VIM_SPECIAL_PATH not in sys.path: sys.path.append(vim.VIM_SPECIAL_PATH)
-  pyfile ~/.vim/vimrc.py
+  pyfile ~/.config/vim/vimrc.py
 endif
 
 " syntax and filetype {{{1
@@ -46,21 +54,15 @@ function! s:viminfo_setup(server) "{{{2
   if a:server
     " options: viminfo
     " default: '100,<50,s10,h
-    set viminfo='100,<50,s10,h,%,n~/.vim/viminfo
+    set viminfo='100,<50,s10,h,%,n~/.cache/vim/viminfo
     " the flag ' is for filenames for marks
-    set viminfo='100
     " the flag < is the nummber of lines saved per register
-    set viminfo+=<50
-    " max size saved for registers in kb
-    set viminfo+=s10
-    " disable hlsearch
-    set viminfo+=h
-    " remember (whole) buffer list
-    set viminfo+=%
-    " name of the viminfo file
-    set viminfo+=n~/.vim/viminfo
+    " the flag s is the max size saved for registers in kb
+    " the flag h is to disable hlsearch
+    " the flag % is to remember (whole) buffer list
+    " the flag n is the name of the viminfo file
     " load a static viminfo file with a file list
-    rviminfo ~/.vim/default-buffer-list.viminfo
+    rviminfo ~/.config/vim/default-buffer-list.viminfo
     " set up an argument list to prevent the empty buffer at start up
     "if argc() == 0
     "  execute 'args' bufname(2)
@@ -118,7 +120,7 @@ augroup END
 augroup LucLilypond "{{{3
   autocmd!
   autocmd FileType lilypond
-	\ setlocal dictionary+=~/.vim/syntax/lilypond-words
+	\ setlocal dictionary+=~/.config/vim/syntax/lilypond-words
 augroup END
 
 augroup LucTex "{{{3
@@ -324,8 +326,8 @@ command! -nargs=1 -complete=customlist,luc#man#complete_topics
 set autoindent
 set backspace=indent,eol,start
 set backup
-set backupdir=~/.vim/backup
-let &backupskip .= ',' . expand('$HOME') . '/.*/**/secure/*'
+set backupdir=~/.cache/vim/backup
+"let &backupskip .= ',' . expand('$HOME') . '/.*/**/secure/*'
 set hidden
 set history=2000
 set confirm
@@ -349,6 +351,8 @@ set sessionoptions+=resize,winpos
 " use /bin/sh as shell to have a shell with a simple prompt TODO fix zsh
 " prompt
 set shell=/bin/sh
+" save the swap files in a xdg dir
+set directory=~/.cache/vim/swap,~/tmp,/tmp
 
 " options: cpoptions {{{1
 set cpoptions+=$ " don't redraw the display while executing c, s, ... cmomands
@@ -362,7 +366,7 @@ set complete+=k
 set dictionary+=spell
 
 " add private directories:
-set dictionary+=~/.vim/dictionary/*
+set dictionary+=~/.config/vim/dictionary/*
 
 " options: terminal stuff {{{1
 "if $TERM_PROGRAM == 'iTerm.app'
@@ -384,9 +388,9 @@ set incsearch
 " MacVim.app/Contents/Resources/vim/runtime/spell
 set spelllang=de,en
 if &spellfile == ''
-  set spellfile+=~/.vim/spell/de.utf-8.add
-  set spellfile+=~/.vim/spell/en.utf-8.add
-  set spellfile+=~/.vim/spell/names.utf-8.add
+  set spellfile+=~/.config/vim/spell/de.utf-8.add
+  set spellfile+=~/.config/vim/spell/en.utf-8.add
+  set spellfile+=~/.config/vim/spell/names.utf-8.add
 endif
 set nospell
 
@@ -503,8 +507,9 @@ set wildignore+=*.tgz
 " plugins: management with vundle {{{1
 " https://github.com/gmarik/Vundle.vim
 filetype off
-set runtimepath+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+let s:bundle_path = expand('~/.local/share/vim/bundle')
+set runtimepath+=~/.local/share/vim/bundle/Vundle.vim
+call vundle#begin(s:bundle_path)
 Plugin 'gmarik/Vundle.vim'
 
 " plugins: buffer and file management {{{1
@@ -933,7 +938,7 @@ Plugin 'Conque-Shell'
 Plugin 'Shougo/vimshell.vim' "{{{2
 Plugin 'Shougo/vimproc'
 "map <D-F11> :VimShellPop<cr>
-let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
+let g:vimshell_temporary_directory = expand('~/.cache/vim/vimshell')
 
 " to be tested (shell in gvim) {{{2
 Plugin 'https://bitbucket.org/fboender/bexec.git'
@@ -1089,6 +1094,13 @@ Plugin 'git://notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
 " last steps {{{1
 
 call vundle#end()
+" fix the runtimepath to conform to XDG a little bit
+set runtimepath-=~/.vim
+set runtimepath-=~/.vim/after
+set runtimepath-=~/.config/vim
+set runtimepath-=~/.config/vim/after
+set runtimepath+=~/.config/vim
+set runtimepath+=~/.config/vim/after
 " switch on filetype detection after defining all Bundles
 filetype plugin indent on
 

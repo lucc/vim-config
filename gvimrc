@@ -26,7 +26,7 @@ let s:normalfonts = join(map(copy(s:fonts),
 let s:bigfonts = join(map(copy(s:fonts),
       \ '(remove(v:val, 1) . join(v:val, s:delim))[2:-1]'), ',')
 if system('uname') == "Linux\n"
-  s:normalfonts = 'DejaVu Sans Mono 9'
+  let s:normalfonts = 'DejaVu Sans Mono 9'
 endif
 
 " user defined functions {{{1
