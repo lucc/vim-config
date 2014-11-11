@@ -26,6 +26,7 @@ syntax enable
 filetype plugin indent on
 
 " user defined variables {{{1
+let s:uname = system('uname')[:-2]
 let mapleader = ','
 let s:do_autogit = 1
 
@@ -507,7 +508,9 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 " plugins: buffer and file management {{{1
-Plugin 'kien/ctrlp.vim'
+if s:uname != 'Linux'
+  Plugin 'kien/ctrlp.vim'
+endif
 
 " cache {{{2
 "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
@@ -725,7 +728,9 @@ endif
 " plugins: snippets {{{1
 
 if has('python')
-  Plugin 'SirVer/ultisnips'
+  if s:uname != 'Linux'
+    Plugin 'SirVer/ultisnips'
+  endif
   let g:UltiSnipsExpandTrigger = '<C-F>'
   let g:UltiSnipsJumpForwardTrigger = '<C-F>'
   "let g:UltiSnipsJumpBackwardTrigger = '<C-Tab>'
@@ -756,7 +761,9 @@ Plugin 'honza/vim-snippets'
 Plugin 'rbonvall/snipmate-snippets-bib'
 
 " plugins: syntastic {{{1
-Plugin 'scrooloose/syntastic'
+if s:uname != 'Linux'
+  Plugin 'scrooloose/syntastic'
+endif
 let g:syntastic_mode_map = {
       \ 'mode': 'passive',
       \ 'active_filetypes': [],
@@ -789,7 +796,9 @@ let g:tex_flavor = 'latex'
 
 "Plugin 'auctex.vim'
 
-Plugin 'git://git.code.sf.net/p/vim-latex/vim-latex' "{{{3
+if s:uname != 'Linux'
+  Plugin 'git://git.code.sf.net/p/vim-latex/vim-latex' "{{{3
+endif
 "Plugin 'LaTeX-Help' " is included in vim-latex
 let g:ngerman_package_file = 1
 let g:Tex_Menus = 0
@@ -971,7 +980,9 @@ let g:manpageview_winopen = 'reuse'
 
 Plugin 'Raimondi/delimitMate'
 Plugin 'paredit.vim'
-Plugin 'tpope/vim-surround'
+if s:uname != 'Linux'
+  Plugin 'tpope/vim-surround'
+endif
 "Plugin 'kana/vim-textobj-indent.git'
 Plugin 'michaeljsmith/vim-indent-object.git'
 Plugin 'junegunn/vim-easy-align.git'
@@ -983,7 +994,9 @@ Plugin 'Lokaltog/vim-easymotion'
 
 " plugins: vcs stuff {{{1
 "Plugin 'tpope/vim-git'
-Plugin 'tpope/vim-fugitive'
+if s:uname != 'Linux'
+  Plugin 'tpope/vim-fugitive'
+endif
 Plugin 'ludovicchabant/vim-lawrencium'
 Plugin 'mhinz/vim-signify' "{{{3
 let g:signify_disable_by_default = 1
