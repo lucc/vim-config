@@ -5,7 +5,7 @@
 
 " TODO
 let s:fonts = [
-      \ ['meslo lg s for powerline', 12, 25],
+      \ ['meslo lg s for powerline', 8, 25],
       \ ['menlo for powerline',      12, 25],
       \ ['menlo',                    12, 25],
       \ ['monospace',                10, 25],
@@ -25,9 +25,10 @@ let s:normalfonts = join(map(copy(s:fonts),
       \ 'join(v:val[0:1], s:delim)'), ',')
 let s:bigfonts = join(map(copy(s:fonts),
       \ '(remove(v:val, 1) . join(v:val, s:delim))[2:-1]'), ',')
-if system('uname') == "Linux\n"
-  let s:normalfonts = 'DejaVu Sans Mono 9'
-endif
+let g:my_fonts__ = [copy(s:normalfonts), copy(s:bigfonts)]
+"if system('uname') == "Linux\n"
+"  let s:normalfonts = 'DejaVu Sans Mono 9'
+"endif
 
 " user defined functions {{{1
 function! s:resize_gui() " {{{2
