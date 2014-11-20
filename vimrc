@@ -966,7 +966,7 @@ let g:easytags_updatetime_warn = 0
 let g:easytags_file = '~/.cache/tags'
 "let g:easytags_by_filetype = '~/.cache/vim-easytag'
 let g:easytags_ignored_filetypes = ''
-let g:easytags_python_enabled = 1
+let g:easytags_python_enabled = 0
 if !exists('g:easytags_languages')
   let g:easytags_languages = {}
 endif
