@@ -516,7 +516,7 @@ call vundle#begin(s:bundle_path)
 Plugin 'gmarik/Vundle.vim'
 
 " plugins: buffer and file management {{{1
-if s:uname != 'Linux'
+if s:uname != 'Linux' || has('nvim')
   Plugin 'kien/ctrlp.vim'
 endif
 
@@ -736,7 +736,7 @@ endif
 " plugins: snippets {{{1
 
 if has('python')
-  if s:uname != 'Linux'
+  if s:uname != 'Linux' || has('nvim')
     Plugin 'SirVer/ultisnips'
   endif
   let g:UltiSnipsExpandTrigger = '<C-F>'
@@ -765,11 +765,13 @@ else
 endif
 
 " Snippets are separated from the engine:
-Plugin 'honza/vim-snippets'
-Plugin 'rbonvall/snipmate-snippets-bib'
+if s:uname != 'Linux' || has('nvim')
+  Plugin 'honza/vim-snippets'
+  Plugin 'rbonvall/snipmate-snippets-bib'
+endif
 
 " plugins: syntastic {{{1
-if s:uname != 'Linux'
+if s:uname != 'Linux' || has('nvim')
   Plugin 'scrooloose/syntastic'
 endif
 let g:syntastic_mode_map = {
@@ -804,7 +806,7 @@ let g:tex_flavor = 'latex'
 
 "Plugin 'auctex.vim'
 
-if s:uname != 'Linux'
+if s:uname != 'Linux' || has('nvim')
   Plugin 'git://git.code.sf.net/p/vim-latex/vim-latex' "{{{3
 endif
 "Plugin 'LaTeX-Help' " is included in vim-latex
@@ -988,7 +990,7 @@ let g:manpageview_winopen = 'reuse'
 
 Plugin 'Raimondi/delimitMate'
 Plugin 'paredit.vim'
-if s:uname != 'Linux'
+if s:uname != 'Linux' || has('nvim')
   Plugin 'tpope/vim-surround'
 endif
 "Plugin 'kana/vim-textobj-indent.git'
@@ -1002,7 +1004,7 @@ Plugin 'Lokaltog/vim-easymotion'
 
 " plugins: vcs stuff {{{1
 "Plugin 'tpope/vim-git'
-if s:uname != 'Linux'
+if s:uname != 'Linux' || has('nvim')
   Plugin 'tpope/vim-fugitive'
 endif
 Plugin 'ludovicchabant/vim-lawrencium'
@@ -1092,7 +1094,9 @@ Plugin 'AndrewRadev/linediff.vim'
 if has('+python')
   Plugin 'guyzmo/notmuch-abook'
 endif
-Plugin 'git://notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
+if s:uname != 'Linux' || has('nvim')
+  Plugin 'git://notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
+endif
 
 " last steps {{{1
 
