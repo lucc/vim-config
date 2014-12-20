@@ -9,6 +9,7 @@ set nocompatible
 " Don't load menus.  This has to happen before 'syntax on' and 'filetype ...'
 set guioptions+=M
 set guioptions-=m
+set guiheadroom=0
 
 " fix the runtimepath to conform to XDG a little bit
 let s:config = ($XDG_CONFIG_HOME != '' ? $XDG_CONFIG_HOME : '~/.config') . '/vim'
@@ -908,6 +909,8 @@ let g:markdown_fold_style = 'nested'
 " strange folding?
 "Plugin 'tpope/vim-markdown'
 
+Plugin 'pdc.vim'
+
 " plugins: comma separated values (csv) {{{2
 "Plugin 'csv.vim'
 "Plugin 'csv-reader'
@@ -1076,7 +1079,7 @@ set laststatus=2 " always display the statusline
 
 " plugins: searching {{{1
 "if executable('ag')
-"  Plugin 'rking/ag.vim'
+  Plugin 'rking/ag.vim'
 "elseif executable('ack')
   Plugin 'mileszs/ack.vim'
 "endif
