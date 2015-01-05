@@ -151,6 +151,7 @@ augroup LucPython "{{{3
 	\   expandtab
 	\   shiftwidth=4
 	\   softtabstop=4
+	\   textwidth=79
 augroup END
 
 augroup LucJava "{{{3
