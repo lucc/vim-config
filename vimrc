@@ -1,698 +1,226 @@
 " vimrc file by luc {{{1
 " vi: set foldmethod=marker spelllang=en:
-" Credits:
-" * Many thanks to Bram for the excellent example vimrc
-" *
 
 " start (things to do first) {{{1
 
-" Use Vim settings, rather then Vi settings (much better!).  This must be
-" first, because it changes other options as a side effect.
+" don't be vi compatible, this has to be first b/c it changes other options
 set nocompatible
 
-" see if some important features are present else do not load the file
-if !(   has('autocmd') &&
-      \ has('gui')     &&
-      \ has('mouse')   &&
-      \ has('syntax')
-      \ ) || version < 700
-  echoerr "This version of Vim lacks many features, please update!"
-  finish
-endif
-
-" Do not load many of the GUI menus.  This has to happen before 'syntax on'
-" and 'filetype ...'
+" Don't load menus.  This has to happen before 'syntax on' and 'filetype ...'
 set guioptions+=M
 set guioptions-=m
+set guiheadroom=0
 
-" syntax and filetype {{{
-" Switch syntax highlighting on, when the terminal has colors (echo &t_Co)
-if &t_Co > 2 || has("gui_running")
-  syntax enable
+" fix the runtimepath to conform to XDG a little bit
+let s:config = ($XDG_CONFIG_HOME != '' ? $XDG_CONFIG_HOME : '~/.config') . '/vim'
+let s:data = ($XDG_DATA_HOME != '' ? $XDG_DATA_HOME : '~/.local/share') . '/vim'
+let s:cache = ($XDG_CACHE_HOME != '' ? $XDG_CACHE_HOME : '~/.cache') .'/vim'
+set runtimepath-=~/.vim
+set runtimepath-=~/.vim/after
+execute 'set runtimepath^=' . s:config
+execute 'set runtimepath+=' . s:config . '/after'
+let $MYGVIMRC = substitute($MYVIMRC, 'vimrc$', 'gvimrc', '')
+let $GVIMINIT = 'source $MYGVIMRC'
+
+" set up python {{{1
+if has('nvim')
+  runtime! python_setup.vim
+  python import vim
+  pyfile ~/.config/vim/vimrc.py
+elseif has('python')
+  python import vim
+  python if vim.VIM_SPECIAL_PATH not in sys.path: sys.path.append(vim.VIM_SPECIAL_PATH)
+  pyfile ~/.config/vim/vimrc.py
 endif
-" Enable file type detection and language-dependent indenting.
+
+" syntax and filetype {{{1
+syntax enable
 filetype plugin indent on
 
 " user defined variables {{{1
+let s:uname = system('uname')[:-2]
 let mapleader = ','
-" a directory/namespace for user defined functions
-let luc = {}
+let s:do_autogit = 1
 
-" user defined functions {{{1
+" functions {{{1
 
-" compiler functions {{{2
-if !has_key(luc, 'compiler')
-  let luc.compiler = {}
-endif
+function! s:server_setup() "{{{2
+  call s:viminfo_setup(!s:server_running())
+endfunction
 
-function! luc.compiler.generic(target, override) dict "{{{3
-  " Try to build stuff depending on some parameters.  What will be built is
-  " decided by a:target and if absent the current file.  First a makefile is
-  " searched for in the directory %:h and above.  If one is found it is used
-  " to make a:target.  If no makefile is found and filetype=tex, the current
-  " file will be compiled with latexmk.  If a:override is non zero only
-  " latexmk will be executed and no makefile will be searched.
+function! s:server_running() "{{{2
+  " Check if another vim server is already running.
+  return !empty(has('clientserver') ? serverlist() :
+	\ system('vim --serverlist'))
+endfunction
 
-  " local variables
-  let bdir = expand('%:h')
-  let bfile = expand('%:t')
-  let Fun = function('function')
-  let functionname = ''
-  let path = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
-  let dir = ''
-  let error = 0
-
-  " old local variables
-  let cmd   = ''
-
-  " try to find a makefile and set dir and cmd
-  while ! empty(path)
-    let dir = '/' . join(path, '/')
-    if filereadable(dir . '/makefile') || filereadable(dir . '/Makefile')
-      "let Fun = g:luc.compiler.make
-      let functionname = 'make'
-      let argument = a:target
-      let path = []
-    elseif filereadable(dir . '/build.xml')
-      "let Fun = g:luc.compiler.ant
-      let functionname = 'ant'
-      let argument = a:target
-      let path = []
-    else
-      unlet path[-1]
-    endif
-  endwhile
-
-  " if no makefile was found or override was asked for try to use latex
-  "if a:override || Fun == function('function') " && &filetype == 'tex' && a:target == ''
-  if a:override || functionname == ''
-    if has_key(g:luc.compiler, &filetype)
-      let functionname = &filetype
-      "execute 'let Fun = g:luc.compiler.' . &filetype
-      let argument = bfile
-      let dir = bdir
-    else
-      echoerr 'Not able to compile anything.'
-      let error = 1
-    endif
-  endif
-
-  " execute the command in the proper directory
-  "if Fun == function('function')
-  if functionname == ''
-    echoerr 'Not able to compile anything. (2)'
-    let error = 1
+function! s:viminfo_setup(server) "{{{2
+  if a:server
+    " options: viminfo
+    " default: '100,<50,s10,h
+    set viminfo='100,<50,s10,h,%
+    let &viminfo .= ',n' . s:cache . '/viminfo'
+    " the flag ' is for filenames for marks
+    " the flag < is the nummber of lines saved per register
+    " the flag s is the max size saved for registers in kb
+    " the flag h is to disable hlsearch
+    " the flag % is to remember (whole) buffer list
+    " the flag n is the name of the viminfo file
+    " load a static viminfo file with a file list
+    rviminfo ~/.config/vim/default-buffer-list.viminfo
+    " set up an argument list to prevent the empty buffer at start up
+    "if argc() == 0
+    "  execute 'args' bufname(2)
+    "endif
   else
-    execute 'cd' dir
-    execute 'let cmd = g:luc.compiler.' . functionname . '(argument)'
-    let dir = fnamemodify(getcwd(), ':~:.')
-    let dir = dir == '' ? '~' : dir
-    echo 'Running' cmd 'in' dir
-    silent execute '!' cmd '&'
-    cd -
-    if v:shell_error
-      echoerr 'Compilation returned ' . v:shell_error . '.'
-    endif
-    let error = ! v:shell_error
+    " if we are not running as the server do not use the viminfo file.  We
+    " probably only want to edit one file quickly from the command line.
+    set viminfo=
   endif
-
-  "if &filetype == 'tex'
-  "  silent ! ( sleep 3 && killall -HUP mupdf ) &
-  "endif
-
-  " redraw the screen to get rid of unneded "press enter" prompts
-  redraw
-
-  " return shell errors
-  return error
 endfunction
 
-function! luc.compiler.ant(target) dict "{{{3
-  return 'ant' . (a:target == '' ? '' : ' ' . a:target)
+function! s:tex_buffer_maps() "{{{2
+  " Some maps for tex buffers.  They are collected in a function because
+  " putting :map into autocmds is error prone.
+  nnoremap <buffer> K
+	\ :call pyeval('tex.doc("""'.expand('<cword>').'""") or 1')<CR>
+  nnoremap <buffer> gGG :python tex_count_vim_wrapper()<CR>
+  vnoremap <buffer> gGG :python tex_count_vim_wrapper()<CR>
+  nnoremap <buffer> gG :python tex_count_vim_wrapper(wait=True)<CR>
+  vnoremap <buffer> gG :python tex_count_vim_wrapper(wait=True)<CR>
 endfunction
 
-function! luc.compiler.make(target) dict "{{{3
-  return 'make' . (a:target == '' ? '' : ' ' . a:target)
+function! s:autocd() "{{{2
+  " Cd to the directory of the current file.
+  cd %:h
 endfunction
 
-function! luc.compiler.markdown(sourcefile) dict "{{{3
-  let target = fnamemodify(a:sourcefile, ':r').'.html'
-  return 'multimarkdown --full --smart --output='.target.' '.a:sourcefile
+function! Luc_save_and_compile() " {{{2
+  let pos = getpos('.')
+  silent update
+  python compile()
+  call setpos('.', pos)
 endfunction
 
-function! luc.compiler.tex(sourcefile) dict "{{{3
-  return 'latexmk -silent ' . a:sourcefile
-endfunction
-
-" help and documentation functions {{{2
-if !has_key(luc, 'man')
-  let luc.man = {}
-endif
-
-function! luc.man.open(...) "{{{3
-  " try to find a manpage
-  if &filetype == 'man' && a:0 == 0
-    execute 'RMan' expand('<cword>')
-  elseif a:0 > 0
-    execute 'TMan\ ' . join(a:000)
-    execute 'RMan\ ' . join(a:000)
-  else
-    echohl Error
-    echo 'Topic missing.'
-    echohl None
-    return
-  endif
-  map <buffer> K :call luc.man.open()<CR>
-  map <buffer> K :call luc.man.open()<CR>
-  vmap <buffer> K :call luc.man.open(luc.misc.GetVisualSelection())<CR>
-  vmap <buffer> K :call luc.man.open(luc.misc.GetVisualSelection())<CR>
-endfunction
-
-function! luc.man.tabopen(type, string) "{{{3
-  " look up string in the documentation for type
-  if a:type =~ 'man\|m'
-    let suffix = 'man'
-  elseif a:type =~ 'info\|i'
-    let suffix = 'i'
-  elseif a:type =~ 'perldoc\|perl\|pl'
-    let suffix = 'pl'
-  elseif a:type =~ 'php'
-    let suffix = 'php'
-  elseif a:type =~ 'pydoc\|python\|py'
-    let suffix = 'py'
-  else
-    let suffix = 'man'
-  endif
-  execute 'TMan' a:string . '.' . suffix
-  " there seems to be a bug in :Man and :TMan
-  execute 'RMan' a:string . '.' . suffix
-  call foreground()
+function! s:sudo_write() "{{{2
+  " danke an Matze
+  write ! sudo dd of="%"
+  edit!
   redraw
 endfunction
 
-function! luc.man.completeTopics(ArgLead, CmdLine, CursorPos) "{{{3
-  let paths = tr(system('man -w'), ":\n", "  ")
-  "let paths = "/usr/share/man/man9"
-  return system('find ' . paths .
-	\ ' -type f | sed "s#.*/##;s/\.gz$//;s/\.[0-9]\{1,\}//" | sort -u')
-endfunction
-
-function! luc.man.helptags() "{{{3
-"function! LucUpdateAllHelptags()
-  for item in map(split(&runtimepath, ','), 'v:val . "/doc"')
-    if isdirectory(item)
-      "echo  'helptags' item
-      execute 'helptags' item
-    endif
-  endfor
-endfunction
-
-" color scheme functions {{{2
-if !has_key(luc, 'color')
-  let luc.color = {}
-endif
-
-function! luc.color.find() "{{{3
-  "return LucFlattenList(filter(map(split(&rtp, ','),
-  "      \ 'glob(v:val .  "/**/colors/*.vim", 0, 1)'), 'v:val != []'))
-  return sort(map(split(globpath(&rtp, 'colors/*.vim'), '\n'),
-        \ 'split(v:val, "/")[-1][0:-5]'))
-endfunction
-
-function! luc.color.selectRandom() "{{{3
-  let colorschemes = s:LucFindAllColorschemes()
-  let this = colorschemes[luc.random(0,len(colorschemes)-1)]
-  execute 'colorscheme' this
-  redraw
-  let g:colors_name = this
-  echo g:colors_name
-endfunction
-
-function! luc.color.like(val) "{{{3
-  let fname = glob('~/.vim/colorscheme-ratings')
-  let cfiles = map(readfile(fname), 'split(v:val)')
-  for item in cfiles
-    if item[0] == g:colors_name
-      let item[1] += a:val
-      break
-    endif
-  endfor
-  call writefile(map(cfiles, 'join(v:val)'), fname)
-  echo g:colors_name
-endfunction
-
-function! luc.random(start, end) "{{{3
-  return (system('echo $RANDOM') % (a:end - a:start + 1)) + a:start
-  " code by Kazuo on vim@vim.org
-  python from random import randint
-  python from vim import command
-  execute 'python command("return %d" % randint('.a:start.','.a:end.'))'
-endfun
-
-function! luc.flattenList(list) "{{{3
-  " Code from bairui@#vim.freenode
-  " https://gist.github.com/3322468
-  let val = []
-  for elem in a:list
-    if type(elem) == type([])
-      call extend(val, luc.flattenList(elem))
-    else
-      call add(val, elem)
-    endif
-    unlet elem
-  endfor
-  return val
-endfunction
-
-"function! luc.color.remove() "{{{3
-"  " what does this do?
-"  if !exists('g:colors_name')
-"    echoerr 'The variable g:colors_name is not set!'
-"    return
-"  else
-"    let file = globpath(&rtp, 'colors/' . g:colors_name . '.vim')
-"    if file == ''
-"      echoerr 'Can not find colorscheme ' . g:colors_name . '!'
-"      return
-"    elseif !exists('g:remove_files')
-"      let g:remove_files = [file]
-"    elseif type(g:remove_files) != type([])
-"      echoerr 'g:remove_files is not a list!'
-"      return
-"    else
-"      call add(g:remove_files, file)
-"      return file
-"    endif
-"  endif
-"endfunction
-
-" latex functions {{{2
-if !has_key(luc, 'tex')
-  let luc.tex = {}
-endif
-
-function! luc.tex.formatBib() "{{{3
-  " format bibentries in the current file
-
-  " define a local helper function
-  let d = {}
-  let dist = 18
-  function! d.f(type, key)
-    let dist = 18
-    let factor = dist - 2 - strlen(a:type)
-    return '@' . a:type . '{' . printf('%'.factor.'s', ' ') . a:key . ','
-  endfunction
-  function! d.g(key, value)
-    let dist = 18
-    let factor = dist - 4 - strlen(a:key)
-    return '  ' . a:key . printf('%'.factor.'s', ' ') . '= "' . a:value . '",'
-  endfunction
-
-  " format the line with "@type{key,"
-  %substitute/^@\([a-z]\+\)\s*{\s*\([a-z0-9.:-]\+\),\s*$/\=d.f(submatch(1), submatch(2))/
-  " format lines wit closing brackets
-  %substitute/^\s*}\s*$/}/
-  " format lines in the entries
-  %substitute/^\s*\([A-Za-z]\+\)\s*=\s*["{]\(.*\)["}],$/\=d.g(submatch(1), submatch(2))/
-endfunction
-function! luc.tex.doc() "{{{3
-"function! LucTexDocFunction()
-  " call the texdoc programm with the word under the cursor or the selected
-  " text.
-  silent execute '!texdoc' expand("<cword>")
-endfunction
-
-function! luc.tex.saveFolds() "{{{3
-"function! s:LucLatexSaveFolds()
-  let l:old = &viewoptions
-  set viewoptions=folds
-  mkview
-  let &viewoptions = l:old
-endfunction
-
-function! luc.tex.count(file) range "{{{3
-"function! LucLatexCount(file) range
-  if type(a:file) == type(0)
-    let tex = bufname(a:file)
-  elseif type(a:file) == type("")
-    if a:file == ""
-      let tex = expand("%")
-    else
-      let tex = a:file
-    endif
-  else
-    return No_File_Found
-  endif
-  let cmd = 'texcount -quiet -nocol -1 -utf8 -incbib '
-  let texchars = split(split(system(cmd . '-char ' . tex), "\n")[0], '+')[0]
-  let texwords = split(split(system(cmd . tex), "\n")[0], '+')[0]
-  let pdf = join(split(tex, '\.')[0:-2], '.').'.pdf'
-  if filereadable(pdf)
-    let cmd = 'pdftotext ' . pdf . ' /dev/stdout | wc -mw'
-    let [pdfwords, pdfchars] = split(system(cmd))
-  endif
-  echo texwords 'words and' texchars 'chars in file' tex
-  if exists('pdfwords')
-    echo pdfwords 'words and' pdfchars 'chars in file' pdf
-  endif
-  return
-  let tc = '!texcount -nosub '
-  let wc = '!pdftotext %:r.pdf /dev/stdout | wc -mw '
-  if a:char == 'char'
-    let tc .= '-char '
-    let wc .= '-m'
-  endif
-  if a:firstline == a:lastline
-    let tc .= '%'
-  else
-    let tc = a:firstline . ',' . a:lastline . 'write ' . tc . '-'
-  endif
-  execute tc
-  execute wc '2>/dev/null'
-endfunction
-
-" misc functions {{{2
-if !has_key(luc, 'misc')
-  let luc.misc = {}
-endif
-
-function! luc.misc.findBaseDir() "{{{3
-  " files which indicate a suitable base directory
-  let indicator_files = [
-                      \ 'makefile',
-                      \ 'build.xml',
-                      \ ]
-  let indicator_dirs = [
-                     \ '~/uni',
-                     \ '~/.vim',
-		     \ ]
-  let matches = []
-  let path = filter(split(expand('%:p:h'), '/'), 'v:val !~ "^$"')
-  let cwd = getcwd()
-  " look at directory of the current buffer
-  while ! empty(path)
-    let dir = '/' . join(path, '/')
-    for file in indicator_files
-      if filereadable(dir . '/' . file)
-	call add(matches, [dir, file])
-      endif
-    endfor
-    if dir == cwd
-      if empty(matches) || matches[-1][0] != cwd
-	call add(matches, [cwd, ''])
-      endif
-    endif
-    unlet path[-1]
-  endwhile
-  " look at the working directory
-  let path = split(cwd, '/')
-  while ! empty(path)
-    let dir = '/' . join(path, '/')
-    for file in indicator_files
-      if filereadable(dir . '/' . file)
-	call add(matches, [dir, file])
-      endif
-    endfor
-    if dir == cwd
-      if empty(matches) || matches[-1][0] != cwd
-	call add(matches, [cwd, ''])
-      endif
-    endif
-    unlet path[-1]
-  endwhile
-  " fallback value
-  if empty(matches)
-    call add(matches, ['/', ''])
-  endif
-  "if len(matches) == 1
-  "  return matches[0][0]
-  "endif
-  " not optimal jet:
-  return matches[0][0]
-endfunction
-
-function! luc.misc.searchStringForURI(string) "{{{3
-  " function to find an URI in a string
-  " thanks to  http://vim.wikia.com/wiki/VimTip306
-  return matchstr(a:string, '[a-z]\+:\/\/[^ >,;:]\+')
-  " alternatives:
-  "return matchstr(a:string, '\(http://\|www\.\)[^ ,;\t]*')
-  "return matchstr(a:string, '[a-z]*:\/\/[^ >,;:]*')
-endfunction
-
-function! luc.misc.HandleURI(uri) "{{{3
-  " function to find an URI on the current line and open it.
-
-  " first find a browser
-  let browser = ''
-  let choises = [
-	\ expand($BROWSER),
-	\ 'firefox',
-	\ 'elinks',
-	\ 'links',
-	\ 'w3m',
-	\ 'lynx',
-	\ 'wget',
-	\ 'curl',
-	\ '',
-	\ ]
-  if has('mac')
-    " this only works on Mac OS X
-    let browser = 'open'
-  else
-    for browser in choises
-      if executable(browser) | break | endif
-    endfor
-  endif
-
-  " without browser or uri, bail out
-  if browser == '' || a:uri == ''
-    echoerr "Can't find a suitable browser or URI."
-    return
-  endif
-
-  " everything set: open the uri
-  echo 'Visiting' a:uri '...'
-  let uri = substitute(shellescape(a:uri), '[%#]', '\\&', 'g')
-  silent execute '!' browser uri
-endfunction
-
-function! luc.misc.InsertStatuslineColor(mode) "{{{3
-  " function to change the color of the statusline depending on the mode
-  " this version is from http://vim.wikia.com/wiki/VimTip1287
-  if     a:mode == 'i'
-    highlight StatusLine guibg=DarkGreen   ctermbg=DarkGreen
-  elseif a:mode == 'r'
-    highlight StatusLine guibg=DarkMagenta ctermbg=DarkMagenta
-  elseif a:mode == 'n'
-    highlight StatusLine guibg=DarkBlue    ctermbg=DarkBlue
-  else
-    highlight statusline guibg=DarkRed     ctermbg=DarkRed
-  endif
-endfunction
-
-function! luc.misc.FindNextSpellError() "{{{3
-  " A function to jump to the next spelling error
-  setlocal spell
-  "if spellbadword(expand('<cword>')) == ['', '']
-    normal ]s
-  "endif
-endfunction
-
-
-function! luc.misc.CheckIfBufferIsNew(...) "{{{3
-  " check if the buffer with number a:1 is new.  That is to say, if it as
-  " no name and is empty.  If a:1 is not supplied 1 is used.
-  " find the buffer nr to check
-  let number = a:0 ? a:1 : 1
-  " save current and alternative buffer
-  let current = bufnr('%')
-  let alternative = bufnr('#')
-  let value = 0
-  " check buffer name
-  if bufexists(number) && bufname(number) == ''
-    silent! execute 'buffer' number
-    let value = line('$') == 1 && getline(1) == ''
-    silent! execute 'buffer' alternative
-    silent! execute 'buffer' current
-  endif
-  return value
-endfunction
-
-" see:
-"http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
-"
-function! luc.misc.RemoteEditor(mail) "{{{3
-  " a function to be called by a client who wishes to use a vim server as an
-  " non forking edior. One can also set the environment variable EDITOR with
-  " EDITOR='vim --remote-tab-wait-silent +call\ luc.misc.RemoteEditor()'
-
-  " the command to hide MacVim (use with system())
-  let s:applescript = 'osascript -e "tell application \"System Events\"' .
-	\ ' to set visible of process \"MacVim\" to false" &'
-
-  " use an autocommand to move MacVim to the background when leaving the
-  " buffer
-  augroup RemoteEditor
-    autocmd BufDelete <buffer> silent call system(s:applescript)|redraw!
-  augroup END
-
-  " define some custom commands to quit the buffer
-  command -bang -buffer -bar QuitRemoteEditor confirm bdelete<bang>
-  command -bang -buffer -bar HideRemoteEditor silent call system(applescript)
-
-  cnoreabbrev <buffer> q        bdelete
-  cnoreabbrev <buffer> qu       bdelete
-  cnoreabbrev <buffer> qui      bdelete
-  cnoreabbrev <buffer> quit     bdelete
-  cnoreabbrev <buffer> wq       write  <bar> bdelete
-  cnoreabbrev <buffer> x        update <bar> bdelete
-  cnoreabbrev <buffer> xi       update <bar> bdelete
-  cnoreabbrev <buffer> xit      update <bar> bdelete
-  cnoreabbrev <buffer> exi      update <bar> bdelete
-  cnoreabbrev <buffer> exit     update <bar> bdelete
-  nnoremap <buffer> ZZ         :update<bar>bdelete<CR>
-  nnoremap <buffer> ZQ         :bdelete!<CR>
-  nnoremap <buffer> <c-w><c-q> :bdelete<CR>
-  nnoremap <buffer> <c-w>q     :bdelete<CR>
-
-  if a:mail == 1
-    /^$
-    normal vGzo
-    redraw!
-  endif
-endfunction
-
-function! luc.misc.GetVisualSelection() "{{{3
-  " This function is copied from http://stackoverflow.com/questions/1533565/
-  " FIXME: This seems to exclude the last character from the selection.
-  let [lnum1, col1] = getpos("'<")[1:2]
-  "let [lnum1, col1] = getpos("v")[1:2]
-  let [lnum2, col2] = getpos("'>")[1:2]
-  "let [lnum2, col2] = getpos(".")[1:2]
-  let lines = getline(lnum1, lnum2)
-  let lines[-1] = lines[-1][: col2 - 2]
-  let lines[0] = lines[0][col1 - 1:]
-  return join(lines, "\n")
-endfunction
-
-" old functions {{{2
-if !has_key(luc, 'old')
-  let luc.old = {}
-endif
-
-function! luc.old.loadScpBuffers() "{{{3
-  badd scp://math/.profile
-  badd scp://ifi/.profile
-  badd scp://ifi/.profile_local
-  badd scp://lg/.bash_profile
-endfunction
+" setup for server vim {{{1
+call s:server_setup()
 
 " user defined autocommands {{{1
 
 " FileType autocommands {{{2
 
+augroup LucMarkdown "{{{3
+  autocmd!
+  autocmd FileType markdown
+	\ setlocal spell
+augroup END
+
 augroup LucLilypond "{{{3
   autocmd!
   autocmd FileType lilypond
-	\ setlocal dictionary+=~/.vim/syntax/lilypond-words
+	\ setlocal dictionary+=~/.config/vim/syntax/lilypond-words
 augroup END
 
-augroup LucLatex "{{{3
+augroup LucTex "{{{3
   autocmd!
   autocmd FileType tex
-	\ nmap <buffer> K :call luc.tex.doc()<CR>|
-	\ nnoremap <buffer> gG :call luc.tex.count('')<CR>|
-	\ setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex|
-	\ vnoremap <buffer> gG :call luc.tex.count('')<CR>|
-	\
-augroup END
-
-augroup LucLatexSuiteSettings "{{{3
-  autocmd!
-  " Tex_ViewRule_pdf and Tex_CompileRule_pdf are for the macros ,ll and ,lv
-  " Tex_UseMakefile forces latex-suite to use makefiles
-  " grep shoul display the filename
-  " Tex_Menus are disabled and empty files are treated as LaTeX with
-  " tex_flavor='latex'
-  autocmd FileType tex
-	\ if has('mac')|let g:Tex_ViewRule_pdf = 'open -a Preview'|endif|
-	\ let g:Tex_UseMakefile = 1|
-	\ let g:Tex_CompileRule_pdf = 'latexmk -silent -pv -pdf $*'|
-	\ let g:Tex_SmartQuoteOpen = '„'|
-	\ let g:Tex_SmartQuoteClose = '“'|
-	\ let g:Tex_Env_quote = "\\begin{quote}\<CR>,,<++>`` \\cite[S.~<++>]{<++>}\<CR>\\end{quote}"|
-	\ setlocal grepprg=grep\ -nH\ $*|
-	\
-  " force grep to display filename.
-  " Handle empty .tex files as LaTeX (optional).
-  " Folding
-  "let Tex_FoldedEnvironments='*'
-  "let Tex_FoldedEnvironments+=','
-  "let Tex_FoldedEnvironments  = 'document,minipage,'
-  "let Tex_FoldedEnvironments .= 'di,lem,ivt,dc,'
-  "let Tex_FoldedEnvironments .= 'verbatim,comment,proof,eq,gather,'
-  "let Tex_FoldedEnvironments .= 'align,figure,table,thebibliography,'
-  "let Tex_FoldedEnvironments .= 'keywords,abstract,titlepage'
-  "let Tex_FoldedEnvironments .= 'item,enum,display'
-  "let Tex_FoldedMisc = 'comments,item,preamble,<<<'
-  "let Tex_FoldedEnvironments .= '*'
-  "let Tex_FoldedSections = 'part,chapter,section,subsection,subsubsection,paragraph'
-  " dont use latexsuite folding
-  "let Tex_FoldedEnvironments=''
-  "let Tex_FoldedMisc=''
-  "let Tex_FoldedSections=''
-  "
-  "let g:Tex_UseUtfMenus=1
+	\ setlocal
+	\   spell
+	\   dictionary+=%:h/**/*.bib,%:h/**/*.tex
+	\   grepprg=grep\ -nH\ $*                 |
+	\ call s:tex_buffer_maps()                |
+	\ if pyeval('check_for_english_babel()')  |
+	\   let b:Tex_SmartQuoteOpen = '“'        |
+	\   let b:Tex_SmartQuoteClose = '”'       |
+	\ endif                                   |
+	\ let b:surround_99 = "\\\1command\1{\r}"
 augroup END
 
 augroup LucPython "{{{3
   autocmd!
-  autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
+  autocmd FileType python
+	\ setlocal
+	\   tabstop=8
+	\   expandtab
+	\   shiftwidth=4
+	\   softtabstop=4
 augroup END
 
 augroup LucJava "{{{3
   autocmd!
-  "autocmd Filetype java setlocal omnifunc=javacomplete#Complete
-  autocmd Filetype java setlocal makeprg=cd\ %:h\ &&\ javac\ %:t
+  autocmd Filetype java
+	\ setlocal makeprg=cd\ %:h\ &&\ javac\ %:t
+        " setlocal omnifunc=javacomplete#Complete
 augroup END
 
 augroup LucMail "{{{3
   autocmd!
-  autocmd FileType mail setlocal textwidth=72
+  autocmd FileType mail
+	\ setlocal textwidth=72 spell |
+	\ silent! /^$/,$ foldopen     |
+	\ /^$
 augroup END
 
 augroup LucMan "{{{3
   autocmd!
-  autocmd FileType man stopinsert | setlocal nospell
+  autocmd FileType man
+	\ stopinsert |
+	\ setlocal nospell
 augroup END
 
-augroup LucSession "{{{2
+augroup LucGitCommit "{{{3
   autocmd!
-  autocmd VimEnter *
-	\ if luc.misc.CheckIfBufferIsNew(1) |
-	\   bwipeout 1 |
-	\   doautocmd BufRead,BufNewFile |
-	\ endif
+  autocmd FileType gitcommit
+	\ setlocal spell
 augroup END
+
+augroup LucQuickFix "{{{3
+  autocmd!
+  autocmd FileType qf
+	\ setlocal nowrap cursorline |
+	\ nnoremap <buffer> <ENTER> :.cc <BAR> cclose<CR>zx|
+	\ vnoremap <buffer> <ENTER> :<C-U>.cc <BAR> cclose<CR>zx|
+	\ nnoremap <buffer> <2-leftmouse> :.cc <BAR> cclose<CR>zx
+augroup END
+
+augroup LucRemoveWhiteSpaceAtEOL "{{{2
+  autocmd!
+  autocmd BufWrite *
+	\ let s:position = getpos('.')          |
+	\ silent keepjumps %substitute/\s\+$//e |
+	\ call setpos('.', s:position)          |
+augroup END
+
+augroup LucAutoGit "{{{2
+  if has('python')
+    autocmd!
+    autocmd BufWritePost ~/.config/**,~/src/shell/**,~/.homesick/repos/**
+	  \ if s:do_autogit                |
+	  \   call pyeval('autogit_vim() or 1') |
+	  \ endif
+  endif
+augroup END
+
+"augroup LucLocalAutoCd "{{{2
+"  autocmd!
+"  autocmd BufEnter ~/uni/**     lcd ~/uni
+"  autocmd BufEnter ~/.config/** lcd ~/.config
+"  autocmd BufEnter ~/src/**     lcd ~/src
+"augroup END
 
 "augroup LucLocalWindowCD "{{{2
 "  autocmd!
 "  " FIXME: still buggy
 "  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
-"	\ execute 'lcd' luc.misc.findBaseDir()
+"	\ execute 'lcd' pyeval('backup_base_dir_vim_reapper()')
 "augroup END
-
-augroup LucRemoveWhiteSpaceAtEOL "{{{2
-  autocmd!
-  autocmd BufWrite * silent %substitute/\s\+$//e
-augroup END
-
-augroup LucDelMenus
-  autocmd!
-  autocmd VimEnter *
-	\ aunmenu *
-augroup END
 
 " user defined commands and mappings {{{1
 
@@ -710,24 +238,49 @@ inoremap <C-U> <C-G>u<C-U>
 inoremap <C-W> <C-G>u<C-W>
 
 " easy spell checking
-inoremap <C-s> <C-o>:call luc.misc.FindNextSpellError()<CR><C-x><C-s>
-nnoremap <C-s>      :call luc.misc.FindNextSpellError()<CR>z=
+inoremap <C-s> <C-o>:call luc#find_next_spell_error()<CR><C-x><C-s>
+nnoremap <C-s>      :call luc#find_next_spell_error()<CR>z=
+nnoremap <leader>s  :call luc#find_next_spell_error()<CR>zv
 
+" capitalize text
+vmap gc  "=luc#capitalize(luc#get_visual_selection())<CR>p
+nmap gc  :set operatorfunc=luc#capitalize_operator_function<CR>g@
+nmap gcc gciw
+
+" prefix lines with &commentstring
+vmap <leader>p :call luc#prefix(visualmode())<CR>
+nmap <leader>p :set operatorfunc=luc#prefix<CR>g@
+
+" bla
 if has('gui_macvim')
   inoremap œ \
   inoremap æ \|
   cnoremap œ \
   cnoremap æ \|
+  inoremap <D-s> <C-O>:silent update<CR>
+  noremap  <D-s>      :silent update<CR>
 endif
 
+" interactive fix for latex quotes in English files
+command! UnsetLaTeXQuotes unlet g:Tex_SmartQuoteOpen g:Tex_SmartQuoteClose
+
+command! Suw :call s:sudo_write()
+
 " open URLs {{{2
-nmap <Leader>w :call luc.misc.HandleURI(luc.misc.searchStringForURI(getline('.')))<CR>
+python import strings
+python import webbrowser
+nmap <Leader>w :python for url in strings.urls(vim.current.line):
+      \ webbrowser.open(url)<CR>
 
 " easy compilation {{{2
-nmap <silent> <F2>        :sil up <BAR> call luc.compiler.generic('', 0)<CR>
-imap <silent> <F2>   <C-O>:sil up <BAR> call luc.compiler.generic('', 0)<CR>
-nmap <silent> <D-F2>      :sil up <BAR> call luc.compiler.generic('', 1)<CR>
-imap <silent> <D-F2> <C-O>:sil up <BAR> call luc.compiler.generic('', 1)<CR>
+nmap <silent> <F2>        :call Luc_save_and_compile()<CR>
+imap <silent> <F2>   <C-O>:call Luc_save_and_compile()<CR>
+
+" backup current buffer
+nnoremap <silent> <F11>
+      \ :silent update <BAR>
+      \ call pyeval('backup_current_buffer() or 1') <BAR>
+      \ redraw <CR>
 
 " moveing around {{{2
 nmap <C-Tab>        gt
@@ -735,31 +288,42 @@ imap <C-Tab>   <C-O>gt
 nmap <C-S-Tab>      gT
 imap <C-S-Tab> <C-O>gT
 
+nmap <C-W><C-F> <C-W>f<C-W>L
+
 nmap <SwipeUp>   gg
 imap <SwipeUp>   gg
 nmap <SwipeDown> G
 imap <SwipeDown> G
 
-" misc {{{2
+nnoremap ' `
+nnoremap ` '
 
-nmap <Leader>d "=strftime('%F')<CR>p
+command! AutoCd call s:autocd()
+
+" misc {{{2
 
 " use ß to clear the screen if you want privacy for a moment
 nmap ß :!clear<CR>
 
-" From the .vimrc example file:
-" Convenient command to see the difference between the current buffer and the
-" file it was loaded from, thus the changes you made.
-" Only define it when not defined already.
-"command! DiffOrig vne | se bt=nofile | r # | 0d_ | difft | wincmd p | difft
+command! AutoGitStart  let s:do_autogit = 1
+command! AutoGitStop   let s:do_autogit = 0
+command! AutoGitToggle let s:do_autogit = !s:do_autogit
+command! AutoGitStatus echon 'AutoGit is ' |
+      \ if s:do_autogit                    |
+      \   echohl LucAutoGitRunning         |
+      \   echon 'running'                  |
+      \ else                               |
+      \   echohl LucAutoGitStopped         |
+      \   echon 'stopped'                  |
+      \ endif                              |
+      \ echohl None
 
-"command! Helptags call LucUpdateAllHelptags()
-command! DislikeCS call s:LucLikeColorscheme(-1)
-command! LikeCS call s:LucLikeColorscheme(1)
+" https://github.com/javyliu/javy_vimrc/blob/master/_vimrc
+"vmap // :<C-U>execute 'normal /' . luc#get_visual_selection()<CR>
+vmap // y/<C-r>"<CR>
 
-nmap <D-+> :call s:LucLikeColorscheme(1)\|call LucSelectRandomColorscheme()<CR>
-nmap <D--> :call s:LucLikeColorscheme(-1)\|call LucSelectRandomColorscheme()<CR>
-nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
+command! -nargs=1 -complete=customlist,luc#man#complete_topics
+      \ ManLuc TMan <args>.man
 
 " options: basic {{{1
 
@@ -767,16 +331,16 @@ nmap <D-_> :call s:LucRemoveColorscheme()\|call LucSelectRandomColorscheme()<CR>
 set autoindent
 set backspace=indent,eol,start
 set backup
-set backupdir=~/.vim/backup
-let &backupskip .= ',' . expand('$HOME') . '/.config/secure/*'
+execute 'set backupdir=' . s:cache . '/backup'
+"let &backupskip .= ',' . expand('$HOME') . '/.*/**/secure/*'
 set hidden
 set history=2000
 set confirm
 set textwidth=78
 set shiftwidth=2
 set number
-" scroll when the courser is 5 lines from the border line
-set scrolloff=5
+" scroll when the courser is 2 lines from the border line
+set scrolloff=2
 set shortmess=
 set nostartofline
 set encoding=utf-8
@@ -789,6 +353,13 @@ set virtualedit=block
 set diffopt=filler,vertical
 " default: blank,buffers,curdir,folds,help,options,tabpages,winsize
 set sessionoptions+=resize,winpos
+" use /bin/sh as shell to have a shell with a simple prompt TODO fix zsh
+" prompt
+set shell=/bin/sh
+" save the swap files in a xdg dir
+execute 'set directory=' . s:cache . '/swap'
+set directory+=~/tmp
+set directory+=/tmp
 
 " options: cpoptions {{{1
 set cpoptions+=$ " don't redraw the display while executing c, s, ... cmomands
@@ -800,12 +371,16 @@ set complete+=k
 
 " use the current spell checking settings for directory completion:
 set dictionary+=spell
-
 " add private directories:
-set dictionary+=~/.vim/dictionary/*
+set dictionary+=~/.config/vim/dictionary/*
+" system word lists
+set dictionary+=/usr/share/dict/american-english
+set dictionary+=/usr/share/dict/british-english
+set dictionary+=/usr/share/dict/ngerman
 
 " options: terminal stuff {{{1
-if $TERM_PROGRAM == 'iTerm.app'
+"if $TERM_PROGRAM == 'iTerm.app'
+if !has('gui_running')
   set t_Co=256
 endif
 
@@ -823,8 +398,9 @@ set incsearch
 " MacVim.app/Contents/Resources/vim/runtime/spell
 set spelllang=de,en
 if &spellfile == ''
-  set spellfile+=~/.vim/spell/de.utf-8.add
-  set spellfile+=~/.vim/spell/en.utf-8.add
+  set spellfile+=~/.config/vim/spell/de.utf-8.add
+  set spellfile+=~/.config/vim/spell/en.utf-8.add
+  set spellfile+=~/.config/vim/spell/names.utf-8.add
 endif
 set nospell
 
@@ -854,62 +430,6 @@ set formatoptions+=r " insert comment leader when hitting <enter>
 set formatoptions+=j " remove comment leader when joining lines
 set formatoptions+=l " do not break lines which are already long
 
-" options: satusline {{{1
-
-" many thanks to
-"   http://vim.wikia.com/wiki/Writing_a_valid_statusline
-"   https://wincent.com/wiki/Set_the_Vim_statusline
-"   http://winterdom.com/2007/06/vimstatusline
-"   http://got-ravings.blogspot.com/2008/08/
-
-" some examples
-"set statusline=last\ changed\ %{strftime(\"%c\",getftime(expand(\"%:p\")))}
-
-" my old versions:
-"set statusline=%t%m%r[%{&ff}][%{&fenc}]%y[ASCII=\%03.3b]%=[%c%V,%l/%L][%p%%]
-"set statusline=%t%m%r[%{&fenc},%{&ff}%Y][ASCII=x%02.2B]%=[%c%V,%l/%L][%P]
-"set statusline=%t[%M%R%H][%{strlen(&fenc)?&fenc:'none'},%{&ff}%Y]
-"set statusline+=[ASCII=x%02.2B]%=%{strftime(\"%Y-%m-%d\ %H:%M\")}
-"set statusline+=\ [%c%V,%l/%L][%P]
-
-" current version
-set statusline=%t                                  " tail of the filename
-set statusline+=\ %([%M%R%H]\ %)                   " group for mod., ro. & help
-set statusline+=[
-set statusline+=%{strlen(&fenc)?&fenc:'none'},     " display fileencoding
-set statusline+=%{&fileformat}                     " filetype (unix/windows)
-set statusline+=%Y                                 " filetype (c/sh/vim/...)
-set statusline+=%{fugitive#statusline()}           " info about git
-set statusline+=]
-set statusline+=\ [ASCII=x%02B]                    " ASCII code of char
-set statusline+=\ %=                               " rubber space
-set statusline+=[%{strftime('%R')}]                " clock
-set statusline+=\ [%c%V,%l/%L]                     " position in file
-set statusline+=\ [%P]                             " percent of above
-set statusline+=%(\ %{SyntasticStatuslineFlag()}%) " see :h syntastic
-
-" always display the statusline
-set laststatus=2
-" use the wildmenu inside the status line
-set wildmenu
-
-" " change highlighting when mode changes
-" augroup LucStatusLine
-"   autocmd!
-"   autocmd InsertEnter * call luc.misc.InsertStatuslineColor(v:insertmode)
-"   autocmd InsertLeave * call luc.misc.InsertStatuslineColor('n')
-" augroup END
-" " now we set the colors for the statusline
-" " in the most simple case
-" highlight StatusLine term=reverse
-" " for color terminal
-" highlight StatusLine cterm=bold,reverse
-" highlight StatusLine ctermbg=1
-" " for the gui
-" "highlight StatusLine gui=bold
-" highlight StatusLine guibg=DarkBlue
-" highlight StatusLine guifg=background
-
 " options: tabline {{{1
 " we could do something similar for tabs.
 " see :help 'tabline'
@@ -919,576 +439,548 @@ set wildmenu
 "set tabline+=\ %{len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))}
 "set tabline+=%=%{strftime('%a\ %F\ %R')}
 
-" options: wildignore {{{1
+" options: wildmenu and wildignore {{{1
+set wildmenu
 set wildmode=longest:full,full
-set wildignore+=.hg,.git,.svn                  " Version control
-set wildignore+=*.aux,*.out,*.toc,*.idx,*.fls  " LaTeX intermediate files
-set wildignore+=*.fdb_latexmk                  " LaTeXmk files
-set wildignore+=*.pdf,*.dvi,*.ps,*.djvu        " binary documents (latex)
-set wildignore+=*.odt,*.doc,*.docx             " office text documents
-set wildignore+=*.ods,*.xls,*.xlsx             " office spreadsheets
-set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg " binary images
-set wildignore+=*.mp3,*.flac                   " music
-set wildignore+=.*.sw?                         " Vim swap files
-set wildignore+=.DS_Store,*.dmg                " OSX bullshit
-set wildignore+=*.o,*.obj,*.exe,*.dll          " compiled object files
-set wildignore+=*.class                        " java class files
-set wildignore+=*.spl                          " compiled spell word lists
-set wildignore+=*.tar,*.tgz,*.tbz2,*.tar.gz,*.tar.bz2
-"set wildignore+=*.luac                        " Lua byte code
-"set wildignore+=migrations                    " Django migrations
-set wildignore+=*.pyc                          " Python byte code
-"set wildignore+=*.orig                        " Merge resolution files
 
+" version control {{{2
+set wildignore+=.git
+set wildignore+=.hg
+set wildignore+=.svn
+"set wildignore+=*.orig " Merge resolution files
 
-" options: viminfo {{{1
-" default: '100,<50,s10,h
-set viminfo='100,<50,s10,h,%,n~/.vim/viminfo
-" the flag ' is for filenames for marks
-set viminfo='100
-" the flag < is the nummber of lines saved per register
-set viminfo+=<50
-" max size saved for registers in kb
-set viminfo+=s10
-" disable hlsearch
-set viminfo+=h
-" remember (whole) buffer list
-set viminfo+=%
-" name of the viminfo file
-set viminfo+=n~/.vim/viminfo
-" load a static viminfo file with a file list
-rviminfo ~/.vim/default-buffer-list.viminfo
+" latex intermediate files {{{2
+set wildignore+=*.aux
+set wildignore+=*.fdb_latexmk
+set wildignore+=*.fls
+set wildignore+=*.idx
+set wildignore+=*.out
+set wildignore+=*.toc
+
+" binary documents and office documents {{{2
+set wildignore+=*.djvu
+set wildignore+=*.doc   " Microsoft Word
+set wildignore+=*.docx  " Microsoft Word
+set wildignore+=*.dvi
+set wildignore+=*.ods   " Open Document spreadsheet
+set wildignore+=*.odt   " Open Document spreadsheet template
+set wildignore+=*.pdf
+set wildignore+=*.ps
+set wildignore+=*.xls   " Microsoft Excel
+set wildignore+=*.xlsx  " Microsoft Excel
+
+" binary images {{{2
+set wildignore+=*.bmp
+set wildignore+=*.gif
+set wildignore+=*.jpeg
+set wildignore+=*.jpg
+set wildignore+=*.png
+
+" music {{{2
+set wildignore+=*.mp3
+set wildignore+=*.flac
+
+" special vim files {{{2
+set wildignore+=.*.sw? " Vim swap files
+set wildignore+=*.spl  " compiled spell word lists
+
+" OS specific files {{{2
+set wildignore+=.DS_Store
+
+" compiled and binary files {{{2
+set wildignore+=*.class " java
+set wildignore+=*.dll   " windows libraries
+set wildignore+=*.exe   " windows executeables
+set wildignore+=*.o     " object files
+set wildignore+=*.obj   " ?
+set wildignore+=*.pyc   " Python byte code
+set wildignore+=*.luac  " Lua byte code
+
+" unsuported archives and images {{{2
+set wildignore+=*.dmg
+set wildignore+=*.iso
+set wildignore+=*.tar
+set wildignore+=*.tar.bz2
+set wildignore+=*.tar.gz
+set wildignore+=*.tbz2
+set wildignore+=*.tgz
+
+" setting variables for special settings {{{1
+"let g:vimsyn_folding  = 'a' " augroups
+"let g:vimsyn_folding .= 'f' " fold functions
+"let g:vimsyn_folding .= 'm' " fold mzscheme script
+"let g:vimsyn_folding .= 'p' " fold perl     script
+"let g:vimsyn_folding .= 'P' " fold python   script
+"let g:vimsyn_folding .= 'r' " fold ruby     script
+"let g:vimsyn_folding .= 't' " fold tcl      script
 
 " plugins: management with vundle {{{1
-" I manage plugins with vundle.  In order to easyly test plugins I keep a
-" dictionary to store a flag depending on which the plugin should be loaded or
-" not.  One could also comment the the line loading the plugin, but these are
-" scatterd ofer the file and not centralized.  Also some plugins need further
-" configuration which is put in the if statements.
-let s:plugins = {
-		\ 'autocomplpop': 0,
-		\ 'ctrlp': 1,
-		\ 'latexsuite': 1,
-		\ 'neocompl': 0,
-		\ 'omnicppcomplete': 0,
-		\ 'powerline': 0,
-		\ 'syntastic': 1,
-		\ 'taglist': 1,
-		\ 'vimshell': 0,
-		\ }
-
-" Managing plugins with Vundle (https://github.com/gmarik/vundle)
+" https://github.com/gmarik/Vundle.vim
 filetype off
-set runtimepath+=~/.vim/bundle/vundle
-call vundle#rc()
-Bundle 'gmarik/vundle'
-"Bundle 'lucc/vundle'
+let s:bundle_path = expand(s:data . '/bundle')
+execute 'set runtimepath+=' . s:bundle_path . '/Vundle.vim'
+call vundle#begin(s:bundle_path)
+Plugin 'gmarik/Vundle.vim'
 
 " plugins: buffer and file management {{{1
+if s:uname != 'Linux' || has('nvim')
+  Plugin 'kien/ctrlp.vim'
+endif
 
-Bundle 'kien/ctrlp.vim'
-
-" How the plugin should manage the cache
+" cache {{{2
 "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
 let g:ctrlp_clear_cache_on_exit = 0
 
-" What files to display or ignore
+" ignore/include/exclude patterns {{{2
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_max_files = 0
 let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\v(\/private|\/var|\/tmp|\/Users\/luc\/(flac|Musik.*|img))',
+      \ 'dir':  '\v(\/private|\/var|\/tmp|\/Users\/luc\/(audio|img|flac))',
       \ }
-"let g:ctrlp_root_markers = ['makefile', 'Makefile', 'latexmkrc']
+let g:ctrlp_root_markers = [
+      \ 'makefile',
+      \ 'Makefile',
+      \ ]
+"      \ 'latexmkrc',
 
-" mappings for the plugin
-let g:ctrlp_map = '<c-space>'
+" extensions {{{2
+let g:ctrlp_extensions = [
+      \ 'tag',
+      \ 'quickfix',
+      \ 'undo',
+      \ 'changes',
+      \]
+      "\ 'dir',
+      "\ 'buffertag',
+      "\ 'line',
+      "\ 'rtscript',
+      "\ 'mixed',
+      "\ 'bookmarkdir',
+
+" mappings {{{2
 let g:ctrlp_cmd = 'CtrlPMRU'
-inoremap <C-Space> <C-O>:CtrlPMRU<CR>
+if has('gui_running')
+  let g:ctrlp_map = '<C-Space>'
+else
+  " In the terminal <c-space> doesn't work but sadly <F1> is also mapped by
+  " latex-suite so we have to overwrite that.
+  let g:ctrlp_map = '<F1>'
+  augroup LucCtrlP
+    autocmd!
+    autocmd BufEnter,WinEnter *
+	  \ execute 'nnoremap' g:ctrlp_map      ':' g:ctrlp_cmd '<CR>'
+    autocmd BufEnter,WinEnter *
+	  \ execute 'inoremap' g:ctrlp_map '<C-O>:' g:ctrlp_cmd '<CR>'
+  augroup END
+endif
+execute 'inoremap' g:ctrlp_map '<C-O>:' g:ctrlp_cmd '<CR>'
+if has('gui_macvim')
+  execute 'nnoremap' '<D-B>' ':CtrlPBuffer<CR>'
+  execute 'inoremap' '<D-B>' ':CtrlPBuffer<CR>'
+  execute 'nnoremap' '<D-F>' ':CtrlP<CR>'
+  execute 'inoremap' '<D-F>' ':CtrlP<CR>'
+  execute 'nnoremap' '<D-T>' ':CtrlPTag<CR>'
+  execute 'inoremap' '<D-T>' ':CtrlPTag<CR>'
+endif
 
-" Use the compiled C-version for speed improvements
-Bundle 'JazzCore/ctrlp-cmatcher'
-let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
-
+" Use the compiled C-version for speed improvements "{{{2
+"if has('python')
+"  Plugin 'JazzCore/ctrlp-cmatcher'
+"  let g:ctrlp_match_func = {'match' : 'matcher#cmatch'}
+"endif
 
 " plugins: completion {{{1
-"Bundle 'IComplete'
-"Bundle 'cppcomplete'
+if has('python') " -> Youcompleteme {{{2
+  Plugin 'Valloric/YouCompleteMe'
+  let g:ycm_filetype_blacklist = {}
+  let g:ycm_complete_in_comments = 1
+  let g:ycm_collect_identifiers_from_comments_and_strings = 1
+  let g:ycm_collect_identifiers_from_tags_files = 1
+  let g:ycm_seed_identifiers_with_syntax = 1
+  let g:ycm_add_preview_to_completeopt = 1
+  let g:ycm_autoclose_preview_window_after_completion = 0
 
-Bundle 'Valloric/YouCompleteMe'
-let g:ycm_filetype_blacklist = {}
-let g:ycm_complete_in_comments = 1
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_seed_identifiers_with_syntax = 1
-let g:ycm_autoclose_preview_window_after_completion = 0
+  Plugin 'bjoernd/vim-ycm-tex',
+	\ {'name': 'YouCompleteMe/python/ycm/completers/tex'}
+  let g:ycm_semantic_triggers = {'tex': ['\ref{','\cite{']}
 
+  "Plugin 'c9s/vimomni.vim'
+  "Plugin 'tek/vim-ycm-vim'
 
-"Bundle 'javacomplete'
+else             " -> neocomplete and neocomplcache {{{2
+  " settings which are uniform for both neocomplete and neocomplcache
+  "Plugin 'Shougo/vimproc' "only needed if not loaded elsewhere
+  Plugin 'Shougo/context_filetype.vim'
+  "Plugin 'Shougo/neosnippet'
 
-if s:plugins['neocompl'] "{{{2
-  "Bundle 'Shougo/neocomplete.vim'
-  Bundle 'Shougo/neocomplcache.vim'
-  Bundle 'Shougo/neosnippet'
-  " Code from the help file:
-  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""{{{
-  "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-  " Disable AutoComplPop.
-  let g:acp_enableAtStartup = 0
-  " Use neocomplcache.
-  let g:neocomplcache_enable_at_startup = 1
-  " Use smartcase.
-  let g:neocomplcache_enable_smart_case = 1
-  " Set minimum syntax keyword length.
-  let g:neocomplcache_min_syntax_length = 3
-  let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-  " Enable heavy features.
-  " Use camel case completion.
-  "let g:neocomplcache_enable_camel_case_completion = 1
-  " Use underbar completion.
-  "let g:neocomplcache_enable_underbar_completion = 1
-
-  " Define dictionary.
-  let g:neocomplcache_dictionary_filetype_lists = {
-      \ 'default' : '',
-      \ 'vimshell' : $HOME.'/.vimshell_hist',
-      \ 'scheme' : $HOME.'/.gosh_completions'
-	  \ }
-
-  " Define keyword.
-  if !exists('g:neocomplcache_keyword_patterns')
-      let g:neocomplcache_keyword_patterns = {}
-  endif
-  let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-
-  " Plugin key-mappings.
-  inoremap <expr><C-g>     neocomplcache#undo_completion()
-  inoremap <expr><C-l>     neocomplcache#complete_common_string()
-
-  " Recommended key-mappings.
-  " <CR>: close popup and save indent.
-  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-  function! s:my_cr_function()
-    return neocomplcache#smart_close_popup() . "\<CR>"
-    " For no inserting <CR> key.
-    "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-  endfunction
-  " <TAB>: completion.
-  inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-  " <C-h>, <BS>: close popup and delete backword char.
-  inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-  inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-  inoremap <expr><C-y>  neocomplcache#close_popup()
-  inoremap <expr><C-e>  neocomplcache#cancel_popup()
-  " Close popup by <Space>.
-  "inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
-
-  " For cursor moving in insert mode(Not recommended)
-  "inoremap <expr><Left>  neocomplcache#close_popup() . "\<Left>"
-  "inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
-  "inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
-  "inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
-  " Or set this.
-  "let g:neocomplcache_enable_cursor_hold_i = 1
-  " Or set this.
-  "let g:neocomplcache_enable_insert_char_pre = 1
-
-  " AutoComplPop like behavior.
-  "let g:neocomplcache_enable_auto_select = 1
-
-  " Shell like behavior(not recommended).
-  "set completeopt+=longest
-  "let g:neocomplcache_enable_auto_select = 1
-  "let g:neocomplcache_disable_auto_complete = 1
-  "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-  " Enable omni completion.
+  " Enable omni completion for both versions
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
   autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
   autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
-  " Enable heavy omni completion.
-  if !exists('g:neocomplcache_omni_patterns')
-    let g:neocomplcache_omni_patterns = {}
+  " <TAB> completion.
+  inoremap <expr> <TAB>    pumvisible() ? '<C-n>' : '<TAB>'
+  inoremap <expr> <S-TAB>  pumvisible() ? '<C-n>' : '<S-TAB>'
+
+  if has('lua') " -> neocomplete {{{3
+    Plugin 'Shougo/neocomplete.vim'
+    let g:neocomplete#enable_at_startup = 1 " necessary
+    let g:neocomplete#enable_refresh_always = 1 " heavy
+    " what is this?
+    if !exists('g:neocomplete#keyword_patterns')
+      let g:neocomplete#keyword_patterns = {}
+    endif
+    let g:neocomplete#keyword_patterns._ = '\h\w*'
+    if !exists('g:neocomplete#same_filetypes')
+      let g:neocomplete#same_filetypes = {}
+    endif
+    " In c buffers, completes from cpp and d buffers.
+    let g:neocomplete#same_filetypes.c = 'cpp,d'
+    " In cpp buffers, completes from c buffers.
+    let g:neocomplete#same_filetypes.cpp = 'c'
+    " In gitconfig buffers, completes from all buffers.
+    let g:neocomplete#same_filetypes.gitconfig = '_'
+    " In default, completes from all buffers.
+    let g:neocomplete#same_filetypes._ = '_'
+
+  else          " -> neocomplcache {{{3
+    Plugin 'Shougo/neocomplcache.vim'
+    let g:neocomplcache_enable_at_startup = 1 " necessary
+    let g:neocomplcache_enable_refresh_always = 1 " heavy
+    let g:neocomplcache_enable_fuzzy_completion = 1 " heavy
+    let g:neocomplcache_temporary_dir = expand('~/.cache/neocomplcache')
+    " what is this?
+    if !exists('g:neocomplcache_keyword_patterns')
+      let g:neocomplcache_keyword_patterns = {}
+    endif
+    let g:neocomplcache_keyword_patterns._ = '\h\w*'
+    if !exists('g:neocompcache_same_filetypes')
+      let g:neocomplcache_same_filetypes = {}
+    endif
+    " mappings from which additional filetypes to fetch completions; '_' means
+    " 'all' or 'default'
+    let g:neocomplcache_same_filetypes.c         = 'cpp,d'
+    let g:neocomplcache_same_filetypes.cpp       = 'c'
+    let g:neocomplcache_same_filetypes.gitconfig = '_'
+    let g:neocomplcache_same_filetypes._         = '_'
+
+  "  " Define dictionary.
+  "  let g:neocomplcache_dictionary_filetype_lists = {
+  "      \ 'default' : '',
+  "      \ 'vimshell' : $HOME.'/.vimshell_hist',
+  "      \ 'scheme' : $HOME.'/.gosh_completions'
+  "	  \ }
+  "
+  "  " Define keyword.
+  "  if !exists('g:neocomplcache_keyword_patterns')
+  "      let g:neocomplcache_keyword_patterns = {}
+  "  endif
+  "  let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+  "
+  "  " Plugin key-mappings.
+  "  inoremap <expr><C-g>     neocomplcache#undo_completion()
+  "  inoremap <expr><C-l>     neocomplcache#complete_common_string()
+  "
+  "  " Recommended key-mappings.
+  "  " <CR>: close popup and save indent.
+  "  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+  "  function! s:my_cr_function()
+  "    return neocomplcache#smart_close_popup() . "\<CR>"
+  "    " For no inserting <CR> key.
+  "    "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+  "  endfunction
+  "  " <C-h>, <BS>: close popup and delete backword char.
+  "  inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+  "  inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+  "  inoremap <expr><C-y>  neocomplcache#close_popup()
+  "  inoremap <expr><C-e>  neocomplcache#cancel_popup()
+  "  " Close popup by <Space>.
+  "  inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() :
+  "        \ "\<Space>"
+  "
+  "  " For cursor moving in insert mode(Not recommended)
+  "  "inoremap <expr><Left>  neocomplcache#close_popup() . "\<Left>"
+  "  "inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
+  "  "inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
+  "  "inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
+  "  " Or set this.
+  "  "let g:neocomplcache_enable_cursor_hold_i = 1
+  "  " Or set this.
+  "  "let g:neocomplcache_enable_insert_char_pre = 1
+  "
+  "  " AutoComplPop like behavior.
+  "  "let g:neocomplcache_enable_auto_select = 1
+  "
+  "  " Shell like behavior(not recommended).
+  "  "set completeopt+=longest
+  "  "let g:neocomplcache_enable_auto_select = 1
+  "  "let g:neocomplcache_disable_auto_complete = 1
+  "  "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+  "
+  "  " Enable heavy omni completion.
+  "  if !exists('g:neocomplcache_omni_patterns')
+  "    let g:neocomplcache_omni_patterns = {}
+  "  endif
+  "  if !exists('g:neocomplcache_force_omni_patterns')
+  "    let g:neocomplcache_force_omni_patterns = {}
+  "  endif
+  "  let g:neocomplcache_omni_patterns.php =
+  "  \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+  "  let g:neocomplcache_omni_patterns.c =
+  "  \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
+  "  let g:neocomplcache_omni_patterns.cpp =
+  "  \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+  "
+  "  " For perlomni.vim setting.
+  "  " https://github.com/c9s/perlomni.vim
+  "  let g:neocomplcache_omni_patterns.perl =
+  "  \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
   endif
-  if !exists('g:neocomplcache_force_omni_patterns')
-    let g:neocomplcache_force_omni_patterns = {}
-  endif
-  let g:neocomplcache_omni_patterns.php =
-  \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-  let g:neocomplcache_omni_patterns.c =
-  \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
-  let g:neocomplcache_omni_patterns.cpp =
-  \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-
-  " For perlomni.vim setting.
-  " https://github.com/c9s/perlomni.vim
-  let g:neocomplcache_omni_patterns.perl =
-  \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
-endif
-
-if s:plugins['omnicppcomplete'] "{{{2
-  Bundle 'OmniCppComplete'
-  "http://www.vim.org/scripts/script.php?script_id=1520
-  if version >= 7
-    " OmniCompletion see ``:help compl-omni''
-    " thanks to http://vim.wikia.com/wiki/C%2B%2B_code_completion
-    let OmniCpp_NamespaceSearch = 1
-    let OmniCpp_GlobalScopeSearch = 1
-    let OmniCpp_ShowAccess = 1
-    let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-    let OmniCpp_MayCompleteDot = 1      " autocomplete after .
-    let OmniCpp_MayCompleteArrow = 1    " autocomplete after ->
-    let OmniCpp_MayCompleteScope= 1    " autocomplete after ::
-    let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-    " automatically open and close the popup menu / preview window
-    augroup LucOmniCppCompete
-      autocmd!
-      autocmd CursorMovedI,InsertLeave * if pumvisible() == 0|sil! pclose|endif
-    augroup END
-    set completeopt=menu,longest,preview
-    imap <C-TAB> <C-x><C-o>
-  endif
-endif
-
-if s:plugins['autocomplpop'] "{{{2
-  Bundle 'AutoComplPop'
-  " do not start popup menu after curser moved.
-  "let g:acp_mappingDriven = 1
-  "let g:acp_behaviorKeywordCommand = '<tab>'
-
-  " From the help file:
-  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""{{{
-  " snipMate's Trigger Completion ~
-  "
-  " snipMate's trigger completion enables you to complete a snippet trigger
-  " provided by snipMate plugin
-  " (http://www.vim.org/scripts/script.php?script_id=2540) and expand it.
-  "
-  "
-  " To enable auto-popup for this completion, add following function to
-  " plugin/snipMate.vim:
-  " >
-  "   fun! GetSnipsInCurrentScope()
-  "     let snips = {}
-  "     for scope in [bufnr('%')] + split(&ft, '\.') + ['_']
-  "       call extend(snips, get(s:snippets, scope, {}), 'keep')
-  "       call extend(snips, get(s:multi_snips, scope, {}), 'keep')
-  "     endfor
-  "     return snips
-  "   endf
-  " <
-  " And set |g:acp_behaviorSnipmateLength| option to 1.
-  "
-  " There is the restriction on this auto-popup, that the word before cursor
-  " must consist only of uppercase characters.
-  "
-  "                                                            *acp-perl-omni*
-  " Perl Omni-Completion ~
-  "
-  " AutoComplPop supports perl-completion.vim
-  " (http://www.vim.org/scripts/script.php?script_id=2852).
-  "
-  " To enable auto-popup for this completion, set
-  " |g:acp_behaviorPerlOmniLength| option to 0 or more.
-  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 endif
 
 " plugins: snippets {{{1
-"Bundle 'snipMate'
-" snippy_plugin.vba.gz
-Bundle 'SirVer/ultisnips'
-let g:UltiSnipsExpandTrigger = '<C-F>'
-let g:UltiSnipsJumpForwardTrigger = '<C-F>'
-"let g:UltiSnipsJumpBackwardTrigger = '<C-Tab>'
-"let g:UltiSnipsExpandTrigger       = <tab>
-"let g:UltiSnipsListSnippets        = <c-tab>
-"let g:UltiSnipsJumpForwardTrigger  = <c-j>
-"let g:UltiSnipsJumpBackwardTrigger = <c-k>
-let g:UltiSnipsJumpBackwardTrigger = '<SID>NOT_DEFINED'
+
+if has('python')
+  if s:uname != 'Linux' || has('nvim')
+    Plugin 'SirVer/ultisnips'
+  endif
+  let g:UltiSnipsExpandTrigger = '<C-F>'
+  let g:UltiSnipsJumpForwardTrigger = '<C-F>'
+  "let g:UltiSnipsJumpBackwardTrigger = '<C-Tab>'
+  "let g:UltiSnipsExpandTrigger       = <tab>
+  "let g:UltiSnipsListSnippets        = <c-tab>
+  "let g:UltiSnipsJumpForwardTrigger  = <c-j>
+  "let g:UltiSnipsJumpBackwardTrigger = <c-k>
+  let g:UltiSnipsJumpBackwardTrigger = '<SID>NOT_DEFINED'
+
+  if has('gui_running') && has('gui_macvim')
+    " new settings
+    let g:UltiSnipsExpandTrigger = '<A-Tab>'
+    let g:UltiSnipsJumpForwardTrigger = '<A-Tab>'
+    let g:UltiSnipsJumpBackwardTrigger = '<A-S-Tab>'
+    let g:UltiSnipsListSnippets = '<SID>NOT_DEFINED'
+  endif
+else
+  " snipmate and dependencies
+  Plugin 'MarcWeber/vim-addon-mw-utils'
+  Plugin 'tomtom/tlib_vim'
+  Plugin 'garbas/vim-snipmate'
+  imap <C-F> <Plug>snipMateNextOrTrigger
+  smap <C-F> <Plug>snipMateNextOrTrigger
+endif
+
+" Snippets are separated from the engine:
+if s:uname != 'Linux' || has('nvim')
+  Plugin 'honza/vim-snippets'
+  Plugin 'rbonvall/snipmate-snippets-bib'
+endif
 
 " plugins: syntastic {{{1
-Bundle 'scrooloose/syntastic'
+if s:uname != 'Linux' || has('nvim')
+  Plugin 'scrooloose/syntastic'
+endif
 let g:syntastic_mode_map = {
-      \ 'mode': 'active',
+      \ 'mode': 'passive',
       \ 'active_filetypes': [],
-      \ 'passive_filetypes': ['tex']
+      \ 'passive_filetypes': []
       \ }
+let g:syntastic_check_on_wq = 0
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_loc_list_height = 5
 
 " plugins: languages {{{1
 
-Bundle 'applescript.vim'
+Plugin 'applescript.vim'
 
 " plugins: LaTeX {{{2
 
+" original vim settings for latex
+"let g:tex_fold_enabled = 1
+let g:tex_flavor = 'latex'
+
 " 3109 LatexBox.vmb
-"Bundle 'coot/atp_vim'
-"Bundle 'LaTeX-functions'
-"Bundle 'latextags'
-"Bundle 'TeX-9'
-"Bundle 'tex.vim'
-"Bundle 'tex_autoclose.vim'
+"Plugin 'coot/atp_vim'
+"Plugin 'LaTeX-functions'
+"Plugin 'latextags'
+"Plugin 'TeX-9'
+"Plugin 'tex.vim'
+"Plugin 'tex_autoclose.vim'
 
-"Bundle 'auctex.vim'
-Bundle 'LaTeX-Help'
+"Plugin 'auctex.vim'
 
-" Vim-latex aka LaTeX-Suite {{{3
-Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
+if s:uname != 'Linux' || has('nvim')
+  Plugin 'git://git.code.sf.net/p/vim-latex/vim-latex' "{{{3
+endif
+"Plugin 'LaTeX-Help' " is included in vim-latex
 let g:ngerman_package_file = 1
 let g:Tex_Menus = 0
-" this has to be lower case!
-let g:tex_flavor = 'latex'
+"let g:Tex_UseUtfMenus = 1
+
 " The other settings for vim-latex are in the LucLatexSuiteSettings
 " autocmdgroup.
+if has('mac') | let g:Tex_ViewRule_pdf = 'open -a Preview' | endif
+let g:Tex_UseMakefile = 1
+let g:Tex_CompileRule_pdf = 'latexmk -silent -pv -pdf $*'
+let g:Tex_SmartQuoteOpen = '„'
+let g:Tex_SmartQuoteClose = '“'
+" the variable Tex_FoldedEnvironments holds the beginnings of names of
+" environments which should be folded.  The innermost environments should come
+" first.
+let s:TexFoldEnv = [ 'verbatim',
+	           \ 'comment',
+	           \ 'eq',
+	           \ 'gather',
+	           \ 'align',
+	           \ 'figure',
+	           \ 'table',
+		   \ 'luc',
+		   \ 'dogma',
+	           \ ]
+" environments for structure of mathematical texts (they can contain other
+" stuff)
+call extend(s:TexFoldEnv, [ 'th',
+			  \ 'satz',
+			  \ 'def',
+			  \ 'lem',
+			  \ 'rem',
+			  \ 'bem',
+			  \ 'proof',
+			  \ ])
+" quotes can contain other stuff
+call extend(s:TexFoldEnv, ['quot',])
+" the beamer class has two top level environments
+call extend(s:TexFoldEnv, [ 'block',
+			  \ 'frame',
+			  \])
+" environments for the general document
+call extend(s:TexFoldEnv, [ 'thebibliography',
+			  \ 'keywords',
+			  \ 'abstract',
+			  \ 'titlepage',
+			  \ ])
+let g:Tex_FoldedEnvironments = join(s:TexFoldEnv, ',')
+let s:TexFoldSec = [
+      \ 'part',
+      \ 'chapter',
+      \ 'section',
+      \ 'subsection',
+      \ 'subsubsection',
+      \ 'paragraph',
+      \ 'subparagraph',
+      \ ]
+let g:Tex_FoldedSections = join(s:TexFoldSec, ',')
+" alternative 1
+  "let s:TexFoldEnv = ['*', 'document', 'minipage', 'di', 'lem', 'ivt', 'dc',
+  "      \ 'verbatim', 'comment', 'proof', 'eq', 'gather', 'align', 'figure',
+  "      \ 'table', 'thebibliography', 'keywords', 'abstract', 'titlepage'
+  "      \ 'item', 'enum', 'display' ]
+  "let g:Tex_FoldedMisc = 'comments,item,preamble,<<<'
+" alternative 2
+  " let g:Tex_FoldedMisc = 'comments,item,preamble,<<<,slide'
+" alternative 3
+  "let Tex_FoldedEnvironments .= '*'
+  "let Tex_FoldedSections =
+  "\ 'part,chapter,section,subsection,subsubsection,paragraph'
 
 " plugins: lisp/scheme {{{2
-
-" lisp/scheme interaction {{3
-Bundle 'slimv.vim'
-"Bundle 'tslime.vim'
-Bundle 'davidmfoley/tslime.vim'
-Bundle 'Limp'
+Plugin 'slimv.vim'
+"Plugin 'tslime.vim'
+Plugin 'davidmfoley/tslime.vim'
+Plugin 'Limp'
 
 " plugins: markdown {{{2
 " unconditionally binds <Leader>f and <Leader>r (also in insert mode=bad for
 " latex)
-"Bundle 'vim-pandoc/vim-markdownfootnotes'
+"Plugin 'vim-pandoc/vim-markdownfootnotes'
 
 " strange folding
-"Bundle 'plasticboy/vim-markdown'
-"Bundle   'hallison/vim-markdown'
-
-" strange autocmd which run a lot
-"Bundle 'suan/vim-instant-markdown'
+"Plugin 'plasticboy/vim-markdown'
+"Plugin   'hallison/vim-markdown'
 
 " good folding uses expr
-Bundle 'nelstrom/vim-markdown-folding'
+Plugin 'nelstrom/vim-markdown-folding'
 let g:markdown_fold_style = 'nested'
 
 " strange folding?
-"Bundle 'tpope/vim-markdown'
+"Plugin 'tpope/vim-markdown'
+
+Plugin 'pdc.vim'
 
 " plugins: comma separated values (csv) {{{2
-"Bundle 'csv.vim'
-"Bundle 'csv-reader'
-"Bundle 'CSVTK'
-"Bundle 'rcsvers.vim'
-"Bundle 'csv-color'
-"Bundle 'CSV-delimited-field-jumper'
+"Plugin 'csv.vim'
+"Plugin 'csv-reader'
+"Plugin 'CSVTK'
+"Plugin 'rcsvers.vim'
+"Plugin 'csv-color'
+"Plugin 'CSV-delimited-field-jumper'
 
 " plugins: python {{{2
 
-"Bundle 'python_fold_compact'
-"Bundle 'jpythonfold.vim'
-Bundle 'Python-Syntax-Folding'
-"Bundle 'klen/python-mode'
+"Plugin 'sunsol/vim_python_fold_compact'
+"Plugin 'Python-Syntax-Folding'
+Plugin 'klen/python-mode'
+let g:pymode_rope = 0
+
+" svn checkout http://vimpdb.googlecode.com/svn/trunk/ vimpdb-read-only
+Plugin 'fs111/pydoc.vim'
 
 " plugins: iCal {{{2
 
 " syntax highlighting
-Bundle 'icalendar.vim'
+Plugin 'icalendar.vim'
+
+" plugins: fish (shell) {{{2
+Plugin 'aliva/vim-fish'
 
 " plugins: shell in Vim {{{1
 
-if s:plugins['vimshell']
-  Bundle 'Shougo/vimproc'
-  Bundle 'Shougo/vimshell.vim'
-  map <D-F11> :VimShellPop<cr>
-  let g:vimshell_temporary_directory = expand('~/.vim/vimshell')
-endif
-"Bundle 'Conque-Shell'
+Plugin 'ervandew/screen'
+let g:ScreenImpl = 'Tmux'
+let g:ScreenShellTerminal = 'iTerm.app'
 
-" to be tested (shell in gvim)
-"Bundle 'ervandew/screen'
-Bundle 'https://bitbucket.org/fboender/bexec.git'
-Bundle 'pydave/AsyncCommand'
-"Bundle 'vimsh.tar.gz'
-"Bundle 'xolox/vim-shell'
+" notes {{{2
+Plugin 'Conque-Shell'
+"Plugin 'vimsh.tar.gz'
+"Plugin 'xolox/vim-shell'
+"Plugin 'vimux'
 
-"Bundle 'vimux'
+Plugin 'Shougo/vimshell.vim' "{{{2
+Plugin 'Shougo/vimproc'
+"map <D-F11> :VimShellPop<cr>
+let g:vimshell_temporary_directory = expand('~/.cache/vim/vimshell')
+
+" to be tested (shell in gvim) {{{2
+Plugin 'https://bitbucket.org/fboender/bexec.git'
+if has('clientserver') | Plugin 'pydave/AsyncCommand' | endif
 
 " plugins: tags {{{1
-"Bundle 'ttags'
-"Bundle 'xolox/vim-easytags'
-
-" Bundle 'taglist-plus' {{{2
-Bundle 'taglist-plus'
-
-if s:plugins['taglist'] "{{{2
-  Bundle 'taglist.vim'
-  "let Tlist_Auto_Highlight_Tag        =
-  "let Tlist_Auto_Open                 =
-  let Tlist_Auto_Update               = 1
-  let Tlist_Close_On_Select           = 1
-  let Tlist_Compact_Format            = 1
-  "let Tlist_Ctags_Cmd                 =
-  let Tlist_Display_Prototype         = 1
-  "let Tlist_Display_Tag_Scope         =
-  "let Tlist_Enable_Fold_Column        =
-  let Tlist_Exit_OnlyWindow           = 1
-  let Tlist_File_Fold_Auto_Close      = 1
-  let Tlist_GainFocus_On_ToggleOpen   = 1
-  "let Tlist_Highlight_Tag_On_BufEnter =
-  "let Tlist_Inc_Winwidth              =
-  "let Tlist_Max_Submenu_Items         =
-  "let Tlist_Max_Tag_Length            =
-  "let Tlist_Process_File_Always       =
-  "let Tlist_Show_Menu                 = 1
-  "let Tlist_Show_One_File             =
-  "let Tlist_Sort_Type                 =
-  "let Tlist_Use_Horiz_Window          =
-  let Tlist_Use_Right_Window          = 1
-  "let Tlist_Use_SingleClick           =
-  "let Tlist_WinHeight                 =
-  let Tlist_WinWidth                  = 75
+" Easytags will automatically create and update tags files and set the 'tags'
+" option per file type.  Tag navigation can be done with the CTRL-P plugin.
+" All these settings are dependent on the file ~/.ctags.
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-easytags'
+let g:easytags_async = 1
+let g:easytags_updatetime_warn = 0
+let g:easytags_file = '~/.cache/tags'
+"let g:easytags_by_filetype = '~/.cache/vim-easytag'
+let g:easytags_ignored_filetypes = ''
+let g:easytags_python_enabled = 0
+if !exists('g:easytags_languages')
+  let g:easytags_languages = {}
 endif
+let g:easytags_languages.latex = {}
+let g:easytags_languages.markdown = {}
 
-" Extend ctags to work with latex
-"""""""""""""""""""""""""""""""""
-" This is strongly dependent on the file ~/.ctags and the definitions therein.
-" See ctags(1) for a description of the format.
-" The variable tlist_tex_settings is a semicolon separated list of key:val
-" pairs. The first item is no such pair but only the language name used by
-" ctags. The key is a single letter used by ctags as "kind" of the tag, the
-" val is a word used by tlist to categorice the tags in the tlist window.
-"let tlist_tex_settings='tex;b:bibitem;c:command;l:label;s:sections;t:subsections;u:subsubsections'
-"let tlist_tex_settings='tex;c:chapters;s:sections;u:subsections;b:subsubsections;p:parts;P:paragraphs;G:subparagraphs'
-let tlist_tex_settings='latex;s:structure;g:graphic+listing;l:label;r:ref;b:bib'
+" plugins: man pages {{{1
+"Plugin 'info.vim'
 
-nmap <silent> <F4> :silent TlistToggle<CR>
-"augroup LucTagList
-"  autocmd!
-"  autocmd BufEnter *.tex let Tlist_Ctags_Cmd = expand('~/.vim/ltags')
-"  autocmd BufLeave *.tex let Tlist_Ctags_Cmd = 'ctags'
-"augroup END
-
-" Ctags and Cscope {{{2
-" always search for a tags file from $PWD down to '/'.
-set tags=./tags,tags;/
-
-" try to use Cscope
-if has('cscope')
-  set nocsverb
-  if has('quickfix') | set cscopequickfix=s-,c-,d-,i-,t-,e- | endif
-  " search cscope database first (1 = ``tags first'')
-  set cscopetagorder=0
-  set cscopetag
-  " {{{ these lines are copied from
-  " http://cscope.sourceforge.net/cscope_maps.vim and modified by me. Many
-  " thanks to the Cscope guys.
-  " The commands are defided into three prefixes:
-  "
-  " 	CTRL-_		show querry in current window
-  " 	CTRL-@		show querry in horizontal split
-  " 	CTRL-@ CTRL-@	show querry in vertival split
-  "
-  " (NOTE: CTRL-@ can also be typed as CTRL-<SPACE>
-  " The querry is determind by the last character of the map. Like this:
-  "
-  " 	's'   symbol: find all references to the token under cursor
-  " 	'g'   global: find global definition(s) of the token under cursor
-  " 	'c'   calls:  find all calls to the function name under cursor
-  " 	't'   text:   find all instances of the text under cursor
-  " 	'e'   egrep:  egrep search for the word under cursor
-  " 	'f'   file:   open the filename under cursor
-  " 	'i'   includes: find files that include the filename under cursor
-  " 	'd'   called: find functions that function under cursor calls
-  "nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-  "nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  "nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>
-  "nmap <C-@>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  "nmap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
-  "nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
-  "nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  "nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
-  " End of http://cscope.sourceforge.net/cscope_maps.vim stuff }}}
-  if $CSCOPE_DB != ""
-    cscope add $CSCOPE_DB
-  elseif filereadable('cscope.out')
-    cscope add cscope.out
-  else
-    " no database so use Ctags instead (unset cscope options)
-    " run ``ctags **/.*[ch]'' to produce the file ``tags''.
-    " these headers are used:
-    " http://www.vim.org/scripts/script.php?script_id=2358
-    "Bundle 'tags-for-std-cpp-STL-streams-...'
-    set tags+=~/.vim/tags/usr_include.tags
-    set tags+=~/.vim/tags/usr_include_cpp.tags
-    set tags+=~/.vim/tags/usr_local_include.tags
-    set tags+=~/.vim/tags/usr_local_include_boost.tags
-    set tags+=~/.vim/tags/cpp.tags
-    set nocscopetag
-  endif
-  set cscopeverbose
-else
-  "call s:ctag_fallback()
-endif
-
-" Tags Bookmarks {{{3
-"Bundle 'a-new-txt2tags-syntax'
-"Bundle 'gtags-multiwindow-browsing'
-"Bundle 'utags'
-"Bundle 'ctags_cache'
-"Bundle 'Intelligent-Tags'
-"Bundle 'Find-XML-Tags'
-"Bundle 'ProjectCTags'
-"Bundle 'cHiTags'
-"Bundle 'easytags.vim'
-"Bundle 'loadtags'
-"Bundle 'OmniTags'
-"Bundle 'tags-for-std-cpp-STL-streams-...'
-"Bundle 'ctags.exe'
-"Bundle 'ttags'
-"Bundle 'undo_tags'
-"Bundle 'GtagsClient'
-"Bundle 'projtags.vim'
-"Bundle 'tagscan'
-"Bundle 'TagsParser'
-"Bundle 'tagSetting.vim'
-"Bundle 'switchtags.vim'
-"Bundle 'tagselect'
-"Bundle 'DoTagStuff'
-"Bundle 'txt2tags'
-"Bundle 'txt2tags-menu'
-"Bundle 'gtags.vim'
-"Bundle 'tagsubmenu'
-"Bundle 'ctags.vim'
-"Bundle 'vtags_def'
-"Bundle 'vtags'
-"Bundle 'latextags'
-"Bundle 'ctags.vim'
-"Bundle 'TagsBase.zip'
-"Bundle 'functags.vim'
-"Bundle 'aux2tags.vim'
-"Bundle 'dtags'
-"Bundle 'TagsMenu.zip'
-"Bundle 'ctags.vim'
-
-" plugins: manpages {{{1
-"Bundle 'info.vim'
-
-" Bundle 'ManPageView' {{{2
+"Plugin 'ManPageView' "{{{2
 " TODO
-"Bundle 'ManPageView'
 " http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
 " manually installed: open above url and execute :UseVimaball
 " display manpages in a vertical split (other options 'only', 'hsplit',
@@ -1503,95 +995,147 @@ let g:manpageview_winopen = 'reuse'
 "  autocmd FileType c,cpp set cmdheight=2
 "augroup END
 
-" plugins: parenthesis and quotes {{{1
+" plugins: parenthesis, quotes, alignment {{{1
 
-Bundle 'Raimondi/delimitMate'
-Bundle 'paredit.vim'
-
-" plugins: unsorted {{{1
-if s:plugins['powerline']
-  Bundle 'Lokaltog/vim-powerline'
-  Bundle 'Lokaltog/powerline'
+Plugin 'Raimondi/delimitMate'
+Plugin 'paredit.vim'
+if s:uname != 'Linux' || has('nvim')
+  Plugin 'tpope/vim-surround'
 endif
+"Plugin 'kana/vim-textobj-indent.git'
+Plugin 'michaeljsmith/vim-indent-object.git'
+Plugin 'junegunn/vim-easy-align.git'
+vmap <Enter> <Plug>(EasyAlign)
+nmap <Leader>a <Plug>(EasyAlign)
 
-Bundle 'ack.vim'
+" plugins: motion {{{1
+Plugin 'Lokaltog/vim-easymotion'
 
-"Bundle 'browser.vim'
-"Bundle 'calendar.vim'
-
-" buggy!
-Bundle 'matchit.zip'
-
-Bundle 'VimRepress'
-"Bundle 'connermcd/VimRepress'
-"Bundle 'blogit.vim'
-
-Bundle 'ZoomWin'
-Bundle 'AndrewRadev/linediff.vim'
-
-" plugins: git stuff {{{1
-"Bundle 'tpope/vim-git'
-Bundle 'tpope/vim-fugitive'
+" plugins: vcs stuff {{{1
+"Plugin 'tpope/vim-git'
+if s:uname != 'Linux' || has('nvim')
+  Plugin 'tpope/vim-fugitive'
+endif
+Plugin 'ludovicchabant/vim-lawrencium'
+Plugin 'mhinz/vim-signify' "{{{3
+let g:signify_disable_by_default = 1
+" use :SignifyToggle to activate
 
 " plugins: colors {{{1
 " list all colorschemes with: globpath(&rtp,'colors/*.vim')
 
-Bundle 'altercation/vim-colors-solarized'
+"Plugin 'ScrollColors'
+"Plugin 'Colour-Sampler-Pack'
+
+Plugin 'altercation/vim-colors-solarized' "{{{3
 let g:solarized_menu = 0
 
-Bundle 'w0ng/vim-hybrid'
-Bundle 'chriskempson/vim-tomorrow-theme'
-Bundle 'nanotech/jellybeans.vim'
-Bundle 'kalt.vim'
-Bundle 'kaltex.vim'
-Bundle 'textmate16.vim'
-"Bundle 'vibrantink'
-Bundle 'tortex'
-Bundle 'tomasr/molokai'
-Bundle 'jonathanfilip/vim-lucius'
+" old unused colors {{{2
+"Plugin 'w0ng/vim-hybrid'
+"Plugin 'chriskempson/vim-tomorrow-theme'
+"Plugin 'nanotech/jellybeans.vim'
+"Plugin 'kalt.vim'
+"Plugin 'kaltex.vim'
+"Plugin 'textmate16.vim'
+""Plugin 'vibrantink'
+"Plugin 'tortex'
+"Plugin 'tomasr/molokai'
+"Plugin 'jonathanfilip/vim-lucius'
+"
+""Plugin 'molokai'
+""Plugin 'pyte'
+""Plugin 'dw_colors'
+""Plugin 'Zenburn'
+""Plugin 'desert-warm-256'
+""Plugin 'tango-desert.vim'
+""Plugin 'desertEx'
+""Plugin 'darkerdesert'
+""Plugin 'DesertedOceanBurnt'
+""Plugin 'desertedocean.vim'
+""Plugin 'desertedocean.vim'
+""Plugin 'desert256.vim'
+""Plugin 'desert.vim'
+""Plugin 'eclm_wombat.vim'
+""Plugin 'wombat256.vim'
+""Plugin 'Wombat'
+""Plugin 'oceandeep'
 
-Bundle 'ScrollColors'
+" plugins: statusline {{{1
 
-"Bundle 'molokai'
-Bundle 'Colour-Sampler-Pack'
-"Bundle 'pyte'
-"Bundle 'dw_colors'
-"Bundle 'Zenburn'
-"Bundle 'desert-warm-256'
-"Bundle 'tango-desert.vim'
-"Bundle 'desertEx'
-"Bundle 'darkerdesert'
-"Bundle 'DesertedOceanBurnt'
-"Bundle 'desertedocean.vim'
-"Bundle 'desertedocean.vim'
-"Bundle 'desert256.vim'
-"Bundle 'desert.vim'
-"Bundle 'eclm_wombat.vim'
-"Bundle 'wombat256.vim'
-"Bundle 'Wombat'
-"Bundle 'oceandeep'
+if has('python') && ! has('nvim')
+  Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+  " the documentation of powerline is not in Vim format but only available at
+  " https://powerline.readthedocs.org/
+else
+  Plugin 'bling/vim-airline'
+  "Plugin 'bling/vim-bufferline'
+  let g:airline_powerline_fonts = 1
+  "let g:airline#extensions#tabline#enabled = 1
+endif
 
+" vim options related to the statusline {{{2
+set noshowmode   " do not display the current mode in the command line
+set laststatus=2 " always display the statusline
+
+" plugins: searching {{{1
+"if executable('ag')
+  Plugin 'rking/ag.vim'
+"elseif executable('ack')
+  Plugin 'mileszs/ack.vim'
+"endif
+
+" plugins: compiling {{{1
+Plugin 'tpope/vim-dispatch'
+
+Plugin 'xuhdev/SingleCompile'
+let g:SingleCompile_asyncrunmode = 'python'
+let g:SingleCompile_menumode = 0
+
+" plugins: unsorted {{{1
+Plugin 'pix/vim-known_hosts'
+Plugin 'matchit.zip' " buggy!
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'sjl/gundo.vim'
+"Plugin 'VimRepress' "https://bitbucket.org/pentie/vimrepress
+Plugin 'lucc/VimRepress'
+Plugin 'ZoomWin'
+Plugin 'AndrewRadev/linediff.vim'
+if has('+python')
+  Plugin 'guyzmo/notmuch-abook'
+endif
+if s:uname != 'Linux' || has('nvim')
+  Plugin 'git://notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
+endif
 
 " last steps {{{1
 
-" switch on filezype detection after defining all Bundles
-filetype plugin indent on
-
-" fix the runtimepath mess that vundle creates {{{2
+call vundle#end()
+" fix the runtimepath to conform to XDG a little bit
 set runtimepath-=~/.vim
 set runtimepath-=~/.vim/after
-set runtimepath-=$VIM/vimfiles
-set runtimepath-=$VIM/runtime
-set runtimepath-=$VIM/vimfiles/after
-set runtimepath^=$VIM/runtime
-set runtimepath^=$VIM/vimfiles
-set runtimepath^=~/.vim
-set runtimepath+=$VIM/vimfiles/after
-set runtimepath+=~/.vim/after
+execute 'set runtimepath-=' . s:config
+execute 'set runtimepath-=' . s:config . '/after'
+execute 'set runtimepath^=' . s:config
+execute 'set runtimepath+=' . s:config . '/after'
+
+" switch on filetype detection after defining all Bundles
+filetype plugin indent on
+
+" settings for easytags which need the runtimepath set properly {{{2
+"call xolox#easytags#map_filetypes('tex', 'latex')
 
 " {{{2 Set colors for the terminal.  If the GUI is running the colorscheme
 "      will be set in gvimrc.
 if ! has('gui_running')
   set background=dark
   colorscheme solarized
+endif
+" define highlight groups after the colorscheme else they will be cleared
+highlight LucAutoGitRunning guifg=#719e07
+highlight LucAutoGitStopped guifg=#dc322f
+
+" neovim special code {{{1
+if has('nvim') && has('gui_macvim')
+  call jobstart('Greeting', 'growlnotify',
+	\ ['--message', 'YEAH neovim rocks!', '--title', 'Hello Neovim'])
 endif

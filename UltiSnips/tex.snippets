@@ -1,84 +1,99 @@
-snippet article "The default header for an article" i
-\documentclass[a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[${1:ngerman}]{babel}
+# first include the lengthy templates:
+extends tex_templates
+extends latex_suite_compat
 
-\author{Lucas Hoffmann}
-\title{$2}
+global !p
+import tex
+def find_babel_languages():
+    '''Return a list of babel languges for the current file.'''
+    return tex.find_babels(vim.current.buffer.name)
+#
+#    for line in vim.current.buffer:
+#        if line.startswith(r'\usepackage['):
+#            match = re.match(r'^\\usepackage\[(.*)\]{babel}$', line)
+#            if match:
+#                return match.group(1).split(',')
+#    return []
+def map_lang(lang):
+  if lang in ['de', 'german', 'ngerman']:
+      return 'gernam'
+  elif lang in ['en', 'english']:
+      return 'english'
+  else:
+      return 'unknown'
+def get_spellangs():
+    return vim.current.buffer.options['spelllang'].split(',')
+def biblatex():
+    '''Return True if biblatex is used for citations in the current vim
+    buffer.''',
+    def match(line):
+        return line.startswith(r'\usepackage') and endswith('{biblatex}\n')
+    def extract(line):
+        return True
+    return tex.parse_tex(vim.current.buffer.name, match, extract)
+#    for line in vim.current.buffer:
+#	if line.startswith(r'\usepackage'):
+#	    match = re.match(r'^\\usepackage(\[.*\])?{biblatex}$', line)
+#	    if match:
+#		return True
+#    return False
+def cond(index, string):
+    if t[index] != '': return string
+    else: return ''
+endglobal
 
-\begin{document}
-%%fakesection titlepage
-\maketitle
-\renewcommand\abstractname{}
-\begin{abstract}
-% TODO
-\end{abstract}
-\vfill
-\tableofcontents
-\clearpage
-
-\section{Einleitung}
-$0
-
-%%fakesection Bibliographie
-\biblographystyle{${3:alphadin}}
-\bibliography{${4:main}}
-\end{document}
-%%fakesection Notizen
+# the strange python evals are only needed as long as completion of bib keys
+# does not work
+snippet "ci( (\S+))?" "a full featured \cite[]{} command" r
+\\`!p
+b = biblatex()
+snip.rv = ('auto' if b else '')`cite${1/.+/[/}${1:see}${1/.+/]/}${2/.+/[/}`!p
+if not b:
+    try: lang = find_babel_languages()[-1]
+    except IndexError: lang = get_spellangs[1]
+    lang = map_lang(lang)
+    if lang == 'german': snip.rv = 'S.~'
+    elif lang == 'english': snip.rv ='p.~'
+    else: snip.rv = 'S.~'`${2:pages}${2/.+/]/}{${3:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "bibkey"`}}$0
 endsnippet
 
-snippet handout "A a handout for a short presentation" !b
-\documentclass[a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[${1:ngerman}]{babel}
-
-%\usepackage[
-%            top=3cm,hmargin=3cm,bottom=3.5cm
-%	   ]{geometry}
-%\usepackage{multicol}
-%\usepackage[
-%            small
-%           ]{titlesec}
-%\usepackage{enumerate}
-
-%\usepackage{amssymb}
-%\usepackage{amsmath}
-
-\pagestyle{empty}
-\author{Lucas Hoffmann}
-
-\begin{document}
-\begin{flushleft}
-%\footnotesize
-%\small
-${2:% Header}
-\end{flushleft}
-\begin{center}
-\bfseries
-\LARGE
-${3:Titel}
-\end{center}
-$0
-\end{document}
+snippet "citxt?( (\S+))?" "\textcite{} from biblatex" r
+\\textcite${1/.+/[/}${1:see}${1/.+/]/}${2/.+/[/}${2:pages}${2/.+/]/}{${3:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "bibkey"`}}$0
 endsnippet
 
-snippet rezept "Ein Rezept für mein Kochbuch" !b
-\begin{rezept}{${1:Name}}{${2:von wem?}}
+snippet "citi( (\S+))?" "\citetitle{} from biblatex" r
+\\citetitle${1/.+/[/}${1:see}${1/.+/]/}${2/.+/[/}${2:pages}${2/.+/]/}{${3:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "bibkey"`}}$0
+endsnippet
 
-\index{$7}
+snippet "ciau( (\S+))?" "\citeauthor{} from biblatex" r
+\\citeauthor${1/.+/[/}${1:see}${1/.+/]/}${2/.+/[/}${2:pages}${2/.+/]/}{${3:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "bibkey"`}}$0
+endsnippet
 
-\begin{zutaten}[${3:reicht für ...}]
-  $4
-\end{zutaten}
+snippet "cino?( (\S))?" "a \nocite{} command" r
+\nocite{${1:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "bibkey"`}}$0
+endsnippet
 
-\zubereitung
+snippet nc "newcommand"
+\newcommand\\${1:cmd}${2/.+/[/}${2:optargs}${2/.+/]/}{$3}$0
+endsnippet
 
-\begin{enumerate}
-  \item $5
-  \item $6
-\end{enumerate}
+snippet up "use package" b
+\usepackage${1/.+/[/}${1:options}${1/.+/]/}{${2:package}}$0
+endsnippet
 
-\end{rezept}
+snippet "b(egin)?( (\S+))?" "begin{} / end{}" br
+\begin{${1:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "something"`}}
+	${2:${VISUAL}}
+\end{$1}$0
+endsnippet
+
+snippet test "Description" b
+`!p snip.rv=1`
+`!p snip.rv=2`
 endsnippet

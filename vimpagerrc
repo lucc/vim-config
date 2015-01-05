@@ -33,9 +33,10 @@ set smartcase
 "let vimpager_use_gvim = 1
 let vimpager_passthrough = 1
 
-if $TERM_PROGRAM == 'iTerm.app'
+"if $TERM_PROGRAM == 'iTerm.app'
+if !has('gui_running')
   set t_Co=256
 endif
-set rtp+=~/.vim/bundle/vim-colors-solarized
+set rtp+=~/.local/share/vim/bundle/vim-colors-solarized
 set bg=dark
 colorscheme solarized

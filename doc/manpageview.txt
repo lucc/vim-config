@@ -1,8 +1,8 @@
-*manpageview.txt*	Man Page Viewer			Apr 05, 2013
+*manpageview.txt*	Man Page Viewer			Mar 04, 2014
 
 Author:  Charles E. Campbell  <NdrchipO@ScampbellPfamily.AbizM>
 	 (remove NOSPAM from Campbell's email first)
-Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
+Copyright: (c) 2004-2014 by Charles E. Campbell		*manpageview-copyright*
 	 The VIM LICENSE applies to ManPageView.vim and ManPageView.txt
 	 (see |copyright|) except use "ManPageView" instead of "Vim"
 	 no warranty, express or implied.  use at-your-own-risk.
@@ -110,9 +110,24 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
 
 	When in a file supporting special manpage handling such
 	as perl or python files, but one wants a regular manpage
-	anyway, use the ".man" extension. Example: >
+	anyway, use the ".man" suffix Example: >
 
 		:Man syslog.man
+<
+				*manpageview-specialhandler*
+	In general, one can force special handling by appending a
+	special handler's associated suffix to the desired topic: >
+
+		Suffix	  Special Handler
+		------    ---------------
+		.man	: normal manpages
+		.i	: special info handler
+		.php	: special php handler
+		.pl	: special perl handler
+		.py	: special python handler
+		.tex	: special tex handler
+		.vim	: special vim handler
+		
 <
 	PERL		*manpageview-perl* 	 *manpageview-.pl* {{{2
 
@@ -396,6 +411,8 @@ Copyright: (c) 2004-2013 by Charles E. Campbell		*manpageview-copyright*
 		Apr 05, 2013	* found why manpageview's |mpv-search| was
 				  noisy (had to do with |g:manpageview_iconv|).
 				  Fixed.
+		Mar 04, 2014	* man glob was failing; manpageview was
+				  identifying the extension as gl.  Fixed.
 	v24:	Jan 03, 2011	* some extra protection against trying to use
 				  a program that is not executable
 		Mar 30, 2012	* TMan command included

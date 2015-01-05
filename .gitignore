@@ -19,3 +19,5 @@ vimshell
 .VimballRecord
 
 startuptime
+.tb.vimrc.tags
+autoload/test.vim

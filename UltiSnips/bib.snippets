@@ -1,90 +1,91 @@
+global
+
+endglobal
 snippet article "Article bib entry" !b
 @Article{         ${1:key},
-  description   = "An article from a journal or magazine.",
-  author        = "${2:author}",
-  title         = "${3:title}",
-  journal       = "${4:journal}",
-  year          = "${5:year}",
-  optional      = "",
-${6:  volume        = "${7:volume}",}
-${8:  number        = "${9:number}",}
-${10:  pages         = "${11:NN}--${12:NN}",}
-${13:  month         = "${14:month}",}
-${15:  note          = "${16:note}",}
-${17:  key           = "${18:key}",}
-}
-$0
+	description   = "An article from a journal or magazine.",
+	author        = "${2:author}",
+	title         = "${3:title}",
+	journal       = "${4:journal}",
+	year          = "${5:year}",
+	optional      = "",
+${6/.+/  volume        = "/}${6:volume}${6/.+/",\n/}`!p
+`${7/.+/  number        = "/}${7:number}${7/.+/",\n/}`!p
+`${8/.+/  pages         = "/}${8:NN}${9/.+/--/}${9:NN}${8/.+/",\n/}`!p
+`${10/.+/  month         = "/}${10:month}${10/.+/",\n/}`!p
+`${11/.+/  note          = "/}${11:note}${11/.+/",\n/}`!p
+`${12/.+/  key           = "/}${12:key}${12/.+/",\n/}`!p
+`}
 endsnippet
 snippet book "Book bib entry" !b
 @Book{            ${1:key},
-  description   = "A book with an explicit publisher.",
-  author        = "${2:author}",
-  editor        = "${3:author}",
-  title         = "${4:title}",
-  publisher     = "${5:publisher}",
-  year          = "${6:year}",
-  optional      = "",
-${7:  volume        = "${8:volume}",}
-${9:  number        = "${10:number}",}
-${11:  month         = "${12:month}",}
-${13:  note          = "${14:note}",}
-${15:  key           = "${16:key}",}
-${17:  series        = "${18:series}",}
-${19:  address       = "${20:address}",}
-${21:  edition       = "${22:edition}",}
+	description   = "A book with an explicit publisher.",
+	author        = "${2:author}",
+	editor        = "${3:author}",
+	title         = "${4:title}",
+	publisher     = "${5:publisher}",
+	year          = "${6:year}",
+	optional      = "",
+`!p snip.shift(); snip.rv=snip.mkline('hans = "",' )`
+${7/.+/  volume        = "/}${7:volume}${7/.+/",/}
+${8/.+/  number        = "/}${8:number}${8/.+/",/}
+${9/.+/  month         = "/}${9:month}${9/.+/",/}
+${10/.+/  note         = "/}${10:note}${10/.+/",/}
+${11/.+/  key          = "/}${11:key}${11/.+/",/}
+${12/.+/  series       = "/}${12:series}${12/.+/",/}
+${13/.+/  address      = "/}${13:address}${13/.+/",/}
+${14/.+/  edition      = "/}${14:edition}${14/.+/",/}
 }
-$0
 endsnippet
 snippet booklet "Booklet bib entry" !b
 @Booklet{         ${1:key},
-  description   = "A work that is printed and bound, but without a named
-                  publisher or sponsoring institution.",
-  title         = "${2:title}",
-  optional      = "",
-${3:  address       = "${4:address}",}
-${5:  author        = "${6:author}",}
-${7:  howpublished  = "${8:howpublished}",}
-${9:  key           = "${10:key}",}
-${11:  month         = "${12:month}",}
-${13:  note          = "${14:note}",}
-${15:  year          = "${16:year}",}
+	description   = "A work that is printed and bound, but without a named
+			publisher or sponsoring institution.",
+	title         = "${2:title}",
+	optional      = "",
+${3/.+/  address       = "/}${3:address}${3/.+/",/}
+${4/.+/  author        = "/}${4:author}${4/.+/",/}
+${5/.+/  howpublished  = "/}${5:howpublished}${5/.+/",/}
+${6/.+/  key           = "/}${6:key}${6/.+/",/}
+${7/.+/  month         = "/}${7:month}${7/.+/",/}
+${8/.+/  note          = "/}${8:note}${8/.+/",/}
+${9/.+/  year          = "/}${9:year}${9/.+/",/}
 }
-$0
 endsnippet
 snippet inbook "InBook bib entry" !b
 @InBook{          ${1:key},
-  description   = "A part of a book, usually untitled. May be a chapter (or
-                  section or whatever) and/or a range of pages.",
-  author        = "${2:author}",
-  editor        = "${3:editor}",
-  title         = "${4:title}",
-  chapter       = "${5:chapter}",
-  pages         = "${6:NN}--${7:NN}",
-  publisher     = "${8:publisher}",
-  year          = "${9:year}",
-  optional      = "",
-${10:  address       = "${11:address}",}
-${12:  edition       = "${13:edition}",}
-${14:  key           = "${15:key}",}
-${16:  month         = "${17:month}",}
-${18:  note          = "${19:note}",}
-${20:  number        = "${21:number}",}
-${22:  series        = "${23:series}",}
-${24:  type          = "${25:type}",}
-${26:  volume        = "${27:volume}",}
+	description   = "A part of a book, usually untitled. May be a chapter (or
+			section or whatever) and/or a range of pages.",
+	author        = "${2:author}",
+	editor        = "${3:editor}",
+	title         = "${4:title}",
+	chapter       = "${5:chapter}",
+	pages         = "${6:NN}--${7:NN}",
+	publisher     = "${8:publisher}",
+	year          = "${9:year}",
+	optional      = "",
+${10/.+/  address       = "/}${10:address}${10/.+/",/}
+${11/.+/  key           = "/}${11:key}${11/.+/",/}
+${12/.+/  month         = "/}${12:month}${12/.+/",/}
+${13/.+/  note          = "/}${13:note}${13/.+/",/}
+${14/.+/  volume        = "/}${14:volume}${14/.+/",/}
+${15/.+/  number        = "/}${15:number}${15/.+/",/}
+${16/.+/  series       = "/}${16:series}${16/.+/",/}
+${17/.+/  edition      = "/}${17:edition}${17/.+/",/}
+${18/.+/  series        = "/}${18:series}${18/.+/",}
+${19/.+/  type          = "/}${19:type}${19/.+/",}
 }
-$0
 endsnippet
 snippet incollection "InCollection bib entry" !b
 @InCollection{    ${1:key},
-  description   = "A part of a book having its own title.",
-  author        = "${2:author}",
-  author        = "${3:author}",
-  title         = "${4:title}",
-  booktitle     = "${5:booktitle}",
-  publisher     = "${6:publisher}",
-  year          = "${7:year}",
-  optional      = "",
+	description   = "A part of a book having its own title.",
+	author        = "${2:author}",
+	author        = "${3:author}",
+	title         = "${4:title}",
+	booktitle     = "${5:booktitle}",
+	publisher     = "${6:publisher}",
+	year          = "${7:year}",
+	optional      = "",
 ${8:  editor        = "${9:editor}",}
 ${10:  volume        = "${11:volume}",}
 ${12:  number        = "${13:number}",}
@@ -98,18 +99,17 @@ ${27:  month         = "${28:month}",}
 ${29:  note          = "${30:note}",}
 ${31:  key           = "${32:key}",}
 }
-$0
 endsnippet
 snippet inproceedings "InProceedings bib entry" !b
 @InProceedings{   ${1:key},
-  description   = "An article in a conference proceedings.",
-  conference    = "The same as inproceedings, included for Scribe
-                  compatibility.",
-  author        = "${2:author}",
-  title         = "${3:title}",
-  booktitle     = "${4:booktitle}",
-  year          = "${5:year}",
-  optional      = "",
+	description   = "An article in a conference proceedings.",
+	conference    = "The same as inproceedings, included for Scribe
+			compatibility.",
+	author        = "${2:author}",
+	title         = "${3:title}",
+	booktitle     = "${4:booktitle}",
+	year          = "${5:year}",
+	optional      = "",
 ${6:  editor        = "${7:editor}",}
 ${8:  volume        = "${9:volume}",}
 ${10:  number        = "${11:number}",}
@@ -122,17 +122,16 @@ ${23:  publisher     = "${24:publisher}",}
 ${25:  note          = "${26:note}",}
 ${27:  key           = "${28:key}",}
 }
-$0
 endsnippet
 snippet manual "Manual bib entry" !b
 @Manual{          ${1:key},
-  description   = "Technical documentation.",
-  title         = "${2:title}",
-  edition       = "${3:edition}",
-  address       = "${4:address}",
-  year          = "${5:year}",
-  notes         = "bibtex gives an error, we need something to sort by",
-  optional      = "",
+	description   = "Technical documentation.",
+	title         = "${2:title}",
+	edition       = "${3:edition}",
+	address       = "${4:address}",
+	year          = "${5:year}",
+	notes         = "bibtex gives an error, we need something to sort by",
+	optional      = "",
 ${6:  organization  = "${7:organization}",}
 ${8:  address       = "${9:address}",}
 ${10:  edition       = "${11:edition}",}
@@ -142,29 +141,27 @@ ${16:  note          = "${17:note}",}
 ${18:  key           = "${19:key}",}
 ${20:  author        = "${21:author}",}
 }
-$0
 endsnippet
 snippet mastersthesis "MastersThesis bib entry" !b
 @MastersThesis{   ${1:key},
-  description   = "A Master's thesis.",
-  author        = "${2:author}",
-  title         = "${3:title}",
-  school        = "${4:school}",
-  year          = "${5:year}",
-  optional      = "",
+	description   = "A Master's thesis.",
+	author        = "${2:author}",
+	title         = "${3:title}",
+	school        = "${4:school}",
+	year          = "${5:year}",
+	optional      = "",
 ${6:  type          = "${7:type}",}
 ${8:  address       = "${9:address}",}
 ${10:  month         = "${11:month}",}
 ${12:  note          = "${13:note}",}
 ${14:  key           = "${15:key}",}
 }
-$0
 endsnippet
 snippet misc "Misc bib entry" !b
 @Misc{            ${1:key},
-  description   = "For use when nothing else fits.",
-  required      = "none",
-  optional      = "",
+	description   = "For use when nothing else fits.",
+	required      = "none",
+	optional      = "",
 ${2:  howpublished  = "${3:howpublished}",}
 ${4:  month         = "${5:month}",}
 ${6:  year          = "${7:year}",}
@@ -173,32 +170,30 @@ ${10:  key           = "${11:key}",}
 ${12:  author        = "${13:author}",}
 ${14:  title         = "${15:title}",}
 }
-$0
 endsnippet
 snippet phdthesis "PhDThesis bib entry" !b
 @PhDThesis{       ${1:key},
-  description   = "A Ph.D. thesis.",
-  author        = "${2:author}",
-  title         = "${3:title}",
-  school        = "${4:school}",
-  year          = "${5:year}",
-  optional      = "",
+	description   = "A Ph.D. thesis.",
+	author        = "${2:author}",
+	title         = "${3:title}",
+	school        = "${4:school}",
+	year          = "${5:year}",
+	optional      = "",
 ${6:  type          = "${7:type}",}
 ${8:  address       = "${9:address}",}
 ${10:  month         = "${11:month}",}
 ${12:  note          = "${13:note}",}
 ${14:  key           = "${15:key}",}
 }
-$0
 endsnippet
 snippet proceedings "Proceedings bib entry" !b
 @Proceedings{     ${1:key},
-  description   = "The proceedings of a conference.",
-  title         = "${2:title}",
-  year          = "${3:year}",
-  organization  = "${4:organization}",
-  notes         = "bibtex gives an error, we need something to sort by",
-  optional      = "",
+	description   = "The proceedings of a conference.",
+	title         = "${2:title}",
+	year          = "${3:year}",
+	organization  = "${4:organization}",
+	notes         = "bibtex gives an error, we need something to sort by",
+	optional      = "",
 ${5:  editor        = "${6:editor}",}
 ${7:  volume        = "${8:volume}",}
 ${9:  number        = "${10:number}",}
@@ -210,17 +205,16 @@ ${19:  organization  = "${20:organization}",}
 ${21:  note          = "${22:note}",}
 ${23:  key           = "${24:key}",}
 }
-$0
 endsnippet
 snippet techreport "TechReport bib entry" !b
 @TechReport{      ${1:key},
-  description   = "A report published by a school or other institution,
-                  usually numbered within a series.",
-  author        = "${2:author}",
-  title         = "${3:title}",
-  institution   = "${4:institution}",
-  year          = "${5:year}",
-  optional      = "",
+	description   = "A report published by a school or other institution,
+			usually numbered within a series.",
+	author        = "${2:author}",
+	title         = "${3:title}",
+	institution   = "${4:institution}",
+	year          = "${5:year}",
+	optional      = "",
 ${6:  type          = "${7:type}",}
 ${8:  number        = "${9:number}",}
 ${10:  address       = "${11:address}",}
@@ -228,19 +222,17 @@ ${12:  month         = "${13:month}",}
 ${14:  note          = "${15:note}",}
 ${16:  key           = "${17:key}",}
 }
-$0
 endsnippet
 snippet unpublished "Unpublished bib entry" !b
 @Unpublished{     ${1:key},
-  description   = "A document having an author and title, but not formally
-                  published.",
-  author        = "${2:author}",
-  title         = "${3:title}",
-  note          = "${4:note}",
-  optional      = "",
+	description   = "A document having an author and title, but not formally
+			published.",
+	author        = "${2:author}",
+	title         = "${3:title}",
+	note          = "${4:note}",
+	optional      = "",
 ${5:  month         = "${6:month}",}
 ${7:  year          = "${8:year}",}
 ${9:  key           = "${10:key}",}
 }
-$0
 endsnippet
