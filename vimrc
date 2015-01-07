@@ -927,6 +927,7 @@ Plugin 'pdc.vim'
 Plugin 'klen/python-mode'
 let g:pymode_rope = 0
 
+Plugin 'vim-autopep8'
 " svn checkout http://vimpdb.googlecode.com/svn/trunk/ vimpdb-read-only
 Plugin 'fs111/pydoc.vim'
 
