@@ -105,15 +105,6 @@ call s:server_setup()
 
 " FileType autocommands {{{2
 
-augroup LucQuickFix "{{{3
-  autocmd!
-  autocmd FileType qf
-	\ setlocal nowrap cursorline |
-	\ nnoremap <buffer> <ENTER> :.cc <BAR> cclose<CR>zx|
-	\ vnoremap <buffer> <ENTER> :<C-U>.cc <BAR> cclose<CR>zx|
-	\ nnoremap <buffer> <2-leftmouse> :.cc <BAR> cclose<CR>zx
-augroup END
-
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd!
   autocmd BufWrite *
