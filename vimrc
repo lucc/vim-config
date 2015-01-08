@@ -24,12 +24,12 @@ let $GVIMINIT = 'source $MYGVIMRC'
 
 " set up python {{{1
 if has('nvim')
-  runtime! python_setup.vim
+  "runtime! python_setup.vim
   python import vim
   pyfile ~/.config/vim/vimrc.py
 elseif has('python')
   python import vim
-  python if vim.VIM_SPECIAL_PATH not in sys.path: sys.path.append(vim.VIM_SPECIAL_PATH)
+  "python if vim.VIM_SPECIAL_PATH not in sys.path: sys.path.append(vim.VIM_SPECIAL_PATH)
   pyfile ~/.config/vim/vimrc.py
 endif
 
@@ -102,8 +102,6 @@ endfunction
 call s:server_setup()
 
 " user defined autocommands {{{1
-
-" FileType autocommands {{{2
 
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd!
@@ -1016,7 +1014,7 @@ Plugin 'sjl/gundo.vim'
 Plugin 'lucc/VimRepress'
 Plugin 'ZoomWin'
 Plugin 'AndrewRadev/linediff.vim'
-if has('+python')
+if has('python')
   Plugin 'guyzmo/notmuch-abook'
 endif
 if s:uname != 'Linux' || has('nvim')
