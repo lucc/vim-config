@@ -105,14 +105,6 @@ call s:server_setup()
 
 " FileType autocommands {{{2
 
-augroup LucMail "{{{3
-  autocmd!
-  autocmd FileType mail
-	\ setlocal textwidth=72 spell |
-	\ silent! /^$/,$ foldopen     |
-	\ /^$
-augroup END
-
 augroup LucMan "{{{3
   autocmd!
   autocmd FileType man
