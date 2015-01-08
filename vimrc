@@ -79,17 +79,6 @@ function! s:viminfo_setup(server) "{{{2
   endif
 endfunction
 
-function! s:tex_buffer_maps() "{{{2
-  " Some maps for tex buffers.  They are collected in a function because
-  " putting :map into autocmds is error prone.
-  nnoremap <buffer> K
-	\ :call pyeval('tex.doc("""'.expand('<cword>').'""") or 1')<CR>
-  nnoremap <buffer> gGG :python tex_count_vim_wrapper()<CR>
-  vnoremap <buffer> gGG :python tex_count_vim_wrapper()<CR>
-  nnoremap <buffer> gG :python tex_count_vim_wrapper(wait=True)<CR>
-  vnoremap <buffer> gG :python tex_count_vim_wrapper(wait=True)<CR>
-endfunction
-
 function! s:autocd() "{{{2
   " Cd to the directory of the current file.
   cd %:h
@@ -126,21 +115,6 @@ augroup LucLilypond "{{{3
   autocmd!
   autocmd FileType lilypond
 	\ setlocal dictionary+=~/.config/vim/syntax/lilypond-words
-augroup END
-
-augroup LucTex "{{{3
-  autocmd!
-  autocmd FileType tex
-	\ setlocal
-	\   spell
-	\   dictionary+=%:h/**/*.bib,%:h/**/*.tex
-	\   grepprg=grep\ -nH\ $*                 |
-	\ call s:tex_buffer_maps()                |
-	\ if pyeval('check_for_english_babel()')  |
-	\   let b:Tex_SmartQuoteOpen = '“'        |
-	\   let b:Tex_SmartQuoteClose = '”'       |
-	\ endif                                   |
-	\ let b:surround_99 = "\\\1command\1{\r}"
 augroup END
 
 augroup LucPython "{{{3
