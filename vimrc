@@ -105,17 +105,6 @@ call s:server_setup()
 
 " FileType autocommands {{{2
 
-augroup LucPython "{{{3
-  autocmd!
-  autocmd FileType python
-	\ setlocal
-	\   tabstop=8
-	\   expandtab
-	\   shiftwidth=4
-	\   softtabstop=4
-	\   textwidth=79
-augroup END
-
 augroup LucJava "{{{3
   autocmd!
   autocmd Filetype java
