@@ -105,13 +105,6 @@ call s:server_setup()
 
 " FileType autocommands {{{2
 
-augroup LucMan "{{{3
-  autocmd!
-  autocmd FileType man
-	\ stopinsert |
-	\ setlocal nospell
-augroup END
-
 augroup LucGitCommit "{{{3
   autocmd!
   autocmd FileType gitcommit
