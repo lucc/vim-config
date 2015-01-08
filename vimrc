@@ -105,12 +105,6 @@ call s:server_setup()
 
 " FileType autocommands {{{2
 
-augroup LucGitCommit "{{{3
-  autocmd!
-  autocmd FileType gitcommit
-	\ setlocal spell
-augroup END
-
 augroup LucQuickFix "{{{3
   autocmd!
   autocmd FileType qf
