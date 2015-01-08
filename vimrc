@@ -105,13 +105,6 @@ call s:server_setup()
 
 " FileType autocommands {{{2
 
-augroup LucJava "{{{3
-  autocmd!
-  autocmd Filetype java
-	\ setlocal makeprg=cd\ %:h\ &&\ javac\ %:t
-        " setlocal omnifunc=javacomplete#Complete
-augroup END
-
 augroup LucMail "{{{3
   autocmd!
   autocmd FileType mail
