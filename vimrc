@@ -105,12 +105,6 @@ call s:server_setup()
 
 " FileType autocommands {{{2
 
-augroup LucLilypond "{{{3
-  autocmd!
-  autocmd FileType lilypond
-	\ setlocal dictionary+=~/.config/vim/syntax/lilypond-words
-augroup END
-
 augroup LucPython "{{{3
   autocmd!
   autocmd FileType python
