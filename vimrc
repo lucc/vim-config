@@ -79,17 +79,6 @@ function! s:viminfo_setup(server) "{{{2
   endif
 endfunction
 
-function! s:tex_buffer_maps() "{{{2
-  " Some maps for tex buffers.  They are collected in a function because
-  " putting :map into autocmds is error prone.
-  nnoremap <buffer> K
-	\ :call pyeval('tex.doc("""'.expand('<cword>').'""") or 1')<CR>
-  nnoremap <buffer> gGG :python tex_count_vim_wrapper()<CR>
-  vnoremap <buffer> gGG :python tex_count_vim_wrapper()<CR>
-  nnoremap <buffer> gG :python tex_count_vim_wrapper(wait=True)<CR>
-  vnoremap <buffer> gG :python tex_count_vim_wrapper(wait=True)<CR>
-endfunction
-
 function! s:autocd() "{{{2
   " Cd to the directory of the current file.
   cd %:h
@@ -115,81 +104,6 @@ call s:server_setup()
 " user defined autocommands {{{1
 
 " FileType autocommands {{{2
-
-augroup LucMarkdown "{{{3
-  autocmd!
-  autocmd FileType markdown
-	\ setlocal spell
-augroup END
-
-augroup LucLilypond "{{{3
-  autocmd!
-  autocmd FileType lilypond
-	\ setlocal dictionary+=~/.config/vim/syntax/lilypond-words
-augroup END
-
-augroup LucTex "{{{3
-  autocmd!
-  autocmd FileType tex
-	\ setlocal
-	\   spell
-	\   dictionary+=%:h/**/*.bib,%:h/**/*.tex
-	\   grepprg=grep\ -nH\ $*                 |
-	\ call s:tex_buffer_maps()                |
-	\ if pyeval('check_for_english_babel()')  |
-	\   let b:Tex_SmartQuoteOpen = '“'        |
-	\   let b:Tex_SmartQuoteClose = '”'       |
-	\ endif                                   |
-	\ let b:surround_99 = "\\\1command\1{\r}"
-augroup END
-
-augroup LucPython "{{{3
-  autocmd!
-  autocmd FileType python
-	\ setlocal
-	\   tabstop=8
-	\   expandtab
-	\   shiftwidth=4
-	\   softtabstop=4
-	\   textwidth=79
-augroup END
-
-augroup LucJava "{{{3
-  autocmd!
-  autocmd Filetype java
-	\ setlocal makeprg=cd\ %:h\ &&\ javac\ %:t
-        " setlocal omnifunc=javacomplete#Complete
-augroup END
-
-augroup LucMail "{{{3
-  autocmd!
-  autocmd FileType mail
-	\ setlocal textwidth=72 spell |
-	\ silent! /^$/,$ foldopen     |
-	\ /^$
-augroup END
-
-augroup LucMan "{{{3
-  autocmd!
-  autocmd FileType man
-	\ stopinsert |
-	\ setlocal nospell
-augroup END
-
-augroup LucGitCommit "{{{3
-  autocmd!
-  autocmd FileType gitcommit
-	\ setlocal spell
-augroup END
-
-augroup LucQuickFix "{{{3
-  autocmd!
-  autocmd FileType qf
-	\ setlocal nowrap cursorline |
-	\ nnoremap <buffer> <ENTER> :.cc <BAR> cclose<CR>zx|
-	\ vnoremap <buffer> <ENTER> :<C-U>.cc <BAR> cclose<CR>zx|
-	\ nnoremap <buffer> <2-leftmouse> :.cc <BAR> cclose<CR>zx
-augroup END
 
 augroup LucRemoveWhiteSpaceAtEOL "{{{2
   autocmd!
