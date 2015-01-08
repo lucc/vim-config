@@ -105,12 +105,6 @@ call s:server_setup()
 
 " FileType autocommands {{{2
 
-augroup LucMarkdown "{{{3
-  autocmd!
-  autocmd FileType markdown
-	\ setlocal spell
-augroup END
-
 augroup LucLilypond "{{{3
   autocmd!
   autocmd FileType lilypond
