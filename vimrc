@@ -822,7 +822,22 @@ let g:markdown_fold_style = 'nested'
 " strange folding?
 "Plugin 'tpope/vim-markdown'
 
-Plugin 'pdc.vim'
+"Plugin 'pdc.vim'
+Plugin 'vim-pandoc/vim-pandoc'
+Plugin 'vim-pandoc/vim-pandoc-syntax'
+let g:pandoc#modules#disabled = ["menu"]
+let g:pandoc#command#latex_engine = 'pdflatex'
+let g:pandoc#folding#fold_yaml = 1
+let g:pandoc#folding#fdc = 0
+"let g:pandoc#folding#fold_fenced_codeblocks = 1
+if exists('g:pandoc#biblio#bibs')
+  call insert(g:pandoc#biblio#bibs, '~/bib/main.bib')
+else
+  let g:pandoc#biblio#bibs = ['~/bib/main.bib']
+endif
+let g:pandoc#command#autoexec_on_writes = 1
+let g:pandoc#command#autoexec_command = "Pandoc pdf"
+let g:pandoc#formatting#mode = 'h'
 
 " plugins: comma separated values (csv) {{{2
 "Plugin 'csv.vim'
