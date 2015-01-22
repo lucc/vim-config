@@ -21,3 +21,5 @@ vimshell
 startuptime
 .tb.vimrc.tags
 autoload/test.vim
+
+default-buffer-list.viminfo
