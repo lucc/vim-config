@@ -992,9 +992,10 @@ let g:solarized_menu = 0
 " plugins: statusline {{{1
 
 if has('python') && ! has('nvim')
-  Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+  "Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
   " the documentation of powerline is not in Vim format but only available at
   " https://powerline.readthedocs.org/
+  source /usr/lib/python3.4/site-packages/powerline/bindings/vim/plugin/powerline.vim
 else
   Plugin 'bling/vim-airline'
   "Plugin 'bling/vim-bufferline'
