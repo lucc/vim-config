@@ -1,26 +1,25 @@
-# backup and swap files
-*~
-.*.swp
-.swp
-
 # spell files
 spell/*
 !spell/*.add
 
-# some subfolders
-bundle
-cache
-backup
-
-viminfo
-doc/tags
+# misc hidden files
 .netrwhist
-vimshell
 .VimballRecord
-
-startuptime
-.tb.vimrc.tags
-autoload/test.vim
-
-default-buffer-list.viminfo
 .downloads/
+
+# misc files
+doc/
+#startuptime
+#autoload/test.vim
+
+# generated files
+autoload/manpageview.vim
+default-buffer-list.viminfo
+plugin/cecutil.vim
+plugin/editexisting.vim
+plugin/matchit.vim
+syntax/info.vim
+syntax/man.vim
+syntax/mangl.vim
+syntax/mankey.vim
+syntax/manphp.vim
