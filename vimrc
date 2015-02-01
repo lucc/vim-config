@@ -1024,7 +1024,6 @@ let g:SingleCompile_menumode = 0
 " plugins: unsorted {{{1
 Plugin 'jamessan/vim-gnupg'
 Plugin 'pix/vim-known_hosts'
-Plugin 'matchit.zip' " buggy!
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'sjl/gundo.vim'
 "Plugin 'VimRepress' "https://bitbucket.org/pentie/vimrepress
