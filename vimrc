@@ -63,11 +63,6 @@ function! s:viminfo_setup(server) "{{{2
   endif
 endfunction
 
-function! s:autocd() "{{{2
-  " Cd to the directory of the current file.
-  cd %:h
-endfunction
-
 function! Luc_save_and_compile() " {{{2
   let pos = getpos('.')
   silent update
@@ -176,7 +171,7 @@ imap <SwipeDown> G
 nnoremap ' `
 nnoremap ` '
 
-command! AutoCd call s:autocd()
+command! AutoCd cd %:h
 
 " misc {{{2
 
