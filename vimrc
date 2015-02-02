@@ -35,7 +35,6 @@ filetype plugin indent on
 " user defined variables {{{1
 let s:uname = system('uname')[:-2]
 let mapleader = ','
-let s:do_autogit = 1
 
 " functions {{{1
 
@@ -94,16 +93,6 @@ augroup LucRemoveWhiteSpaceAtEOL "{{{2
 	\ let s:position = getpos('.')          |
 	\ silent keepjumps %substitute/\s\+$//e |
 	\ call setpos('.', s:position)          |
-augroup END
-
-augroup LucAutoGit "{{{2
-  if has('python')
-    autocmd!
-    autocmd BufWritePost ~/.config/**,~/src/shell/**,~/.homesick/repos/**
-	  \ if s:do_autogit                |
-	  \   call pyeval('autogit_vim() or 1') |
-	  \ endif
-  endif
 augroup END
 
 "augroup LucLocalAutoCd "{{{2
@@ -202,19 +191,6 @@ command! AutoCd call s:autocd()
 
 " use ß to clear the screen if you want privacy for a moment
 nmap ß :!clear<CR>
-
-command! AutoGitStart  let s:do_autogit = 1
-command! AutoGitStop   let s:do_autogit = 0
-command! AutoGitToggle let s:do_autogit = !s:do_autogit
-command! AutoGitStatus echon 'AutoGit is ' |
-      \ if s:do_autogit                    |
-      \   echohl LucAutoGitRunning         |
-      \   echon 'running'                  |
-      \ else                               |
-      \   echohl LucAutoGitStopped         |
-      \   echon 'stopped'                  |
-      \ endif                              |
-      \ echohl None
 
 " https://github.com/javyliu/javy_vimrc/blob/master/_vimrc
 "vmap // :<C-U>execute 'normal /' . luc#get_visual_selection()<CR>
@@ -1040,9 +1016,6 @@ if ! has('gui_running')
   set background=dark
   colorscheme solarized
 endif
-" define highlight groups after the colorscheme else they will be cleared
-highlight LucAutoGitRunning guifg=#719e07
-highlight LucAutoGitStopped guifg=#dc322f
 
 " neovim special code {{{1
 if has('nvim') && has('gui_macvim')
