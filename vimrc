@@ -12,15 +12,10 @@ set guioptions-=m
 set guiheadroom=0
 
 " fix the runtimepath to conform to XDG a little bit
-let s:config = ($XDG_CONFIG_HOME != '' ? $XDG_CONFIG_HOME : '~/.config') . '/vim'
-let s:data = ($XDG_DATA_HOME != '' ? $XDG_DATA_HOME : '~/.local/share') . '/vim'
-let s:cache = ($XDG_CACHE_HOME != '' ? $XDG_CACHE_HOME : '~/.cache') .'/vim'
-set runtimepath-=~/.vim
-set runtimepath-=~/.vim/after
-execute 'set runtimepath^=' . s:config
-execute 'set runtimepath+=' . s:config . '/after'
-let $MYGVIMRC = substitute($MYVIMRC, 'vimrc$', 'gvimrc', '')
-let $GVIMINIT = 'source $MYGVIMRC'
+set runtimepath+=~/.config/vim
+call luc#xdg#vars()
+call luc#xdg#runtimepath()
+call luc#xdg#init_files()
 
 " set up python {{{1
 if has('nvim')
@@ -49,7 +44,7 @@ function! s:viminfo_setup(server) "{{{2
     " options: viminfo
     " default: '100,<50,s10,h
     set viminfo='100,<50,s10,h,%
-    let &viminfo .= ',n' . s:cache . '/viminfo'
+    let &viminfo .= ',n' . luc#xdg#cache . '/viminfo'
     " the flag ' is for filenames for marks
     " the flag < is the nummber of lines saved per register
     " the flag s is the max size saved for registers in kb
@@ -234,7 +229,7 @@ command! -nargs=1 -complete=customlist,luc#man#complete_topics
 set autoindent
 set backspace=indent,eol,start
 set backup
-execute 'set backupdir=' . s:cache . '/backup'
+execute 'set backupdir=' . luc#xdg#cache . '/backup'
 "let &backupskip .= ',' . expand('$HOME') . '/.*/**/secure/*'
 set hidden
 set history=2000
@@ -260,7 +255,7 @@ set sessionoptions+=resize,winpos
 " prompt
 set shell=/bin/sh
 " save the swap files in a xdg dir
-execute 'set directory=' . s:cache . '/swap'
+execute 'set directory=' . luc#xdg#cache . '/swap'
 set directory+=~/tmp
 set directory+=/tmp
 
@@ -420,7 +415,7 @@ set wildignore+=*.tgz
 " plugins: management with vundle {{{1
 " https://github.com/gmarik/Vundle.vim
 filetype off
-let s:bundle_path = expand(s:data . '/bundle')
+let s:bundle_path = expand(luc#xdg#data . '/bundle')
 execute 'set runtimepath+=' . s:bundle_path . '/Vundle.vim'
 call vundle#begin(s:bundle_path)
 Plugin 'gmarik/Vundle.vim'
@@ -1031,12 +1026,7 @@ endif
 
 call vundle#end()
 " fix the runtimepath to conform to XDG a little bit
-set runtimepath-=~/.vim
-set runtimepath-=~/.vim/after
-execute 'set runtimepath-=' . s:config
-execute 'set runtimepath-=' . s:config . '/after'
-execute 'set runtimepath^=' . s:config
-execute 'set runtimepath+=' . s:config . '/after'
+call luc#xdg#runtimepath()
 
 " switch on filetype detection after defining all Bundles
 filetype plugin indent on
