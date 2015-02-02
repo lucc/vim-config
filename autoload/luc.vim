@@ -351,3 +351,11 @@ function! luc#prefix(type) range "{{{1
   let subst = '\=printf("' . fmt . '", submatch(1), submatch(2))'
   execute range . 's/' . regex . '/' . subst . '/'
 endfunction
+
+function! luc#save_and_compile() " {{{1
+  " Use the python function to compile the current file
+  let pos = getpos('.')
+  silent update
+  python compile()
+  call setpos('.', pos)
+endfunction

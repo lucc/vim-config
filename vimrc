@@ -63,13 +63,6 @@ function! s:viminfo_setup(server) "{{{2
   endif
 endfunction
 
-function! Luc_save_and_compile() " {{{2
-  let pos = getpos('.')
-  silent update
-  python compile()
-  call setpos('.', pos)
-endfunction
-
 " setup for server vim {{{1
 call s:viminfo_setup(!luc#server#running())
 
@@ -146,8 +139,8 @@ nmap <Leader>w :python for url in strings.urls(vim.current.line):
       \ webbrowser.open(url)<CR>
 
 " easy compilation {{{2
-nmap <silent> <F2>        :call Luc_save_and_compile()<CR>
-imap <silent> <F2>   <C-O>:call Luc_save_and_compile()<CR>
+nmap <silent> <F2>        :call luc#save_and_compile()<CR>
+imap <silent> <F2>   <C-O>:call luc#save_and_compile()<CR>
 
 " backup current buffer
 nnoremap <silent> <F11>
