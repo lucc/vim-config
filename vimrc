@@ -44,16 +44,6 @@ let s:do_autogit = 1
 
 " functions {{{1
 
-function! s:server_setup() "{{{2
-  call s:viminfo_setup(!s:server_running())
-endfunction
-
-function! s:server_running() "{{{2
-  " Check if another vim server is already running.
-  return !empty(has('clientserver') ? serverlist() :
-	\ system('vim --serverlist'))
-endfunction
-
 function! s:viminfo_setup(server) "{{{2
   if a:server
     " options: viminfo
@@ -99,7 +89,7 @@ function! s:sudo_write() "{{{2
 endfunction
 
 " setup for server vim {{{1
-call s:server_setup()
+call s:viminfo_setup(!luc#server#running())
 
 " user defined autocommands {{{1
 
