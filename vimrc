@@ -13,9 +13,9 @@ set guiheadroom=0
 
 " fix the runtimepath to conform to XDG a little bit
 set runtimepath+=~/.config/vim
-call luc#xdg#vars()
 call luc#xdg#runtimepath()
-call luc#xdg#init_files()
+let $MYGVIMRC = substitute($MYVIMRC, 'vimrc$', 'gvimrc', '')
+let $GVIMINIT = 'source $MYGVIMRC'
 
 " set up python {{{1
 if has('nvim')
