@@ -75,13 +75,6 @@ function! Luc_save_and_compile() " {{{2
   call setpos('.', pos)
 endfunction
 
-function! s:sudo_write() "{{{2
-  " danke an Matze
-  write ! sudo dd of="%"
-  edit!
-  redraw
-endfunction
-
 " setup for server vim {{{1
 call s:viminfo_setup(!luc#server#running())
 
@@ -150,8 +143,6 @@ endif
 
 " interactive fix for latex quotes in English files
 command! UnsetLaTeXQuotes unlet g:Tex_SmartQuoteOpen g:Tex_SmartQuoteClose
-
-command! Suw :call s:sudo_write()
 
 " open URLs {{{2
 python import strings
