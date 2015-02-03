@@ -12,94 +12,25 @@ set guioptions-=m
 set guiheadroom=0
 
 " fix the runtimepath to conform to XDG a little bit
-let s:config = ($XDG_CONFIG_HOME != '' ? $XDG_CONFIG_HOME : '~/.config') . '/vim'
-let s:data = ($XDG_DATA_HOME != '' ? $XDG_DATA_HOME : '~/.local/share') . '/vim'
-let s:cache = ($XDG_CACHE_HOME != '' ? $XDG_CACHE_HOME : '~/.cache') .'/vim'
-set runtimepath-=~/.vim
-set runtimepath-=~/.vim/after
-execute 'set runtimepath^=' . s:config
-execute 'set runtimepath+=' . s:config . '/after'
+set runtimepath+=~/.config/vim
+call luc#xdg#runtimepath()
 let $MYGVIMRC = substitute($MYVIMRC, 'vimrc$', 'gvimrc', '')
 let $GVIMINIT = 'source $MYGVIMRC'
 
-" set up python {{{1
-if has('nvim')
-  "runtime! python_setup.vim
-  python import vim
-  pyfile ~/.config/vim/vimrc.py
-elseif has('python')
-  python import vim
-  "python if vim.VIM_SPECIAL_PATH not in sys.path: sys.path.append(vim.VIM_SPECIAL_PATH)
-  pyfile ~/.config/vim/vimrc.py
-endif
+" misc settings {{{1
+" set up python
+call luc#setup#python()
 
-" syntax and filetype {{{1
+" syntax and filetype
 syntax enable
 filetype plugin indent on
 
-" user defined variables {{{1
+" user defined variables
 let s:uname = system('uname')[:-2]
 let mapleader = ','
-let s:do_autogit = 1
 
-" functions {{{1
-
-function! s:server_setup() "{{{2
-  call s:viminfo_setup(!s:server_running())
-endfunction
-
-function! s:server_running() "{{{2
-  " Check if another vim server is already running.
-  return !empty(has('clientserver') ? serverlist() :
-	\ system('vim --serverlist'))
-endfunction
-
-function! s:viminfo_setup(server) "{{{2
-  if a:server
-    " options: viminfo
-    " default: '100,<50,s10,h
-    set viminfo='100,<50,s10,h,%
-    let &viminfo .= ',n' . s:cache . '/viminfo'
-    " the flag ' is for filenames for marks
-    " the flag < is the nummber of lines saved per register
-    " the flag s is the max size saved for registers in kb
-    " the flag h is to disable hlsearch
-    " the flag % is to remember (whole) buffer list
-    " the flag n is the name of the viminfo file
-    " load a static viminfo file with a file list
-    rviminfo ~/.config/vim/default-buffer-list.viminfo
-    " set up an argument list to prevent the empty buffer at start up
-    "if argc() == 0
-    "  execute 'args' bufname(2)
-    "endif
-  else
-    " if we are not running as the server do not use the viminfo file.  We
-    " probably only want to edit one file quickly from the command line.
-    set viminfo=
-  endif
-endfunction
-
-function! s:autocd() "{{{2
-  " Cd to the directory of the current file.
-  cd %:h
-endfunction
-
-function! Luc_save_and_compile() " {{{2
-  let pos = getpos('.')
-  silent update
-  python compile()
-  call setpos('.', pos)
-endfunction
-
-function! s:sudo_write() "{{{2
-  " danke an Matze
-  write ! sudo dd of="%"
-  edit!
-  redraw
-endfunction
-
-" setup for server vim {{{1
-call s:server_setup()
+" setup for server vim
+call luc#setup#viminfo(!luc#server#running())
 
 " user defined autocommands {{{1
 
@@ -110,30 +41,6 @@ augroup LucRemoveWhiteSpaceAtEOL "{{{2
 	\ silent keepjumps %substitute/\s\+$//e |
 	\ call setpos('.', s:position)          |
 augroup END
-
-augroup LucAutoGit "{{{2
-  if has('python')
-    autocmd!
-    autocmd BufWritePost ~/.config/**,~/src/shell/**,~/.homesick/repos/**
-	  \ if s:do_autogit                |
-	  \   call pyeval('autogit_vim() or 1') |
-	  \ endif
-  endif
-augroup END
-
-"augroup LucLocalAutoCd "{{{2
-"  autocmd!
-"  autocmd BufEnter ~/uni/**     lcd ~/uni
-"  autocmd BufEnter ~/.config/** lcd ~/.config
-"  autocmd BufEnter ~/src/**     lcd ~/src
-"augroup END
-
-"augroup LucLocalWindowCD "{{{2
-"  autocmd!
-"  " FIXME: still buggy
-"  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
-"	\ execute 'lcd' pyeval('backup_base_dir_vim_reapper()')
-"augroup END
 
 " user defined commands and mappings {{{1
 
@@ -177,8 +84,6 @@ endif
 " interactive fix for latex quotes in English files
 command! UnsetLaTeXQuotes unlet g:Tex_SmartQuoteOpen g:Tex_SmartQuoteClose
 
-command! Suw :call s:sudo_write()
-
 " open URLs {{{2
 python import strings
 python import webbrowser
@@ -186,8 +91,8 @@ nmap <Leader>w :python for url in strings.urls(vim.current.line):
       \ webbrowser.open(url)<CR>
 
 " easy compilation {{{2
-nmap <silent> <F2>        :call Luc_save_and_compile()<CR>
-imap <silent> <F2>   <C-O>:call Luc_save_and_compile()<CR>
+nmap <silent> <F2>        :call luc#save_and_compile()<CR>
+imap <silent> <F2>   <C-O>:call luc#save_and_compile()<CR>
 
 " backup current buffer
 nnoremap <silent> <F11>
@@ -211,25 +116,10 @@ imap <SwipeDown> G
 nnoremap ' `
 nnoremap ` '
 
-command! AutoCd call s:autocd()
-
 " misc {{{2
 
 " use ß to clear the screen if you want privacy for a moment
 nmap ß :!clear<CR>
-
-command! AutoGitStart  let s:do_autogit = 1
-command! AutoGitStop   let s:do_autogit = 0
-command! AutoGitToggle let s:do_autogit = !s:do_autogit
-command! AutoGitStatus echon 'AutoGit is ' |
-      \ if s:do_autogit                    |
-      \   echohl LucAutoGitRunning         |
-      \   echon 'running'                  |
-      \ else                               |
-      \   echohl LucAutoGitStopped         |
-      \   echon 'stopped'                  |
-      \ endif                              |
-      \ echohl None
 
 " https://github.com/javyliu/javy_vimrc/blob/master/_vimrc
 "vmap // :<C-U>execute 'normal /' . luc#get_visual_selection()<CR>
@@ -244,7 +134,7 @@ command! -nargs=1 -complete=customlist,luc#man#complete_topics
 set autoindent
 set backspace=indent,eol,start
 set backup
-execute 'set backupdir=' . s:cache . '/backup'
+execute 'set backupdir=' . luc#xdg#cache . '/backup'
 "let &backupskip .= ',' . expand('$HOME') . '/.*/**/secure/*'
 set hidden
 set history=2000
@@ -270,7 +160,7 @@ set sessionoptions+=resize,winpos
 " prompt
 set shell=/bin/sh
 " save the swap files in a xdg dir
-execute 'set directory=' . s:cache . '/swap'
+execute 'set directory=' . luc#xdg#cache . '/swap'
 set directory+=~/tmp
 set directory+=/tmp
 
@@ -428,11 +318,7 @@ set wildignore+=*.tgz
 "let g:vimsyn_folding .= 't' " fold tcl      script
 
 " plugins: management with vundle {{{1
-" https://github.com/gmarik/Vundle.vim
-filetype off
-let s:bundle_path = expand(s:data . '/bundle')
-execute 'set runtimepath+=' . s:bundle_path . '/Vundle.vim'
-call vundle#begin(s:bundle_path)
+call luc#setup#vundle()
 Plugin 'gmarik/Vundle.vim'
 
 " plugins: buffer and file management {{{1
@@ -1037,12 +923,7 @@ endif
 
 call vundle#end()
 " fix the runtimepath to conform to XDG a little bit
-set runtimepath-=~/.vim
-set runtimepath-=~/.vim/after
-execute 'set runtimepath-=' . s:config
-execute 'set runtimepath-=' . s:config . '/after'
-execute 'set runtimepath^=' . s:config
-execute 'set runtimepath+=' . s:config . '/after'
+call luc#xdg#runtimepath()
 
 " switch on filetype detection after defining all Bundles
 filetype plugin indent on
@@ -1056,6 +937,3 @@ if ! has('gui_running')
   set background=dark
   colorscheme solarized
 endif
-" define highlight groups after the colorscheme else they will be cleared
-highlight LucAutoGitRunning guifg=#719e07
-highlight LucAutoGitStopped guifg=#dc322f
