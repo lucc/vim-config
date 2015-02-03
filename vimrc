@@ -76,20 +76,6 @@ augroup LucRemoveWhiteSpaceAtEOL "{{{2
 	\ call setpos('.', s:position)          |
 augroup END
 
-"augroup LucLocalAutoCd "{{{2
-"  autocmd!
-"  autocmd BufEnter ~/uni/**     lcd ~/uni
-"  autocmd BufEnter ~/.config/** lcd ~/.config
-"  autocmd BufEnter ~/src/**     lcd ~/src
-"augroup END
-
-"augroup LucLocalWindowCD "{{{2
-"  autocmd!
-"  " FIXME: still buggy
-"  autocmd BufWinEnter,WinEnter,BufNew,BufRead,BufEnter *
-"	\ execute 'lcd' pyeval('backup_base_dir_vim_reapper()')
-"augroup END
-
 " user defined commands and mappings {{{1
 
 " editing {{{2
@@ -163,8 +149,6 @@ imap <SwipeDown> G
 
 nnoremap ' `
 nnoremap ` '
-
-command! AutoCd cd %:h
 
 " misc {{{2
 
