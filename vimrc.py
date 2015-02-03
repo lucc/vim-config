@@ -11,6 +11,7 @@ import re
 import subprocess
 import threading
 import time
+import timeit
 import vim
 # import sys
 # import webbrowser
@@ -192,3 +193,56 @@ def find_babel_languages():
             if match:
                 return match.group(1).split(',')
     return []
+
+
+def time_cmd(cmd1, cmd2, count=10):
+    """Compare the execution time of two vim commands.
+
+    :cmd1: a vim command as a string, will be passed to vim.command
+    :cmd2: like cmd1
+    :count: the number of times the commands will be executed
+    :returns: None
+
+    """
+    length = max(len(cmd1), len(cmd2))
+    fmt = '%%-%ds %%s' % (length + 2)
+    print('Running', count, 'repetitions of ...')
+    print(fmt % (cmd1, '->'), end=' ')
+    t1 = timeit.timeit(
+        'vim.command("""silent '+cmd1+'""")',
+        setup='import vim',
+        number=count)
+    print(t1)
+    print(fmt % (cmd2, '->'), end=' ')
+    t2 = timeit.timeit(
+        'vim.command("""silent '+cmd2+'""")',
+        setup='import vim',
+        number=count)
+    print(t2)
+
+
+def time_expr(expr1, expr2, count=10):
+    """Compare the evaluation time of two vim expressions.
+
+    :expr1: a vim expression as a string, will be passed to vim.eval
+    :expr2: like expr2
+    :count: the number of times the commands will be executed
+    :returns: None
+
+    """
+    length = max(len(expr1), len(expr2))
+    fmt = '%%-%ds %%s' % (length + 2)
+    print('Evaluationg', count, 'repetitions of ...')
+    print(fmt % (expr1, '->'), end=' ')
+    t1 = timeit.timeit(
+        'vim.eval("""'+expr1+'""")',
+        setup='import vim',
+        number=count)
+    print(t1)
+    print(fmt % (expr2, '->'), end=' ')
+    t2 = timeit.timeit(
+        'vim.eval("""'+expr2+'""")',
+        setup='import vim',
+        number=count)
+    print(t2)
+    pass
