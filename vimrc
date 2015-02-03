@@ -709,6 +709,8 @@ let g:syntastic_loc_list_height = 5
 " plugins: languages {{{1
 
 Plugin 'applescript.vim'
+Plugin 'icalendar.vim'
+Plugin 'aliva/vim-fish'
 
 " plugins: LaTeX {{{2
 
@@ -858,30 +860,24 @@ Plugin 'vim-autopep8'
 " svn checkout http://vimpdb.googlecode.com/svn/trunk/ vimpdb-read-only
 Plugin 'fs111/pydoc.vim'
 
-" plugins: iCal {{{2
-
-" syntax highlighting
-Plugin 'icalendar.vim'
-
-" plugins: fish (shell) {{{2
-Plugin 'aliva/vim-fish'
-
 " plugins: shell in Vim {{{1
 
 Plugin 'ervandew/screen'
 let g:ScreenImpl = 'Tmux'
 let g:ScreenShellTerminal = 'iTerm.app'
 
-" notes {{{2
-Plugin 'Conque-Shell'
-"Plugin 'vimsh.tar.gz'
-"Plugin 'xolox/vim-shell'
-"Plugin 'vimux'
+if has('gui_macvim')
+  " notes
+  Plugin 'Conque-Shell'
+  "Plugin 'vimsh.tar.gz'
+  "Plugin 'xolox/vim-shell'
+  "Plugin 'vimux'
 
-Plugin 'Shougo/vimshell.vim' "{{{2
-Plugin 'Shougo/vimproc'
-"map <D-F11> :VimShellPop<cr>
-let g:vimshell_temporary_directory = expand('~/.cache/vim/vimshell')
+  Plugin 'Shougo/vimshell.vim'
+  Plugin 'Shougo/vimproc'
+  "map <D-F11> :VimShellPop<cr>
+  let g:vimshell_temporary_directory = expand('~/.cache/vim/vimshell')
+endif
 
 " to be tested (shell in gvim) {{{2
 Plugin 'https://bitbucket.org/fboender/bexec.git'
@@ -1063,9 +1059,3 @@ endif
 " define highlight groups after the colorscheme else they will be cleared
 highlight LucAutoGitRunning guifg=#719e07
 highlight LucAutoGitStopped guifg=#dc322f
-
-" neovim special code {{{1
-if has('nvim') && has('gui_macvim')
-  call jobstart('Greeting', 'growlnotify',
-	\ ['--message', 'YEAH neovim rocks!', '--title', 'Hello Neovim'])
-endif
