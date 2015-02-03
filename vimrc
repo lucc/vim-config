@@ -17,54 +17,20 @@ call luc#xdg#runtimepath()
 let $MYGVIMRC = substitute($MYVIMRC, 'vimrc$', 'gvimrc', '')
 let $GVIMINIT = 'source $MYGVIMRC'
 
-" set up python {{{1
-if has('nvim')
-  "runtime! python_setup.vim
-  python import vim
-  pyfile ~/.config/vim/vimrc.py
-elseif has('python')
-  python import vim
-  "python if vim.VIM_SPECIAL_PATH not in sys.path: sys.path.append(vim.VIM_SPECIAL_PATH)
-  pyfile ~/.config/vim/vimrc.py
-endif
+" misc settings {{{1
+" set up python
+call luc#setup#python()
 
-" syntax and filetype {{{1
+" syntax and filetype
 syntax enable
 filetype plugin indent on
 
-" user defined variables {{{1
+" user defined variables
 let s:uname = system('uname')[:-2]
 let mapleader = ','
 
-" functions {{{1
-
-function! s:viminfo_setup(server) "{{{2
-  if a:server
-    " options: viminfo
-    " default: '100,<50,s10,h
-    set viminfo='100,<50,s10,h,%
-    let &viminfo .= ',n' . luc#xdg#cache . '/viminfo'
-    " the flag ' is for filenames for marks
-    " the flag < is the nummber of lines saved per register
-    " the flag s is the max size saved for registers in kb
-    " the flag h is to disable hlsearch
-    " the flag % is to remember (whole) buffer list
-    " the flag n is the name of the viminfo file
-    " load a static viminfo file with a file list
-    rviminfo ~/.config/vim/default-buffer-list.viminfo
-    " set up an argument list to prevent the empty buffer at start up
-    "if argc() == 0
-    "  execute 'args' bufname(2)
-    "endif
-  else
-    " if we are not running as the server do not use the viminfo file.  We
-    " probably only want to edit one file quickly from the command line.
-    set viminfo=
-  endif
-endfunction
-
-" setup for server vim {{{1
-call s:viminfo_setup(!luc#server#running())
+" setup for server vim
+call luc#setup#viminfo(!luc#server#running())
 
 " user defined autocommands {{{1
 
@@ -352,11 +318,7 @@ set wildignore+=*.tgz
 "let g:vimsyn_folding .= 't' " fold tcl      script
 
 " plugins: management with vundle {{{1
-" https://github.com/gmarik/Vundle.vim
-filetype off
-let s:bundle_path = expand(luc#xdg#data . '/bundle')
-execute 'set runtimepath+=' . s:bundle_path . '/Vundle.vim'
-call vundle#begin(s:bundle_path)
+call luc#setup#vundle()
 Plugin 'gmarik/Vundle.vim'
 
 " plugins: buffer and file management {{{1
