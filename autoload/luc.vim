@@ -102,31 +102,6 @@ function! luc#get_visual_selection() "{{{1
   return return_value
 endfunction
 
-function! luc#format_bib() "{{{1
-  " format bibentries in the current file
-
-  " define a local helper function
-  let d = {}
-  let dist = 18
-  function! d.f(type, key)
-    let dist = 18
-    let factor = dist - 2 - strlen(a:type)
-    return '@' . a:type . '{' . printf('%'.factor.'s', ' ') . a:key . ','
-  endfunction
-  function! d.g(key, value)
-    let dist = 18
-    let factor = dist - 4 - strlen(a:key)
-    return '  ' . a:key . printf('%'.factor.'s', ' ') . '= "' . a:value . '",'
-  endfunction
-
-  " format the line with "@type{key,"
-  %substitute/^@\([a-z]\+\)\s*{\s*\([a-z0-9.:-]\+\),\s*$/\=d.f(submatch(1), submatch(2))/
-  " format lines with closing brackets
-  %substitute/^\s*}\s*$/}/
-  " format lines in the entries
-  %substitute/^\s*\([A-Za-z]\+\)\s*=\s*["{]\(.*\)["}],$/\=d.g(submatch(1), submatch(2))/
-endfunction
-
 function! s:flatten_list(list) "{{{1
   " Code from bairui@#vim.freenode
   " https://gist.github.com/3322468
