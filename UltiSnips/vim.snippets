@@ -1,0 +1,11 @@
+snippet fun "function with documentation" b
+function! ${1:Function_name}(${2:arg1})
+	" ${3:documentation}
+	"`!p
+snip >> 1
+for arg in t[2].split(','):
+    snip += '" '+arg.strip()+': TODO'`
+	" returns: TODO
+	$0
+endfunction
+endsnippet
