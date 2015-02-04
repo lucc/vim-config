@@ -5,7 +5,7 @@ function! luc#setup#viminfo(server)
     " options: viminfo
     " default: '100,<50,s10,h
     set viminfo='100,<50,s10,h,%
-    let &viminfo .= ',n' . luc#xdg#cache . '/viminfo'
+    let &viminfo .= ',n' . g:luc#xdg#cache . '/viminfo'
     " the flag ' is for filenames for marks
     " the flag < is the nummber of lines saved per register
     " the flag s is the max size saved for registers in kb
