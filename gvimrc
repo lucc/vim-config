@@ -122,6 +122,3 @@ endif
 " colorscheme {{{1
 set background=dark
 colorscheme solarized
-" define highlight groups after the colorscheme else they will be cleared
-highlight LucAutoGitRunning guifg=#719e07
-highlight LucAutoGitStopped guifg=#dc322f
