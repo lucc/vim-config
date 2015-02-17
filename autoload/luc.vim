@@ -144,14 +144,6 @@ function! s:select_font(big) "{{{1
   " TODO
 endfunction
 
-function! luc#remove_last_bib_and_save()
-  $
-  ?^}$?+1
-  .,$delete
-  let g:i += 1
-  execute printf('%s%03d%s', 'sav /Users/luc/uni/new-', g:i, '.bib')
-endfunction
-
 "function! luc#prefix() "{{{1
 "  let sel_save = &selection
 "  let saved_register = getreg('@', 1, 1)
