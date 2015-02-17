@@ -120,7 +120,6 @@ nmap ß :!clear<CR>
 " https://github.com/javyliu/javy_vimrc/blob/master/_vimrc
 "vmap // :<C-U>execute 'normal /' . luc#get_visual_selection()<CR>
 vmap // y/<C-r>"<CR>
-
 command! -nargs=1 -complete=customlist,luc#man#complete_topics
       \ ManLuc TMan <args>.man
 
@@ -543,7 +542,7 @@ if has('python')
   endif
   let g:UltiSnipsExpandTrigger = '<C-F>'
   let g:UltiSnipsJumpForwardTrigger = '<C-F>'
-  "let g:UltiSnipsJumpBackwardTrigger = '<C-Tab>'
+  let g:UltiSnipsJumpBackwardTrigger = '<C-G>'
   "let g:UltiSnipsExpandTrigger       = <tab>
   "let g:UltiSnipsListSnippets        = <c-tab>
   "let g:UltiSnipsJumpForwardTrigger  = <c-j>
@@ -720,7 +719,7 @@ if exists('g:pandoc#biblio#bibs')
 else
   let g:pandoc#biblio#bibs = ['~/bib/main.bib']
 endif
-let g:pandoc#command#autoexec_on_writes = 1
+let g:pandoc#command#autoexec_on_writes = 0
 let g:pandoc#command#autoexec_command = "Pandoc pdf"
 let g:pandoc#formatting#mode = 'h'
 
