@@ -21,10 +21,6 @@ let $GVIMINIT = 'source $MYGVIMRC'
 " set up python
 call luc#setup#python()
 
-" syntax and filetype
-syntax enable
-filetype plugin indent on
-
 " user defined variables
 let s:uname = system('uname')[:-2]
 let mapleader = ','
@@ -927,6 +923,7 @@ call vundle#end()
 call luc#xdg#runtimepath()
 
 " switch on filetype detection after defining all Bundles
+syntax enable
 filetype plugin indent on
 
 " settings for easytags which need the runtimepath set properly {{{2
