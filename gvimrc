@@ -71,6 +71,7 @@ augroup END
 " user defined commands and mappings {{{1
 
 nmap ß :windo set rightleft!<CR>
+map <ESC> :nohlsearch<BAR>redraw<CR><C-G>
 if has("gui_macvim")
   " tabs
   nmap <S-D-CR>      <C-W>T
