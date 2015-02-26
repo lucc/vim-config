@@ -30,37 +30,6 @@ let g:my_fonts__ = [copy(s:normalfonts), copy(s:bigfonts)]
 "  let s:normalfonts = 'DejaVu Sans Mono 9'
 "endif
 
-" user defined functions {{{1
-function! s:resize_gui() " {{{2
-  " function to put the gvim window on the left of the screen
-  set nofullscreen
-  set guioptions-=T
-  winpos 0 0
-  let &guifont = s:normalfonts
-  set lines=999
-  set columns=85
-  "redraw!
-endfunction
-
-function! <SID>toggle_fullscreen() " {{{2
-  " function to toggle fullscreen mode
-  if &fullscreen
-    call s:resize_gui()
-  else
-    set fullscreen
-  endif
-endfunction
-
-function! <SID>toggle_font_size() "{{{2
-  if &guifont == s:normalfonts
-    let &guifont = s:bigfonts
-  elseif &guifont == s:bigfonts
-    let &guifont = s:normalfonts
-  else
-    echoerr 'Can not toggle font.'
-  endif
-endfunction
-
 " user defined autocommands {{{1
 
 augroup LucDelMenus "{{{2
@@ -77,10 +46,10 @@ if has("gui_macvim")
   nmap <S-D-CR>      <C-W>T
   imap <S-D-CR> <C-O><C-W>T
   " fullscreen
-  nmap <D-CR>      :call <SID>toggle_fullscreen()<CR>
-  imap <D-CR> <C-O>:call <SID>toggle_fullscreen()<CR>
-  nmap <F12>       :call <SID>toggle_font_size()<CR>
-  imap <F12>  <C-O>:call <SID>toggle_font_size()<CR>
+  nmap <D-CR>      :call luc#gui#toggle_fullscreen()<CR>
+  imap <D-CR> <C-O>:call luc#gui#toggle_fullscreen()<CR>
+  nmap <F12>       :call luc#gui#toggle_font_size()<CR>
+  imap <F12>  <C-O>:call luc#gui#toggle_font_size()<CR>
   " copy and paste like the mac osx default
   nmap <silent> <D-v>       "*p
   imap <silent> <D-v>  <C-r>*
