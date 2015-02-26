@@ -8,7 +8,6 @@ set nocompatible
 " Don't load menus.  This has to happen before 'syntax on' and 'filetype ...'
 set guioptions+=M
 set guioptions-=m
-set guiheadroom=0
 
 " basic {{{1
 

@@ -107,6 +107,7 @@ endif
 set guioptions+=cegv
 set guioptions-=rT
 set tabpagemax=30
+set guiheadroom=0
 " TODO
 let &guifont = s:normalfonts
 
