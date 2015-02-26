@@ -22,17 +22,8 @@ execute 'source' . luc#xdg#config . '/vimrc.d/autocmds.vim'
 execute 'source' . luc#xdg#config . '/vimrc.d/maps.vim'
 execute 'source' . luc#xdg#config . '/vimrc.d/commands.vim'
 execute 'source' . luc#xdg#config . '/vimrc.d/plugins.vim'
+execute 'source' . luc#xdg#config . '/vimrc.d/colors.vim'
 
 " switch on filetype detection after defining all Bundles
 syntax enable
 filetype plugin indent on
-
-" settings for easytags which need the runtimepath set properly
-"call xolox#easytags#map_filetypes('tex', 'latex')
-
-" Set colors for the terminal.  If the GUI is running the colorscheme will be
-" set in gvimrc.
-if ! has('gui_running')
-  set background=dark
-  colorscheme solarized
-endif
