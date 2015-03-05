@@ -44,20 +44,7 @@ let g:ctrlp_extensions = [
 
 " mappings {{{2
 let g:ctrlp_cmd = 'CtrlPMRU'
-if has('gui_running')
-  let g:ctrlp_map = '<C-Space>'
-else
-  " In the terminal <c-space> doesn't work but sadly <F1> is also mapped by
-  " latex-suite so we have to overwrite that.
-  let g:ctrlp_map = '<F1>'
-  augroup LucCtrlP
-    autocmd!
-    autocmd BufEnter,WinEnter *
-	  \ execute 'nnoremap' g:ctrlp_map      ':' g:ctrlp_cmd '<CR>'
-    autocmd BufEnter,WinEnter *
-	  \ execute 'inoremap' g:ctrlp_map '<C-O>:' g:ctrlp_cmd '<CR>'
-  augroup END
-endif
+let g:ctrlp_map = has('gui_running') ? '<C-Space>' : '<NUL>'
 execute 'inoremap' g:ctrlp_map '<C-O>:' g:ctrlp_cmd '<CR>'
 if has('gui_macvim')
   execute 'nnoremap' '<D-B>' ':CtrlPBuffer<CR>'
