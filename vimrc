@@ -17,12 +17,12 @@ let mapleader = ','
 call luc#setup#viminfo(!luc#server#running())
 
 " source subfiles
-execute 'source' . luc#xdg#config . '/vimrc.d/options.vim'
-execute 'source' . luc#xdg#config . '/vimrc.d/autocmds.vim'
-execute 'source' . luc#xdg#config . '/vimrc.d/maps.vim'
-execute 'source' . luc#xdg#config . '/vimrc.d/commands.vim'
-execute 'source' . luc#xdg#config . '/vimrc.d/plugins.vim'
-execute 'source' . luc#xdg#config . '/vimrc.d/colors.vim'
+runtime vimrc.d/options.vim
+runtime vimrc.d/autocmds.vim
+runtime vimrc.d/maps.vim
+runtime vimrc.d/commands.vim
+runtime vimrc.d/plugins.vim
+runtime vimrc.d/colors.vim
 
 " switch on filetype detection after defining all Bundles
 syntax enable
