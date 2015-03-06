@@ -487,7 +487,9 @@ if s:uname != 'Linux' || has('nvim')
   Plugin 'tpope/vim-surround'
 endif
 "Plugin 'kana/vim-textobj-indent.git'
-Plugin 'michaeljsmith/vim-indent-object'
+if s:uname != 'Linux' || has('nvim')
+  Plugin 'michaeljsmith/vim-indent-object'
+endif
 Plugin 'junegunn/vim-easy-align'
 vmap <Enter> <Plug>(EasyAlign)
 nmap <Leader>a <Plug>(EasyAlign)
