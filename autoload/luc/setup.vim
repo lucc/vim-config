@@ -55,3 +55,15 @@ function! luc#setup#vim_plug()
   command! -bar -nargs=+ Plugin Plug <args>
   Plug 'junegunn/vim-plug'
 endfunction
+
+function! luc#setup#delfunction(pattern)
+  " Delete all functions matching the given pattern.
+  let old = @a
+  redir @a
+  execute 'silent function /'.a:pattern
+  redir END
+  for fun in split(@a, "\n")
+    execute 'del'.substitute(fun, '(.*)$', '', '')
+  endfor
+  let @a = old
+endfunction
