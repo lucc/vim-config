@@ -45,3 +45,13 @@ function! luc#setup#vundle()
   call vundle#begin(path)
   Plugin 'gmarik/Vundle.vim'
 endfunction
+
+function! luc#setup#vim_plug()
+  " https://github.com/junegunn/vim-plug
+  let path = expand(g:luc#xdg#data . '/bundle')
+  "execute 'set runtimepath+=' . path . '/vim-plug'
+  execute 'source' path . '/vim-plug/plug.vim'
+  call plug#begin(path)
+  command! -bar -nargs=+ Plugin Plug <args>
+  Plug 'junegunn/vim-plug'
+endfunction

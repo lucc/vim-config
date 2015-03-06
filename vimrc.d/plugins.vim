@@ -4,7 +4,7 @@
 let s:uname = system('uname')[:-2]
 
 " plugins: management with vundle {{{1
-call luc#setup#vundle()
+call luc#setup#vim_plug()
 
 " plugins: buffer and file management {{{1
 if s:uname != 'Linux' || has('nvim')
@@ -593,6 +593,6 @@ if s:uname != 'Linux' || has('nvim')
 endif
 
 " finalize {{{1
-call vundle#end()
+call plug#end()
 " fix the runtimepath to conform to XDG a little bit
 call luc#xdg#runtimepath()
