@@ -58,11 +58,10 @@ endfunction
 
 function! luc#setup#delfunction(pattern)
   " Delete all functions matching the given pattern.
-  let old = @a
-  redir @a
+  redir => functions
   execute 'silent function /'.a:pattern
   redir END
-  for fun in split(@a, "\n")
+  for fun in split(functions, "\n")
     execute 'del'.substitute(fun, '(.*)$', '', '')
   endfor
   let @a = old
