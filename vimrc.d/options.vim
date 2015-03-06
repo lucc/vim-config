@@ -190,10 +190,10 @@ set wildignore+=*.tbz2
 set wildignore+=*.tgz
 
 " setting variables for special settings {{{1
-"let g:vimsyn_folding  = 'a' " augroups
-"let g:vimsyn_folding .= 'f' " fold functions
-"let g:vimsyn_folding .= 'm' " fold mzscheme script
-"let g:vimsyn_folding .= 'p' " fold perl     script
-"let g:vimsyn_folding .= 'P' " fold python   script
-"let g:vimsyn_folding .= 'r' " fold ruby     script
-"let g:vimsyn_folding .= 't' " fold tcl      script
+let g:vimsyn_folding  = 'a' " augroups
+let g:vimsyn_folding .= 'f' " fold functions
+let g:vimsyn_folding .= 'm' " fold mzscheme script
+let g:vimsyn_folding .= 'p' " fold perl     script
+let g:vimsyn_folding .= 'P' " fold python   script
+let g:vimsyn_folding .= 'r' " fold ruby     script
+let g:vimsyn_folding .= 't' " fold tcl      script
