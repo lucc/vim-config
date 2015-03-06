@@ -43,4 +43,5 @@ function! luc#setup#vundle()
   let path = expand(g:luc#xdg#data . '/bundle')
   execute 'set runtimepath+=' . path . '/Vundle.vim'
   call vundle#begin(path)
+  Plugin 'gmarik/Vundle.vim'
 endfunction

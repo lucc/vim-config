@@ -5,7 +5,6 @@ let s:uname = system('uname')[:-2]
 
 " plugins: management with vundle {{{1
 call luc#setup#vundle()
-Plugin 'gmarik/Vundle.vim'
 
 " plugins: buffer and file management {{{1
 if s:uname != 'Linux' || has('nvim')
@@ -488,8 +487,8 @@ if s:uname != 'Linux' || has('nvim')
   Plugin 'tpope/vim-surround'
 endif
 "Plugin 'kana/vim-textobj-indent.git'
-Plugin 'michaeljsmith/vim-indent-object.git'
-Plugin 'junegunn/vim-easy-align.git'
+Plugin 'michaeljsmith/vim-indent-object'
+Plugin 'junegunn/vim-easy-align'
 vmap <Enter> <Plug>(EasyAlign)
 nmap <Leader>a <Plug>(EasyAlign)
 
