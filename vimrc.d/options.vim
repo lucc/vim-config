@@ -172,13 +172,15 @@ set wildignore+=*.spl  " compiled spell word lists
 set wildignore+=.DS_Store
 
 " compiled and binary files {{{2
-set wildignore+=*.class " java
-set wildignore+=*.dll   " windows libraries
-set wildignore+=*.exe   " windows executeables
-set wildignore+=*.o     " object files
-set wildignore+=*.obj   " ?
-set wildignore+=*.pyc   " Python byte code
-set wildignore+=*.luac  " Lua byte code
+set wildignore+=*.class     " java
+set wildignore+=*.dll       " windows libraries
+set wildignore+=*.exe       " windows executeables
+set wildignore+=*.o         " object files
+set wildignore+=*.obj       " ?
+set wildignore+=*.pyc       " Python byte code
+set wildignore+=*.luac      " Lua byte code
+set wildignore+=__pycache__ " python stuff
+set wildignore+=*.egg-info  " python stuff
 
 " unsuported archives and images {{{2
 set wildignore+=*.dmg
