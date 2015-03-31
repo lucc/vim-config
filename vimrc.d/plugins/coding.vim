@@ -105,7 +105,6 @@ if s:uname != 'Linux' || has('nvim')
   Plugin 'tpope/vim-fugitive'
 endif
 Plugin 'ludovicchabant/vim-lawrencium'
-Plugin 'mhinz/vim-signify' "{{{3
-let g:signify_disable_by_default = 1
+Plugin 'mhinz/vim-signify'
+"let g:signify_disable_by_default = 1
 " use :SignifyToggle to activate
-
