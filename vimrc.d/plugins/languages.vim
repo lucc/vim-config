@@ -136,7 +136,7 @@ let g:pandoc#command#autoexec_command = "Pandoc pdf"
 let g:pandoc#formatting#mode = 'h'
 
 " plugins: comma separated values (csv) {{{1
-"Plugin 'csv.vim'
+Plugin 'chrisbra/csv.vim'
 "Plugin 'csv-reader'
 "Plugin 'CSVTK'
 "Plugin 'rcsvers.vim'
