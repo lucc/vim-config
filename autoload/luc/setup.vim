@@ -12,12 +12,6 @@ function! luc#setup#viminfo(server)
     " the flag h is to disable hlsearch
     " the flag % is to remember (whole) buffer list
     " the flag n is the name of the viminfo file
-    " load a static viminfo file with a file list
-    rviminfo ~/.config/vim/default-buffer-list.viminfo
-    " set up an argument list to prevent the empty buffer at start up
-    "if argc() == 0
-    "  execute 'args' bufname(2)
-    "endif
   else
     " if we are not running as the server do not use the viminfo file.  We
     " probably only want to edit one file quickly from the command line.
