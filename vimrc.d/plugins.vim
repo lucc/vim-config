@@ -116,6 +116,8 @@ if s:uname != 'Linux' || has('nvim')
   Plugin 'git://notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
 endif
 
+Plugin '~/src/vim-tip'
+
 " finalize {{{1
 call plug#end()
 " fix the runtimepath to conform to XDG a little bit
