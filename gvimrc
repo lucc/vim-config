@@ -1,6 +1,8 @@
 " gvimrc file by luc
-execute 'source' . luc#xdg#config . '/gvimrc.d/font.vim'
-execute 'source' . luc#xdg#config . '/gvimrc.d/autocmds.vim'
-execute 'source' . luc#xdg#config . '/gvimrc.d/maps.vim'
-execute 'source' . luc#xdg#config . '/gvimrc.d/options.vim'
-execute 'source' . luc#xdg#config . '/gvimrc.d/colors.vim'
+runtime gvimrc.d/font.vim
+runtime gvimrc.d/autocmds.vim
+runtime gvimrc.d/maps.vim
+runtime gvimrc.d/options.vim
+runtime gvimrc.d/colors.vim
+
+VimTip
