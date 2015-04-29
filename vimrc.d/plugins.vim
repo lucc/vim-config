@@ -9,6 +9,7 @@ runtime vimrc.d/plugins/coding.vim
 runtime vimrc.d/plugins/editing.vim
 runtime vimrc.d/plugins/completion.vim
 runtime vimrc.d/plugins/languages.vim
+runtime vimrc.d/plugins/colors.vim
 
 " plugins: shell in Vim {{{1
 
@@ -34,45 +35,6 @@ endif
 " to be tested (shell in gvim) {{{2
 Plugin 'https://bitbucket.org/fboender/bexec.git'
 if has('clientserver') | Plugin 'pydave/AsyncCommand' | endif
-
-" plugins: colors {{{1
-" list all colorschemes with: globpath(&rtp,'colors/*.vim')
-
-"Plugin 'ScrollColors'
-"Plugin 'Colour-Sampler-Pack'
-
-Plugin 'altercation/vim-colors-solarized' "{{{3
-let g:solarized_menu = 0
-
-" old unused colors {{{2
-"Plugin 'w0ng/vim-hybrid'
-"Plugin 'chriskempson/vim-tomorrow-theme'
-"Plugin 'nanotech/jellybeans.vim'
-"Plugin 'kalt.vim'
-"Plugin 'kaltex.vim'
-"Plugin 'textmate16.vim'
-""Plugin 'vibrantink'
-"Plugin 'tortex'
-"Plugin 'tomasr/molokai'
-"Plugin 'jonathanfilip/vim-lucius'
-"
-""Plugin 'molokai'
-""Plugin 'pyte'
-""Plugin 'dw_colors'
-""Plugin 'Zenburn'
-""Plugin 'desert-warm-256'
-""Plugin 'tango-desert.vim'
-""Plugin 'desertEx'
-""Plugin 'darkerdesert'
-""Plugin 'DesertedOceanBurnt'
-""Plugin 'desertedocean.vim'
-""Plugin 'desertedocean.vim'
-""Plugin 'desert256.vim'
-""Plugin 'desert.vim'
-""Plugin 'eclm_wombat.vim'
-""Plugin 'wombat256.vim'
-""Plugin 'Wombat'
-""Plugin 'oceandeep'
 
 " plugins: statusline {{{1
 
