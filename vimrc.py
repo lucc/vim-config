@@ -14,7 +14,6 @@ import time
 import timeit
 import vim
 # import sys
-# import webbrowser
 
 # importing private modules
 # sys.path.append(os.path.expanduser('~/src/shell/python'))
@@ -22,7 +21,6 @@ import compilercollection
 import fs
 import git
 import ssh
-# import strings
 import tex
 
 # some wrapper functions to be called from vim

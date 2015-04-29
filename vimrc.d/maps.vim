@@ -35,12 +35,6 @@ if has('gui_macvim')
   noremap  <D-s>      :silent update<CR>
 endif
 
-" open URLs
-python import strings
-python import webbrowser
-nmap <Leader>w :python for url in strings.urls(vim.current.line):
-      \ webbrowser.open(url)<CR>
-
 " easy compilation
 nmap <silent> <F2>        :call luc#save_and_compile()<CR>
 imap <silent> <F2>   <C-O>:call luc#save_and_compile()<CR>

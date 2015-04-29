@@ -199,3 +199,4 @@ let g:vimsyn_folding .= 'p' " fold perl     script
 let g:vimsyn_folding .= 'P' " fold python   script
 let g:vimsyn_folding .= 'r' " fold ruby     script
 let g:vimsyn_folding .= 't' " fold tcl      script
+let g:netrw_browsex_viewer = "xdg-open"
