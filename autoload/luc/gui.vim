@@ -5,7 +5,7 @@ function! s:resize_gui()
   set nofullscreen
   set guioptions-=T
   winpos 0 0
-  let &guifont = s:normalfonts
+  let &guifont = g:luc#gui#normalfonts
   set lines=999
   set columns=85
   "redraw!
@@ -21,10 +21,10 @@ function! luc#gui#toggle_fullscreen()
 endfunction
 
 function! luc#gui#toggle_font_size()
-  if &guifont == s:normalfonts
-    let &guifont = s:bigfonts
-  elseif &guifont == s:bigfonts
-    let &guifont = s:normalfonts
+  if &guifont == g:luc#gui#normalfonts
+    let &guifont = g:luc#gui#bigfonts
+  elseif &guifont == g:luc#gui#bigfonts
+    let &guifont = g:luc#gui#normalfonts
   else
     echoerr 'Can not toggle font.'
   endif

@@ -27,3 +27,9 @@ runtime vimrc.d/colors.vim
 " switch on filetype detection after defining all Bundles
 syntax enable
 filetype plugin indent on
+
+if has('nvim') && has('gui_running')
+ augroup LucNvimGuiInit
+   autocmd VimEnter * source $MYGVIMRC
+ augroup end
+endif

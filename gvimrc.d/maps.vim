@@ -31,3 +31,6 @@ if has("gui_macvim")
   nmap <silent> <SwipeLeft>  :pop<CR>
   nmap <silent> <SwipeRight> :tag<CR>
 endif
+
+nmap <F12>       :call luc#gui#toggle_font_size()<CR>
+imap <F12>  <C-O>:call luc#gui#toggle_font_size()<CR>
