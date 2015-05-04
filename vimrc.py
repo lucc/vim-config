@@ -5,7 +5,6 @@ vimrc.py file by luc.  This file should be loaded from vimrc with :pyfile.
 from __future__ import print_function
 
 # import random.randint
-import bisect
 import os
 import re
 import subprocess
@@ -118,40 +117,6 @@ def open_pdf_or_preview_app(check=False, filename=None, go_back=True):
     if go_back:
         time.sleep(0.5)
         vim.eval('foreground()')
-
-
-if 'man_page_cache' not in dir():
-    man_page_cache = []
-
-
-def _generate_man_paths():
-    paths = subprocess.check_output(['man', '-w']).decode().strip().split(':')
-    for path in paths:
-        for dirpath, dirnames, filenames in os.walk(path):
-            for filename in filenames:
-                # remove some suffixes
-                root, ext = os.path.splitext(filename)
-                if ext == '.gz':
-                    root, ext = os.path.splitext(root)
-                if ext in ['.1', '.2', '.3', '.4', '.5', '.6', '.7', '.8', '.9',
-                           '.3pm']:
-                    yield root
-                # else:
-                #     yield root + ext
-
-
-def _fill_man_path_cache():
-    for item in _generate_man_paths():
-        if item not in man_page_cache:
-            bisect.insort_right(man_page_cache, item)
-
-
-def man_page_topics_for_completion(arg_lead, cmd_line, cursor_position):
-    if man_page_cache == []:
-        threading.Thread(target=_fill_man_path_cache).start()
-    for item in man_page_cache:
-        if item.startswith(arg_lead):
-            yield item
 
 
 def activate_preview():

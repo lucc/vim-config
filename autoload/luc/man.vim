@@ -39,8 +39,9 @@ function! luc#man#open_tab(type, string) "{{{2
   redraw
 endfunction
 
+python import man
 function! luc#man#complete_topics(ArgLead, CmdLine, CursorPos) "{{{2
-  return pyeval('man_page_topics_for_completion("'.a:ArgLead.'","'.a:CmdLine.'","'.a:CursorPos.'")')
+  return pyeval('man.complete("'.a:ArgLead.'","'.a:CmdLine.'","'.a:CursorPos.'")')
 endfunction
 
 function! luc#man#help_tags() "{{{2
