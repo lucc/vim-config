@@ -9,12 +9,9 @@ spell/*
 
 # misc files
 doc/
-#startuptime
-#autoload/test.vim
 
 # generated files
 autoload/manpageview.vim
-default-buffer-list.viminfo
 plugin/cecutil.vim
 plugin/editexisting.vim
 plugin/manpageviewPlugin.vim
