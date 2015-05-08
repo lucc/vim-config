@@ -65,3 +65,7 @@ nmap ß :!clear<CR>
 " https://github.com/javyliu/javy_vimrc/blob/master/_vimrc
 "vmap // :<C-U>execute 'normal /' . luc#get_visual_selection()<CR>
 vmap // y/<C-r>"<CR>
+
+if has('nvim')
+  tnoremap <Esc> <C-\><C-n>
+endif
