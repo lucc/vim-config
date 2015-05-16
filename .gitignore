@@ -13,9 +13,7 @@ doc/
 # generated files
 autoload/manpageview.vim
 plugin/cecutil.vim
-plugin/editexisting.vim
 plugin/manpageviewPlugin.vim
-plugin/matchit.vim
 syntax/info.vim
 syntax/man.vim
 syntax/mangl.vim
