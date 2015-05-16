@@ -22,7 +22,6 @@ endfunction
 
 nmap <silent> S :call LucCallGvimWithMan()<CR>
 
-set noloadplugins
 set mouse=a
 set viminfo=
 set incsearch
@@ -40,3 +39,6 @@ endif
 set rtp+=~/.local/share/vim/bundle/vim-colors-solarized
 set bg=dark
 colorscheme solarized
+
+" fix error with powerline plugin
+let g:powerline_loaded = 1
