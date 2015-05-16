@@ -1,0 +1,17 @@
+global !p
+import subprocess
+author = subprocess.check_output(['git', 'config', '--get', 'user.name']).strip()
+email = subprocess.check_output(['git', 'config', '--get', 'user.email']).strip()
+endglobal
+
+snippet setup "setuptools.setup call for setup.py" b
+setup(
+	name="$1",
+	description="$2",
+	version=${3:".".join(map(str, __version__))},
+	author="${4:`!p snip.rv = author`}",
+	author_email="${5:`!p snip.rv = email`}",
+	packages=${6:find_packages()},
+	entry_points={'console_scripts': ['$7']},
+)
+endsnippet
