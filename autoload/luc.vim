@@ -221,3 +221,26 @@ function! luc#save_and_compile() " {{{1
   python compile()
   call setpos('.', pos)
 endfunction
+
+function! luc#convert_nvim_test() range " {{{1
+  let sep1 = ''
+  for index in range(a:firstline, a:lastline)
+    let line = getline(index)
+    if line =~ '^\s*--'
+      continue
+    endif
+    let sep = substitute(line, '^\s*\(execute\|feed\)(\(''\|\[=*\[\).*', '\2', '')
+    if len(sep1) < len(sep)
+      let sep1 = sep
+    endif
+  endfor
+  if sep1 == "'" || sep1 == ''
+    let sep1 = '[['
+  endif
+  let sep2 = substitute(sep1, '[', ']', 'g')
+  execute a:firstline.','.a:lastline 'g/^\s*execute(/ substitute/\v^(\s*)execute\((''|\[\=*\[)(.*)(''|\]\=*\])\)$/\1  \3/'
+  execute a:firstline.','.a:lastline 'g/^\s*feed(/ substitute/\v^(\s*)feed\((''|\[\=*\[)(.*)\<[Cc][Rr]\>(''|\]\=*\])\)$/\1  \3/'
+  execute a:firstline.','.a:lastline 'g/^\s*--/ substitute/\v^(\s*)--(.*)$/\1  " \2/'
+  execute a:firstline."put! ='    source(".sep1."'"
+  execute a:lastline+1."put ='    ".sep2.")'"
+endfunction
