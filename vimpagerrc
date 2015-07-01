@@ -30,7 +30,9 @@ set smartcase
 
 " this works, but is crazy
 "let vimpager_use_gvim = 1
-let vimpager_passthrough = 1
+if !empty($VIMPAGER_NO_PASSTHROUGH)
+  let vimpager_passthrough = 0
+endif
 
 "if $TERM_PROGRAM == 'iTerm.app'
 if !has('gui_running')
