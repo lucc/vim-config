@@ -106,5 +106,6 @@ if s:uname != 'Linux' || has('nvim')
 endif
 Plugin 'ludovicchabant/vim-lawrencium'
 Plugin 'mhinz/vim-signify'
+let g:sygnify_vcs_list = ['git', 'hg', 'svn']
 "let g:signify_disable_by_default = 1
 " use :SignifyToggle to activate
