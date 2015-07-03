@@ -20,15 +20,8 @@ function! luc#setup#viminfo(server)
 endfunction
 
 function! luc#setup#python()
-  if has('nvim')
-    "runtime! python_setup.vim
-    python import vim
-    pyfile ~/.config/vim/vimrc.py
-  elseif has('python')
-    python import vim
-    "python if vim.VIM_SPECIAL_PATH not in sys.path: sys.path.append(vim.VIM_SPECIAL_PATH)
-    pyfile ~/.config/vim/vimrc.py
-  endif
+  python import vim
+  pyfile ~/.config/vim/vimrc.py
 endfunction
 
 function! luc#setup#vundle()
