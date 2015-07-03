@@ -28,7 +28,7 @@ $1/%: .downloads/%
 endef
 
 web-plugins: manpageview AnsiEsc syntax/applescript.vim doc/tags
-system-plugins: plugin/matchit.vim doc/matchit.txt plugin/editexisting.vim doc/tags
+system-plugins: plugin/matchit.vim doc/matchit.txt doc/tags
 $(foreach url,$(URLS),$(eval $(call download-rules,$(url))))
 $(foreach folder,plugin syntax doc,$(eval $(call system-rules,$(folder))))
 doc/tags: doc/*.txt
