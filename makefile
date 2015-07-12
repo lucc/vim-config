@@ -37,3 +37,7 @@ doc/tags: doc/*.txt
 	mkdir $@
 %: %.gz
 	$(GUNZIP) $<
+clean-excludes:
+	sort -u .git/info/exclude > .exclude.tmp
+	mv -f .exclude.tmp .git/info/exclude
+.PHONY: clean-excludes
