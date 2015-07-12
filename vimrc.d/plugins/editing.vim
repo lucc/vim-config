@@ -2,9 +2,9 @@
 " vim: foldmethod=marker spelllang=en
 let s:uname = system('uname')[:-2]
 " plugins: buffer and file management {{{1
-if s:uname != 'Linux' || has('nvim')
-  Plugin 'kien/ctrlp.vim'
-endif
+"if s:uname != 'Linux' || has('nvim')
+  Plugin 'ctrlpvim/ctrlp.vim'
+"endif
 
 " cache {{{2
 "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
