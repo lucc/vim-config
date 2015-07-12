@@ -9,6 +9,10 @@ if has('python') " -> Youcompleteme {{{1
   let g:ycm_seed_identifiers_with_syntax = 1
   let g:ycm_add_preview_to_completeopt = 1
   let g:ycm_autoclose_preview_window_after_completion = 0
+  let g:ycm_extra_conf_globlist = [
+	\ '~/vcs/nvim/src/.ycm_extra_conf.py',
+	\ '~/vcs/neovim/src/.ycm_extra_conf.py'
+	\ ]
 
   Plugin 'bjoernd/vim-ycm-tex',
 	\ {'name': 'YouCompleteMe/python/ycm/completers/tex'}
