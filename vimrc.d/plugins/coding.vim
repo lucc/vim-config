@@ -39,21 +39,49 @@ if s:uname != 'Linux' || has('nvim')
   Plugin 'rbonvall/snipmate-snippets-bib'
 endif
 
-" plugins: syntastic {{{1
-if s:uname != 'Linux' || has('nvim')
-  Plugin 'scrooloose/syntastic'
+" plugins: compilation and linting {{{1
+let s:use = 'neomake'
+if s:use == 'neomake' " {{{2
+  Plugin 'benekastah/neomake'
+  let g:neomake_verbose = 0
+  let g:neomake_python_enabled_makers = filter([
+	\ 'flake8',
+	\ 'pep8',
+	\ 'pylint',
+	\ 'python',
+	\ ], 'executable(v:val)')
+  "let neomake_open_list = 2 " also preserve cursor position
+  let g:neomake_list_height = 5
+"  let g:neomake_error_sign = {
+"	\ 'text': '✗',
+"	\ 'texthl': 'ErrorMsg',
+"	\ }
+elseif s:use == 'syntastic' "{{{2
+  " plugins: syntastic
+  if s:uname != 'Linux'
+    Plugin 'scrooloose/syntastic'
+  endif
+  let g:syntastic_mode_map = {
+	\ 'mode': 'passive',
+	\ 'active_filetypes': [],
+	\ 'passive_filetypes': []
+	\ }
+  let g:syntastic_check_on_wq = 0
+  let g:syntastic_error_symbol = '✗'
+  let g:syntastic_warning_symbol = '⚠'
+  let g:syntastic_always_populate_loc_list = 1
+  let g:syntastic_auto_loc_list = 1
+  let g:syntastic_loc_list_height = 5
+elseif s:use == 'dispatch' "{{{2
+  " plugins: compiling {{{1
+  if ! has('nvim')
+    Plugin 'tpope/vim-dispatch'
+  endif
+
+  Plugin 'xuhdev/SingleCompile'
+  let g:SingleCompile_asyncrunmode = 'python'
+  let g:SingleCompile_menumode = 0
 endif
-let g:syntastic_mode_map = {
-      \ 'mode': 'passive',
-      \ 'active_filetypes': [],
-      \ 'passive_filetypes': []
-      \ }
-let g:syntastic_check_on_wq = 0
-let g:syntastic_error_symbol = '✗'
-let g:syntastic_warning_symbol = '⚠'
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_loc_list_height = 5
 
 " plugins: tags {{{1
 " Easytags will automatically create and update tags files and set the 'tags'
@@ -92,12 +120,6 @@ let g:manpageview_winopen = 'reuse'
 "  autocmd FileType c,cpp set cmdheight=2
 "augroup END
 
-" plugins: compiling {{{1
-Plugin 'tpope/vim-dispatch'
-
-Plugin 'xuhdev/SingleCompile'
-let g:SingleCompile_asyncrunmode = 'python'
-let g:SingleCompile_menumode = 0
 
 " plugins: vcs stuff {{{1
 "Plugin 'tpope/vim-git'

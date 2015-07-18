@@ -149,6 +149,7 @@ Plugin 'chrisbra/csv.vim'
 "Plugin 'Python-Syntax-Folding'
 Plugin 'klen/python-mode'
 let g:pymode_rope = 0
+let g:pymode_lint = 0
 
 Plugin 'vim-autopep8'
 " svn checkout http://vimpdb.googlecode.com/svn/trunk/ vimpdb-read-only
