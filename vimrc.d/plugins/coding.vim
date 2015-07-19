@@ -52,10 +52,11 @@ if s:use == 'neomake' " {{{2
 	\ ], 'executable(v:val)')
   "let neomake_open_list = 2 " also preserve cursor position
   let g:neomake_list_height = 5
-"  let g:neomake_error_sign = {
-"	\ 'text': '✗',
-"	\ 'texthl': 'ErrorMsg',
-"	\ }
+  let g:neomake_nvimluatest_maker = {
+	\ 'exe': 'make',
+	\ 'args': ['functionaltest', 'TEST_FILE=%:p'],
+	\ 'errorformat': '%f:%l: Expected objects to be the same.',
+	\ }
 elseif s:use == 'syntastic' "{{{2
   " plugins: syntastic
   if s:uname != 'Linux'
@@ -73,7 +74,7 @@ elseif s:use == 'syntastic' "{{{2
   let g:syntastic_auto_loc_list = 1
   let g:syntastic_loc_list_height = 5
 elseif s:use == 'dispatch' "{{{2
-  " plugins: compiling {{{1
+  " plugins: compiling {{{2
   if ! has('nvim')
     Plugin 'tpope/vim-dispatch'
   endif

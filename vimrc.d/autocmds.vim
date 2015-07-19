@@ -16,4 +16,5 @@ augroup END
 augroup LucNeoMake "{{{1
   autocmd!
   autocmd BufWritePost * Neomake
+  autocmd BufWritePost ~/vcs/nvim/test/functional/**/*_spec.lua Neomake! nvimluatest
 augroup END
