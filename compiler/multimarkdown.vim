@@ -1,5 +1,5 @@
 " Vim compiler file
-" Compiler:    markdown
+" Compiler:    multimarkdown
 " Maintainer:  luc
 " Last Change: 2015-07-21
 
@@ -10,7 +10,7 @@ endif
 let s:keepcpo = &cpo
 set cpo&vim
 
-CompilerSet makeprg=TODO
+CompilerSet makeprg=multimarkdown\ --full\ --smart\ %\ --output=%.html
 CompilerSet errorformat=TODO
 
 let &cpo = s:keepcpo

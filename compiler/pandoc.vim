@@ -1,5 +1,5 @@
 " Vim compiler file
-" Compiler:    markdown
+" Compiler:    pandoc
 " Maintainer:  luc
 " Last Change: 2015-07-21
 
