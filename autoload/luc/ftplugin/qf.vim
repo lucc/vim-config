@@ -4,12 +4,10 @@ function! luc#ftplugin#qf#open()
 	\ w:quickfix_title == ":        lgetexpr ''"
     .ll
     lclose
-  elseif 0 " no quickfix things up till now
+  else
     .cc
     cclose
-  else
-    echoerr "Unknown quickfix type: ".w:quickfix_title
   endif
-  %foldclose!
+  silent %foldclose!
   silent! .foldopen!
 endfunction

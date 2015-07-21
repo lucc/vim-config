@@ -53,6 +53,11 @@ if s:use == 'neomake' " {{{2
   "let neomake_open_list = 2 " also preserve cursor position
   let g:neomake_list_height = 5
   let g:neomake_nvimluatest_maker = {
+	\ 'exe': 'sh',
+	\ 'args': ['-c', 'make functionaltest TEST_FILE=%:p 2>/dev/null | ~/.config/vim/bin/error-filter-for-nvim-lua-tests.sh'],
+	\ 'errorformat': '%f:%l: Expected objects to be the same.',
+	\ }
+  let g:neomake_luctest_maker = {
 	\ 'exe': 'make',
 	\ 'args': ['functionaltest', 'TEST_FILE=%:p'],
 	\ 'errorformat': '%f:%l: Expected objects to be the same.',
