@@ -17,10 +17,10 @@ endif
 nmap <silent> S :call luc#man#open_this_in_gvim()<CR>
 
 set mouse=a
-set viminfo=
 set incsearch
 set ignorecase
 set smartcase
+call luc#setup#viminfo('pager')
 
 " this works, but is crazy
 "let vimpager_use_gvim = 1

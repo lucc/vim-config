@@ -14,7 +14,7 @@ call luc#setup#python()
 let mapleader = ','
 
 " setup for server vim
-call luc#setup#viminfo(!luc#server#running())
+call luc#setup#viminfo(luc#server#running() ? 'client' : 'server')
 
 " source subfiles
 runtime vimrc.d/options.vim

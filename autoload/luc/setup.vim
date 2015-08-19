@@ -1,21 +1,23 @@
 " some generic functions to set up vim
 
-function! luc#setup#viminfo(server)
-  if a:server
-    " options: viminfo
-    " default: '100,<50,s10,h
+function! luc#setup#viminfo(type)
+  " default: '100,<50,s10,h
+  " the flag ' is for filenames for marks
+  " the flag < is the nummber of lines saved per register
+  " the flag s is the max size saved for registers in kb
+  " the flag h is to disable hlsearch
+  " the flag % is to remember (whole) buffer list
+  " the flag n is the name of the viminfo file
+  if a:type == 'server'
     set viminfo='100,<50,s10,h,%
-    let &viminfo .= ',n' . g:luc#xdg#cache . '/viminfo'
-    " the flag ' is for filenames for marks
-    " the flag < is the nummber of lines saved per register
-    " the flag s is the max size saved for registers in kb
-    " the flag h is to disable hlsearch
-    " the flag % is to remember (whole) buffer list
-    " the flag n is the name of the viminfo file
-  else
+    let &viminfo .= ',n' . g:luc#xdg#cache . '/viminfo/main.viminfo'
+  elseif a:type == 'client'
     " if we are not running as the server do not use the viminfo file.  We
     " probably only want to edit one file quickly from the command line.
     set viminfo=
+  elseif a:type == 'pager'
+    set viminfo='0,<50,s10,h
+    let &viminfo .= ',n' . g:luc#xdg#cache . '/viminfo/pager.viminfo'
   endif
 endfunction
 
