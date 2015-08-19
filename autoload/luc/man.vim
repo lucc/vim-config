@@ -51,3 +51,22 @@ function! luc#man#help_tags() "{{{2
     endif
   endfor
 endfunction
+
+function luc#man#open_this_in_gvim()
+  let l:count = index(g:vimpager_ptree, 'man')
+  if l:count == -1
+    echohl ErrorMsg
+    echomsg 'Are you sure you are viewing a manpage? I am not.'
+    echohl None
+    return
+  endif
+  let l:count = len(g:vimpager_ptree) - l:count
+  let pid = getpid()
+  while l:count != 0
+    let pid = system('ps -o ppid= '. pid)[0:-2]
+    let l:count -= 1
+  endwhile
+  let arg = split(system('ps -o args= ' . pid))[-1]
+  call system('transparent-gvim.sh --man ' . arg . '&')
+  quit
+endfunction
