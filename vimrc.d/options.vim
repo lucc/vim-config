@@ -1,9 +1,22 @@
 " options setup by luc
 " vim: foldmethod=marker spelllang=en
 
-" special options {{{1
-" don't be vi compatible, this has to be first b/c it changes other options
-set nocompatible
+" Some options where removed in neovim or have different default values. For
+" vim we still need to set them.
+if !has('nvim') "{{{1
+  " don't be vi compatible, this has to be first b/c it changes other options
+  set nocompatible
+  set autoindent
+  " allow backspacing over everything in insert mode
+  set backspace=indent,eol,start
+  set encoding=utf-8
+  set mouse=a
+  " highlight the last used search pattern.
+  set hlsearch
+  " incremental search
+  set incsearch
+  set wildmenu
+endif
 
 " Don't load menus.  This has to happen before 'syntax on' and 'filetype ...'
 set guioptions+=M
@@ -11,9 +24,6 @@ set guioptions-=m
 
 " basic {{{1
 
-" allow backspacing over everything in insert mode
-set autoindent
-set backspace=indent,eol,start
 set backup
 execute 'set backupdir=' . luc#xdg#cache . '/backup'
 "let &backupskip .= ',' . expand('$HOME') . '/.*/**/secure/*'
@@ -27,10 +37,8 @@ set number
 set scrolloff=2
 set shortmess=
 set nostartofline
-set encoding=utf-8
 set switchbuf=useopen
 set colorcolumn=+1
-set mouse=a
 set showcmd
 set splitright
 set virtualedit=block
@@ -47,7 +55,6 @@ set directory+=/tmp
 
 " cpoptions {{{1
 set cpoptions+=$ " don't redraw the display while executing c, s, ... cmomands
-set cpoptions+={ " let { and } stop on a "{" in the first column
 
 " dictionary and complete {{{1
 
@@ -71,10 +78,6 @@ endif
 " searching {{{1
 set ignorecase
 set smartcase
-" highlight the last used search pattern.
-set hlsearch
-" incremental search
-set incsearch
 
 " spellchecking {{{1
 
@@ -124,7 +127,6 @@ set formatoptions+=l " do not break lines which are already long
 "set tabline+=%=%{strftime('%a\ %F\ %R')}
 
 " wildmenu and wildignore {{{1
-set wildmenu
 set wildmode=longest:full,full
 
 " version control {{{2
