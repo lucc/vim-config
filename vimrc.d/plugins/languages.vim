@@ -148,7 +148,9 @@ Plugin 'chrisbra/csv.vim'
 "Plugin 'sunsol/vim_python_fold_compact'
 "Plugin 'Python-Syntax-Folding'
 Plugin 'klen/python-mode'
-let g:pymode_python = 'python3'
+if has('nvim')
+  let g:pymode_python = 'python3'
+endif
 let g:pymode_rope = 0
 let g:pymode_lint = 0
 
