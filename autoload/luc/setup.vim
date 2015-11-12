@@ -10,20 +10,19 @@ function! luc#setup#viminfo(type)
   " the flag n is the name of the viminfo file
   if a:type == 'server'
     set viminfo='100,<50,s10,h,%
-    let &viminfo .= ',n' . g:luc#xdg#cache . '/viminfo/main.viminfo'
   elseif a:type == 'client'
     " if we are not running as the server do not use the viminfo file.  We
     " probably only want to edit one file quickly from the command line.
     set viminfo=
   elseif a:type == 'pager'
     set viminfo='0,<50,s10,h
-    let &viminfo .= ',n' . g:luc#xdg#cache . '/viminfo/pager.viminfo'
+    let &viminfo .= ',n' . g:luc#xdg#cache . '/viminfo/pager.shada'
   endif
 endfunction
 
 function! luc#setup#python()
   python import vim
-  pyfile ~/.config/vim/vimrc.py
+  pyfile ~/.config/nvim/vimrc.py
 endfunction
 
 function! luc#setup#vundle()

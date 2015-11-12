@@ -25,7 +25,7 @@ set guioptions-=m
 " basic {{{1
 
 set backup
-execute 'set backupdir=' . luc#xdg#cache . '/backup'
+set backupdir-=.
 "let &backupskip .= ',' . expand('$HOME') . '/.*/**/secure/*'
 set hidden
 set history=2000
@@ -48,8 +48,6 @@ set sessionoptions+=resize,winpos
 " use /bin/sh as shell to have a shell with a simple prompt TODO fix zsh
 " prompt
 set shell=/bin/sh
-" save the swap files in a xdg dir
-execute 'set directory=' . luc#xdg#cache . '/swap'
 set directory+=~/tmp
 set directory+=/tmp
 

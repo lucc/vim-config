@@ -82,5 +82,3 @@ Plugin '~/src/vim-tip'
 
 " finalize {{{1
 call plug#end()
-" fix the runtimepath to conform to XDG a little bit
-call luc#xdg#runtimepath()

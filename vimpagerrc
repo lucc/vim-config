@@ -1,10 +1,6 @@
 " ~/.vimpagerrc file by luc
 " vim: ft=vim
 
-" Fix the runtimepath to conform to XDG a little bit.
-set runtimepath+=~/.config/vim
-call luc#xdg#runtimepath()
-
 " Set a flag wheather we are viewing a man page.
 let s:man = index(g:vimpager_ptree, 'man') != -1
 
