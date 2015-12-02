@@ -36,7 +36,7 @@ else             " -> neocomplete and neocomplcache {{{1
 
   " <TAB> completion.
   inoremap <expr> <TAB>    pumvisible() ? '<C-n>' : '<TAB>'
-  inoremap <expr> <S-TAB>  pumvisible() ? '<C-n>' : '<S-TAB>'
+  inoremap <expr> <S-TAB>  pumvisible() ? '<C-p>' : '<S-TAB>'
 
   if has('lua') " -> neocomplete {{{2
     Plugin 'Shougo/neocomplete.vim'
