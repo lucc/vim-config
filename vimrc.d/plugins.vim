@@ -33,7 +33,8 @@ if has('gui_macvim')
 endif
 
 " to be tested (shell in gvim) {{{2
-Plugin 'https://bitbucket.org/fboender/bexec.git'
+Plugin 'fboender/bexec'
+let g:bexec_splitdir = 'ver'
 if has('clientserver') | Plugin 'pydave/AsyncCommand' | endif
 
 " plugins: statusline {{{1
