@@ -1,8 +1,8 @@
-" gvimrc file by luc
-runtime gvimrc.d/font.vim
-runtime gvimrc.d/autocmds.vim
-runtime gvimrc.d/maps.vim
-runtime gvimrc.d/options.vim
-runtime gvimrc.d/colors.vim
+" ginit file by luc
+runtime ginit.d/font.vim
+runtime ginit.d/autocmds.vim
+runtime ginit.d/maps.vim
+runtime ginit.d/options.vim
+runtime ginit.d/colors.vim
 
 VimTip

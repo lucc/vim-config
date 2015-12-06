@@ -5,11 +5,11 @@ let s:uname = system('uname')[:-2]
 
 call luc#setup#vim_plug()
 
-runtime vimrc.d/plugins/coding.vim
-runtime vimrc.d/plugins/editing.vim
-runtime vimrc.d/plugins/completion.vim
-runtime vimrc.d/plugins/languages.vim
-runtime vimrc.d/plugins/colors.vim
+runtime init.d/plugins/coding.vim
+runtime init.d/plugins/editing.vim
+runtime init.d/plugins/completion.vim
+runtime init.d/plugins/languages.vim
+runtime init.d/plugins/colors.vim
 
 " plugins: shell in Vim {{{1
 

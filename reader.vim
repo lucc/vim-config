@@ -8,7 +8,7 @@ set laststatus=0
 set noloadplugins
 call luc#xdg#runtimepath()
 call luc#setup#vim_plug()
-runtime vimrc.d/plugins/colors.vim
+runtime init.d/plugins/colors.vim
 call plug#end()
 call luc#xdg#runtimepath()
 set background=light

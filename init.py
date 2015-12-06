@@ -1,5 +1,5 @@
 '''
-vimrc.py file by luc.  This file should be loaded from vimrc with :pyfile.
+init.py file by luc.  This file should be loaded from init.vim with :pyfile.
 '''
 
 from __future__ import print_function

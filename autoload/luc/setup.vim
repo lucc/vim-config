@@ -22,7 +22,7 @@ endfunction
 
 function! luc#setup#python()
   python import vim
-  pyfile ~/.config/nvim/vimrc.py
+  pyfile ~/.config/nvim/init.py
 endfunction
 
 function! luc#setup#vundle()

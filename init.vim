@@ -1,4 +1,4 @@
-" vimrc file by luc
+" init.vim file by luc
 " vim: spelllang=en
 
 " set up python
@@ -11,12 +11,12 @@ let mapleader = ','
 call luc#setup#viminfo(luc#server#running() ? 'client' : 'server')
 
 " source subfiles
-runtime vimrc.d/options.vim
-runtime vimrc.d/autocmds.vim
-runtime vimrc.d/maps.vim
-runtime vimrc.d/commands.vim
-runtime vimrc.d/plugins.vim
-runtime vimrc.d/colors.vim
+runtime init.d/options.vim
+runtime init.d/autocmds.vim
+runtime init.d/maps.vim
+runtime init.d/commands.vim
+runtime init.d/plugins.vim
+runtime init.d/colors.vim
 
 " switch on filetype detection after defining all Bundles
 syntax enable

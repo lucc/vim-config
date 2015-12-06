@@ -12,5 +12,5 @@ function! grepft#search(query)
   execute command
 endfunction
 
-" To use, define a command like this in your .vimrc (not here)
+" To use, define a command like this in your init.vim (not here)
 "command -nargs=1 Hans call grepft#search(<q-args>)
