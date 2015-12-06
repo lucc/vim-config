@@ -153,6 +153,10 @@ if has('nvim')
 endif
 let g:pymode_rope = 0
 let g:pymode_lint = 0
+"let g:pymode_folding = 0
+"let g:pymode_virtualenv = 0
+"let g:pymode_syntax = 0
+let g:pymode_indent = 0
 
 Plugin 'vim-autopep8'
 " svn checkout http://vimpdb.googlecode.com/svn/trunk/ vimpdb-read-only
