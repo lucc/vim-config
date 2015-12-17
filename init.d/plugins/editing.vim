@@ -50,10 +50,10 @@ if has('gui_macvim')
 endif
 
 " Use the compiled C-version for speed improvements "{{{2
-"if has('python')
-"  Plugin 'JazzCore/ctrlp-cmatcher'
-"  let g:ctrlp_match_func = {'match' : 'matcher#cmatch'}
-"endif
+if has('python')
+  Plugin 'JazzCore/ctrlp-cmatcher'
+  let g:ctrlp_match_func = {'match' : 'matcher#cmatch'}
+endif
 
 " plugins: parenthesis, quotes, alignment {{{1
 
