@@ -1,26 +1,30 @@
 " vim: foldmethod=marker spelllang=en
 " plugins: completion
-if has('python') " -> Youcompleteme {{{1
-  Plugin 'Valloric/YouCompleteMe'
-  let g:ycm_filetype_blacklist = {}
-  let g:ycm_complete_in_comments = 1
-  let g:ycm_collect_identifiers_from_comments_and_strings = 1
-  let g:ycm_collect_identifiers_from_tags_files = 1
-  let g:ycm_seed_identifiers_with_syntax = 1
-  let g:ycm_add_preview_to_completeopt = 1
-  let g:ycm_autoclose_preview_window_after_completion = 0
-  let g:ycm_extra_conf_globlist = [
-	\ '~/vcs/nvim/src/.ycm_extra_conf.py',
-	\ '~/vcs/neovim/src/.ycm_extra_conf.py'
-	\ ]
+if has('python') "{{{1
+  "if has('nvim') " -> Deoplete.vim {{{2
+  "  Plugin 'Shougo/deoplete.nvim'
+  "  let g:deoplete#enable_at_startup = 1
+  "else " -> Youcompleteme {{{2
+    Plugin 'Valloric/YouCompleteMe'
+    let g:ycm_filetype_blacklist = {}
+    let g:ycm_complete_in_comments = 1
+    let g:ycm_collect_identifiers_from_comments_and_strings = 1
+    let g:ycm_collect_identifiers_from_tags_files = 1
+    let g:ycm_seed_identifiers_with_syntax = 1
+    let g:ycm_add_preview_to_completeopt = 1
+    let g:ycm_autoclose_preview_window_after_completion = 0
+    let g:ycm_extra_conf_globlist = [
+	  \ '~/vcs/nvim/src/.ycm_extra_conf.py',
+	  \ '~/vcs/neovim/src/.ycm_extra_conf.py'
+	  \ ]
 
-  Plugin 'bjoernd/vim-ycm-tex',
-	\ {'name': 'YouCompleteMe/python/ycm/completers/tex'}
-  let g:ycm_semantic_triggers = {'tex': ['\ref{','\cite{']}
+    Plugin 'bjoernd/vim-ycm-tex',
+	  \ {'name': 'YouCompleteMe/python/ycm/completers/tex'}
+    let g:ycm_semantic_triggers = {'tex': ['\ref{','\cite{']}
 
-  "Plugin 'c9s/vimomni.vim'
-  "Plugin 'tek/vim-ycm-vim'
-
+    "Plugin 'c9s/vimomni.vim'
+    "Plugin 'tek/vim-ycm-vim'
+  "endif
 else             " -> neocomplete and neocomplcache {{{1
   " settings which are uniform for both neocomplete and neocomplcache
   "Plugin 'Shougo/vimproc' "only needed if not loaded elsewhere
