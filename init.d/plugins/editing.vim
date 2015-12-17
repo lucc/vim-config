@@ -55,6 +55,10 @@ if has('python')
   let g:ctrlp_match_func = {'match' : 'matcher#cmatch'}
 endif
 
+" {{{1 fzf
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+
 " plugins: parenthesis, quotes, alignment {{{1
 
 Plugin 'Raimondi/delimitMate'
