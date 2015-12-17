@@ -108,7 +108,9 @@ let g:easytags_languages.latex = {}
 let g:easytags_languages.markdown = {}
 
 " plugins: man pages {{{1
-"Plugin 'info.vim'
+"Plugin 'info.vim' "{{{2
+
+Plugin 'vim-utils/vim-man' "{{{2
 
 "Plugin 'ManPageView' "{{{2
 " TODO
@@ -116,7 +118,7 @@ let g:easytags_languages.markdown = {}
 " manually installed: open above url and execute :UseVimaball
 " display manpages in a vertical split (other options 'only', 'hsplit',
 " 'vsplit', 'hsplit=', 'vsplit=', 'reuse')
-let g:manpageview_winopen = 'reuse'
+"let g:manpageview_winopen = 'reuse'
 
 " hints_man {{{2
 " http://www.vim.org/scripts/script.php?script_id=1825
@@ -125,7 +127,6 @@ let g:manpageview_winopen = 'reuse'
 "  autocmd!
 "  autocmd FileType c,cpp set cmdheight=2
 "augroup END
-
 
 " plugins: vcs stuff {{{1
 "Plugin 'tpope/vim-git'
