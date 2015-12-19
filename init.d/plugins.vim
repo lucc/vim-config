@@ -56,11 +56,11 @@ set noshowmode   " do not display the current mode in the command line
 set laststatus=2 " always display the statusline
 
 " plugins: searching {{{1
-"if executable('ag')
-  Plugin 'rking/ag.vim'
-"elseif executable('ack')
-  Plugin 'mileszs/ack.vim'
-"endif
+"Plugin 'rking/ag.vim'
+"Plugin 'mileszs/ack.vim'
+Plugin 'mhinz/vim-grepper' "{{{2
+command! -nargs=* -complete=file GG Grepper! -tool git -query <args>
+command! -nargs=* -complete=file Ag Grepper! -tool ag -query <args>
 
 " plugins: unsorted {{{1
 Plugin 'jamessan/vim-gnupg'
