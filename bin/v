@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+#nvim -c "call luc#findinit#start('"${*//\'/\'\'}"')"
+LUC_FINDINIT_DEFAULT_INPUT=${(j::)*} nvim -c "call luc#findinit#from_env()"
