@@ -13,23 +13,25 @@ runtime init.d/plugins/colors.vim
 
 " plugins: shell in Vim {{{1
 
-Plugin 'ervandew/screen'
-let g:ScreenImpl = 'Tmux'
+if !has('nvim')
+  Plugin 'ervandew/screen'
+  let g:ScreenImpl = 'Tmux'
 
-if has('gui_macvim')
+  if has('gui_macvim')
 
-  let g:ScreenShellTerminal = 'iTerm.app'
+    let g:ScreenShellTerminal = 'iTerm.app'
 
-  " notes
-  Plugin 'Conque-Shell'
-  "Plugin 'vimsh.tar.gz'
-  "Plugin 'xolox/vim-shell'
-  "Plugin 'vimux'
+    " notes
+    Plugin 'Conque-Shell'
+    "Plugin 'vimsh.tar.gz'
+    "Plugin 'xolox/vim-shell'
+    "Plugin 'vimux'
 
-  Plugin 'Shougo/vimshell.vim'
-  Plugin 'Shougo/vimproc'
-  "map <D-F11> :VimShellPop<cr>
-  let g:vimshell_temporary_directory = expand('~/.cache/vim/vimshell')
+    Plugin 'Shougo/vimshell.vim'
+    Plugin 'Shougo/vimproc'
+    "map <D-F11> :VimShellPop<cr>
+    let g:vimshell_temporary_directory = expand('~/.cache/vim/vimshell')
+  endif
 endif
 
 " to be tested (shell in gvim) {{{2
