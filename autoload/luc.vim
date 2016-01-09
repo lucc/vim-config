@@ -244,3 +244,13 @@ function! luc#convert_nvim_test() range " {{{1
   execute a:firstline."put! ='    source(".sep1."'"
   execute a:lastline+1."put ='    ".sep2.")'"
 endfunction
+
+function! luc#mail_format_quote_header() range
+  " Formate the header of a quote block in an email message.
+  "
+  " : TODO
+  " returns: TODO
+  execute a:firstline . ',' . a:lastline . 'substitute/^\(> *\)*//'
+  execute a:firstline . ',' . a:lastline . 'global/^-----Ursprüngliche Nachricht-----$/delete'
+  " TODO find header fields ...
+endfunction
