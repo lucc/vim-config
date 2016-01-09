@@ -56,8 +56,9 @@ if has('python')
 endif
 
 " {{{1 fzf
-"Plug 'junegunn/fzf'
-"Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'wincent/command-t'
 
 " plugins: parenthesis, quotes, alignment {{{1
 
