@@ -17,6 +17,7 @@ if has('python') "{{{1
 	  \ '~/vcs/nvim/src/.ycm_extra_conf.py',
 	  \ '~/vcs/neovim/src/.ycm_extra_conf.py'
 	  \ ]
+    let g:ycm_autoclose_preview_window_after_completion = 1
 
     Plugin 'bjoernd/vim-ycm-tex',
 	  \ {'name': 'YouCompleteMe/python/ycm/completers/tex'}
