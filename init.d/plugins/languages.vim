@@ -23,7 +23,7 @@ let g:tex_flavor = 'latex'
 "Plugin 'auctex.vim'
 
 if s:uname != 'Linux' || has('nvim')
-  Plugin 'git://git.code.sf.net/p/vim-latex/vim-latex' "{{{2
+  Plugin 'vim-latex/vim-latex' "{{{2
 endif
 "Plugin 'LaTeX-Help' " is included in vim-latex
 let g:ngerman_package_file = 1
