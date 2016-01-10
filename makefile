@@ -27,6 +27,8 @@ $1/%: .downloads/%
 	echo $$@ >> .git/info/exclude
 endef
 
+$(patsubst %,$(HOME)/.local/bin/%,v e): $(HOME)/.local/%: %
+	ln -fns $(PWD)/$< $@
 web-plugins: manpageview AnsiEsc syntax/applescript.vim doc/tags
 system-plugins: plugin/matchit.vim doc/matchit.txt doc/tags
 $(foreach url,$(URLS),$(eval $(call download-rules,$(url))))
