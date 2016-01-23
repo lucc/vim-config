@@ -63,8 +63,8 @@ set laststatus=2 " always display the statusline
 "Plugin 'rking/ag.vim'
 "Plugin 'mileszs/ack.vim'
 Plugin 'mhinz/vim-grepper' "{{{2
-command! -nargs=* -complete=file GG Grepper! -tool git -query <args>
-command! -nargs=* -complete=file Ag Grepper! -tool ag -query <args>
+command! -nargs=* -complete=file GG Grepper -jump -tool git -query <args>
+command! -nargs=* -complete=file Ag Grepper -jump -tool ag -query <args>
 
 " plugins: unsorted {{{1
 Plugin 'jamessan/vim-gnupg'
