@@ -1,6 +1,7 @@
 # makefile for some vim config files, by luc
 
-VIM = vim -T dumb
+#VIM = vim -T dumb
+VIM = nvim
 GUNZIP = gunzip --keep --force
 WGET = wget -nv --continue
 VIMRUNTIME := /usr/share/vim/vim74
