@@ -169,25 +169,25 @@ function! s:select_font(big) "{{{1
   " TODO
 endfunction
 
-"function! luc#prefix() "{{{1
-"  let sel_save = &selection
-"  let saved_register = getreg('@', 1, 1)
-"  let saved_register_type = getregtype('@')
-"  let &selection = "inclusive"
-"  let minindent = 100000000
-"  for linenr in range(line("'<"), line("'>"))
-"    let minindent = min(minindent, indent(linenr))
-"  endfor
-"  for count in range(line("'>") - line("'<"))
-"    call append(thelist, text)
-"  endfor
-"  call setreg('@', thelist, 'b')
-"  call setpos([line("'<"), minindent])
-"  execute "normal <C-V>"
-"  call setpos([line("'>"), minindent])
-"  normal p
-"  call setreg('@', saved_register, saved_register_type)
-"endfunction
+function! luc#prefix_old() "{{{1
+  let sel_save = &selection
+  let saved_register = getreg('@', 1, 1)
+  let saved_register_type = getregtype('@')
+  let &selection = "inclusive"
+  let minindent = 100000000
+  for linenr in range(line("'<"), line("'>"))
+    let minindent = min(minindent, indent(linenr))
+  endfor
+  for count in range(line("'>") - line("'<"))
+    call append(thelist, text)
+  endfor
+  call setreg('@', thelist, 'b')
+  call setpos([line("'<"), minindent])
+  execute "normal <C-V>"
+  call setpos([line("'>"), minindent])
+  normal p
+  call setreg('@', saved_register, saved_register_type)
+endfunction
 
 function! luc#prefix(type) range "{{{1
   if a:type == ""
