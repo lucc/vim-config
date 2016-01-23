@@ -253,3 +253,31 @@ function! luc#mail_format_quote_header() range
   execute a:firstline . ',' . a:lastline . 'global/^-----Ursprüngliche Nachricht-----$/delete'
   " TODO find header fields ...
 endfunction
+
+function! luc#prepare_vcard_null_lines_for_merge() range
+  " documentation
+  "
+  " : TODO
+  " returns: TODO
+  if a:firstline < a:lastline
+    execute a:firstline . ',' . (a:lastline - 1) . 'substitute/END:VCARD$//'
+    execute (a:firstline + 1) . ',' . a:lastline . 'substitute/^BEGIN:VCARD//'
+  endif
+  execute a:firstline . ',' . a:lastline 'substitute/\%x00/\r/g'
+  execute 'set undolevels=' . &undolevels
+  execute a:firstline + 1 . ',/^END:VCARD$/-1 sort u'
+  execute a:firstline + 1 . ',/^END:VCARD$/-1 global /^$/ delete'
+  execute a:firstline + 1 . ',/^END:VCARD$/-1 global /^VERSION:/ move' . a:firstline
+  noh
+  redraw
+endfunction
+
+function! luc#vcard2null_line() range
+  "
+  "
+  " : TODO
+  " returns: TODO
+  execute a:firstline . ',' . a:lastline . 'substitute/\n\([A-Z]\)/\n\1/g'
+  noh
+  redraw
+endfunction
