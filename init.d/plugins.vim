@@ -77,7 +77,6 @@ Plugin 'ZoomWin'
 Plugin 'AndrewRadev/linediff.vim'
 if has('python')
   Plugin 'guyzmo/notmuch-abook'
-  let g:notmuchconfig = "~/.config/notmuch/config"
 endif
 if s:uname != 'Linux' || has('nvim')
   Plugin 'git://notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
