@@ -1,4 +1,3 @@
-" vim: fdm=marker
 
 function! luc#remote_editor(mail) "{{{1
   " a function to be called by a client who wishes to use a vim server as an
@@ -113,9 +112,9 @@ function! luc#find_next_spell_error() "{{{1
   "endif
 endfunction
 
-" see:
-"http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
 function! luc#get_visual_selection() "{{{1
+  " see:
+  "http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
   let saved_register = @@
   let current = getpos('.')
   call setpos('.', getpos("'<"))
