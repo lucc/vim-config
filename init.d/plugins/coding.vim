@@ -23,7 +23,7 @@ if has('python')
     let g:UltiSnipsJumpBackwardTrigger = '<A-S-Tab>'
     let g:UltiSnipsListSnippets = '<SID>NOT_DEFINED'
   endif
-  let g:UltiSnipsSnippetsDir = luc#xdg#config.'/UltiSnips'
+  let g:UltiSnipsSnippetsDir = fnamemodify($MYVIMRC, ':h').'/UltiSnips'
 else
   " snipmate and dependencies
   Plugin 'MarcWeber/vim-addon-mw-utils'

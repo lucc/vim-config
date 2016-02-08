@@ -28,7 +28,7 @@ endfunction
 function! luc#setup#vundle()
   " https://github.com/gmarik/Vundle.vim
   filetype off
-  let path = expand(g:luc#xdg#data . '/bundle')
+  let path = expand(g:luc#xdg#data . '/plugins')
   execute 'set runtimepath+=' . path . '/Vundle.vim'
   call vundle#begin(path)
   Plugin 'gmarik/Vundle.vim'
@@ -36,7 +36,7 @@ endfunction
 
 function! luc#setup#vim_plug()
   " https://github.com/junegunn/vim-plug
-  let path = expand(g:luc#xdg#data . '/bundle')
+  let path = expand(g:luc#xdg#data . '/plugins')
   "execute 'set runtimepath+=' . path . '/vim-plug'
   execute 'source' path . '/vim-plug/plug.vim'
   call plug#begin(path)
