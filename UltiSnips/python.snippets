@@ -15,3 +15,22 @@ setup(
 	entry_points={'console_scripts': ['$7']},
 )
 endsnippet
+
+snippet prop "a property attribut" b
+@property
+def ${1:attribute}(self):
+	"""${2:TODO: Docstring for $1.}"""
+	return self._$1
+
+@$1.setter
+def $1(self, value):
+	"""${3:TODO Docstring for setter of $1.}
+
+	:value: TODO
+	"""
+	self._$1 = value
+
+@$1.deleter
+def $1(self):
+	del self._$1
+endsnippet
