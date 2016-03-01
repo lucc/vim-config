@@ -1,14 +1,14 @@
 " general plugins for editing
 " vim: foldmethod=marker spelllang=en
 let s:uname = system('uname')[:-2]
+
 " plugins: buffer and file management {{{1
-"if s:uname != 'Linux' || has('nvim')
-  Plugin 'ctrlpvim/ctrlp.vim'
-"endif
+Plugin 'ctrlpvim/ctrlp.vim'
 
 " cache {{{2
 "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
 let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_mruf_max = 1000
 
 " ignore/include/exclude patterns {{{2
 let g:ctrlp_show_hidden = 1
