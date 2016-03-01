@@ -5,6 +5,7 @@ let s:uname = system('uname')[:-2]
 Plugin 'applescript.vim'
 Plugin 'icalendar.vim'
 Plugin 'aliva/vim-fish'
+Plugin 'VCard-syntax'
 
 " plugins: LaTeX {{{1
 
