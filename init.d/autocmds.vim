@@ -1,19 +1,17 @@
 " user defined autocommands by luc
 
-augroup LucRemoveWhiteSpaceAtEOL "{{{1
+augroup LucRemoveWhiteSpaceAtEOL
   autocmd!
   autocmd BufWrite *
-	\ let s:position = getpos('.')          |
-	\ silent keepjumps %substitute/\s\+$//e |
-	\ call setpos('.', s:position)          |
+	\ if ! (expand('<afile>') =~? '.*\.patch' ||
+        \       expand('<afile>') =~? '.*\.diff') |
+	\   let s:position = getpos('.')          |
+	\   silent keepjumps %substitute/\s\+$//e |
+	\   call setpos('.', s:position)          |
+	\ endif
 augroup END
 
-augroup LucNvimContribStuff "{{{1
-  autocmd!
-  autocmd FileType c nnoremap <buffer> <silent> <C-]> :YcmCompleter GoTo<cr>
-augroup END
-
-augroup LucNeoMake "{{{1
+augroup LucNeoMake
   autocmd!
   "autocmd BufWritePost * Neomake
   autocmd BufWritePost ~/vcs/n{,eo}vim/test/functional/**/*_spec.lua Neomake!
