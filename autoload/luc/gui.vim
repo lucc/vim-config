@@ -29,3 +29,9 @@ function! luc#gui#toggle_font_size()
     echoerr 'Can not toggle font.'
   endif
 endfunction
+
+function! luc#gui#nvim_qt_guifont(font)
+  " Taken from https://github.com/equalsraf/neovim-qt/wiki/GUI.
+  let g:Guifont = a:font
+  return rpcnotify(0, 'Gui', 'SetFont', a:font)
+endfunction
