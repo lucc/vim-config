@@ -1,6 +1,6 @@
 " vim: foldmethod=marker spelllang=en
 " plugins: completion
-if has('python') "{{{1
+if has('python') && system('hostname')[:-2] != 'pi' "{{{1
   "if has('nvim') " -> Deoplete.vim {{{2
   "  Plugin 'Shougo/deoplete.nvim'
   "  let g:deoplete#enable_at_startup = 1
