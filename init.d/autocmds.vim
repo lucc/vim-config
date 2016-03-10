@@ -13,6 +13,6 @@ augroup END
 
 augroup LucNeoMake
   autocmd!
-  "autocmd BufWritePost * Neomake
-  autocmd BufWritePost ~/vcs/n{,eo}vim/test/functional/**/*_spec.lua Neomake!
+  autocmd BufWritePost * Neomake
+  "autocmd BufWritePost ~/vcs/n{,eo}vim/test/functional/**/*_spec.lua Neomake!
 augroup END
