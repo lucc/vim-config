@@ -17,7 +17,7 @@ let g:solarized_menu = 0
 "Plugin 'dw_colors'
 "Plugin 'eclm_wombat.vim'
 "Plugin 'fugalh/desert.vim'
-"Plugin 'jnurmine/Zenburn'
+Plugin 'jnurmine/Zenburn'
 "Plugin 'jonathanfilip/vim-lucius'
 "Plugin 'kalt.vim'
 "Plugin 'kaltex.vim'
