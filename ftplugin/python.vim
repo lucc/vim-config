@@ -9,3 +9,4 @@ augroup LucPythonFileType
   autocmd!
   autocmd BufWritePost <buffer> Neomake
 augroup END
+let b:easytags_auto_highlight = 0
