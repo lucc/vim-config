@@ -1,15 +1,6 @@
 " ~/.vimpagerrc file by luc
 " vim: ft=vim
 
-" Set a flag wheather we are viewing a man page.
-let s:man = index(g:vimpager_ptree, 'man') != -1
-
-" Load some man page plugin code if we are viewing a man page.
-if s:man
-  runtime plugin/manpageviewPlugin.vim
-  runtime after/plugin/manpageviewPlugin.vim
-endif
-
 nmap <silent> S :call luc#man#open_this_in_gvim()<CR>
 
 set mouse=a
