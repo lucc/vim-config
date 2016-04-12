@@ -3,8 +3,6 @@
 
 nmap <silent> S :call luc#man#open_this_in_gvim()<CR>
 
-set mouse=a
-set incsearch
 set ignorecase
 set smartcase
 set laststatus=1
