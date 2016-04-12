@@ -8,20 +8,13 @@ set smartcase
 set laststatus=1
 call luc#setup#viminfo('pager')
 
-" this works, but is crazy
-"let vimpager_use_gvim = 1
-
 if !empty($VIMPAGER_NO_PASSTHROUGH)
   let vimpager_passthrough = 0
 endif
 
-"if $TERM_PROGRAM == 'iTerm.app'
 if !has('gui_running')
   set t_Co=256
 endif
 set rtp+=~/.local/share/nvim/plugins/vim-colors-solarized
 set bg=dark
 colorscheme solarized
-
-" fix error with powerline plugin
-let g:powerline_loaded = 1
