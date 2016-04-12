@@ -28,7 +28,6 @@ set backup
 set backupdir-=.
 "let &backupskip .= ',' . expand('$HOME') . '/.*/**/secure/*'
 set hidden
-set history=2000
 set confirm
 set textwidth=78
 set shiftwidth=2
