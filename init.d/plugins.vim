@@ -41,18 +41,54 @@ if has('clientserver') | Plugin 'pydave/AsyncCommand' | endif
 
 " plugins: statusline {{{1
 
-if has('python') && ! has('nvim')
+let s:statusline = 'light'
+if s:statusline == 'power'
+"if has('python') && ! has('nvim')
   "Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
   " the documentation of powerline is not in Vim format but only available at
   " https://powerline.readthedocs.org/
-  source /usr/lib/python3.4/site-packages/powerline/bindings/vim/plugin/powerline.vim
-else
+  let g:powerline_pycmd = 'py3'
+  source /usr/share/vim/vimfiles/plugin/powerline.vim
+elseif s:statusline == 'air'
   Plugin 'bling/vim-airline'
   "Plugin 'bling/vim-bufferline'
   let g:airline_powerline_fonts = 1
   "let g:airline_left_sep = ''
   "let g:airline_right_sep = ''
   "let g:airline#extensions#tabline#enabled = 1
+elseif s:statusline == 'light'
+  let g:lightline = {
+	\ 'colorscheme': 'solarized',
+	\ 'active': {
+	\   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ]
+	\ },
+	\ 'component_function': {
+	\   'fugitive': 'LightLineFugitive',
+	\   'filename': 'LightLineFilename'
+	\ }
+	\ }
+  function! LightLineModified()
+    return &ft =~ 'help\|vimfiler' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+  endfunction
+  function! LightLineReadonly()
+    return &ft !~? 'help\|vimfiler' && &readonly ? 'RO' : ''
+  endfunction
+  function! LightLineFilename()
+    return ('' != LightLineReadonly() ? LightLineReadonly() . ' ' : '') .
+	  \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+	  \  &ft == 'unite' ? unite#get_status_string() :
+	  \  &ft == 'vimshell' ? vimshell#get_status_string() :
+	  \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+	  \ ('' != LightLineModified() ? ' ' . LightLineModified() : '')
+  endfunction
+  function! LightLineFugitive()
+    if exists('*fugitive#head')
+      let _ = fugitive#head()
+      return strlen(_) ? ' '._ : ''
+    endif
+    return ''
+  endfunction
+  Plugin 'itchyny/lightline.vim'
 endif
 
 " vim options related to the statusline {{{2
