@@ -1,6 +1,6 @@
 " vim: foldmethod=marker spelllang=en
 " plugins: completion
-if has('python') && system('hostname')[:-2] != 'pi' "{{{1
+if (has('python') || has('python3')) && system('hostname')[:-2] != 'pi' "{{{1
   "if has('nvim') " -> Deoplete.vim {{{2
   "  Plugin 'Shougo/deoplete.nvim'
   "  let g:deoplete#enable_at_startup = 1
@@ -26,6 +26,10 @@ if has('python') && system('hostname')[:-2] != 'pi' "{{{1
     "Plugin 'c9s/vimomni.vim'
     "Plugin 'tek/vim-ycm-vim'
   "endif
+
+  " Map <S-Tab> to <C-P> to go to the previous completion entry in insert
+  " mode.
+  inoremap <S-Tab> <C-P>
 else             " -> neocomplete and neocomplcache {{{1
   " settings which are uniform for both neocomplete and neocomplcache
   "Plugin 'Shougo/vimproc' "only needed if not loaded elsewhere
