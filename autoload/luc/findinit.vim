@@ -5,7 +5,7 @@ let s:saved = {}
 let s:restore = {}
 
 function! luc#findinit#from_env()
-    call s:Run(exists('$LUC_FINDINIT_DEFAULT_INPUT') ? $LUC_FINDINIT_DEFAULT_INPUT : '')
+    call s:Run(exists('$FINDINIT') ? $FINDINIT : '')
 endfunction
 
 function! luc#findinit#run(input)
