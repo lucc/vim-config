@@ -4,7 +4,7 @@ snippet script "generte a generic shell script" b
 # ${1:short description}
 
 version=${2:0.1}
-prog="$(basename "\$0")"
+prog="\${0##*/}"
 
 usage () {
 	echo "Usage: $prog"
@@ -23,6 +23,7 @@ while getopts ${4:hv} FLAG; do
 		*) usage >&2; exit 2;;
 	esac
 done
+shift $((OPTIND - 1))
 
 ${0:TODO}
 endsnippet
