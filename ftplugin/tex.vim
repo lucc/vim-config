@@ -14,6 +14,8 @@ endfunction
 setlocal spell
 setlocal dictionary+=%:h/**/*.bib,%:h/**/*.tex
 setlocal grepprg=grep\ -nH\ $*
+" This is currently handled by latex-suite
+"setlocal makeprg=latexmk\ -silent\ -pv\ -pdf\ $*
 
 call s:tex_buffer_maps()
 

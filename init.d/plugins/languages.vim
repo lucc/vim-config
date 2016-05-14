@@ -36,6 +36,7 @@ let g:Tex_Menus = 0
 if has('mac') | let g:Tex_ViewRule_pdf = 'open -a Preview' | endif
 let g:Tex_UseMakefile = 1
 let g:Tex_CompileRule_pdf = 'latexmk -silent -pv -pdf $*'
+let g:Tex_DefaultTargetFormat = 'pdf'
 let g:Tex_SmartQuoteOpen = '„'
 let g:Tex_SmartQuoteClose = '“'
 " the variable Tex_FoldedEnvironments holds the beginnings of names of
