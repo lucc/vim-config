@@ -97,3 +97,14 @@ snippet test "Description" b
 `!p snip.rv=1`
 `!p snip.rv=2`
 endsnippet
+
+snippet "cc( \S+\s*){0,2}" "\command" r
+\\${1:`!p
+if match.group(1) is not None:
+    snip.rv = match.group(1).strip() if match.group(1) else "command"
+if match.group(2) is not None:
+    arg = match.group(2).strip()
+else:
+    arg = False
+`}`!p snip.rv = "{" + arg + "}" if arg else ""`
+endsnippet
