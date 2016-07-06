@@ -44,12 +44,11 @@ let s:use = 'neomake'
 if s:use == 'neomake' " {{{2
   Plugin 'benekastah/neomake'
   let g:neomake_verbose = 0
-  let g:neomake_python_enabled_makers = filter([
-	\ 'flake8',
-	\ 'pep8',
-	\ 'pylint',
-	\ 'python',
-	\ ], 'executable(v:val)')
+  "if executable('flake8')
+  "  let g:neomake_python_enabled_makers = ['flake8', 'python']
+  "else
+  "  let g:neomake_python_enabled_makers = ['pep8', 'pylint', 'python']
+  "endif
   "let neomake_open_list = 2 " also preserve cursor position
   let g:neomake_list_height = 5
   let g:neomake_nvimluatest_maker = {
