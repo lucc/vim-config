@@ -115,7 +115,7 @@ if has('python')
   Plugin 'guyzmo/notmuch-abook'
 endif
 if s:uname != 'Linux' || has('nvim')
-  Plugin 'git://notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
+  Plugin 'git://git.notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
 endif
 
 Plugin '~/src/vim-tip'
