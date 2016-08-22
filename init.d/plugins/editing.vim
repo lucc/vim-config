@@ -2,6 +2,8 @@
 " vim: foldmethod=marker spelllang=en
 let s:uname = system('uname')[:-2]
 
+Plug 'ron89/thesaurus_query.vim'
+
 " plugins: buffer and file management {{{1
 Plugin 'ctrlpvim/ctrlp.vim'
 
