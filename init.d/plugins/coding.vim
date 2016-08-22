@@ -115,7 +115,7 @@ let g:easytags_languages.pandoc = g:easytags_languages.markdown
 " plugins: man pages {{{1
 "Plugin 'info.vim' "{{{2
 
-Plugin 'vim-utils/vim-man', {'branch': 'fix/shadow'} "{{{2
+"Plugin 'vim-utils/vim-man', {'branch': 'fix/shadow'} "{{{2
 
 "Plugin 'ManPageView' "{{{2
 " TODO
