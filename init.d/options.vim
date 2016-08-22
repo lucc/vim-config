@@ -82,9 +82,9 @@ set smartcase
 " MacVim.app/Contents/Resources/vim/runtime/spell
 set spelllang=de,en
 if &spellfile == ''
-  set spellfile+=~/.config/vim/spell/de.utf-8.add
-  set spellfile+=~/.config/vim/spell/en.utf-8.add
-  set spellfile+=~/.config/vim/spell/names.utf-8.add
+  set spellfile+=~/.config/nvim/spell/de.utf-8.add
+  set spellfile+=~/.config/nvim/spell/en.utf-8.add
+  set spellfile+=~/.config/nvim/spell/names.utf-8.add
 endif
 set nospell
 
