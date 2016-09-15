@@ -3,4 +3,5 @@
 if ! has('gui_running')
   set background=dark
   colorscheme solarized
+  highlight! SignColumn ctermfg=10 ctermbg=0
 endif
