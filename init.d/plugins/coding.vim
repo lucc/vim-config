@@ -42,7 +42,7 @@ endif
 " plugins: compilation and linting {{{1
 let s:use = 'neomake'
 if s:use == 'neomake' " {{{2
-  Plugin 'benekastah/neomake'
+  Plugin 'neomake/neomake'
   let g:neomake_verbose = 0
   "if executable('flake8')
   "  let g:neomake_python_enabled_makers = ['flake8', 'python']
@@ -112,10 +112,12 @@ let g:easytags_languages.markdown = {
       \ }
 let g:easytags_languages.pandoc = g:easytags_languages.markdown
 
-" plugins: man pages {{{1
+" plugins: man and info pages {{{1
 "Plugin 'info.vim' "{{{2
 
-"Plugin 'vim-utils/vim-man', {'branch': 'fix/shadow'} "{{{2
+Plugin 'alx741/vinfo' "{{{2
+
+"Plugin 'vim-utils/vim-man', {'branch': 'fix/shadow'} " {{{2
 
 "Plugin 'ManPageView' "{{{2
 " TODO
