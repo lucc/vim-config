@@ -34,3 +34,16 @@ def $1(self, value):
 def $1(self):
 	del self._$1
 endsnippet
+snippet utest "unittest file template" b
+import unittest
+
+
+class ${1:Test}(unittest.TestCase):
+
+	def test_${2:foo}(self):
+		${3:pass}
+
+
+if __name__ == "__main__":
+	unittest.main()
+endsnippet
