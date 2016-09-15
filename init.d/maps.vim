@@ -55,7 +55,7 @@ nmap <SwipeUp>   gg
 imap <SwipeUp>   gg
 nmap <SwipeDown> G
 imap <SwipeDown> G
-nnoremap g<CR> <C-[>
+nnoremap g<CR> <C-]>
 
 nnoremap ' `
 nnoremap ` '
