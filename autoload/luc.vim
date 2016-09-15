@@ -319,3 +319,10 @@ endfunction
 function! luc#get_terminal()
   return copy(s:terminal)
 endfunction
+
+function! luc#khard_editor()
+  " Load options and maps for editing khard yaml files.
+  setfiletype yaml
+  map  <buffer> <tab>       /^[^#]/<cr>A
+  imap <buffer> <tab> <c-o>:/^[^#]/ normal $<cr>
+endfunction
