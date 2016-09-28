@@ -70,3 +70,6 @@ vmap // y/<C-r>"<CR>
 if has('nvim')
   tnoremap <Esc> <C-\><C-n>
 endif
+
+" open the file under the cursor with xdg-open
+nnoremap gF :O<CR>

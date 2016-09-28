@@ -15,3 +15,16 @@ function! s:DiffOrig()
   wincmd p
   diffthis
 endfunction
+
+" Open the file under the cursor or the current file with xdg-open.
+command! -bang O call s:open("<bang>")
+
+function! s:open(bang)
+  if empty(a:bang)
+    !xdg-open <cfile> &
+    redraw
+  else
+    !xdg-open % &
+    redraw
+  endif
+endfunction
