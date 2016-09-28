@@ -6,6 +6,7 @@ Plugin 'applescript.vim'
 Plugin 'icalendar.vim'
 Plugin 'aliva/vim-fish'
 Plugin 'VCard-syntax'
+Plugin 'vimperator/vimperator.vim'
 
 " plugins: LaTeX {{{1
 
