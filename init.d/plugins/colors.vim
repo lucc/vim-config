@@ -4,6 +4,7 @@
 "Plugin 'ScrollColors'
 "Plugin 'Colour-Sampler-Pack'
 
+Plugin 'iCyMind/NeoSolarized'
 Plugin 'altercation/vim-colors-solarized'
 let g:solarized_menu = 0
 

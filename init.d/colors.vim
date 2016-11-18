@@ -2,6 +2,10 @@
 " set in ginit.vim.
 if ! has('gui_running')
   set background=dark
-  colorscheme solarized
-  highlight! SignColumn ctermfg=10 ctermbg=0
+  if &termguicolors
+    colorscheme NeoSolarized
+  else
+    colorscheme solarized
+  endif
+  highlight! SignColumn ctermfg=10 ctermbg=0 guibg=#073642
 endif

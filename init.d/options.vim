@@ -67,8 +67,10 @@ set dictionary+=/usr/share/dict/british-english
 set dictionary+=/usr/share/dict/ngerman
 
 " terminal stuff {{{1
-"if $TERM_PROGRAM == 'iTerm.app'
-if !has('gui_running')
+
+if $COLORTERM == "truecolor" || !empty($KONSOLE_DBUS_SERVICE) || $TERM =~ "st.*"
+  set termguicolors
+elseif !has('gui_running')
   set t_Co=256
 endif
 
