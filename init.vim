@@ -2,7 +2,7 @@
 " vim: spelllang=en
 
 " set up python
-call luc#setup#python()
+"call luc#setup#python() " disable automatic python loading for speed
 
 " user defined variables
 let mapleader = ','
