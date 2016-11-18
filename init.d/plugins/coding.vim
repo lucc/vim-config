@@ -61,6 +61,13 @@ if s:use == 'neomake' " {{{2
 	\ 'args': ['functionaltest', 'TEST_FILE=%:p'],
 	\ 'errorformat': '%f:%l: Expected objects to be the same.',
 	\ }
+  " A maker to build a pdf file from a tex file if a makefile is afailable.
+  let g:neomake_tex_make_maker = {
+	\ 'exe': function('luc#neomake_tex_make_exe'),
+	\ 'args': function('luc#neomake_tex_make_args'),
+	\ }
+elseif s:use == 'accio' "{{{2
+  Plugin 'pgdouyon/vim-accio'
 elseif s:use == 'syntastic' "{{{2
   " plugins: syntastic
   if s:uname != 'Linux'
@@ -78,7 +85,6 @@ elseif s:use == 'syntastic' "{{{2
   let g:syntastic_auto_loc_list = 1
   let g:syntastic_loc_list_height = 5
 elseif s:use == 'dispatch' "{{{2
-  " plugins: compiling {{{2
   if ! has('nvim')
     Plugin 'tpope/vim-dispatch'
   endif
