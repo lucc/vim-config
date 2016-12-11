@@ -25,10 +25,6 @@ import tex
 # some wrapper functions to be called from vim
 
 
-def autogit_vim(branches=['autocmd', 'autogit']):
-    '''Wrapper around git.autogit() to be called from vim.'''
-    directory = os.path.dirname(vim.current.buffer.name)
-    threading.Thread(target=git.autogit, args=(directory, branches)).start()
 
 
 def find_base_dir_vim_wrapper(cur=None):

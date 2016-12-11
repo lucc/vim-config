@@ -7,7 +7,17 @@ endif
 let autogit_loaded = 1
 let s:do_autogit = 1
 
-augroup LucAutoGit "{{{2
+python <<END_OF_PYTHON
+import os, threading # stdlib
+import vim           # 3. party
+import git           # custom
+def autogit_vim(branches=['autocmd', 'autogit']):
+    '''Wrapper around git.autogit() to be called from vim.'''
+    directory = os.path.dirname(vim.current.buffer.name)
+    threading.Thread(target=git.autogit, args=(directory, branches)).start()
+END_OF_PYTHON
+
+augroup LucAutoGit
   autocmd!
   autocmd BufWritePost ~/.config/**,~/src/shell/**,~/.homesick/repos/**
 	\ if s:do_autogit                |
