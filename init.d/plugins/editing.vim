@@ -40,7 +40,7 @@ let g:ctrlp_extensions = [
 
 " mappings {{{2
 let g:ctrlp_cmd = 'CtrlPMRU'
-let g:ctrlp_map = has('gui_running') ? '<C-Space>' : '<NUL>'
+let g:ctrlp_map = '<C-Space>'
 execute 'inoremap' g:ctrlp_map '<C-O>:' g:ctrlp_cmd '<CR>'
 if has('gui_macvim')
   execute 'nnoremap' '<D-B>' ':CtrlPBuffer<CR>'
