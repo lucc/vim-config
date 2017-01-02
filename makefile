@@ -1,5 +1,10 @@
 # makefile for some vim config files, by luc
 
+# Targets for system installtion
+install-deps:
+	pacaur -S neovim-symlinks python{,2}-neovim
+
+# Other targets
 VIM = nvim
 GUNZIP = gunzip --keep --force
 WGET = wget -nv --continue
