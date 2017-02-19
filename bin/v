@@ -1,30 +1,60 @@
-#!/bin/zsh
+#!/usr/bin/nvim -S
+" vim: ft=vim
 
-function all-readable () {
-  for file; do
-    if [[ ! -r $file ]]; then
-      return 1
-    fi
-  done
-  return 0
-}
+function! s:all_readable(filelist)
+  for file in a:filelist
+    if !filereadable(file)
+      return 0
+    endif
+  endfor
+  return 1
+endfunction
 
-function find-files-and-patterns () {
-  for arg; do
-    if [[ -f $arg ]]; then
-      files=($files $arg)
-    else
-      pattern=$pattern$arg
-    fi
-  done
-  # now $files and $pattern could be used like this:
-  # FINDINIT=$pattern nvim -c 'call luc#findinit#run()' -- $files
-}
+function! s:run(input)
+  " Run CtrlPMRU with the given input and clean up afterwards.
+  "
+  " input: the input to feed to CtrlP initially
+  " returns: 0
 
-if [[ $# -eq 0 ]]; then
-  nvim -c 'call luc#findinit#run("")'
-elif all-readable $@; then
-  nvim $@
+  " Save the global settings that we will override
+  if exists('g:ctrlp_default_input')
+    let l:saved_ctrlp_default_input = g:ctrlp_default_input
+  endif
+  if exists('g:ctrlp_match_window')
+    let l:saved_ctrlp_match_window = g:ctrlp_match_window
+  endif
+  if exists('g:ctrlp_open_single_match')
+    let l:saved_ctrlp_open_single_match = g:ctrlp_open_single_match
+  endif
+  " Override the global settings with custom values.
+  let g:ctrlp_default_input = a:input
+  let g:ctrlp_match_window = 'bottom,order:btt,min:'.(&lines + 1).',max:'.(&lines + 1)
+  let g:ctrlp_open_single_match = ['all']
+  " Run CtrlP.
+  CtrlPMRU
+  " unlet custom settings
+  unlet g:ctrlp_default_input
+  unlet g:ctrlp_match_window
+  unlet g:ctrlp_open_single_match
+  " restore saved settings
+  if exists('l:saved_ctrlp_default_input')
+    let g:ctrlp_default_input = l:saved_ctrlp_default_input
+  endif
+  if exists('l:saved_ctrlp_match_window')
+    let g:ctrlp_match_window = l:saved_ctrlp_match_window
+  endif
+  if exists('l:saved_ctrlp_open_single_match')
+    let g:ctrlp_open_single_match = l:saved_ctrlp_open_single_match
+  endif
+endfunction
+
+if argc() == 0
+  call s:run()
+elseif s:all_readable(argv())
+  " do nothing
 else
-  FINDINIT=${(j::)*} nvim -c 'call luc#findinit#from_env()'
-fi
+  let args = join(argv(), '')
+  %argdelete
+  %bwipeout
+  call s:run(args)
+endif
