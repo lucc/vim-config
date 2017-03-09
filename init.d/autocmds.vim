@@ -14,7 +14,6 @@ augroup END
 augroup LucNeoMake
   autocmd!
   autocmd BufWritePost * Neomake
-  "autocmd BufWritePost ~/vcs/n{,eo}vim/test/functional/**/*_spec.lua Neomake!
   autocmd BufEnter *.py
 	\ let b:neomake_python_enabled_makers =
 	\   filter(neomake#makers#ft#python#EnabledMakers(),
