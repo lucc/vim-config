@@ -15,7 +15,7 @@ let g:ctrlp_mruf_max = 1000
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_max_files = 0
 let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\v(\/private|\/var|\/tmp|\/Users\/luc\/(audio|img|flac))',
+      \ 'dir':  '\v(\/private|\/tmp|\/Users\/luc\/(audio|img|flac))',
       \ }
 let g:ctrlp_root_markers = [
       \ 'makefile',
