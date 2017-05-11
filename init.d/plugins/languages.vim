@@ -2,10 +2,10 @@
 let s:uname = system('uname')[:-2]
 " plugins: languages
 
-Plugin 'applescript.vim'
-Plugin 'icalendar.vim'
+Plugin 'vim-scripts/applescript.vim'
+Plugin 'vim-scripts/icalendar.vim'
 Plugin 'aliva/vim-fish'
-Plugin 'VCard-syntax'
+Plugin 'vim-scripts/VCard-syntax'
 Plugin 'vimperator/vimperator.vim'
 Plugin 'tkztmk/vim-vala'
 
@@ -17,18 +17,18 @@ let g:tex_flavor = 'latex'
 
 " 3109 LatexBox.vmb
 "Plugin 'coot/atp_vim'
-"Plugin 'LaTeX-functions'
-"Plugin 'latextags'
-"Plugin 'TeX-9'
-"Plugin 'tex.vim'
-"Plugin 'tex_autoclose.vim'
+"Plugin 'vim-scripts/LaTeX-functions'
+"Plugin 'vim-scripts/latextags'
+"Plugin 'vim-scripts/TeX-9'
+"Plugin 'vim-scripts/tex.vim'
+"Plugin 'vim-scripts/tex_autoclose.vim'
 
-"Plugin 'auctex.vim'
+"Plugin 'vim-scripts/auctex.vim'
 
 if s:uname != 'Linux' || has('nvim')
   Plugin 'vim-latex/vim-latex' "{{{2
 endif
-"Plugin 'LaTeX-Help' " is included in vim-latex
+"Plugin 'vim-scripts/LaTeX-Help' " is included in vim-latex
 let g:ngerman_package_file = 1
 let g:Tex_Menus = 0
 "let g:Tex_UseUtfMenus = 1
@@ -101,10 +101,10 @@ let g:Tex_FoldedSections = join(s:TexFoldSec, ',')
   "\ 'part,chapter,section,subsection,subsubsection,paragraph'
 
 " plugins: lisp/scheme {{{1
-Plugin 'slimv.vim'
-"Plugin 'tslime.vim'
-Plugin 'davidmfoley/tslime.vim'
-Plugin 'Limp'
+"Plugin 'vim-scripts/slimv.vim'
+"Plugin 'vim-scripts/tslime.vim'
+"Plugin 'davidmfoley/tslime.vim'
+"Plugin 'vim-scripts/Limp'
 
 " plugins: markdown {{{1
 " unconditionally binds <Leader>f and <Leader>r (also in insert mode=bad for
@@ -122,7 +122,7 @@ let g:markdown_fold_style = 'nested'
 " strange folding?
 "Plugin 'tpope/vim-markdown'
 
-"Plugin 'pdc.vim'
+"Plugin 'vim-scripts/pdc.vim'
 Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax'
 let g:pandoc#modules#disabled = ["menu"]
@@ -141,16 +141,16 @@ let g:pandoc#formatting#mode = 'h'
 
 " plugins: comma separated values (csv) {{{1
 Plugin 'chrisbra/csv.vim'
-"Plugin 'csv-reader'
-"Plugin 'CSVTK'
-"Plugin 'rcsvers.vim'
-"Plugin 'csv-color'
-"Plugin 'CSV-delimited-field-jumper'
+"Plugin 'vim-scripts/csv-reader'
+"Plugin 'vim-scripts/CSVTK'
+"Plugin 'vim-scripts/rcsvers.vim'
+"Plugin 'vim-scripts/csv-color'
+"Plugin 'vim-scripts/CSV-delimited-field-jumper'
 
 " plugins: python {{{1
 
 "Plugin 'sunsol/vim_python_fold_compact'
-"Plugin 'Python-Syntax-Folding'
+"Plugin 'vim-scripts/Python-Syntax-Folding'
 Plugin 'klen/python-mode'
 if has('nvim')
   let g:pymode_python = 'python3'

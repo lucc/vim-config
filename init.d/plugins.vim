@@ -22,10 +22,10 @@ if !has('nvim')
     let g:ScreenShellTerminal = 'iTerm.app'
 
     " notes
-    Plugin 'Conque-Shell'
-    "Plugin 'vimsh.tar.gz'
+    Plugin 'vim-scripts/Conque-Shell'
+    "Plugin 'vim-scripts/vimsh.tar.gz'
     "Plugin 'xolox/vim-shell'
-    "Plugin 'vimux'
+    "Plugin 'vim-scripts/vimux'
 
     Plugin 'Shougo/vimshell.vim'
     Plugin 'Shougo/vimproc'
@@ -109,7 +109,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'sjl/gundo.vim'
 "Plugin 'VimRepress' "https://bitbucket.org/pentie/vimrepress
 Plugin 'lucc/VimRepress'
-Plugin 'ZoomWin'
+Plugin 'vim-scripts/ZoomWin'
 Plugin 'AndrewRadev/linediff.vim'
 if has('python')
   Plugin 'guyzmo/notmuch-abook'

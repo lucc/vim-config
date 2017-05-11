@@ -65,7 +65,7 @@ Plug 'junegunn/fzf.vim'
 " plugins: parenthesis, quotes, alignment {{{1
 
 Plugin 'Raimondi/delimitMate'
-Plugin 'paredit.vim'
+Plug 'vim-scripts/paredit.vim'
 if s:uname != 'Linux' || has('nvim')
   Plugin 'tpope/vim-surround'
 endif
