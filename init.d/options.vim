@@ -68,7 +68,7 @@ set dictionary+=/usr/share/dict/ngerman
 
 " terminal stuff {{{1
 
-if $COLORTERM == "truecolor" || !empty($KONSOLE_DBUS_SERVICE) || $TERM =~ "st.*"
+if $COLORTERM ==? 'truecolor' || !empty($KONSOLE_DBUS_SERVICE) || $TERM =~? 'st.*'
   set termguicolors
 elseif !has('gui_running')
   set t_Co=256
@@ -83,7 +83,7 @@ set smartcase
 " on Mac OS X the spellchecking files are in:
 " MacVim.app/Contents/Resources/vim/runtime/spell
 set spelllang=de,en
-if &spellfile == ''
+if &spellfile ==# ''
   set spellfile+=~/.config/nvim/spell/de.utf-8.add
   set spellfile+=~/.config/nvim/spell/en.utf-8.add
   set spellfile+=~/.config/nvim/spell/names.utf-8.add
@@ -200,4 +200,4 @@ let g:vimsyn_folding .= 'p' " fold perl     script
 let g:vimsyn_folding .= 'P' " fold python   script
 let g:vimsyn_folding .= 'r' " fold ruby     script
 let g:vimsyn_folding .= 't' " fold tcl      script
-let g:netrw_browsex_viewer = "xdg-open"
+let g:netrw_browsex_viewer = 'xdg-open'
