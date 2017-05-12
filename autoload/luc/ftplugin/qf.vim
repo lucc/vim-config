@@ -1,13 +1,15 @@
-function! luc#ftplugin#qf#open()
-  if
-	\ w:quickfix_title == ':setloclist()' ||
-	\ w:quickfix_title == ":        lgetexpr ''"
+function! luc#ftplugin#qf#open() abort
+  let l:info = getwininfo(win_getid())[0]
+  if l:info.loclist
     .ll
     lclose
-  else
+  elseif l:info.quickfix
     .cc
     cclose
+  else
+    echoerr 'This function must be called from a quickfix or location list window.'
+    return
   endif
-  silent %foldclose!
+  silent! %foldclose!
   silent! .foldopen!
 endfunction
