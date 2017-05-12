@@ -1,6 +1,5 @@
 " general plugins for editing
 " vim: foldmethod=marker spelllang=en
-let s:uname = system('uname')[:-2]
 
 Plug 'ron89/thesaurus_query.vim'
 
@@ -42,14 +41,6 @@ let g:ctrlp_extensions = [
 let g:ctrlp_cmd = 'CtrlPMRU'
 let g:ctrlp_map = '<C-Space>'
 execute 'inoremap' g:ctrlp_map '<C-O>:' g:ctrlp_cmd '<CR>'
-if has('gui_macvim')
-  execute 'nnoremap' '<D-B>' ':CtrlPBuffer<CR>'
-  execute 'inoremap' '<D-B>' ':CtrlPBuffer<CR>'
-  execute 'nnoremap' '<D-F>' ':CtrlP<CR>'
-  execute 'inoremap' '<D-F>' ':CtrlP<CR>'
-  execute 'nnoremap' '<D-T>' ':CtrlPTag<CR>'
-  execute 'inoremap' '<D-T>' ':CtrlPTag<CR>'
-endif
 
 " Use the compiled C-version for speed improvements "{{{2
 if has('python')
@@ -66,13 +57,9 @@ Plug 'junegunn/fzf.vim'
 
 Plugin 'Raimondi/delimitMate'
 Plug 'vim-scripts/paredit.vim'
-if s:uname != 'Linux' || has('nvim')
-  Plugin 'tpope/vim-surround'
-endif
+Plugin 'tpope/vim-surround'
 "Plugin 'kana/vim-textobj-indent.git'
-if s:uname != 'Linux' || has('nvim')
-  Plugin 'michaeljsmith/vim-indent-object'
-endif
+Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'junegunn/vim-easy-align'
 vmap <Enter> <Plug>(EasyAlign)
 nmap <Leader>a <Plug>(EasyAlign)

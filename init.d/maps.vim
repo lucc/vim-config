@@ -35,10 +35,6 @@ if has('gui_macvim')
   noremap  <D-s>      :silent update<CR>
 endif
 
-" easy compilation
-nmap <silent> <F2>        :call luc#save_and_compile()<CR>
-imap <silent> <F2>   <C-O>:call luc#save_and_compile()<CR>
-
 " backup current buffer
 nnoremap <silent> <F11>
       \ :silent update <BAR>
