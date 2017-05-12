@@ -4,9 +4,7 @@ let s:uname = system('uname')[:-2]
 " plugins: snippets {{{1
 
 if has('python')
-  if s:uname != 'Linux' || has('nvim')
-    Plugin 'SirVer/ultisnips'
-  endif
+  Plugin 'SirVer/ultisnips'
   let g:UltiSnipsExpandTrigger = '<C-F>'
   let g:UltiSnipsJumpForwardTrigger = '<C-F>'
   let g:UltiSnipsJumpBackwardTrigger = '<C-G>'
@@ -34,65 +32,34 @@ else
 endif
 
 " Snippets are separated from the engine:
-if s:uname != 'Linux' || has('nvim')
-  Plugin 'honza/vim-snippets'
-  Plugin 'rbonvall/snipmate-snippets-bib'
-endif
+Plugin 'honza/vim-snippets'
+Plugin 'rbonvall/snipmate-snippets-bib'
 
 " plugins: compilation and linting {{{1
-let s:use = 'neomake'
-if s:use == 'neomake' " {{{2
-  Plugin 'neomake/neomake'
-  let g:neomake_verbose = 0
-  "if executable('flake8')
-  "  let g:neomake_python_enabled_makers = ['flake8', 'python']
-  "else
-  "  let g:neomake_python_enabled_makers = ['pep8', 'pylint', 'python']
-  "endif
-  "let neomake_open_list = 2 " also preserve cursor position
-  let g:neomake_list_height = 5
-  let g:neomake_nvimluatest_maker = {
-	\ 'exe': 'sh',
-	\ 'args': ['-c', 'make functionaltest TEST_FILE=%:p 2>/dev/null | ~/.config/vim/bin/error-filter-for-nvim-lua-tests.sh'],
-	\ 'errorformat': '%f:%l: Expected objects to be the same.',
-	\ }
-  let g:neomake_luctest_maker = {
-	\ 'exe': 'make',
-	\ 'args': ['functionaltest', 'TEST_FILE=%:p'],
-	\ 'errorformat': '%f:%l: Expected objects to be the same.',
-	\ }
-  " A maker to build a pdf file from a tex file if a makefile is afailable.
-  let g:neomake_tex_make_maker = {
-	\ 'exe': function('luc#neomake_tex_make_exe'),
-	\ 'args': function('luc#neomake_tex_make_args'),
-	\ }
-elseif s:use == 'accio' "{{{2
-  Plugin 'pgdouyon/vim-accio'
-elseif s:use == 'syntastic' "{{{2
-  " plugins: syntastic
-  if s:uname != 'Linux'
-    Plugin 'scrooloose/syntastic'
-  endif
-  let g:syntastic_mode_map = {
-	\ 'mode': 'passive',
-	\ 'active_filetypes': [],
-	\ 'passive_filetypes': []
-	\ }
-  let g:syntastic_check_on_wq = 0
-  let g:syntastic_error_symbol = '✗'
-  let g:syntastic_warning_symbol = '⚠'
-  let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_auto_loc_list = 1
-  let g:syntastic_loc_list_height = 5
-elseif s:use == 'dispatch' "{{{2
-  if ! has('nvim')
-    Plugin 'tpope/vim-dispatch'
-  endif
-
-  Plugin 'xuhdev/SingleCompile'
-  let g:SingleCompile_asyncrunmode = 'python'
-  let g:SingleCompile_menumode = 0
-endif
+Plugin 'neomake/neomake'
+let g:neomake_verbose = 0
+"if executable('flake8')
+"  let g:neomake_python_enabled_makers = ['flake8', 'python']
+"else
+"  let g:neomake_python_enabled_makers = ['pep8', 'pylint', 'python']
+"endif
+"let neomake_open_list = 2 " also preserve cursor position
+let g:neomake_list_height = 5
+let g:neomake_nvimluatest_maker = {
+      \ 'exe': 'sh',
+      \ 'args': ['-c', 'make functionaltest TEST_FILE=%:p 2>/dev/null | ~/.config/vim/bin/error-filter-for-nvim-lua-tests.sh'],
+      \ 'errorformat': '%f:%l: Expected objects to be the same.',
+      \ }
+let g:neomake_luctest_maker = {
+      \ 'exe': 'make',
+      \ 'args': ['functionaltest', 'TEST_FILE=%:p'],
+      \ 'errorformat': '%f:%l: Expected objects to be the same.',
+      \ }
+" A maker to build a pdf file from a tex file if a makefile is afailable.
+let g:neomake_tex_make_maker = {
+      \ 'exe': function('luc#neomake_tex_make_exe'),
+      \ 'args': function('luc#neomake_tex_make_args'),
+      \ }
 
 " plugins: tags {{{1
 " Easytags will automatically create and update tags files and set the 'tags'
@@ -143,9 +110,7 @@ Plugin 'alx741/vinfo' "{{{2
 
 " plugins: vcs stuff {{{1
 "Plugin 'tpope/vim-git'
-if s:uname != 'Linux' || has('nvim')
-  Plugin 'tpope/vim-fugitive'
-endif
+Plugin 'tpope/vim-fugitive'
 Plugin 'ludovicchabant/vim-lawrencium'
 Plugin 'mhinz/vim-signify'
 let g:sygnify_vcs_list = ['git', 'hg', 'svn']
@@ -155,4 +120,4 @@ Plugin 'junegunn/gv.vim'
 Plugin 'gregsexton/gitv'
 
 " debugging {{{1
-Plug 'joonty/vdebug'
+Plug 'joonty/vdebug', {'branch': 'v2-integration'}

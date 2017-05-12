@@ -11,43 +11,14 @@ runtime init.d/plugins/completion.vim
 runtime init.d/plugins/languages.vim
 runtime init.d/plugins/colors.vim
 
-" plugins: shell in Vim {{{1
-
-if !has('nvim')
-  Plugin 'ervandew/screen'
-  let g:ScreenImpl = 'Tmux'
-
-  if has('gui_macvim')
-
-    let g:ScreenShellTerminal = 'iTerm.app'
-
-    " notes
-    Plugin 'vim-scripts/Conque-Shell'
-    "Plugin 'vim-scripts/vimsh.tar.gz'
-    "Plugin 'xolox/vim-shell'
-    "Plugin 'vim-scripts/vimux'
-
-    Plugin 'Shougo/vimshell.vim'
-    Plugin 'Shougo/vimproc'
-    "map <D-F11> :VimShellPop<cr>
-    let g:vimshell_temporary_directory = expand('~/.cache/vim/vimshell')
-  endif
-endif
-
-" to be tested (shell in gvim) {{{2
-Plugin 'fboender/bexec'
-let g:bexec_splitdir = 'ver'
-if has('clientserver') | Plugin 'pydave/AsyncCommand' | endif
-
 " plugins: statusline {{{1
 
 let s:statusline = 'light'
 if s:statusline == 'power'
-"if has('python') && ! has('nvim')
-  "Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
   " the documentation of powerline is not in Vim format but only available at
   " https://powerline.readthedocs.org/
   let g:powerline_pycmd = 'py3'
+  "Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
   source /usr/share/vim/vimfiles/plugin/powerline.vim
 elseif s:statusline == 'air'
   Plugin 'bling/vim-airline'
@@ -114,9 +85,7 @@ Plugin 'AndrewRadev/linediff.vim'
 if has('python')
   Plugin 'guyzmo/notmuch-abook'
 endif
-if s:uname != 'Linux' || has('nvim')
-  Plugin 'git://git.notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
-endif
+Plugin 'git://git.notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
 
 Plugin '~/src/vim-tip'
 

@@ -25,9 +25,7 @@ let g:tex_flavor = 'latex'
 
 "Plugin 'vim-scripts/auctex.vim'
 
-if s:uname != 'Linux' || has('nvim')
-  Plugin 'vim-latex/vim-latex' "{{{2
-endif
+Plugin 'vim-latex/vim-latex' "{{{2
 "Plugin 'vim-scripts/LaTeX-Help' " is included in vim-latex
 let g:ngerman_package_file = 1
 let g:Tex_Menus = 0
