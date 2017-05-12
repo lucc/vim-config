@@ -10,7 +10,6 @@ if !has('nvim') "{{{1
   " allow backspacing over everything in insert mode
   set backspace=indent,eol,start
   set encoding=utf-8
-  set mouse=a
   " highlight the last used search pattern.
   set hlsearch
   " incremental search
@@ -38,6 +37,7 @@ set shortmess=
 set nostartofline
 set switchbuf=useopen
 set colorcolumn=+1
+set mouse=a
 set showcmd
 set splitright
 set virtualedit=block
