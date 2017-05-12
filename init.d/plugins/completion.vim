@@ -27,6 +27,7 @@ let s:choice = 'ycm'
 "elseif s:choice == 'deoplete'
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   let g:deoplete#enable_at_startup = 1
+  Plug 'zchee/deoplete-jedi'
 "endif
 
 if s:choice != 'none'

@@ -154,3 +154,5 @@ let g:sygnify_vcs_list = ['git', 'hg', 'svn']
 Plugin 'junegunn/gv.vim'
 Plugin 'gregsexton/gitv'
 
+" debugging {{{1
+Plug 'joonty/vdebug'

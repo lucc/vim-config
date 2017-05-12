@@ -124,6 +124,7 @@ Plugin 'chrisbra/unicode.vim'
 Plugin 'chrisbra/vim-zsh'
 Plugin 'git://fedorapeople.org/home/fedora/wwoods/public_git/vim-scripts.git'
 "Plugin 'ryanoasis/vim-devicons'
+Plug 'hkupty/iron.nvim'
 
 " finalize {{{1
 call plug#end()
