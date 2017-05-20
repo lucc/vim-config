@@ -1,9 +1,9 @@
 " vim: foldmethod=marker spelllang=en
 " plugins: completion
 
-let s:choice = 'ycm'
+let s:choice = 'deoplete'
 
-"if s:choice == 'ycm'
+if s:choice == 'ycm'
   Plugin 'Valloric/YouCompleteMe'
   let g:ycm_filetype_blacklist = {}
   let g:ycm_complete_in_comments = 1
@@ -24,11 +24,21 @@ let s:choice = 'ycm'
 
   "Plugin 'c9s/vimomni.vim'
   "Plugin 'tek/vim-ycm-vim'
-"elseif s:choice == 'deoplete'
+elseif s:choice == 'deoplete'
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   let g:deoplete#enable_at_startup = 1
   Plug 'zchee/deoplete-jedi'
-"endif
+  "https://github.com/poppyschmo/deoplete-latex
+  "https://github.com/lvht/phpcd.vim
+  "https://github.com/padawan-php/deoplete-padawan
+  "https://github.com/Shougo/neco-vim
+  "https://github.com/Shougo/neco-syntax
+  "https://github.com/zchee/deoplete-zsh
+  "https://github.com/tpope/vim-rhubarb
+  "https://github.com/SevereOverfl0w/deoplete-github
+  "https://github.com/autozimu/LanguageClient-neovim
+  "https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
+endif
 
 if s:choice != 'none'
   " Map <S-Tab> to <C-P> to go to the previous completion entry in insert
