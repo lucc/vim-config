@@ -24,10 +24,12 @@ let g:luc#gui#bigfonts = join(map(copy(s:fonts),
 
 let &guifont = g:luc#gui#normalfonts
 
-command -nargs=? Guifont call luc#gui#nvim_qt_guifont(<q-args>)
-augroup LucNvimGUIFont
-  autocmd VimEnter *
-	\ if has('nvim') && has('gui_running')                |
-	\   execute 'Guifont' s:fonts[0][0].':h'.s:fonts[0][1] |
-	\ endif
-augroup END
+if has('nvim')
+  augroup LucNvimGUIFont
+    autocmd!
+    autocmd VimEnter *
+	  \ if has('gui_running') |
+	  \   execute 'GuiFont' s:fonts[0][0].':h'.s:fonts[0][1] |
+	  \ endif
+  augroup END
+endif
