@@ -6,13 +6,10 @@ let s:uname = system('uname')[:-2]
 if has('python')
   Plugin 'SirVer/ultisnips'
   let g:UltiSnipsExpandTrigger = '<C-F>'
-  let g:UltiSnipsJumpForwardTrigger = '<C-F>'
-  let g:UltiSnipsJumpBackwardTrigger = '<C-G>'
+  let g:UltiSnipsJumpForwardTrigger = '<C-F>' " <C-J>
+  let g:UltiSnipsJumpBackwardTrigger = '<C-G>' " <C-K>
   "let g:UltiSnipsExpandTrigger       = <tab>
   "let g:UltiSnipsListSnippets        = <c-tab>
-  "let g:UltiSnipsJumpForwardTrigger  = <c-j>
-  "let g:UltiSnipsJumpBackwardTrigger = <c-k>
-  let g:UltiSnipsJumpBackwardTrigger = '<SID>NOT_DEFINED'
 
   if has('gui_running') && has('gui_macvim')
     " new settings
