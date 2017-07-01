@@ -1,7 +1,5 @@
 " user defined autocommands by luc
 
-let s:quitting = 0
-
 augroup LucRemoveWhiteSpaceAtEOL
   autocmd!
   autocmd BufWrite *
@@ -15,12 +13,7 @@ augroup END
 
 augroup LucNeoMake
   autocmd!
-  autocmd BufWritePost *
-	\ if ! s:quitting                             |
-  	\   Neomake                                   |
-  	\ elseif tabpagenr('$') > 1 || winnr('$') > 1 |
-  	\   let s:quitting = 0                        |
-  	\ endif
+  autocmd BufWritePost * Neomake
   "autocmd BufWritePost ~/vcs/n{,eo}vim/test/functional/**/*_spec.lua Neomake!
 augroup END
 
@@ -35,9 +28,4 @@ augroup LucApplications
 	\ let b:neomake_tex_enabled_makers =
 	\   filter(neomake#makers#ft#tex#EnabledMakers() + ['make'],
 	\          'executable(v:val)')
-augroup END
-
-augroup LucQuitMarker
-  autocmd!
-  autocmd QuitPre * let s:quitting = 1
 augroup END
