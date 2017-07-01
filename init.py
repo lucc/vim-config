@@ -15,22 +15,20 @@ import vim
 # import sys
 
 # importing private modules
-# sys.path.append(os.path.expanduser('~/src/shell/python'))
-import compilercollection
-import fs
-import git
-import ssh
-import tex
+import lib
+import lib.compilercollection
+import lib.fs
+import lib.git
+import lib.ssh
+import lib.tex
 
 # some wrapper functions to be called from vim
-
-
 
 
 def find_base_dir_vim_wrapper(cur=None):
     if cur is None:
         cur = vim.current.buffer.name
-    return fs.find_base_dir(cur)
+    return lib.fs.find_base_dir(cur)
 
 
 def open_pdf_vim_wrapper():
@@ -41,7 +39,7 @@ def tex_count_vim_wrapper(filename=None, wait=False):
     if filename is None:
         filename = vim.current.buffer.name
     width = vim.current.window.width - 1
-    for data in tex.count(filename, wait):
+    for data in lib.tex.count(filename, wait):
         if 'pages' in data:
             print(('%(pages)s pages, %(words)s words and %(chars)s chars '
                    'in %(file)s.'
@@ -54,7 +52,7 @@ def tex_count_vim_wrapper(filename=None, wait=False):
 
 def compile():
     '''Compile the current file.'''
-    cls = compilercollection.find_compiler(vim.current.buffer.name)
+    cls = lib.compilercollection.find_compiler(vim.current.buffer.name)
     compiler = cls(vim.current.buffer.name)
     threading.Thread(target=compiler.run).start()
 
@@ -66,7 +64,7 @@ def backup_current_buffer():
     mytime = time.strftime('%Y/%m/%d/%H/%M')
     for server in servers.keys():
         path = os.path.join(servers[server], mytime)
-        threading.Thread(target=ssh.background_scp,
+        threading.Thread(target=lib.ssh.background_scp,
                          args=([filename], server, path, True, True)).start()
 
 
@@ -129,7 +127,7 @@ def osx_version():
 def check_for_english_babel():
     ''' Check if the given buffer has a line matching
     "\usepackage[english]{babel}".'''
-    return tex.find_babel(vim.current.buffer.name) == 'english'
+    return lib.tex.find_babel(vim.current.buffer.name) == 'english'
     #for line in vim.current.buffer:
     #    if line.startswith(r'\usepackage[') and line.endswith(']{babel}'):
     #        # langs = line.strip(r'\usepackage{babel}')[1:-1].split(',')
