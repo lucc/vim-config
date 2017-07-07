@@ -65,15 +65,17 @@ function! luc#time(cmd1, cmd2, count) " {{{1
 endfunction
 
 " function! luc#localtime() {{{1
-if has('python')
-  function! luc#localtime()
-    " precice local time from python
-    return pyeval('time.time()')
-  endfunction
-elseif has('python3')
+if has('python3')
+  python3 import time
   function! luc#localtime()
     " precice local time from python3
     return py3eval('time.time()')
+  endfunction
+elseif has('python')
+  python import time
+  function! luc#localtime()
+    " precice local time from python
+    return pyeval('time.time()')
   endfunction
 else
   function! luc#localtime()
