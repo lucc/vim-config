@@ -109,10 +109,11 @@ Plugin 'alx741/vinfo' "{{{2
 "Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'ludovicchabant/vim-lawrencium'
-Plugin 'mhinz/vim-signify'
-let g:sygnify_vcs_list = ['git', 'hg', 'svn']
+"Plugin 'mhinz/vim-signify'
+"let g:sygnify_vcs_list = ['git', 'hg', 'svn']
 "let g:signify_disable_by_default = 1
 " use :SignifyToggle to activate
+Plug 'airblade/vim-gitgutter'
 Plugin 'junegunn/gv.vim'
 Plugin 'gregsexton/gitv'
 
