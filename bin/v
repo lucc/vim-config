@@ -1,9 +1,24 @@
 #!/usr/bin/nvim -S
 " vim: ft=vim
 
+" save and restore global variables
+let s:saved = {}
+function! s:save(name)
+  if has_key(g:, a:name)
+    let s:saved[a:name] = g:[a:name]
+  endif
+endfunction
+function! s:restore(name)
+  unlet! g:{a:name}
+  if has_key(s:saved, a:name)
+    let g:[a:name] = s:saved[a:name]
+    unlet s:saved[a:name]
+  endif
+endfunction
+
 function! s:all_readable(filelist)
-  for file in a:filelist
-    if !filereadable(file)
+  for l:file in a:filelist
+    if !filereadable(l:file)
       return 0
     endif
   endfor
@@ -17,35 +32,19 @@ function! s:run(input)
   " returns: 0
 
   " Save the global settings that we will override
-  if exists('g:ctrlp_default_input')
-    let l:saved_ctrlp_default_input = g:ctrlp_default_input
-  endif
-  if exists('g:ctrlp_match_window')
-    let l:saved_ctrlp_match_window = g:ctrlp_match_window
-  endif
-  if exists('g:ctrlp_open_single_match')
-    let l:saved_ctrlp_open_single_match = g:ctrlp_open_single_match
-  endif
+  call s:save('ctrlp_default_input')
+  call s:save('ctrlp_match_window')
+  call s:save('ctrlp_open_single_match')
   " Override the global settings with custom values.
   let g:ctrlp_default_input = a:input
   let g:ctrlp_match_window = 'bottom,order:btt,min:'.(&lines + 1).',max:'.(&lines + 1)
   let g:ctrlp_open_single_match = ['all']
   " Run CtrlP.
   CtrlPMRU
-  " unlet custom settings
-  unlet g:ctrlp_default_input
-  unlet g:ctrlp_match_window
-  unlet g:ctrlp_open_single_match
   " restore saved settings
-  if exists('l:saved_ctrlp_default_input')
-    let g:ctrlp_default_input = l:saved_ctrlp_default_input
-  endif
-  if exists('l:saved_ctrlp_match_window')
-    let g:ctrlp_match_window = l:saved_ctrlp_match_window
-  endif
-  if exists('l:saved_ctrlp_open_single_match')
-    let g:ctrlp_open_single_match = l:saved_ctrlp_open_single_match
-  endif
+  call s:restore('ctrlp_default_input')
+  call s:restore('ctrlp_match_window')
+  call s:restore('ctrlp_open_single_match')
 endfunction
 
 if argc() == 0
@@ -53,8 +52,8 @@ if argc() == 0
 elseif s:all_readable(argv())
   " do nothing
 else
-  let args = join(argv(), '')
+  let s:args = join(argv(), '')
   %argdelete
   %bwipeout
-  call s:run(args)
+  call s:run(s:args)
 endif
