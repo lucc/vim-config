@@ -102,12 +102,16 @@ let g:sh_fold_enabled=7
 
 " path {{{1
 " set the path for file searching
-set path=.,,./**,.;,~/
-set path+=/usr/include/
-set path+=/usr/local/include/
-set path+=/usr/lib/wx/include/
-set path+=/usr/X11/include/
-set path+=/opt/X11/include/
+" first the directory of the current file
+set path=.
+" then the current working directory
+set path+=,
+" all files below the current file
+set path+=./**
+" all dirs above the current file
+set path+=.;
+" and the home directory
+set path+=~/
 
 " formatoptions {{{1
 " formatoptions default is tcq
