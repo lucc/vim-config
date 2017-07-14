@@ -25,7 +25,7 @@ set guioptions-=m
 
 set backup
 set backupdir-=.
-"let &backupskip .= ',' . expand('$HOME') . '/.*/**/secure/*'
+set backupskip+=/dev/shm/*
 set hidden
 set confirm
 set textwidth=78
