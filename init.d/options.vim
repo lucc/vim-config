@@ -46,9 +46,12 @@ set diffopt=filler,vertical
 set sessionoptions+=resize,winpos
 " use /bin/sh as shell to have a shell with a simple prompt TODO fix zsh
 " prompt
-set shell=/bin/sh
+"set shell=/bin/sh
+" hopefully this is not to demanding (=short)
+set updatetime=200
 set directory+=~/tmp
 set directory+=/tmp
+set inccommand=split
 
 " cpoptions {{{1
 set cpoptions+=$ " don't redraw the display while executing c, s, ... cmomands
