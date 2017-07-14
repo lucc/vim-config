@@ -43,16 +43,16 @@ endfunction
 function! luc#time(cmd1, cmd2, count) " {{{1
   " execute two ex commands count times each and print the duration
   let header = [
-	\ 'let s:time1 = luc#localtime()',
+	\ 'let s:time1 = reltime()',
 	\ 'for i in range('.a:count.')'
 	\ ]
   let footer = [
 	\ 'endfor',
-	\ 'let s:time2 = luc#localtime()'
+	\ 'let s:time2 = reltime(s:time1)'
 	\ ]
   let length = min([max([len(a:cmd1), len(a:cmd2)]) + 5, &columns - 20])
   let fmt = '%-'.length.'.'.length.'s'
-  let echostr = 'echo %s." -> ".string(s:time2-s:time1)." sec"'
+  let echostr = 'echo %s." -> ".reltimestr(s:time2)." sec"'
   let echo1 = printf(echostr, string(printf(fmt, a:cmd1)))
   let echo2 = printf(echostr, string(printf(fmt, a:cmd2)))
   echo 'Running' a:count 'repetitions of ...'
@@ -63,26 +63,6 @@ function! luc#time(cmd1, cmd2, count) " {{{1
   execute 'source' file
   call delete(file)
 endfunction
-
-" function! luc#localtime() {{{1
-if has('python3')
-  python3 import time
-  function! luc#localtime()
-    " precice local time from python3
-    return py3eval('time.time()')
-  endfunction
-elseif has('python')
-  python import time
-  function! luc#localtime()
-    " precice local time from python
-    return pyeval('time.time()')
-  endfunction
-else
-  function! luc#localtime()
-    " localtime from vimscript (one second precision)
-    return localtime()
-  endfunction
-endif
 
 function! luc#capitalize(text) " {{{1
   return substitute(a:text, '\v<(\w)(\w*)>', '\u\1\L\2', 'g')
