@@ -4,15 +4,13 @@ init.py file by luc.  This file should be loaded from init.vim with :pyfile.
 
 from __future__ import print_function
 
-# import random.randint
 import os
 import re
-import subprocess
 import threading
 import time
 import timeit
+
 import vim
-# import sys
 
 # importing private modules
 import lib
@@ -65,7 +63,7 @@ def backup_current_buffer():
 
 
 def check_for_english_babel():
-    ''' Check if the given buffer has a line matching
+    r''' Check if the given buffer has a line matching
     "\usepackage[english]{babel}".'''
     return lib.tex.find_babel(vim.current.buffer.name) == 'english'
     #for line in vim.current.buffer:
