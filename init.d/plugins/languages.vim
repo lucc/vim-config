@@ -1,7 +1,9 @@
 " vim: foldmethod=marker spelllang=en
-let s:uname = system('uname')[:-2]
+
 " plugins: languages
 
+Plug 'Shougo/context_filetype.vim'
+Plug 'tpope/vim-scriptease'
 Plugin 'vim-scripts/applescript.vim'
 Plugin 'vim-scripts/icalendar.vim'
 Plugin 'aliva/vim-fish'
