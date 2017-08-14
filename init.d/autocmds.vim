@@ -29,3 +29,12 @@ augroup LucApplications
 	\   filter(neomake#makers#ft#tex#EnabledMakers() + ['make'],
 	\          'executable(v:val)')
 augroup END
+
+augroup LucNewScripts
+  autocmd!
+  " from https://unix.stackexchange.com/a/39995/88313
+  autocmd BufWritePost *
+	\ if getline(1) =~# '^#!.*/bin/' && ! executable(expand('<afile>')) |
+	\   silent !chmod +x <afile> |
+	\ endif
+augroup END
