@@ -40,6 +40,7 @@ let g:neomake_verbose = 0
 "else
 "  let g:neomake_python_enabled_makers = ['pep8', 'pylint', 'python']
 "endif
+let g:neomake_php_enabled_makers = ['php', 'phpcs', 'phpmd']
 "let neomake_open_list = 2 " also preserve cursor position
 let g:neomake_list_height = 5
 let g:neomake_nvimluatest_maker = {
