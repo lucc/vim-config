@@ -84,21 +84,11 @@ let g:easytags_languages.markdown = {
 let g:easytags_languages.pandoc = g:easytags_languages.markdown
 
 " plugins: man and info pages {{{1
-"Plugin 'info.vim' "{{{2
+Plug 'alvan/vim-php-manual'
+"Plugin 'info.vim'
+Plugin 'alx741/vinfo'
 
-Plugin 'alx741/vinfo' "{{{2
-
-"Plugin 'vim-utils/vim-man', {'branch': 'fix/shadow'} " {{{2
-
-"Plugin 'ManPageView' "{{{2
-" TODO
-" http://www.drchip.org/astronaut/vim/vbafiles/manpageview.vba.gz
-" manually installed: open above url and execute :UseVimaball
-" display manpages in a vertical split (other options 'only', 'hsplit',
-" 'vsplit', 'hsplit=', 'vsplit=', 'reuse')
-"let g:manpageview_winopen = 'reuse'
-
-" hints_man {{{2
+" hints_man
 " http://www.vim.org/scripts/script.php?script_id=1825
 " http://www.vim.org/scripts/script.php?script_id=1826
 "augroup LucManHints
