@@ -120,3 +120,9 @@ Plugin 'gregsexton/gitv'
 
 " debugging {{{1
 Plug 'joonty/vdebug', {'branch': 'v2-integration'}
+let g:vdebug_options = {
+      \ 'break_on_open': 0,
+      \ 'continuous_mode': 1,
+      \ 'watch_window_style': 'compact',
+      \ }
+      ""\ 'debug_window_level': 2,
