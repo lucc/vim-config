@@ -1,4 +1,4 @@
-function! luc#bib#format()
+function! luc#bib#format() abort
   " format bibentries in the current file
 
   " format the line with "@type{key,"
@@ -9,7 +9,7 @@ function! luc#bib#format()
   %substitute/^\s*\([A-Za-z]\+\)\s*=\s*["{]\(.*\)["}],$/\=s:g(submatch(1), submatch(2))/
 endfunction
 
-function! s:f(type, key)
+function! s:f(type, key) abort
   " Format function to produce a nicely formatied bibtex entry.
   "
   " type: the bibtex entry type as a string
@@ -19,7 +19,7 @@ function! s:f(type, key)
   return '@' . a:type . '{' . printf('%'.factor.'s', ' ') . a:key . ','
 endfunction
 
-function! s:g(key, value)
+function! s:g(key, value) abort
   " Format a field - value line in a bibtex entry.
   "
   " key: the field name as a string

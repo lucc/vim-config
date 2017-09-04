@@ -1,4 +1,4 @@
-function! luc#man#open(...) "{{{2
+function! luc#man#open(...) abort "{{{2
   " try to find a manpage
   if &filetype == 'man' && a:0 == 0
     execute 'RMan' expand('<cword>')
@@ -17,7 +17,7 @@ function! luc#man#open(...) "{{{2
   vmap <buffer> K :call LucManOpen(LucGetVisualSelection())<CR>
 endfunction
 
-function! luc#man#open_tab(type, string) "{{{2
+function! luc#man#open_tab(type, string) abort "{{{2
   " look up string in the documentation for type
   if a:type =~ 'man\|m'
     let suffix = 'man'
@@ -40,11 +40,11 @@ function! luc#man#open_tab(type, string) "{{{2
 endfunction
 
 python import man
-function! luc#man#complete_topics(ArgLead, CmdLine, CursorPos) "{{{2
+function! luc#man#complete_topics(ArgLead, CmdLine, CursorPos) abort "{{{2
   return pyeval('list(man.complete("'.a:ArgLead.'","'.a:CmdLine.'","'.a:CursorPos.'"))')
 endfunction
 
-function! luc#man#help_tags() "{{{2
+function! luc#man#help_tags() abort "{{{2
   for item in split(globpath(&runtimepath, 'doc'), '\n')
     if isdirectory(item)
       execute 'helptags' item
@@ -52,7 +52,7 @@ function! luc#man#help_tags() "{{{2
   endfor
 endfunction
 
-function luc#man#open_this_in_gvim()
+function luc#man#open_this_in_gvim() abort
   let l:count = index(g:vimpager_ptree, 'man')
   if l:count == -1
     echohl ErrorMsg

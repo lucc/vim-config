@@ -1,8 +1,8 @@
-function! luc#wrap#core(text, pre, post) "{{{1
+function! luc#wrap#core(text, pre, post) abort
   return a:pre . a:text . a:post
 endfunction
 
-function! luc#wrap#delim(text, delim) "{{{1
+function! luc#wrap#delim(text, delim) abort
   if a:delim == "'"
     return luc#wrap#core(a:text, "'", "'")
   elseif a:delim == '"'
@@ -26,7 +26,7 @@ function! luc#wrap#delim(text, delim) "{{{1
   endif
 endfunction
 
-function! luc#wrap#tex(text, wrapper) "{{{1
+function! luc#wrap#tex(text, wrapper) abort
   if a:delim == "'"
     return luc#wrap#core(a:text, "'", "'")
   elseif a:delim == '"'
@@ -62,7 +62,7 @@ function! luc#wrap#tex(text, wrapper) "{{{1
   endif
 endfunction
 
-function! luc#wrap#operator(type) "{{{1
+function! luc#wrap#operator(type) abort
   " this function is partly copied from the vim help about g@
   let sel_save = &selection
   let saved_register = @@

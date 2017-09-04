@@ -1,6 +1,6 @@
 " some generic functions to set up vim
 
-function! luc#setup#viminfo(type)
+function! luc#setup#viminfo(type) abort
   " default: '100,<50,s10,h
   " the flag ' is for filenames for marks
   " the flag < is the nummber of lines saved per register
@@ -20,12 +20,12 @@ function! luc#setup#viminfo(type)
   endif
 endfunction
 
-function! luc#setup#python()
+function! luc#setup#python() abort
   python import vim
   pyfile ~/.config/nvim/init.py
 endfunction
 
-function! luc#setup#vundle()
+function! luc#setup#vundle() abort
   " https://github.com/gmarik/Vundle.vim
   filetype off
   let path = expand(g:luc#xdg#data . '/plugins')
@@ -34,7 +34,7 @@ function! luc#setup#vundle()
   Plugin 'gmarik/Vundle.vim'
 endfunction
 
-function! luc#setup#vim_plug()
+function! luc#setup#vim_plug() abort
   " https://github.com/junegunn/vim-plug
   let path = expand(g:luc#xdg#data . '/plugins')
   "execute 'set runtimepath+=' . path . '/vim-plug'
@@ -44,7 +44,7 @@ function! luc#setup#vim_plug()
   Plug 'junegunn/vim-plug'
 endfunction
 
-function! luc#setup#delfunction(pattern)
+function! luc#setup#delfunction(pattern) abort
   " Delete all functions matching the given pattern.
   redir => functions
   execute 'silent function /'.a:pattern

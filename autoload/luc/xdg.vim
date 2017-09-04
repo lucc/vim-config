@@ -7,7 +7,7 @@ let luc#xdg#data =
 let luc#xdg#cache =
       \ ($XDG_CACHE_HOME != '' ? $XDG_CACHE_HOME : '~/.cache') .'/nvim'
 
-function! luc#xdg#runtimepath()
+function! luc#xdg#runtimepath() abort
   set runtimepath-=~/.vim
   set runtimepath-=~/.vim/after
   execute 'set runtimepath-=' . g:luc#xdg#config

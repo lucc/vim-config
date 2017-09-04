@@ -1,7 +1,7 @@
 " safe this file as autoload/grepft.vim in your runtimepath
 
 " Search all files of the current file type.
-function! grepft#search(query)
+function! grepft#search(query) abort
   " can be changed to 'grep', 'Ack' or 'Ag':
   let command = 'vimgrep'
   let command .= ' ' . a:query . ' **/*.'

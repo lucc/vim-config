@@ -1,5 +1,5 @@
 
-function! luc#remote_editor(mail) "{{{1
+function! luc#remote_editor(mail) abort
   " a function to be called by a client who wishes to use a vim server as an
   " non forking edior. One can also set the environment variable EDITOR with
   " EDITOR='vim --remote-tab-wait-silent +call\ LucMiscRemoteEditor()'
@@ -40,7 +40,7 @@ function! luc#remote_editor(mail) "{{{1
   endif
 endfunction
 
-function! luc#time(cmd1, cmd2, count) " {{{1
+function! luc#time(cmd1, cmd2, count) abort
   " execute two ex commands count times each and print the duration
   let header = [
 	\ 'let s:time1 = reltime()',
@@ -64,11 +64,11 @@ function! luc#time(cmd1, cmd2, count) " {{{1
   call delete(file)
 endfunction
 
-function! luc#capitalize(text) " {{{1
+function! luc#capitalize(text) abort
   return substitute(a:text, '\v<(\w)(\w*)>', '\u\1\L\2', 'g')
 endfunction
 
-function! luc#capitalize_operator_function(type) "{{{1
+function! luc#capitalize_operator_function(type) abort
   " this function is partly copied from the vim help about g@
   let sel_save = &selection
   let saved_register = @@
@@ -86,7 +86,7 @@ function! luc#capitalize_operator_function(type) "{{{1
   let @@ = saved_register
 endfunction
 
-function! luc#find_next_spell_error() "{{{1
+function! luc#find_next_spell_error() abort
   " A function to jump to the next spelling error
   setlocal spell
   "if spellbadword(expand('<cword>')) == ['', '']
@@ -94,7 +94,7 @@ function! luc#find_next_spell_error() "{{{1
   "endif
 endfunction
 
-function! luc#get_visual_selection() "{{{1
+function! luc#get_visual_selection() abort
   " see:
   "http://vim.wikia.com/wiki/Making_Parenthesis_And_Brackets_Handling_Easier
   let saved_register = @@
@@ -109,7 +109,7 @@ function! luc#get_visual_selection() "{{{1
   return return_value
 endfunction
 
-function! s:flatten_list(list) "{{{1
+function! s:flatten_list(list) abort
   " Code from bairui@#vim.freenode
   " https://gist.github.com/3322468
   let val = []
@@ -124,7 +124,7 @@ function! s:flatten_list(list) "{{{1
   return val
 endfunction
 
-function! s:goto_definition(string) "{{{1
+function! s:goto_definition(string) abort
   try
     execute 'cscope find g' string
   catch
@@ -140,7 +140,7 @@ function! s:goto_definition(string) "{{{1
   " noautocmd
 endfunction
 
-function! s:select_font(big) "{{{1
+function! s:select_font(big) abort
   " Select a font and set it
   let delim = ''
   if has('gui_macvim')
@@ -151,7 +151,7 @@ function! s:select_font(big) "{{{1
   " TODO
 endfunction
 
-function! luc#prefix_old() "{{{1
+function! luc#prefix_old() abort
   let sel_save = &selection
   let saved_register = getreg('@', 1, 1)
   let saved_register_type = getregtype('@')
@@ -171,7 +171,7 @@ function! luc#prefix_old() "{{{1
   call setreg('@', saved_register, saved_register_type)
 endfunction
 
-function! luc#prefix(type) range "{{{1
+function! luc#prefix(type) range abort
   if a:type == ""
     let first = line("'<")
     let last = line("'>")
@@ -195,7 +195,7 @@ function! luc#prefix(type) range "{{{1
   execute range . 's/' . regex . '/' . subst . '/'
 endfunction
 
-function! luc#mail_format_quote_header() range
+function! luc#mail_format_quote_header() range abort
   " Formate the header of a quote block in an email message.
   "
   " : TODO
@@ -205,7 +205,7 @@ function! luc#mail_format_quote_header() range
   " TODO find header fields ...
 endfunction
 
-function! luc#prepare_vcard_null_lines_for_merge() range
+function! luc#prepare_vcard_null_lines_for_merge() range abort
   " documentation
   "
   " : TODO
@@ -223,7 +223,7 @@ function! luc#prepare_vcard_null_lines_for_merge() range
   redraw
 endfunction
 
-function! luc#vcard2null_line() range
+function! luc#vcard2null_line() range abort
   "
   "
   " : TODO
@@ -233,7 +233,7 @@ function! luc#vcard2null_line() range
   redraw
 endfunction
 
-function! luc#nvim_as_terminal()
+function! luc#nvim_as_terminal() abort
   " Set up nvim to be usable as a stand alone terminal.
   if exists('s:terminal')
     let s:terminal.last_buffer = buffer_number('%')
@@ -255,7 +255,7 @@ function! luc#nvim_as_terminal()
   tnoremap <buffer> <C-S> <C-\><C-N>:call luc#return_from_terminal()<CR>
 endfunction
 
-function! luc#return_from_terminal()
+function! luc#return_from_terminal() abort
   " Undo the settings done by luc#nvim_as_terminal.
   if !exists('s:terminal')
     echoerr "The terminal was never opened!"
@@ -267,18 +267,18 @@ function! luc#return_from_terminal()
   execute 'buffer' s:terminal.last_buffer
 endfunction
 
-function! luc#get_terminal()
+function! luc#get_terminal() abort
   return copy(s:terminal)
 endfunction
 
-function! luc#khard_editor()
+function! luc#khard_editor() abort
   " Load options and maps for editing khard yaml files.
   setfiletype yaml
   map  <buffer> <tab>       /^[^#]/<cr>A
   imap <buffer> <tab> <c-o>:/^[^#]/ normal $<cr>
 endfunction
 
-function! luc#neomake_tex_make_exe()
+function! luc#neomake_tex_make_exe() abort
   if filereadable(getcwd() . '/makefile')
     return 'make'
   else
@@ -286,6 +286,6 @@ function! luc#neomake_tex_make_exe()
   endif
 endfunction
 
-function! luc#neomake_tex_make_args()
+function! luc#neomake_tex_make_args() abort
   return [expand('%:p:t:r') . '.pdf']
 endfunction
