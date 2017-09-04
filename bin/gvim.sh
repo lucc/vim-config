@@ -44,7 +44,7 @@ doc () {
   fi
   wait_server \
     --cmd 'let server = split(serverlist())[0]' \
-    --cmd "call remote_expr(server, 'luc#man#open_tab(\"$1\", \"${@:2}\")')" \
+    --cmd "call remote_expr(server, 'luc#man#open_tab(\"$1\", \"${*:2}\")')" \
     --cmd 'call remote_foreground(server)'
 }
 
