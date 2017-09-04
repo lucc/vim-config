@@ -20,20 +20,19 @@ fi
 wait_server () {
   # this does not need any other options to silence the process b/c --cmd will
   # execute the code very early
-  vim --cmd 'while serverlist() == "" | sleep 100m | endwhile' "$@"
+  vim --cmd 'while serverlist() == "" | sleep 100m | endwhile' "$@" --cmd quit
 }
 
 # try to put the server vim in the foreground {{{2
 foreground () {
   wait_server \
     --cmd 'let server = split(serverlist())[0]' \
-    --cmd 'call remote_foreground(server)' \
-    --cmd quit
+    --cmd 'call remote_foreground(server)'
 }
 
 # open a new tab in the server {{{2
 tab () {
-  wait_server --cmd quit
+  wait_server
   vim --remote-tab-wait-silent "$@"
 }
 
@@ -46,8 +45,7 @@ doc () {
   wait_server \
     --cmd 'let server = split(serverlist())[0]' \
     --cmd "call remote_expr(server, 'luc#man#open_tab(\"$1\", \"${@:2}\")')" \
-    --cmd 'call remote_foreground(server)' \
-    --cmd quit
+    --cmd 'call remote_foreground(server)'
 }
 
 # wrapper functions for individual help systems {{{2
