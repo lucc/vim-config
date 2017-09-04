@@ -5,12 +5,12 @@
 # info or to call a gvim server.
 
 # variables {{{1
-TMP=`mktemp -t $PROG.$$.XXXXXX`
+TMP=$(mktemp)
 SAVE_STDIN=false
 CMD=tab
 
 # start gvim in the background if no vim server is running {{{1
-if [ -z "`vim --serverlist`" ]; then
+if [ -z "$(vim --serverlist)" ]; then
   gvim &
 fi
 
@@ -62,7 +62,7 @@ if [ $# -eq 0 ]; then
 else
   # trying to implement long options
   for arg; do
-    case "$arg" in
+    case $arg in
       --editor)
 	# be an editor, to be used with $EDITOR
 	CMD=tab
