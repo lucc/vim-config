@@ -77,6 +77,7 @@ command! -nargs=* -complete=file Ag Grepper -jump -tool ag -query <args>
 Plugin 'jamessan/vim-gnupg'
 Plugin 'pix/vim-known_hosts'
 Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree'
 Plugin 'sjl/gundo.vim'
 "Plugin 'VimRepress' "https://bitbucket.org/pentie/vimrepress
 Plugin 'lucc/VimRepress'
