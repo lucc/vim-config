@@ -67,6 +67,6 @@ function luc#man#open_this_in_gvim()
     let l:count -= 1
   endwhile
   let arg = split(system('ps -o args= ' . pid))[-1]
-  call system('transparent-gvim.sh --man ' . arg . '&')
+  call system('gvim.sh --man ' . arg . '&')
   quit
 endfunction
