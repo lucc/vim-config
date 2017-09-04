@@ -11,10 +11,10 @@ function! luc#man#open(...) abort "{{{2
     echohl None
     return
   endif
-  map <buffer> K :call LucManOpen()<CR>
-  map <buffer> K :call LucManOpen()<CR>
-  vmap <buffer> K :call LucManOpen(LucGetVisualSelection())<CR>
-  vmap <buffer> K :call LucManOpen(LucGetVisualSelection())<CR>
+  map <buffer> K :call luc#man#open()<CR>
+  map <buffer> K :call luc#man#open()<CR>
+  vmap <buffer> K :call luc#man#open(luc#get_visual_selection())<CR>
+  vmap <buffer> K :call luc#man#open(luc#get_visual_selection())<CR>
 endfunction
 
 function! luc#man#open_tab(type, string) abort "{{{2
