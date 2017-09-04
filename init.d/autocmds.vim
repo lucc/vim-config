@@ -6,7 +6,7 @@ augroup LucRemoveWhiteSpaceAtEOL
 	\ if ! (expand('<afile>') =~? '.*\.patch' ||
         \       expand('<afile>') =~? '.*\.diff') |
 	\   let s:position = getpos('.')          |
-	\   silent keepjumps %substitute/\s\+$//e |
+	\   silent keepjumps %snomagic/\s\+$//e   |
 	\   call setpos('.', s:position)          |
 	\ endif
 augroup END
