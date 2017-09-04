@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # vim: foldmethod=marker
 
 # A script to use gvim as a replacement for different programs like man and
@@ -8,9 +8,10 @@
 TMP=$(mktemp)
 SAVE_STDIN=false
 CMD=tab
+new_args=()
 
 # start gvim in the background if no vim server is running {{{1
-if [ -z "$(vim --serverlist)" ]; then
+if [[ -z "$(vim --serverlist)" ]]; then
   gvim &
 fi
 
@@ -38,7 +39,7 @@ tab () {
 
 # generic function to open documentation {{{2
 doc () {
-  if [ $# -eq 0 ]; then
+  if [[ $# -eq 0 ]]; then
     echo Topic needed >&2
     exit 2
   fi
@@ -57,7 +58,7 @@ php     () { doc php "$@"; }
 pydoc   () { doc py  "$@"; }
 
 # parse the command line {{{1
-if [ $# -eq 0 ]; then
+if [[ $# -eq 0 ]]; then
   CMD=foreground
 else
   # trying to implement long options
@@ -66,7 +67,7 @@ else
       --editor)
 	# be an editor, to be used with $EDITOR
 	CMD=tab
-	new_args=("${new_args[@]}" '+call luc#remote_editor(0)')
+	new_args+=('+call luc#remote_editor(0)')
 	;;
       --info)
 	# emulate info(1)
@@ -75,7 +76,7 @@ else
       --mail)
 	# like --editor for emails
 	CMD=tab
-	new_args=("${new_args[@]}" '+call luc#remote_editor(1)')
+	new_args+=('+call luc#remote_editor(1)')
 	;;
       --man)
 	# emulate man(1)
@@ -102,7 +103,7 @@ else
 	;;
       *)
 	# pass this argument to vim directly
-	new_args=("${new_args[@]}" "$arg")
+	new_args+=("$arg")
 	;;
     esac
   done
@@ -112,7 +113,7 @@ fi
 if $SAVE_STDIN; then
   # save stdin to a temp file (see :h --remote and :h --)
   cat > "$TMP"
-  new_args=("${new_args[@]}" "$TMP")
+  new_args+=("$TMP")
 fi
 
 $CMD "${new_args[@]}"
