@@ -100,6 +100,12 @@ let g:Tex_FoldedSections = join(s:TexFoldSec, ',')
   "let Tex_FoldedSections =
   "\ 'part,chapter,section,subsection,subsubsection,paragraph'
 
+" Synctex support with evince as described here:
+" https://help.gnome.org/users/evince/stable/synctex-editors.html.en
+let g:Tex_ViewRule_pdf = 'python /usr/lib/gedit/plugins/synctex/evince_dbus.py'
+let g:Tex_DefaultTargetFormat = 'pdf'
+let g:Tex_CompileRule_pdf = 'latexrun --latex-args --synctex=1 $*'
+
 " plugins: lisp/scheme {{{1
 "Plugin 'vim-scripts/slimv.vim'
 "Plugin 'vim-scripts/tslime.vim'
