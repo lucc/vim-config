@@ -38,6 +38,6 @@ augroup LucNewScripts
   " from https://unix.stackexchange.com/a/39995/88313
   autocmd BufWritePost *
 	\ if getline(1) =~# '^#!.*/bin/' && ! executable(expand('<afile>')) |
-	\   silent !chmod +x <afile> |
+	\   call jobstart(['chmod', '+x', expand('<afile>')]) |
 	\ endif
 augroup END
