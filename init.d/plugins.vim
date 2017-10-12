@@ -77,7 +77,8 @@ command! -nargs=* -complete=file Ag Grepper -jump -tool ag -query <args>
 Plugin 'jamessan/vim-gnupg'
 Plugin 'pix/vim-known_hosts'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
+"Plugin 'scrooloose/nerdtree'
+"Plug 'tpope/vim-vinegar'
 Plugin 'sjl/gundo.vim'
 "Plugin 'VimRepress' "https://bitbucket.org/pentie/vimrepress
 Plugin 'lucc/VimRepress'
@@ -95,7 +96,6 @@ Plugin 'chrisbra/vim-zsh'
 Plugin 'git://fedorapeople.org/home/fedora/wwoods/public_git/vim-scripts.git'
 "Plugin 'ryanoasis/vim-devicons'
 Plug 'hkupty/iron.nvim'
-Plug 'severin-lemaignan/vim-minimap'
 
 " finalize {{{1
 call plug#end()
