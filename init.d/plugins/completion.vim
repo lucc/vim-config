@@ -48,3 +48,20 @@ if s:choice != 'none'
   inoremap <expr> <Tab>   pumvisible() ? "\<C-N>" : "\<Tab>"
   inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>" : "\<Tab>"
 endif
+
+Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
+let g:LanguageClient_serverCommands = {
+      \ 'php': ['php', 'vendor/felixfbecker/language-server/bin/php-language-server.php'],
+      \ 'python': ['pyls'],
+      \ }
+"    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+"    \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
+"    \ }
+
+" Automatically start language servers.
+ let g:LanguageClient_autoStart = 1
+"
+nnoremap <silent> KK :call LanguageClient_textDocument_hover()<CR>
+" nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+" nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
