@@ -51,7 +51,6 @@ endif
 
 Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
 let g:LanguageClient_serverCommands = {
-      \ 'php': ['php', 'vendor/felixfbecker/language-server/bin/php-language-server.php'],
       \ 'python': ['pyls'],
       \ }
 "    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
