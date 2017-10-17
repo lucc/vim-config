@@ -4,8 +4,9 @@ if ! has('gui_running')
   set background=dark
   if &termguicolors
     colorscheme NeoSolarized
+    highlight! VertSplit guifg=#657b83 guibg=#657b83
   else
     colorscheme solarized
+    highlight! SignColumn ctermfg=10 ctermbg=0
   endif
-  highlight! SignColumn ctermfg=10 ctermbg=0 guibg=#073642
 endif

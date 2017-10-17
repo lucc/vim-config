@@ -106,6 +106,7 @@ Plugin 'ludovicchabant/vim-lawrencium'
 "let g:signify_disable_by_default = 1
 " use :SignifyToggle to activate
 Plug 'airblade/vim-gitgutter'
+"let g:gitgutter_override_sign_column_highlight = 0
 Plugin 'junegunn/gv.vim'
 Plugin 'gregsexton/gitv'
 
