@@ -1,14 +1,8 @@
 " init.vim file by luc
 " vim: spelllang=en
 
-" set up python
-"call luc#setup#python() " disable automatic python loading for speed
-
 " user defined variables
 let mapleader = ','
-
-" setup for server vim
-call luc#setup#viminfo(luc#server#running() ? 'client' : 'server')
 
 " source subfiles
 runtime init.d/options.vim

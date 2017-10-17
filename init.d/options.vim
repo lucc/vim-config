@@ -53,6 +53,16 @@ set directory+=~/tmp
 set directory+=/tmp
 set inccommand=split
 
+" shada {{{1
+" default: '100,<50,s10,h
+" the flag ' is for filenames for marks
+" the flag < is the nummber of lines saved per register
+" the flag s is the max size saved for registers in kb
+" the flag h is to disable hlsearch
+" the flag % is to remember (whole) buffer list
+" the flag n is the name of the viminfo file
+set shada+=%
+
 " cpoptions {{{1
 set cpoptions+=$ " don't redraw the display while executing c, s, ... cmomands
 
