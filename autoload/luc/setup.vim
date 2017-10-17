@@ -5,15 +5,6 @@ function! luc#setup#python() abort
   pyfile ~/.config/nvim/init.py
 endfunction
 
-function! luc#setup#vundle() abort
-  " https://github.com/gmarik/Vundle.vim
-  filetype off
-  let path = expand(g:luc#xdg#data . '/plugins')
-  execute 'set runtimepath+=' . path . '/Vundle.vim'
-  call vundle#begin(path)
-  Plugin 'gmarik/Vundle.vim'
-endfunction
-
 function! luc#setup#vim_plug() abort
   " https://github.com/junegunn/vim-plug
   let path = expand(g:luc#xdg#data . '/plugins')
