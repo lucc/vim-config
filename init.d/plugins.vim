@@ -27,7 +27,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'sjl/gundo.vim'
 "Plugin 'VimRepress' "https://bitbucket.org/pentie/vimrepress
 Plugin 'lucc/VimRepress'
-Plugin 'vim-scripts/ZoomWin'
+"Plugin 'vim-scripts/ZoomWin'
 Plugin 'AndrewRadev/linediff.vim'
 if has('python')
   Plugin 'guyzmo/notmuch-abook'
@@ -41,6 +41,12 @@ Plugin 'chrisbra/vim-zsh'
 Plugin 'git://fedorapeople.org/home/fedora/wwoods/public_git/vim-scripts.git'
 Plugin 'ryanoasis/vim-devicons'
 Plug 'hkupty/iron.nvim'
+
+Plug 'nathanaelkane/vim-indent-guides'
+let g:indent_guides_auto_colors = 0
+let g:indent_guides_default_mapping = 0
+highlight link IndentGuidesOdd  Normal
+highlight link IndentGuidesEven LineNr
 
 " finalize {{{1
 call plug#end()

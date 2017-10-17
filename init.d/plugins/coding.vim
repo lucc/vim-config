@@ -99,6 +99,7 @@ Plugin 'alx741/vinfo'
 " plugins: vcs stuff {{{1
 "Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-fugitive'
+Plug 'jreybert/vimagit'
 Plugin 'ludovicchabant/vim-lawrencium'
 "Plugin 'mhinz/vim-signify'
 "let g:sygnify_vcs_list = ['git', 'hg', 'svn']

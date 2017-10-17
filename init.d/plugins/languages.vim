@@ -26,6 +26,7 @@ let g:tex_flavor = 'latex'
 "Plugin 'vim-scripts/tex_autoclose.vim'
 
 "Plugin 'vim-scripts/auctex.vim'
+Plug 'lervag/vimtex'
 Plug 'donRaphaco/neotex', { 'for': 'tex' }
 
 Plugin 'vim-latex/vim-latex' "{{{2
