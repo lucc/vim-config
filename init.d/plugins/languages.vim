@@ -3,6 +3,7 @@
 " plugins: languages
 
 Plug 'Shougo/context_filetype.vim'
+Plug 'chrisbra/vim-zsh'
 Plug 'tpope/vim-scriptease'
 Plugin 'vim-scripts/applescript.vim'
 Plugin 'vim-scripts/icalendar.vim'

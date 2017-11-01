@@ -37,7 +37,6 @@ Plugin 'git://git.notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
 Plugin '~/src/vim-tip'
 
 Plugin 'chrisbra/unicode.vim'
-Plugin 'chrisbra/vim-zsh'
 Plugin 'git://fedorapeople.org/home/fedora/wwoods/public_git/vim-scripts.git'
 Plugin 'ryanoasis/vim-devicons'
 Plug 'hkupty/iron.nvim'
