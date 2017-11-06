@@ -36,7 +36,6 @@ elseif s:choice == 'deoplete'
   "https://github.com/zchee/deoplete-zsh
   "https://github.com/tpope/vim-rhubarb
   "https://github.com/SevereOverfl0w/deoplete-github
-  "https://github.com/autozimu/LanguageClient-neovim
   "https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
   Plug 'Shougo/echodoc.vim'
   let g:echodoc#enable_at_startup = 1
