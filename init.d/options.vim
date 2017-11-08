@@ -217,5 +217,5 @@ let g:vimsyn_folding .= 'r' " fold ruby     script
 let g:vimsyn_folding .= 't' " fold tcl      script
 let g:netrw_browsex_viewer = 'xdg-open'
 
-let g:python3_host_prog = '/usr/bin/python'
+let g:python3_host_prog = '/usr/bin/python3'
 let g:python_host_prog = '/usr/bin/python2'
