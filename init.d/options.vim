@@ -72,8 +72,6 @@ set complete+=k
 
 " use the current spell checking settings for directory completion:
 set dictionary+=spell
-" add private directories:
-set dictionary+=~/.config/vim/dictionary/*
 " system word lists
 set dictionary+=/usr/share/dict/american-english
 set dictionary+=/usr/share/dict/british-english
