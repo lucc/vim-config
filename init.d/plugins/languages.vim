@@ -12,6 +12,7 @@ Plugin 'aliva/vim-fish'
 Plugin 'vim-scripts/VCard-syntax'
 Plugin 'vimperator/vimperator.vim'
 Plugin 'tkztmk/vim-vala'
+Plugin 'swekaj/php-foldexpr.vim'
 
 " plugins: LaTeX {{{1
 
