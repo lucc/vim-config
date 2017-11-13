@@ -126,7 +126,7 @@ return require('packer').startup{
 	vim.g.neomake_verbose = 1
 	--vim.g.neomake.open_list = 2 -- also preserve cursor position
 	vim.g.neomake_list_height = 5
-	--vim.g.neomake_php_enabled_makers = ['php', 'phpcs', 'phpmd']
+	vim.g.neomake_php_enabled_makers = {'php', 'phpmd', 'phpcs'}
 	vim.g.neomake_tex_enabled_makers = {
 	  'chktex', 'lacheck', 'rubberinfo', 'proselint', 'latexrun'
 	}
