@@ -22,7 +22,7 @@ let g:neomake_verbose = 1
 "let neomake.open_list = 2 " also preserve cursor position
 let g:neomake_list_height = 5
 
-"let g:neomake_php_enabled_makers = ['php', 'phpcs', 'phpmd']
+let g:neomake_php_enabled_makers = ['php', 'phpmd', 'phpcs']
 let g:neomake_tex_enabled_makers = ['chktex', 'lacheck', 'rubberinfo', 'proselint', 'latexrun']
 let g:neomake_bib_enabled_makers = ['bibtex']
 let g:neomake_nvimluatest_maker = {
