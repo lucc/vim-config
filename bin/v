@@ -40,11 +40,14 @@ function! s:run(input)
   let g:ctrlp_match_window = 'bottom,order:btt,min:'.(&lines + 1).',max:'.(&lines + 1)
   let g:ctrlp_open_single_match = ['mru files']
   " Run CtrlP.
-  CtrlPMRU
-  " restore saved settings
-  call s:restore('ctrlp_default_input')
-  call s:restore('ctrlp_match_window')
-  call s:restore('ctrlp_open_single_match')
+  try
+    CtrlPMRU
+  finally
+    " restore saved settings
+    call s:restore('ctrlp_default_input')
+    call s:restore('ctrlp_match_window')
+    call s:restore('ctrlp_open_single_match')
+  endtry
 endfunction
 
 if argc() == 0
