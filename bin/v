@@ -38,7 +38,7 @@ function! s:run(input)
   " Override the global settings with custom values.
   let g:ctrlp_default_input = a:input
   let g:ctrlp_match_window = 'bottom,order:btt,min:'.(&lines + 1).',max:'.(&lines + 1)
-  let g:ctrlp_open_single_match = ['all']
+  let g:ctrlp_open_single_match = ['mru files']
   " Run CtrlP.
   CtrlPMRU
   " restore saved settings
