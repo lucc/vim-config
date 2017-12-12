@@ -25,16 +25,6 @@ nmap gcc gciw
 vmap <leader>p :call luc#prefix(visualmode())<CR>
 nmap <leader>p :set operatorfunc=luc#prefix<CR>g@
 
-" bla
-if has('gui_macvim')
-  inoremap œ \
-  inoremap æ \|
-  cnoremap œ \
-  cnoremap æ \|
-  inoremap <D-s> <C-O>:silent update<CR>
-  noremap  <D-s>      :silent update<CR>
-endif
-
 " backup current buffer
 nnoremap <silent> <F11>
       \ :silent update <BAR>
@@ -55,9 +45,6 @@ nnoremap g<CR> <C-]>
 
 nnoremap ' `
 nnoremap ` '
-
-" use ß to clear the screen if you want privacy for a moment
-nmap ß :!clear<CR>
 
 " https://github.com/javyliu/javy_vimrc/blob/master/_vimrc
 "vmap // :<C-U>execute 'normal /' . luc#get_visual_selection()<CR>
