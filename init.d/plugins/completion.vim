@@ -25,9 +25,11 @@ if s:choice == 'ycm'
   "Plugin 'c9s/vimomni.vim'
   "Plugin 'tek/vim-ycm-vim'
 elseif s:choice == 'deoplete'
+  " FIXME for ultisnips integration we have to make a function call after
+  " plug#end() in init.d/plugins.vim.
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   let g:deoplete#enable_at_startup = 1
-  Plug 'zchee/deoplete-jedi'
+  "Plug 'zchee/deoplete-jedi'
   "https://github.com/poppyschmo/deoplete-latex
   "https://github.com/lvht/phpcd.vim
   "https://github.com/padawan-php/deoplete-padawan
@@ -51,6 +53,7 @@ endif
 Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
 let g:LanguageClient_serverCommands = {
       \ 'python': ['pyls'],
+      \ 'lua': ['lua-lsp'],
       \ }
 "    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
 "    \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
