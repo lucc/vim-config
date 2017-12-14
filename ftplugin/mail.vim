@@ -3,7 +3,7 @@ setlocal textwidth=72
 setlocal spell
 
 " command to delete empty line(s) ant the end
-command -buffer CleanTrail $ global/\v(> ?)*\s*$/ delete
+command -buffer CleanTrail $ global/\v^(\> ?)*\s*$/ delete
 
 " unfold interesting stuff
 silent! /^$/,$ foldopen
