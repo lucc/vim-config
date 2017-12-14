@@ -36,6 +36,7 @@ Plugin 'chrisbra/unicode.vim'
 Plugin 'git://fedorapeople.org/home/fedora/wwoods/public_git/vim-scripts.git'
 Plugin 'ryanoasis/vim-devicons'
 Plug 'hkupty/iron.nvim'
+command REPL IronRepl
 
 Plug 'nathanaelkane/vim-indent-guides'
 let g:indent_guides_auto_colors = 0
