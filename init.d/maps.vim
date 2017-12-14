@@ -15,6 +15,7 @@ inoremap <C-W> <C-G>u<C-W>
 inoremap <C-s>     <C-o>:call luc#find_next_spell_error()<CR><C-x><C-s>
 nnoremap <C-s>          :call luc#find_next_spell_error()<CR>z=
 nnoremap <leader>s      :call luc#find_next_spell_error()<CR>zv
+nnoremap <leader>k      1z=
 
 " capitalize text
 vmap gc  "=luc#capitalize(luc#get_visual_selection())<CR>p
