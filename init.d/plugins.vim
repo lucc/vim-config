@@ -1,7 +1,6 @@
 " plugin setup file by luc
+"
 " vim: foldmethod=marker spelllang=en
-
-let s:uname = system('uname')[:-2]
 
 call luc#setup#vim_plug()
 
@@ -12,10 +11,7 @@ runtime init.d/plugins/languages.vim
 runtime init.d/plugins/ui.vim
 
 " plugins: searching {{{1
-"Plugin 'rking/ag.vim'
-"Plugin 'mileszs/ack.vim'
 Plugin 'mhinz/vim-grepper' "{{{2
-command! -nargs=* -complete=file GG Grepper -jump -tool git -query <args>
 command! -nargs=* -complete=file Ag Grepper -jump -tool ag -query <args>
 
 " plugins: unsorted {{{1
