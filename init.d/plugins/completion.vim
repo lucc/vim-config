@@ -39,8 +39,8 @@ elseif s:choice == 'deoplete'
   "https://github.com/tpope/vim-rhubarb
   "https://github.com/SevereOverfl0w/deoplete-github
   "https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
-  Plug 'Shougo/echodoc.vim'
-  let g:echodoc#enable_at_startup = 1
+elseif s:choice == 'ncm'
+  Plug 'roxma/nvim-completion-manager'
 endif
 
 if s:choice != 'none'
@@ -66,3 +66,6 @@ nnoremap <silent> KK :call LanguageClient_textDocument_hover()<CR>
 " nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 " nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
+
+Plug 'Shougo/echodoc.vim'
+let g:echodoc#enable_at_startup = 1
