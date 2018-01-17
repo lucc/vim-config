@@ -28,7 +28,6 @@ Plugin 'AndrewRadev/linediff.vim'
 if has('python')
   Plugin 'guyzmo/notmuch-abook'
 endif
-Plugin 'git://git.notmuchmail.org/git/notmuch', {'rtp': 'contrib/notmuch-vim'}
 
 Plugin '~/src/vim-tip'
 
