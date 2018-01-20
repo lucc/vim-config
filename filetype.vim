@@ -8,5 +8,6 @@ augroup LucFileType
   autocmd BufRead,BufNewFile *.mutt   setfiletype muttrc
   autocmd BufRead,BufNewFile *.muttrc setfiletype muttrc
   autocmd BufRead,BufNewFile *.ics    setfiletype icalendar
+  autocmd BufRead,BufNewFile *.vcf    setfiletype icalendar | set fileformat=dos
   autocmd BufRead,BufNewFile *.tmux   setfiletype tmux
 augroup END
