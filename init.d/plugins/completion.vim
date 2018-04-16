@@ -58,6 +58,7 @@ let g:LanguageClient_serverCommands = {
       \ 'python': ['pyls'],
       \ 'lua': ['lua-lsp'],
       \ }
+"    \ 'php': ['php', 'php-language-server.php'],
 "    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
 "    \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
 "    \ }
