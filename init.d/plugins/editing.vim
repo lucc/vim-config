@@ -21,7 +21,9 @@ let g:ctrlp_root_markers = [
       \ 'makefile',
       \ 'Makefile',
       \ ]
-"      \ 'latexmkrc',
+" asynchronous file cache update
+let g:user_command_async = 1
+let g:ctrlp_user_command = 'find %s -type f'
 
 " extensions {{{2
 let g:ctrlp_extensions = [
