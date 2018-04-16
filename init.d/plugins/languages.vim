@@ -3,6 +3,7 @@
 " plugins: languages
 
 Plug 'Shougo/context_filetype.vim'
+" devel version of the official syntax file
 Plug 'chrisbra/vim-zsh'
 Plug 'tpope/vim-scriptease'
 Plugin 'vim-scripts/applescript.vim'
@@ -160,7 +161,7 @@ Plugin 'chrisbra/csv.vim'
 
 "Plugin 'sunsol/vim_python_fold_compact'
 "Plugin 'vim-scripts/Python-Syntax-Folding'
-Plugin 'klen/python-mode'
+Plugin 'python-mode/python-mode'
 if has('nvim')
   let g:pymode_python = 'python3'
 endif
