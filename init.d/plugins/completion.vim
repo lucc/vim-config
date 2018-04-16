@@ -50,7 +50,10 @@ if s:choice != 'none'
   inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>" : "\<Tab>"
 endif
 
-Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 let g:LanguageClient_serverCommands = {
       \ 'python': ['pyls'],
       \ 'lua': ['lua-lsp'],
