@@ -48,4 +48,4 @@ call plug#end()
 
 " For very short ultisnips triggers to be usable with deoplete:
 " https://github.com/SirVer/ultisnips/issues/517#issuecomment-268518251
-call deoplete#custom#set('ultisnips', 'matchers', ['matcher_fuzzy'])
+call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
