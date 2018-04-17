@@ -32,7 +32,7 @@ elseif s:choice == 'deoplete'
   "Plug 'zchee/deoplete-jedi'
   "https://github.com/poppyschmo/deoplete-latex
   "https://github.com/lvht/phpcd.vim
-  "https://github.com/padawan-php/deoplete-padawan
+  Plug 'padawan-php/deoplete-padawan'
   "https://github.com/Shougo/neco-vim
   "https://github.com/Shougo/neco-syntax
   "https://github.com/zchee/deoplete-zsh
