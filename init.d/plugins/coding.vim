@@ -111,7 +111,7 @@ Plugin 'junegunn/gv.vim'
 Plugin 'gregsexton/gitv'
 
 " debugging {{{1
-Plug 'joonty/vdebug', {'branch': 'v2-integration', 'on': 'VdebugStart'}
+Plug 'vim-vdebug/vdebug', {'on': 'VdebugStart'}
 let g:vdebug_options = {
       \ 'break_on_open': 0,
       \ 'continuous_mode': 1,
