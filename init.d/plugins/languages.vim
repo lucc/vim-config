@@ -12,7 +12,6 @@ Plugin 'aliva/vim-fish'
 Plugin 'vim-scripts/VCard-syntax'
 Plugin 'vimperator/vimperator.vim'
 Plugin 'tkztmk/vim-vala'
-Plugin 'swekaj/php-foldexpr.vim'
 
 " plugins: LaTeX {{{1
 
@@ -20,17 +19,11 @@ Plugin 'swekaj/php-foldexpr.vim'
 "let g:tex_fold_enabled = 1
 let g:tex_flavor = 'latex'
 
-" 3109 LatexBox.vmb
-"Plugin 'coot/atp_vim'
-"Plugin 'vim-scripts/LaTeX-functions'
-"Plugin 'vim-scripts/latextags'
-"Plugin 'vim-scripts/TeX-9'
-"Plugin 'vim-scripts/tex.vim'
-"Plugin 'vim-scripts/tex_autoclose.vim'
-
-"Plugin 'vim-scripts/auctex.vim'
-Plug 'lervag/vimtex'
+" async autocompilation
 Plug 'donRaphaco/neotex', { 'for': 'tex' }
+let g:neotex_enabled = 2 " activate by default
+
+Plug 'lervag/vimtex'
 
 Plugin 'vim-latex/vim-latex' "{{{2
 "Plugin 'vim-scripts/LaTeX-Help' " is included in vim-latex
@@ -42,7 +35,6 @@ let g:Tex_Menus = 0
 " autocmdgroup.
 if has('mac') | let g:Tex_ViewRule_pdf = 'open -a Preview' | endif
 let g:Tex_UseMakefile = 1
-let g:Tex_CompileRule_pdf = 'latexmk -silent -pv -pdf $*'
 let g:Tex_DefaultTargetFormat = 'pdf'
 let g:Tex_SmartQuoteOpen = '„'
 let g:Tex_SmartQuoteClose = '“'
