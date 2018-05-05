@@ -55,13 +55,21 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'do': 'bash install.sh',
     \ }
 let g:LanguageClient_serverCommands = {
-      \ 'python': ['pyls'],
+      \ 'c': ['cquery'] ,
+      \ 'css': ['css-languageserver'],
+      \ 'docker': ['docker-languageserver'],
+      \ 'html': ['html-languageserver'],
+      \ 'java': ['jdtls', '-Dlog.level=ALL'],
+      \ 'json': ['json-languageserver'],
       \ 'lua': ['lua-lsp'],
+      \ 'python': ['pyls'],
+      \ 'sh': ['bash-language-server'],
       \ }
 "    \ 'php': ['php', 'php-language-server.php'],
 "    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
 "    \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
-"    \ }
+"    \ 'java': ['jdtls', '-data', {{ your workspace }}, '-Dlog.level=ALL'],
+"
 
 " Automatically start language servers.
  let g:LanguageClient_autoStart = 1
