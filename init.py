@@ -14,7 +14,7 @@ import vim
 
 # importing private modules
 import lib
-import lib.compilercollection
+#import lib.compilercollection
 import lib.fs
 import lib.git
 import lib.ssh
