@@ -13,19 +13,11 @@ augroup END
 
 augroup LucNeoMake
   autocmd!
-  autocmd BufWritePost * Neomake
-  autocmd BufEnter *.py
-	\ let b:neomake_python_enabled_makers =
-	\   filter(neomake#makers#ft#python#EnabledMakers(),
-	\          {i, v -> executable(v)}) + ['unittest']
+  autocmd BufWritePost * if &syntax != 'python' | Neomake | endif
 augroup END
 
 augroup LucApplications
   autocmd!
-  "autocmd BufWritePost ~/apply/*.tex exe 'echo "NeomakeSh make ' <afile>:t:r.pdf   '"'
-  "autocmd BufWritePost ~/apply/*.tex !echo NeomakeSh make <afile>:t:r.pdf
-  "autocmd BufWritePost ~/apply/*.tex NeomakeSh make <afile>:t:r.pdf
-  "autocmd BufWritePost ~/apply/*.tex execute 'NeomakeSh make' expand('<afile>:t:r.pdf')
   autocmd BufWritePost ~/apply/current.tex NeomakeSh make
   autocmd BufEnter ~/apply/*.tex
 	\ let b:neomake_tex_enabled_makers =
