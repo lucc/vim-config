@@ -26,6 +26,12 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'sjl/gundo.vim'
 "Plugin 'VimRepress' "https://bitbucket.org/pentie/vimrepress
 Plugin 'lucc/VimRepress'
+Plug 'aquach/vim-mediawiki-editor'
+let g:mediawiki_editor_uri_scheme = 'http'
+let g:mediawiki_editor_url = 'asam2'
+let g:mediawiki_editor_path = '/asam_wiki/'
+let g:mediawiki_editor_username = 'LUC'
+
 "Plugin 'vim-scripts/ZoomWin'
 Plugin 'AndrewRadev/linediff.vim'
 
