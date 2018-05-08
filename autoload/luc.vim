@@ -277,15 +277,3 @@ function! luc#khard_editor() abort
   map  <buffer> <tab>       /^[^#]/<cr>A
   imap <buffer> <tab> <c-o>:/^[^#]/ normal $<cr>
 endfunction
-
-function! luc#neomake_tex_make_exe() abort
-  if filereadable(getcwd() . '/makefile')
-    return 'make'
-  else
-    return ''
-  endif
-endfunction
-
-function! luc#neomake_tex_make_args() abort
-  return [expand('%:p:t:r') . '.pdf']
-endfunction

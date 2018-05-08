@@ -33,16 +33,16 @@ Plugin 'honza/vim-snippets'
 Plugin 'rbonvall/snipmate-snippets-bib'
 
 " plugins: compilation and linting {{{1
-Plugin 'neomake/neomake'
-let g:neomake_verbose = 0
-"if executable('flake8')
-"  let g:neomake_python_enabled_makers = ['flake8', 'python']
-"else
-"  let g:neomake_python_enabled_makers = ['pep8', 'pylint', 'python']
-"endif
-let g:neomake_php_enabled_makers = ['php', 'phpcs', 'phpmd']
-"let neomake_open_list = 2 " also preserve cursor position
-let g:neomake_list_height = 5
+
+Plug 'neomake/neomake'
+
+if !exists('g:neomake') | let g:neomake = {} | endif
+let g:neomake.verbose = 0
+"let neomake.open_list = 2 " also preserve cursor position
+let g:neomake.list_height = 5
+
+"let g:neomake_php_enabled_makers = ['php', 'phpcs', 'phpmd']
+let g:neomake_bib_enabled_makers = ['bibtex']
 let g:neomake_nvimluatest_maker = {
       \ 'exe': 'sh',
       \ 'args': ['-c', 'make functionaltest TEST_FILE=%:p 2>/dev/null | ~/.config/vim/bin/error-filter-for-nvim-lua-tests.sh'],
@@ -55,8 +55,8 @@ let g:neomake_luctest_maker = {
       \ }
 " A maker to build a pdf file from a tex file if a makefile is afailable.
 let g:neomake_tex_make_maker = {
-      \ 'exe': function('luc#neomake_tex_make_exe'),
-      \ 'args': function('luc#neomake_tex_make_args'),
+      \ 'exe': { -> filereadable(getcwd() . '/makefile') ? 'make' : '' },
+      \ 'args': { -> [expand('%:p:t:r') . '.pdf'] },
       \ }
 
 " plugins: tags {{{1
