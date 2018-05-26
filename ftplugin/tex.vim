@@ -24,3 +24,5 @@ endif
 let b:surround_99 = "\\\1command\1{\r}"
 
 let b:delimitMate_quotes = "' ` *"
+
+autocmd BufWritePost,CursorHold,CursorHoldI <buffer> Neomake!

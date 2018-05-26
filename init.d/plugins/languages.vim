@@ -21,10 +21,11 @@ let g:tex_flavor = 'latex'
 
 " async autocompilation
 Plug 'donRaphaco/neotex', { 'for': 'tex' }
-let g:neotex_enabled = 2 " activate by default
+"let g:neotex_enabled = 2 " activate by default
 
 Plug 'lervag/vimtex'
 let g:vimtex_fold_enabled = 1
+let g:vimtex_compiler_method = 'latexrun'
 
 " plugins: lisp/scheme {{{1
 "Plugin 'vim-scripts/slimv.vim'

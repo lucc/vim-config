@@ -42,6 +42,7 @@ let g:neomake.verbose = 0
 let g:neomake.list_height = 5
 
 "let g:neomake_php_enabled_makers = ['php', 'phpcs', 'phpmd']
+let g:neomake_latex_enabled_makers = ['chktex', 'lacheck', 'rubberinfo', 'proselint', 'latexrun']
 let g:neomake_bib_enabled_makers = ['bibtex']
 let g:neomake_nvimluatest_maker = {
       \ 'exe': 'sh',
