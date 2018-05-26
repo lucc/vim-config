@@ -21,6 +21,9 @@ endif
 set guioptions+=M
 set guioptions-=m
 
+" Use neovim-remote as $EDITOR to open files in the same instance.
+let $EDITOR = 'nvr'
+
 " basic {{{1
 
 set backup
