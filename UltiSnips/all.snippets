@@ -21,3 +21,7 @@ endsnippet
 snippet bug2 "expand with tw=something short before that column"
 pretext `!p snip.rv = 'marker' if t[1] != '' else ''` ${1:replacemant} `!p snip.rv = 'marker' if t[1] != '' else ''` posttext
 endsnippet
+
+snippet "\\u[0-9a-fA-F]+" "expand Unicode points" r
+`!p snip.rv = eval('"'+match.group(0)+'"')`
+endsnippet
