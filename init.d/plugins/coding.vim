@@ -3,30 +3,14 @@
 let s:uname = system('uname')[:-2]
 " plugins: snippets {{{1
 
-if has('python')
-  Plugin 'SirVer/ultisnips'
-  let g:UltiSnipsExpandTrigger = '<C-F>'
-  let g:UltiSnipsJumpForwardTrigger = '<C-F>' " <C-J>
-  let g:UltiSnipsJumpBackwardTrigger = '<C-G>' " <C-K>
-  "let g:UltiSnipsExpandTrigger       = <tab>
-  "let g:UltiSnipsListSnippets        = <c-tab>
+Plugin 'SirVer/ultisnips'
+let g:UltiSnipsExpandTrigger = '<C-F>'
+let g:UltiSnipsJumpForwardTrigger = '<C-F>' " <C-J>
+let g:UltiSnipsJumpBackwardTrigger = '<C-G>' " <C-K>
+"let g:UltiSnipsExpandTrigger       = <tab>
+"let g:UltiSnipsListSnippets        = <c-tab>
 
-  if has('gui_running') && has('gui_macvim')
-    " new settings
-    let g:UltiSnipsExpandTrigger = '<A-Tab>'
-    let g:UltiSnipsJumpForwardTrigger = '<A-Tab>'
-    let g:UltiSnipsJumpBackwardTrigger = '<A-S-Tab>'
-    let g:UltiSnipsListSnippets = '<SID>NOT_DEFINED'
-  endif
-  let g:UltiSnipsSnippetsDir = fnamemodify($MYVIMRC, ':h').'/UltiSnips'
-else
-  " snipmate and dependencies
-  Plugin 'MarcWeber/vim-addon-mw-utils'
-  Plugin 'tomtom/tlib_vim'
-  Plugin 'garbas/vim-snipmate'
-  imap <C-F> <Plug>snipMateNextOrTrigger
-  smap <C-F> <Plug>snipMateNextOrTrigger
-endif
+let g:UltiSnipsSnippetsDir = fnamemodify($MYVIMRC, ':h').'/UltiSnips'
 
 " Snippets are separated from the engine:
 Plugin 'honza/vim-snippets'
