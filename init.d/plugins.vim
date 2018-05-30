@@ -28,9 +28,6 @@ Plugin 'sjl/gundo.vim'
 Plugin 'lucc/VimRepress'
 "Plugin 'vim-scripts/ZoomWin'
 Plugin 'AndrewRadev/linediff.vim'
-if has('python')
-  Plugin 'guyzmo/notmuch-abook'
-endif
 
 Plugin '~/src/vim-tip'
 
