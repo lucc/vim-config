@@ -211,14 +211,26 @@ set wildignore+=*.tbz2
 set wildignore+=*.tgz
 
 " setting variables for special settings {{{1
-let g:vimsyn_folding  = 'a' " augroups
-let g:vimsyn_folding .= 'f' " fold functions
-let g:vimsyn_folding .= 'm' " fold mzscheme script
-let g:vimsyn_folding .= 'p' " fold perl     script
-let g:vimsyn_folding .= 'P' " fold python   script
-let g:vimsyn_folding .= 'r' " fold ruby     script
-let g:vimsyn_folding .= 't' " fold tcl      script
+let mapleader = ','
+
+let g:vimsyn_folding = 'afmpPrt'
+" augroups ____________/ ||||||
+" fold functions ________/|||||
+" fold mzscheme script ___/||||
+" fold perl     script ____/|||
+" fold python   script _____/||
+" fold ruby     script ______/|
+" fold tcl      script _______/
 let g:netrw_browsex_viewer = 'xdg-open'
 
+" Hard code paths that work for Arch Linux and CentOS.
 let g:python3_host_prog = '/usr/bin/python3'
 let g:python_host_prog = '/usr/bin/python2'
+" Disable python 2 support
+"let g:loaded_python_provider = 1
+
+" taken from http://stackoverflow.com/a/7490288
+let php_folding = 0        "Set PHP folding of classes and functions.
+"let php_htmlInStrings = 1  "Syntax highlight HTML code inside PHP strings.
+"let php_sql_query = 1      "Syntax highlight SQL code inside PHP strings.
+"let php_noShortTags = 1    "Disable PHP short tags.
