@@ -82,6 +82,9 @@ set dictionary+=/usr/share/dict/ngerman
 
 " terminal stuff {{{1
 
+set title
+set titleold=shell
+
 if $COLORTERM ==? 'truecolor' || !empty($KONSOLE_DBUS_SERVICE) || $TERM =~? 'st.*'
   set termguicolors
 elseif !has('gui_running')
