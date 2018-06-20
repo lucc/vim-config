@@ -27,6 +27,8 @@ Plug 'donRaphaco/neotex', { 'for': 'tex' }
 Plug 'lervag/vimtex'
 let g:vimtex_fold_enabled = 1
 let g:vimtex_compiler_method = 'latexrun'
+let g:vimtex_compiler_progname = 'nvr'
+
 
 " plugins: lisp/scheme {{{1
 "Plugin 'vim-scripts/slimv.vim'
