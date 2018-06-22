@@ -13,6 +13,7 @@ Plugin 'vim-scripts/VCard-syntax'
 Plugin 'vimperator/vimperator.vim'
 Plugin 'tkztmk/vim-vala'
 Plug 'rosstimson/bats.vim'
+Plug 'chikamichi/mediawiki.vim'
 
 " plugins: LaTeX {{{1
 
