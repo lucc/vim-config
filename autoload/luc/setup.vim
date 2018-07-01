@@ -7,7 +7,7 @@ endfunction
 
 function! luc#setup#vim_plug() abort
   " https://github.com/junegunn/vim-plug
-  let path = expand(g:luc#xdg#data . '/plugins')
+  let path = stdpath('data').'/plugins'
   execute 'source' path . '/vim-plug/plug.vim'
   call plug#begin(path)
   command! -bar -nargs=+ Plugin Plug <args>
