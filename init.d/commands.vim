@@ -28,3 +28,5 @@ function! s:open(bang)
     redraw
   endif
 endfunction
+
+cabbrev man vertical Man
