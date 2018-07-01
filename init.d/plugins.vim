@@ -11,11 +11,13 @@ runtime init.d/plugins/languages.vim
 runtime init.d/plugins/ui.vim
 
 " plugins: searching {{{1
-Plugin 'mhinz/vim-grepper' "{{{2
+Plugin 'mhinz/vim-grepper'
 let g:grepper = {}
 let g:grepper.quickfix = 0
 command! -nargs=* -complete=file Ag Grepper -jump -tool ag -query <args>
 nnoremap <Leader>g :Grepper<CR>
+
+"Plug 'wsdjeg/FlyGrep.vim'
 
 " plugins: unsorted {{{1
 Plugin 'jamessan/vim-gnupg'
