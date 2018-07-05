@@ -4,7 +4,7 @@
 Plug 'ron89/thesaurus_query.vim'
 
 " plugins: buffer and file management {{{1
-Plugin 'ctrlpvim/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 
 " cache {{{2
 "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
@@ -63,14 +63,14 @@ Plug 'junegunn/fzf.vim'
 
 " plugins: parenthesis, quotes, alignment {{{1
 
-Plugin 'Raimondi/delimitMate'
+Plug 'Raimondi/delimitMate'
 Plug 'vim-scripts/paredit.vim'
-Plugin 'tpope/vim-surround'
+Plug 'tpope/vim-surround'
 "Plugin 'kana/vim-textobj-indent.git'
-Plugin 'michaeljsmith/vim-indent-object'
-Plugin 'junegunn/vim-easy-align'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'junegunn/vim-easy-align'
 vmap <Enter> <Plug>(EasyAlign)
 nmap <Leader>a <Plug>(EasyAlign)
 
 " plugins: motion {{{1
-Plugin 'Lokaltog/vim-easymotion'
+Plug 'Lokaltog/vim-easymotion'

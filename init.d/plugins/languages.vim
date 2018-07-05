@@ -6,12 +6,12 @@ Plug 'Shougo/context_filetype.vim'
 " devel version of the official syntax file
 Plug 'chrisbra/vim-zsh'
 Plug 'tpope/vim-scriptease'
-Plugin 'vim-scripts/applescript.vim'
-Plugin 'vim-scripts/icalendar.vim'
-Plugin 'aliva/vim-fish'
-Plugin 'vim-scripts/VCard-syntax'
-Plugin 'vimperator/vimperator.vim'
-Plugin 'tkztmk/vim-vala'
+Plug 'vim-scripts/applescript.vim'
+Plug 'vim-scripts/icalendar.vim'
+Plug 'aliva/vim-fish'
+Plug 'vim-scripts/VCard-syntax'
+Plug 'vimperator/vimperator.vim'
+Plug 'tkztmk/vim-vala'
 Plug 'rosstimson/bats.vim'
 Plug 'chikamichi/mediawiki.vim'
 
@@ -47,15 +47,15 @@ let g:vimtex_compiler_progname = 'nvr'
 "Plugin   'hallison/vim-markdown'
 
 " good folding uses expr
-Plugin 'nelstrom/vim-markdown-folding'
+Plug 'nelstrom/vim-markdown-folding'
 let g:markdown_fold_style = 'nested'
 
 " strange folding?
 "Plugin 'tpope/vim-markdown'
 
 "Plugin 'vim-scripts/pdc.vim'
-Plugin 'vim-pandoc/vim-pandoc'
-Plugin 'vim-pandoc/vim-pandoc-syntax'
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
 let g:pandoc#modules#disabled = ["menu"]
 let g:pandoc#command#latex_engine = 'pdflatex'
 let g:pandoc#folding#fold_yaml = 1
@@ -71,7 +71,7 @@ let g:pandoc#command#autoexec_command = "Pandoc pdf"
 let g:pandoc#formatting#mode = 'h'
 
 " plugins: comma separated values (csv) {{{1
-Plugin 'chrisbra/csv.vim'
+Plug 'chrisbra/csv.vim'
 "Plugin 'vim-scripts/csv-reader'
 "Plugin 'vim-scripts/CSVTK'
 "Plugin 'vim-scripts/rcsvers.vim'
@@ -82,7 +82,7 @@ Plugin 'chrisbra/csv.vim'
 
 "Plugin 'sunsol/vim_python_fold_compact'
 "Plugin 'vim-scripts/Python-Syntax-Folding'
-Plugin 'python-mode/python-mode'
+Plug 'python-mode/python-mode'
 if has('nvim')
   let g:pymode_python = 'python3'
 endif
@@ -96,7 +96,7 @@ let g:pymode_indent = 0
 let g:pymode_options_max_line_length = 79
 
 " This is nicer than the pymode version.
-Plugin 'fs111/pydoc.vim'
+Plug 'fs111/pydoc.vim'
 
 " svn checkout http://vimpdb.googlecode.com/svn/trunk/ vimpdb-read-only
 
@@ -108,4 +108,4 @@ let php_folding = 0        "Set PHP folding of classes and functions.
 "let php_sql_query = 1      "Syntax highlight SQL code inside PHP strings.
 "let php_noShortTags = 1    "Disable PHP short tags.
 
-Plugin 'swekaj/php-foldexpr.vim'
+Plug 'swekaj/php-foldexpr.vim'

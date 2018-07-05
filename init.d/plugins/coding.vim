@@ -3,7 +3,7 @@
 let s:uname = system('uname')[:-2]
 " plugins: snippets {{{1
 
-Plugin 'SirVer/ultisnips'
+Plug 'SirVer/ultisnips'
 let g:UltiSnipsExpandTrigger = '<C-F>'
 let g:UltiSnipsJumpForwardTrigger = '<C-F>' " <C-J>
 let g:UltiSnipsJumpBackwardTrigger = '<C-G>' " <C-K>
@@ -13,8 +13,8 @@ let g:UltiSnipsJumpBackwardTrigger = '<C-G>' " <C-K>
 let g:UltiSnipsSnippetsDir = fnamemodify($MYVIMRC, ':h').'/UltiSnips'
 
 " Snippets are separated from the engine:
-Plugin 'honza/vim-snippets'
-Plugin 'rbonvall/snipmate-snippets-bib'
+Plug 'honza/vim-snippets'
+Plug 'rbonvall/snipmate-snippets-bib'
 
 " plugins: compilation and linting {{{1
 
@@ -48,8 +48,8 @@ let g:neomake_tex_make_maker = {
 " Easytags will automatically create and update tags files and set the 'tags'
 " option per file type.  Tag navigation can be done with the CTRL-P plugin.
 " All these settings are dependent on the file ~/.ctags.
-Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-easytags'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-easytags'
 let g:easytags_async = 1
 let g:easytags_updatetime_warn = 0
 let g:easytags_file = '~/.cache/tags'
@@ -71,7 +71,7 @@ let g:easytags_languages.pandoc = g:easytags_languages.markdown
 " plugins: man and info pages {{{1
 Plug 'alvan/vim-php-manual'
 "Plugin 'info.vim'
-Plugin 'alx741/vinfo'
+Plug 'alx741/vinfo'
 
 " hints_man
 " http://www.vim.org/scripts/script.php?script_id=1825
@@ -83,17 +83,17 @@ Plugin 'alx741/vinfo'
 
 " plugins: vcs stuff {{{1
 "Plugin 'tpope/vim-git'
-Plugin 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'
-Plugin 'ludovicchabant/vim-lawrencium'
+Plug 'ludovicchabant/vim-lawrencium'
 "Plugin 'mhinz/vim-signify'
 "let g:sygnify_vcs_list = ['git', 'hg', 'svn']
 "let g:signify_disable_by_default = 1
 " use :SignifyToggle to activate
 Plug 'airblade/vim-gitgutter'
 "let g:gitgutter_override_sign_column_highlight = 0
-Plugin 'junegunn/gv.vim'
-Plugin 'gregsexton/gitv'
+Plug 'junegunn/gv.vim'
+Plug 'gregsexton/gitv'
 
 " debugging {{{1
 Plug 'vim-vdebug/vdebug', {'on': 'VdebugStart'}

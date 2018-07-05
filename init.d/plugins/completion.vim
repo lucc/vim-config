@@ -4,7 +4,7 @@
 let s:choice = 'deoplete'
 
 if s:choice == 'ycm'
-  Plugin 'Valloric/YouCompleteMe'
+  Plug 'Valloric/YouCompleteMe'
   let g:ycm_filetype_blacklist = {}
   let g:ycm_complete_in_comments = 1
   let g:ycm_collect_identifiers_from_comments_and_strings = 1
@@ -18,7 +18,7 @@ if s:choice == 'ycm'
 	\ ]
   let g:ycm_autoclose_preview_window_after_completion = 1
 
-  Plugin 'bjoernd/vim-ycm-tex',
+  Plug 'bjoernd/vim-ycm-tex',
 	\ {'name': 'YouCompleteMe/python/ycm/completers/tex'}
   let g:ycm_semantic_triggers = {'tex': ['\ref{','\cite{']}
 

@@ -3,8 +3,8 @@
 scriptencoding utf-8
 
 " colors
-Plugin 'iCyMind/NeoSolarized'
-Plugin 'altercation/vim-colors-solarized'
+Plug 'iCyMind/NeoSolarized'
+Plug 'altercation/vim-colors-solarized'
 let g:solarized_menu = 0
 
 " statusline
@@ -23,6 +23,7 @@ elseif s:statusline == 'air'
   let g:airline#extensions#whitespace#mixed_indent_algo = 2
   let g:airline#extensions#whitespace#checks = ['indent', 'trailing', 'long']
 elseif s:statusline == 'light'
+  Plug 'itchyny/lightline.vim'
   let g:lightline = {
 	\ 'colorscheme': 'solarized',
 	\ 'active': {
@@ -54,7 +55,6 @@ elseif s:statusline == 'light'
     endif
     return ''
   endfunction
-  Plugin 'itchyny/lightline.vim'
 endif
 
 " vim options related to the statusline

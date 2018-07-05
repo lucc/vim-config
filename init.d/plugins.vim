@@ -11,7 +11,7 @@ runtime init.d/plugins/languages.vim
 runtime init.d/plugins/ui.vim
 
 " plugins: searching {{{1
-Plugin 'mhinz/vim-grepper'
+Plug 'mhinz/vim-grepper'
 let g:grepper = {}
 let g:grepper.quickfix = 0
 command! -nargs=* -complete=file Ag Grepper -jump -tool ag -query <args>
@@ -20,14 +20,14 @@ nnoremap <Leader>g :Grepper<CR>
 "Plug 'wsdjeg/FlyGrep.vim'
 
 " plugins: unsorted {{{1
-Plugin 'jamessan/vim-gnupg'
-Plugin 'pix/vim-known_hosts'
-Plugin 'scrooloose/nerdcommenter'
+Plug 'jamessan/vim-gnupg'
+Plug 'pix/vim-known_hosts'
+Plug 'scrooloose/nerdcommenter'
 "Plugin 'scrooloose/nerdtree'
 "Plug 'tpope/vim-vinegar'
-Plugin 'sjl/gundo.vim'
+Plug 'sjl/gundo.vim'
 "Plugin 'VimRepress' "https://bitbucket.org/pentie/vimrepress
-Plugin 'lucc/VimRepress'
+Plug 'lucc/VimRepress'
 Plug 'aquach/vim-mediawiki-editor'
 let g:mediawiki_editor_uri_scheme = 'http'
 let g:mediawiki_editor_url = 'asam2'
@@ -35,13 +35,13 @@ let g:mediawiki_editor_path = '/asam_wiki/'
 let g:mediawiki_editor_username = 'LUC'
 
 "Plugin 'vim-scripts/ZoomWin'
-Plugin 'AndrewRadev/linediff.vim'
+Plug 'AndrewRadev/linediff.vim'
 
-Plugin '~/src/vim-tip'
+Plug '~/src/vim-tip'
 
-Plugin 'chrisbra/unicode.vim'
-Plugin 'git://fedorapeople.org/home/fedora/wwoods/public_git/vim-scripts.git'
-Plugin 'ryanoasis/vim-devicons'
+Plug 'chrisbra/unicode.vim'
+Plug 'git://fedorapeople.org/home/fedora/wwoods/public_git/vim-scripts.git'
+Plug 'ryanoasis/vim-devicons'
 Plug 'hkupty/iron.nvim'
 command REPL IronRepl
 
