@@ -46,8 +46,9 @@ endif
 if s:choice != 'none'
   " Map <S-Tab> to <C-P> to go to the previous completion entry in insert
   " mode.
-  inoremap <expr> <Tab>   pumvisible() ? "\<C-N>" : "\<Tab>"
-  inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>" : "\<Tab>"
+  inoremap <expr> <Tab>   pumvisible() ? "\<C-N>"      : "\<Tab>"
+  inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>"      : "\<Tab>"
+  "inoremap <expr> <CR>    pumvisible() ? "\<C-Y>\<CR>" : "\<CR>"
 endif
 
 Plug 'autozimu/LanguageClient-neovim', {
