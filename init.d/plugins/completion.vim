@@ -29,18 +29,36 @@ elseif s:choice == 'deoplete'
   " plug#end() in init.d/plugins.vim.
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   let g:deoplete#enable_at_startup = 1
-  "Plug 'zchee/deoplete-jedi'
-  "https://github.com/poppyschmo/deoplete-latex
-  "https://github.com/lvht/phpcd.vim
+  " A list of possible source for completion is at
+  " https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
+  Plug 'Shougo/neco-syntax'
+  Plug 'Shougo/neco-vim'
+  Plug 'fszymanski/deoplete-emoji'
+  Plug 'nicoe/deoplete-khard'
   Plug 'padawan-php/deoplete-padawan'
-  "https://github.com/Shougo/neco-vim
-  "https://github.com/Shougo/neco-syntax
-  "https://github.com/zchee/deoplete-zsh
-  "https://github.com/tpope/vim-rhubarb
+  Plug 'poppyschmo/deoplete-latex'
+  Plug 'zchee/deoplete-zsh'
+  Plug 'lionawurscht/deoplete-biblatex'
+  "Plug 'zchee/deoplete-jedi'
   "https://github.com/SevereOverfl0w/deoplete-github
-  "https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
+  "https://github.com/lvht/phpcd.vim
+  "https://github.com/tpope/vim-rhubarb
 elseif s:choice == 'ncm'
-  Plug 'roxma/nvim-completion-manager'
+  Plug 'ncm2/ncm2'
+  Plug 'roxma/nvim-yarp'
+  Plug 'ncm2/ncm2-abbrfuzzy'
+
+  Plug 'ncm2/ncm2-bufword'
+  Plug 'ncm2/ncm2-path'
+  Plug 'ncm2/ncm2-jedi'
+  Plug 'ncm2/ncm2-html-subscope'
+  Plug 'ncm2/ncm2-markdown-subscope'
+  Plug 'ncm2/ncm2-rst-subscope'
+
+  autocmd BufEnter * call ncm2#enable_for_buffer()
+
+  set completeopt+=noinsert
+  set completeopt+=menuone
 endif
 
 if s:choice != 'none'
