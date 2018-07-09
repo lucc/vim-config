@@ -1,4 +1,4 @@
-" vim: foldmethod=marker spelllang=en
+" vim: spelllang=en
 " plugins: completion
 
 let s:choice = 'deoplete'
