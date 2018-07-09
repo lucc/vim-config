@@ -81,3 +81,15 @@ Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer ru
 
 Plug 'Shougo/echodoc.vim'
 let g:echodoc#enable_at_startup = 1
+
+" options related to completion
+
+" Use the 'dictionary' option for completion
+set complete+=k
+
+" use the current spell checking settings for directory completion:
+set dictionary+=spell
+" system word lists
+set dictionary+=/usr/share/dict/american-english
+set dictionary+=/usr/share/dict/british-english
+set dictionary+=/usr/share/dict/ngerman

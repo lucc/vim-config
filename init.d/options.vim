@@ -69,17 +69,6 @@ set shada+=%
 " cpoptions {{{1
 set cpoptions+=$ " don't redraw the display while executing c, s, ... cmomands
 
-" dictionary and complete {{{1
-
-set complete+=k
-
-" use the current spell checking settings for directory completion:
-set dictionary+=spell
-" system word lists
-set dictionary+=/usr/share/dict/american-english
-set dictionary+=/usr/share/dict/british-english
-set dictionary+=/usr/share/dict/ngerman
-
 " terminal stuff {{{1
 
 set title
