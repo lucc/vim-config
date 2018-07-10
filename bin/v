@@ -1,4 +1,4 @@
-#!/usr/bin/nvim -S
+#!nvim -S
 " vim: ft=vim
 
 " save and restore global variables
