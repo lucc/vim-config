@@ -64,7 +64,12 @@ set inccommand=split
 " the flag h is to disable hlsearch
 " the flag % is to remember (whole) buffer list
 " the flag n is the name of the viminfo file
+" include bufferlist
 set shada+=%
+" save all lines from registers
+set shada-=<
+" save all items smaller than 100K
+set shada+=s100
 
 " cpoptions {{{1
 set cpoptions+=$ " don't redraw the display while executing c, s, ... cmomands
