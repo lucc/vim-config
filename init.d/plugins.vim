@@ -10,46 +10,47 @@ runtime init.d/plugins/completion.vim
 runtime init.d/plugins/languages.vim
 runtime init.d/plugins/ui.vim
 
-" plugins: searching {{{1
-Plug 'mhinz/vim-grepper'
+"Plug 'wsdjeg/FlyGrep.vim'
+"Plug 'scrooloose/nerdtree'
+"Plug 'tpope/vim-vinegar'
+"Plug 'vim-scripts/ZoomWin'
+
+Plug 'mhinz/vim-grepper' " {{{1
 let g:grepper = {}
 let g:grepper.quickfix = 0
 command! -nargs=* -complete=file Ag Grepper -jump -tool ag -query <args>
 nnoremap <Leader>g :Grepper<CR>
 
-"Plug 'wsdjeg/FlyGrep.vim'
-
-" plugins: unsorted {{{1
-Plug 'jamessan/vim-gnupg'
-Plug 'pix/vim-known_hosts'
-Plug 'scrooloose/nerdcommenter'
-"Plugin 'scrooloose/nerdtree'
-"Plug 'tpope/vim-vinegar'
-Plug 'sjl/gundo.vim'
-"Plugin 'VimRepress' "https://bitbucket.org/pentie/vimrepress
-Plug 'lucc/VimRepress'
-Plug 'aquach/vim-mediawiki-editor'
+Plug 'aquach/vim-mediawiki-editor' " {{{1
 let g:mediawiki_editor_uri_scheme = 'http'
 let g:mediawiki_editor_url = 'asam2'
 let g:mediawiki_editor_path = '/asam_wiki/'
 let g:mediawiki_editor_username = 'LUC'
 
-"Plugin 'vim-scripts/ZoomWin'
-Plug 'AndrewRadev/linediff.vim'
+Plug 'hkupty/iron.nvim' " {{{1
+let g:iron_repl_open_cmd = 'vsplit'
+command! REPL IronRepl
 
-Plug '~/src/vim-tip'
-
-Plug 'chrisbra/unicode.vim'
-Plug 'git://fedorapeople.org/home/fedora/wwoods/public_git/vim-scripts.git'
-Plug 'ryanoasis/vim-devicons'
-Plug 'hkupty/iron.nvim'
-command REPL IronRepl
-
-Plug 'nathanaelkane/vim-indent-guides'
+Plug 'nathanaelkane/vim-indent-guides' " {{{1
 let g:indent_guides_auto_colors = 0
 let g:indent_guides_default_mapping = 0
 highlight link IndentGuidesOdd  Normal
 highlight link IndentGuidesEven LineNr
+
+" plugins: unsorted {{{1
+Plug 'AndrewRadev/linediff.vim'
+Plug 'andymass/vim-matchup'
+Plug 'chrisbra/unicode.vim'
+Plug 'git://fedorapeople.org/home/fedora/wwoods/public_git/vim-scripts.git'
+Plug 'jamessan/vim-gnupg'
+Plug 'lucc/VimRepress' " clone of https://bitbucket.org/pentie/vimrepress
+Plug 'pix/vim-known_hosts'
+Plug 'ryanoasis/vim-devicons'
+Plug 'scrooloose/nerdcommenter'
+Plug 'Shougo/denite.nvim'
+Plug 'sjl/gundo.vim'
+Plug 'ZeroKnight/vim-signjump'
+Plug '~/src/vim-tip'
 
 " finalize {{{1
 call plug#end()
