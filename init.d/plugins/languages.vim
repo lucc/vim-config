@@ -14,6 +14,8 @@ Plug 'vimperator/vimperator.vim'
 Plug 'tkztmk/vim-vala'
 Plug 'rosstimson/bats.vim'
 Plug 'chikamichi/mediawiki.vim'
+Plug 'tbastos/vim-lua'
+Plug 'vim-scripts/luarefvim'
 
 " plugins: LaTeX {{{1
 
