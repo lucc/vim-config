@@ -25,4 +25,13 @@ let b:surround_99 = "\\\1command\1{\r}"
 
 let b:delimitMate_quotes = "' ` *"
 
-autocmd BufWritePost,CursorHold,CursorHoldI <buffer> Neomake!
+" TODO we could put this into the status line
+let s:timer = -1
+function! s:count(id)
+  VimtexCountLetters
+endfunction
+
+augroup LucFileTypeTex
+  autocmd BufWritePost,CursorHold,CursorHoldI          <buffer> Neomake!
+  autocmd CursorHold,CursorHoldI,FocusGained,FocusLost <buffer> if timer_info(s:timer) == [] | let s:timer = timer_start(3000, function('s:count')) | endif
+augroup END
