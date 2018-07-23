@@ -21,9 +21,9 @@ Plug 'rbonvall/snipmate-snippets-bib'
 Plug 'neomake/neomake'
 
 if !exists('g:neomake') | let g:neomake = {} | endif
-let g:neomake.verbose = 0
+let g:neomake_verbose = 1
 "let neomake.open_list = 2 " also preserve cursor position
-let g:neomake.list_height = 5
+let g:neomake_list_height = 5
 
 "let g:neomake_php_enabled_makers = ['php', 'phpcs', 'phpmd']
 let g:neomake_latex_enabled_makers = ['chktex', 'lacheck', 'rubberinfo', 'proselint', 'latexrun']
