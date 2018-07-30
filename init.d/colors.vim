@@ -5,6 +5,7 @@ if ! has('gui_running')
   if &termguicolors
     colorscheme NeoSolarized
     highlight! VertSplit guifg=#657b83 guibg=#657b83
+    highlight! MatchParen gui=italic,bold guibg=none
   else
     colorscheme solarized
     highlight! SignColumn ctermfg=10 ctermbg=0
