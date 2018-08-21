@@ -20,8 +20,10 @@ let g:ctrlp_root_markers = [
       \ 'Makefile',
       \ ]
 " asynchronous file cache update
-let g:user_command_async = 1
-let g:ctrlp_user_command = 'fd --hidden --type f "" %s'
+if executable("fd")
+  let g:user_command_async = 1
+  let g:ctrlp_user_command = 'fd --hidden --type f "" %s'
+endif
 
 " extensions {{{2
 let g:ctrlp_extensions = [
