@@ -25,8 +25,8 @@ Plug 'eugen0329/vim-esearch' " {{{1
 
 Plug 'aquach/vim-mediawiki-editor' " {{{1
 let g:mediawiki_editor_uri_scheme = 'http'
-let g:mediawiki_editor_url = 'asam2'
-let g:mediawiki_editor_path = '/asam_wiki/'
+let g:mediawiki_editor_url = 'asam3'
+let g:mediawiki_editor_path = '/asam_infra/asam_wiki/'
 let g:mediawiki_editor_username = 'LUC'
 
 Plug 'hkupty/iron.nvim' " {{{1
