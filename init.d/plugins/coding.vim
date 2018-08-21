@@ -72,5 +72,7 @@ let g:vdebug_options = {
       \     'DebuggerStack': 'belowright new +res5',
       \     'DebuggerStatus': 'belowright new +res5'
       \   },
+      \ 'debug_file': '~/vdebug.log',
+      \ 'debug_file_level': 2,
       \ }
       ""\ 'debug_window_level': 2,
