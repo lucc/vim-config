@@ -8,7 +8,6 @@ Plug 'ctrlpvim/ctrlp.vim'
 
 " cache {{{2
 "let g:ctrlp_cache_dir = $HOME.'/.vim/cache/ctrlp'
-let g:ctrlp_use_caching = 0
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_mruf_max = 1000
 
@@ -23,6 +22,9 @@ let g:ctrlp_root_markers = [
 if executable("fd")
   let g:user_command_async = 1
   let g:ctrlp_user_command = 'fd --hidden --type f "" %s'
+  let g:ctrlp_use_caching = 0
+else
+  let g:ctrlp_use_caching = 1
 endif
 
 " extensions {{{2
