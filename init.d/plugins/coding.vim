@@ -92,8 +92,8 @@ Plug 'ludovicchabant/vim-lawrencium'
 " use :SignifyToggle to activate
 Plug 'airblade/vim-gitgutter'
 "let g:gitgutter_override_sign_column_highlight = 0
-Plug 'junegunn/gv.vim'
-Plug 'gregsexton/gitv'
+Plug 'junegunn/gv.vim'  " faster than gitv?  :GV
+Plug 'gregsexton/gitv'  " gitk for vim       :Gitv
 
 " debugging {{{1
 Plug 'vim-vdebug/vdebug', {'on': 'VdebugStart'}
