@@ -82,13 +82,12 @@ let g:LanguageClient_serverCommands = {
       \ 'json': ['json-languageserver'],
       \ 'lua': ['lua-lsp'],
       \ 'python': ['pyls'],
+      \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
       \ 'sh': ['bash-language-server', 'start'],
       \ }
 "    \ 'php': ['php', 'php-language-server.php'],
-"    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
 "    \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
 "    \ 'java': ['jdtls', '-data', {{ your workspace }}, '-Dlog.level=ALL'],
-"
 
 " Automatically start language servers.
  let g:LanguageClient_autoStart = 1
