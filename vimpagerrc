@@ -10,7 +10,6 @@ nmap <silent> S :call luc#man#open_this_in_gvim()<CR>
 set ignorecase
 set smartcase
 set laststatus=1
-call luc#setup#viminfo('pager')
 
 if !empty($VIMPAGER_NO_PASSTHROUGH)
   let vimpager_passthrough = 0
