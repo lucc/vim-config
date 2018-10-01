@@ -18,8 +18,11 @@ runtime init.d/plugins/ui.vim
 Plug 'mhinz/vim-grepper' " {{{1
 let g:grepper = {}
 let g:grepper.quickfix = 0
-command! -nargs=* -complete=file Ag Grepper -jump -tool ag -query <args>
+command! Ag GrepperAg <args>
+cnoreabbrev ag Ag
 nnoremap <Leader>g :Grepper<CR>
+
+Plug 'eugen0329/vim-esearch' " {{{1
 
 Plug 'aquach/vim-mediawiki-editor' " {{{1
 let g:mediawiki_editor_uri_scheme = 'http'
