@@ -46,19 +46,62 @@ elseif s:choice == 'deoplete'
 elseif s:choice == 'ncm'
   Plug 'ncm2/ncm2'
   Plug 'roxma/nvim-yarp'
-  Plug 'ncm2/ncm2-abbrfuzzy'
+  "Plug 'ncm2/ncm2-abbrfuzzy' " should be build in
 
   Plug 'ncm2/ncm2-bufword'
   Plug 'ncm2/ncm2-path'
   Plug 'ncm2/ncm2-jedi'
+
   Plug 'ncm2/ncm2-html-subscope'
   Plug 'ncm2/ncm2-markdown-subscope'
   Plug 'ncm2/ncm2-rst-subscope'
 
+  Plug 'ncm2/ncm2-github'
+  Plug 'ncm2/ncm2-tmux'
+  Plug 'ncm2/ncm2-tagprefix'
+  Plug 'filipekiss/ncm2-look.vim'
+
+  Plug 'Shougo/neco-syntax'
+  Plug 'ncm2/ncm2-syntax'
+
+  Plug 'ncm2/ncm2-neoinclude'
+  Plug 'Shougo/neoinclude.vim'
+  Plug 'wellle/tmux-complete.vim'
+  " can not handle multible entries in 'dict'
+  " Plug 'yuki-ycino/ncm2-dictionary'
+
+  Plug 'ncm2/ncm2-racer'
+  Plug 'ncm2/ncm2-go'
+
+  Plug 'ncm2/ncm2-vim'
+  Plug 'Shougo/neco-vim'
+
+  Plug 'phpactor/phpactor' ,  {'do': 'composer install', 'for': 'php'}
+  Plug 'phpactor/ncm2-phpactor'
+
+  Plug 'ncm2/ncm2-ultisnips'
+
   autocmd BufEnter * call ncm2#enable_for_buffer()
+  autocmd User Ncm2Plugin call ncm2#register_source({
+	      \ 'name' : 'vimtex',
+	      \ 'priority': 1,
+	      \ 'subscope_enable': 1,
+	      \ 'complete_length': 1,
+	      \ 'scope': ['tex'],
+	      \ 'matcher': {'name': 'combine',
+	      \           'matchers': [
+	      \               {'name': 'abbrfuzzy', 'key': 'menu'},
+	      \               {'name': 'prefix', 'key': 'word'},
+	      \           ]},
+	      \ 'mark': 'tex',
+	      \ 'word_pattern': '\w+',
+	      \ 'complete_pattern': g:vimtex#re#ncm,
+	      \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
+	      \ })
 
   set completeopt+=noinsert
   set completeopt+=menuone
+  set completeopt+=noselect
 endif
 
 if s:choice != 'none'
