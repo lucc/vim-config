@@ -1,7 +1,7 @@
 " vim: spelllang=en
 " plugins: completion
 
-let s:choice = 'deoplete'
+let s:choice = 'ncm'
 
 if s:choice == 'ycm'
   Plug 'Valloric/YouCompleteMe'
@@ -105,11 +105,9 @@ elseif s:choice == 'ncm'
 endif
 
 if s:choice != 'none'
-  " Map <S-Tab> to <C-P> to go to the previous completion entry in insert
-  " mode.
   inoremap <expr> <Tab>   pumvisible() ? "\<C-N>"      : "\<Tab>"
   inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>"      : "\<Tab>"
-  "inoremap <expr> <CR>    pumvisible() ? "\<C-Y>\<CR>" : "\<CR>"
+  inoremap <expr> <CR>    pumvisible() ? "\<C-Y>\<CR>" : "\<CR>"
 endif
 
 Plug 'autozimu/LanguageClient-neovim', {
@@ -149,7 +147,7 @@ let g:echodoc#enable_at_startup = 1
 set complete+=k
 
 " use the current spell checking settings for directory completion:
-set dictionary+=spell
+"set dictionary+=spell
 " system word lists
 set dictionary+=/usr/share/dict/american-english
 set dictionary+=/usr/share/dict/british-english

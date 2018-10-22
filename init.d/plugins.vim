@@ -60,6 +60,6 @@ call plug#end()
 
 " For very short ultisnips triggers to be usable with deoplete:
 " https://github.com/SirVer/ultisnips/issues/517#issuecomment-268518251
-call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
+"call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
 " https://github.com/autozimu/LanguageClient-neovim/wiki/deoplete
-call deoplete#custom#source('LanguageClient', 'min_pattern_length', 2)
+"call deoplete#custom#source('LanguageClient', 'min_pattern_length', 2)
