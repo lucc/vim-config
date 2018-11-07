@@ -118,6 +118,7 @@ let g:LanguageClient_serverCommands = {
       \ 'c': ['cquery'] ,
       \ 'css': ['css-languageserver'],
       \ 'docker': ['docker-languageserver'],
+      \ 'haskell': ['hie-wrapper'],
       \ 'html': ['html-languageserver'],
       \ 'java': ['jdtls', '-Dlog.level=ALL'],
       \ 'json': ['json-languageserver'],

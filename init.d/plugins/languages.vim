@@ -17,6 +17,20 @@ Plug 'chikamichi/mediawiki.vim'
 Plug 'tbastos/vim-lua'
 Plug 'vim-scripts/luarefvim'
 
+" Rust {{{1
+
+Plug 'rust-lang/rust.vim'
+Plug 'rhysd/rust-doc.vim'
+let g:rust_doc#downloaded_rust_doc_dir = '/usr/share/doc/rust'
+
+" Haskell {{{1
+
+" Plug 'vim-scripts/alex.vim' " for the alex lexer generator -- bad
+Plug 'neovimhaskell/haskell-vim'
+"Plug 'itchyny/vim-haskell-indent'  " to be tested
+Plug 'parsonsmatt/intero-neovim'
+
+
 " plugins: LaTeX {{{1
 
 " original vim settings for latex
