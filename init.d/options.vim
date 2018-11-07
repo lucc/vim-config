@@ -55,6 +55,7 @@ set updatetime=200
 set directory+=~/tmp
 set directory+=/tmp
 set inccommand=split
+set undofile
 
 " shada {{{1
 " default: '100,<50,s10,h
