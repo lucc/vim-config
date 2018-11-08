@@ -223,8 +223,8 @@ let g:vimsyn_folding = 'afmpPrt'
 let g:netrw_browsex_viewer = 'xdg-open'
 
 " Hard code paths that work for Arch Linux and CentOS.
-let g:python3_host_prog = '/usr/bin/python3'
-let g:python_host_prog = '/usr/bin/python2'
+let g:python3_host_prog = 'python3'
+let g:python_host_prog = 'python2'
 " Disable python 2 support
 "let g:loaded_python_provider = 1
 
