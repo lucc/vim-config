@@ -74,5 +74,6 @@ let g:vdebug_options = {
       \   },
       \ 'debug_file': '~/vdebug.log',
       \ 'debug_file_level': 2,
+      \ 'path_maps' : {"/var/www/html/dev": "/home/luc/dev.vm"}
       \ }
       ""\ 'debug_window_level': 2,
