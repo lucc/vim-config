@@ -159,6 +159,7 @@ return require('packer').startup{
 	  debug_file = '~/vdebug.log',
 	  debug_file_level = 2,
 	  --debug_window_level = 2,
+	  path_maps = {["/var/www/html/dev"] = "/home/luc/dev.vm"},
 	}
       end,
     }
