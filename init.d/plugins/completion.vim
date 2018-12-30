@@ -120,7 +120,7 @@ let g:LanguageClient_serverCommands = {
       \ 'docker': ['docker-languageserver'],
       \ 'haskell': ['hie-wrapper'],
       \ 'html': ['html-languageserver'],
-      \ 'java': ['jdtls', '-Dlog.level=ALL'],
+      \ 'java': ['jdtls', '-Dlog.level=ALL', '-data', expand('~/.cache/jdtls-workspace')],
       \ 'json': ['json-languageserver'],
       \ 'lua': ['lua-lsp'],
       \ 'python': ['pyls'],
