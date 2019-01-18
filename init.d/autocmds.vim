@@ -33,3 +33,8 @@ augroup LucNewScripts
 	\   call jobstart(['chmod', '+x', expand('<afile>')]) |
 	\ endif
 augroup END
+
+augroup LucPrivateFiles
+  autocmd!
+  autocmd BufWritePre /tmp/*,/dev/shm/* setlocal noundofile
+augroup END
