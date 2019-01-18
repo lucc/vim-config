@@ -63,3 +63,12 @@ call plug#end()
 "call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
 " https://github.com/autozimu/LanguageClient-neovim/wiki/deoplete
 "call deoplete#custom#source('LanguageClient', 'min_pattern_length', 2)
+
+lua <<EOF
+iron = require("iron")
+iron.core.set_config{
+  preferred = {
+    prolog = "swipl"
+  }
+}
+EOF
