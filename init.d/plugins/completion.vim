@@ -139,6 +139,7 @@ nnoremap <silent> KK :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 " nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 
 Plug 'Shougo/echodoc.vim'
 let g:echodoc#enable_at_startup = 1
