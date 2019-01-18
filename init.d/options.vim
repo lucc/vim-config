@@ -37,6 +37,7 @@ set number
 " scroll when the courser is 2 lines from the border line
 set scrolloff=2
 set shortmess=
+set shortmess+=c
 set nostartofline
 set switchbuf=useopen
 set colorcolumn=+1
