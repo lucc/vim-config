@@ -124,7 +124,8 @@ let g:LanguageClient_serverCommands = {
       \ 'json': ['json-languageserver'],
       \ 'lua': ['lua-lsp'],
       \ 'python': ['pyls'],
-      \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+      \ 'rust': executable('rustup') ? ['rustup', 'run', 'nightly', 'rls']
+      \                              : ['rls'],
       \ 'sh': ['bash-language-server', 'start'],
       \ }
 "    \ 'php': ['php', 'php-language-server.php'],
