@@ -11,9 +11,11 @@ augroup LucRemoveWhiteSpaceAtEOL
 	\ endif
 augroup END
 
+" FIXME how far can this be replaced by LSP?
 augroup LucNeoMake
   autocmd!
-  autocmd BufWritePost * if &syntax != 'python' | Neomake | endif
+  "autocmd BufWritePost * if &syntax != 'python' | Neomake | endif
+  autocmd BufWritePost * Neomake
 augroup END
 
 augroup LucApplications
