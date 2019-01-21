@@ -44,30 +44,6 @@ let g:neomake_tex_make_maker = {
       \ 'args': { -> [expand('%:p:t:r') . '.pdf'] },
       \ }
 
-" plugins: tags {{{1
-" Easytags will automatically create and update tags files and set the 'tags'
-" option per file type.  Tag navigation can be done with the CTRL-P plugin.
-" All these settings are dependent on the file ~/.ctags.
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-easytags'
-let g:easytags_async = 1
-let g:easytags_updatetime_warn = 0
-let g:easytags_file = '~/.cache/tags'
-"let g:easytags_by_filetype = '~/.cache/vim-easytag'
-let g:easytags_ignored_filetypes = ''
-let g:easytags_python_enabled = 1
-if !exists('g:easytags_languages')
-  let g:easytags_languages = {}
-endif
-let g:easytags_languages.latex = {}
-let g:easytags_languages.markdown = {
-      \ 'cmd': 'markdown2ctags',
-      \ 'fileoutput_opt': '--file',
-      \ 'stdout_opt': '--file=-',
-      \ 'recurse_flag': ''
-      \ }
-let g:easytags_languages.pandoc = g:easytags_languages.markdown
-
 " plugins: man and info pages {{{1
 Plug 'alvan/vim-php-manual'
 "Plugin 'info.vim'
