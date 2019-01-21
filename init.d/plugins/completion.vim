@@ -141,6 +141,14 @@ nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 
+" language client mappings for coding
+nnoremap <leader>* :call LanguageClient_textDocument_documentHighlight()<CR>
+
+augroup LucLanguageClientPopup
+  autocmd!
+  autocmd CursorHold,CursorHoldI * if &buftype != 'nofile' | call LanguageClient#textDocument_hover() | endif
+augroup END
+
 Plug 'Shougo/echodoc.vim'
 let g:echodoc#enable_at_startup = 1
 
