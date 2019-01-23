@@ -3,7 +3,9 @@
 
 let s:choice = 'ncm'
 
-if s:choice == 'ycm'
+if s:choice == 'coc'
+  Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+elseif s:choice == 'ycm'
   Plug 'Valloric/YouCompleteMe'
   let g:ycm_filetype_blacklist = {}
   let g:ycm_complete_in_comments = 1
@@ -50,7 +52,7 @@ elseif s:choice == 'ncm'
 
   Plug 'ncm2/ncm2-bufword'
   Plug 'ncm2/ncm2-path'
-  Plug 'ncm2/ncm2-jedi'
+  "Plug 'ncm2/ncm2-jedi'
 
   Plug 'ncm2/ncm2-html-subscope'
   Plug 'ncm2/ncm2-markdown-subscope'
@@ -110,47 +112,53 @@ if s:choice != 'none'
   inoremap <expr> <CR>    pumvisible() ? "\<C-Y>\<CR>" : "\<CR>"
 endif
 
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-let g:LanguageClient_serverCommands = {
-      \ 'c': ['cquery'] ,
-      \ 'css': ['css-languageserver'],
-      \ 'docker': ['docker-languageserver'],
-      \ 'haskell': ['hie-wrapper'],
-      \ 'html': ['html-languageserver'],
-      \ 'java': ['jdtls', '-Dlog.level=ALL', '-data', expand('~/.cache/jdtls-workspace')],
-      \ 'json': ['json-languageserver'],
-      \ 'lua': ['lua-lsp'],
-      \ 'python': ['pyls'],
-      \ 'rust': executable('rustup') ? ['rustup', 'run', 'nightly', 'rls']
-      \                              : ['rls'],
-      \ 'sh': ['bash-language-server', 'start'],
+if s:choice != 'coc'
+  Plug 'autozimu/LanguageClient-neovim', {
+      \ 'branch': 'next',
+      \ 'do': 'bash install.sh',
       \ }
-"    \ 'php': ['php', 'php-language-server.php'],
-"    \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
-"    \ 'java': ['jdtls', '-data', {{ your workspace }}, '-Dlog.level=ALL'],
+  let g:LanguageClient_serverCommands = {
+	\ 'c': ['cquery'] ,
+	\ 'css': ['css-languageserver'],
+	\ 'docker': ['docker-languageserver'],
+	\ 'haskell': ['hie-wrapper'],
+	\ 'html': ['html-languageserver'],
+	\ 'java': ['jdtls', '-Dlog.level=ALL', '-data', expand('~/.cache/jdtls-workspace')],
+	\ 'json': ['json-languageserver'],
+	\ 'lua': ['lua-lsp'],
+	\ 'python': ['pyls'],
+	\ 'rust': executable('rustup') ? ['rustup', 'run', 'nightly', 'rls']
+	\                              : ['rls'],
+	\ 'sh': ['bash-language-server', 'start'],
+	\ }
+  "    \ 'php': ['php', 'php-language-server.php'],
+  "    \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
+  "    \ 'java': ['jdtls', '-data', {{ your workspace }}, '-Dlog.level=ALL'],
 
-" Automatically start language servers.
- let g:LanguageClient_autoStart = 1
-"
-nnoremap <silent> KK :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-" nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
-Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+  " Automatically start language servers.
+   let g:LanguageClient_autoStart = 1
+  "
+  nnoremap <silent> KK :call LanguageClient_textDocument_hover()<CR>
+  nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+  " nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+  Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
+  nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 
-" language client mappings for coding
-nnoremap <leader>* :call LanguageClient_textDocument_documentHighlight()<CR>
+  " language client mappings for coding
+  nnoremap <leader>* :call LanguageClient_textDocument_documentHighlight()<CR>
 
-augroup LucLanguageClientPopup
-  autocmd!
-  autocmd CursorHold,CursorHoldI * if &buftype != 'nofile' | call LanguageClient#textDocument_hover() | endif
-augroup END
+  "augroup LucLanguageClientPopup
+  "  autocmd!
+  "  autocmd CursorHold,CursorHoldI *
+  "        \ if &buftype != 'nofile' |
+  "        \   call LanguageClient#textDocument_hover() |
+  "        \ endif
+  "augroup END
+endif
 
 Plug 'Shougo/echodoc.vim'
 let g:echodoc#enable_at_startup = 1
+"let g:echodoc#type = 'signature'
 
 " options related to completion
 
