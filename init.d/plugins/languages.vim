@@ -28,7 +28,7 @@ let g:rust_doc#downloaded_rust_doc_dir = '/usr/share/doc/rust'
 " Plug 'vim-scripts/alex.vim' " for the alex lexer generator -- bad
 Plug 'neovimhaskell/haskell-vim'
 "Plug 'itchyny/vim-haskell-indent'  " to be tested
-"Plug 'parsonsmatt/intero-neovim'
+Plug 'parsonsmatt/intero-neovim'
 let g:intero_ghci_options = '-ghci-script ' . expand('~/.config/ghc/intero.conf')
 "let g:intero_prompt_regex = ".*  \e[m"
 let g:intero_prompt_regex = "λ> "
