@@ -11,11 +11,13 @@ augroup LucRemoveWhiteSpaceAtEOL
 	\ endif
 augroup END
 
-" FIXME how far can this be replaced by LSP?
 augroup LucNeoMake
   autocmd!
-  "autocmd BufWritePost * if &syntax != 'python' | Neomake | endif
-  autocmd BufWritePost * Neomake
+  " FIXME can this check be done dynamically with LSP?
+  autocmd BufWritePost *
+	\ if index(['python', 'lua', 'rust', 'haskell', 'sh'], &syntax) == -1 |
+	\   Neomake |
+	\ endif
 augroup END
 
 augroup LucApplications
