@@ -16,6 +16,7 @@ Plug 'rosstimson/bats.vim'
 Plug 'chikamichi/mediawiki.vim'
 Plug 'tbastos/vim-lua'
 Plug 'vim-scripts/luarefvim'
+Plug 'cespare/vim-toml'
 
 " Rust {{{1
 
