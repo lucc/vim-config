@@ -158,7 +158,7 @@ endif
 
 Plug 'Shougo/echodoc.vim'
 let g:echodoc#enable_at_startup = 1
-"let g:echodoc#type = 'signature'
+let g:echodoc#type = 'virtual'
 
 " options related to completion
 
