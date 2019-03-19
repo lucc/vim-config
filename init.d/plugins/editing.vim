@@ -62,8 +62,8 @@ Plug 'nixprime/cpsm', { 'do': './install.sh' }
 "let g:ctrlp_match_current_file = 0
 
 " {{{1 fzf
-Plug 'junegunn/fzf'
-Plug 'junegunn/fzf.vim'
+"Plug 'junegunn/fzf'
+"Plug 'junegunn/fzf.vim'
 
 " plugins: parenthesis, quotes, alignment {{{1
 
