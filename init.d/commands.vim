@@ -30,3 +30,14 @@ function! s:open(bang)
 endfunction
 
 cabbrev man vertical Man
+
+command! -nargs=* SSH call s:ssh(<q-args>)
+
+function! s:ssh(args)
+  if empty(a:args)
+    echoerr "You must give a remote path to edit."
+    return 1
+  endif
+  let [host; path] = split(a:args, '/')
+  execute 'edit scp://' . host . '//' . join(path, '/')
+endfunction
