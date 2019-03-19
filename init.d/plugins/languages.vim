@@ -33,6 +33,9 @@ Plug 'parsonsmatt/intero-neovim'
 let g:intero_ghci_options = '-ghci-script ' . expand('~/.config/ghc/intero.conf')
 "let g:intero_prompt_regex = ".*  \e[m"
 let g:intero_prompt_regex = "λ> "
+let g:intero_use_neomake = 0
+let g:intero_start_immediately = 0
+
 Plug 'Twinside/vim-hoogle'
 
 " plugins: LaTeX {{{1
