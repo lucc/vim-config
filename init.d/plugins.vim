@@ -85,3 +85,18 @@ iron.core.set_config{
   }
 }
 EOF
+
+call denite#custom#map(
+      \ 'insert',
+      \ '<down>',
+      \ '<denite:move_to_next_line>',
+      \ 'noremap'
+      \)
+call denite#custom#map(
+      \ 'insert',
+      \ '<up>',
+      \ '<denite:move_to_previous_line>',
+      \ 'noremap'
+      \)
+call denite#custom#var('file/rec', 'command',
+      \ ['fd',  '--hidden', '--type',  'f', '""'])
