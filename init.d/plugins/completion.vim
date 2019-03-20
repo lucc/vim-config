@@ -5,6 +5,8 @@ let s:choice = 'ncm'
 
 if s:choice == 'coc'
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'Shougo/neco-vim'
+  Plug 'neoclide/coc-neco'
 elseif s:choice == 'ycm'
   Plug 'Valloric/YouCompleteMe'
   let g:ycm_filetype_blacklist = {}
