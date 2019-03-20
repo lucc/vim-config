@@ -1,0 +1,25 @@
+{
+  "diagnostic.enable": true,
+
+  "languageserver": {
+
+    "phplang": {
+      "command": "php-language-server",
+      "filetypes": ["php"]
+    },
+
+    "bash": {
+      "command": "bash-language-server",
+      "args": ["start"],
+      "filetypes": ["sh"],
+      "ignoredRootPaths": ["~"]
+    },
+
+    "html": {
+      "command": "html-languageserver",
+      // "args": ["start"],
+      "filetypes": ["html"],
+    },
+  },
+
+}
