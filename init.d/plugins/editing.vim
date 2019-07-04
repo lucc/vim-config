@@ -15,6 +15,7 @@ let g:ctrlp_mruf_max = 1000
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_max_files = 0
 let g:ctrlp_root_markers = [
+      \ '.git',
       \ 'makefile',
       \ 'Makefile',
       \ ]
