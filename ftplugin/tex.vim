@@ -33,5 +33,6 @@ endfunction
 
 augroup LucFileTypeTex
   autocmd BufWritePost,CursorHold,CursorHoldI          <buffer> Neomake!
-  autocmd CursorHold,CursorHoldI,FocusGained,FocusLost <buffer> if timer_info(s:timer) == [] | let s:timer = timer_start(3000, function('s:count')) | endif
+  "autocmd CursorHold,CursorHoldI,FocusGained,FocusLost <buffer> if timer_info(s:timer) == [] | let s:timer = timer_start(3000, function('s:count')) | endif
+  autocmd BufWritePost <buffer> if timer_info(s:timer) == [] | let s:timer = timer_start(3000, function('s:count')) | endif
 augroup END
