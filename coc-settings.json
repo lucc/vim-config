@@ -3,8 +3,14 @@
 
   "languageserver": {
 
-    "phplang": {
-      "command": "php-language-server",
+//    "phplang": {
+//      "command": "php-language-server",
+//      "filetypes": ["php"]
+//    },
+
+    "intelephense": {
+      "command": "node",
+      "args": ["/home/luc/node_modules/intelephense/lib/intelephense.js", "--stdio"],
       "filetypes": ["php"]
     },
 
