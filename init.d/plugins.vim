@@ -64,6 +64,7 @@ Plug 'pix/vim-known_hosts'
 Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdcommenter'
 Plug 'Shougo/denite.nvim'
+Plug 'Shougo/neomru.vim' " mru for denite
 Plug 'sjl/gundo.vim'
 Plug 'ZeroKnight/vim-signjump'
 Plug '~/src/vim-tip'
