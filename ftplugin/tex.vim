@@ -24,6 +24,7 @@ endif
 let b:surround_99 = "\\\1command\1{\r}"
 
 let b:delimitMate_quotes = "' ` *"
+let b:neomake_echo_current_error = 0
 
 " TODO we could put this into the status line
 let s:timer = -1

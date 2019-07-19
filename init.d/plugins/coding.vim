@@ -10,8 +10,6 @@ let g:UltiSnipsJumpBackwardTrigger = '<C-G>' " <C-K>
 "let g:UltiSnipsExpandTrigger       = <tab>
 "let g:UltiSnipsListSnippets        = <c-tab>
 
-let g:UltiSnipsSnippetsDir = fnamemodify($MYVIMRC, ':h').'/UltiSnips'
-
 " Snippets are separated from the engine:
 Plug 'honza/vim-snippets'
 Plug 'rbonvall/snipmate-snippets-bib'
@@ -26,7 +24,7 @@ let g:neomake_verbose = 1
 let g:neomake_list_height = 5
 
 "let g:neomake_php_enabled_makers = ['php', 'phpcs', 'phpmd']
-let g:neomake_latex_enabled_makers = ['chktex', 'lacheck', 'rubberinfo', 'proselint', 'latexrun']
+let g:neomake_tex_enabled_makers = ['chktex', 'lacheck', 'rubberinfo', 'proselint', 'latexrun']
 let g:neomake_bib_enabled_makers = ['bibtex']
 let g:neomake_nvimluatest_maker = {
       \ 'exe': 'sh',
