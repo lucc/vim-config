@@ -4,7 +4,7 @@
 let s:choice = 'ncm'
 
 if s:choice == 'coc'
-  Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
 elseif s:choice == 'ycm'
   Plug 'Valloric/YouCompleteMe'
   let g:ycm_filetype_blacklist = {}
@@ -130,14 +130,11 @@ if s:choice != 'coc'
 	\ 'rust': executable('rustup') ? ['rustup', 'run', 'nightly', 'rls']
 	\                              : ['rls'],
 	\ 'sh': ['bash-language-server', 'start'],
+	\ 'tex': ['texlab'],
 	\ }
   "    \ 'php': ['php', 'php-language-server.php'],
   "    \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
-  "    \ 'java': ['jdtls', '-data', {{ your workspace }}, '-Dlog.level=ALL'],
 
-  " Automatically start language servers.
-   let g:LanguageClient_autoStart = 1
-  "
   nnoremap <silent> KK :call LanguageClient_textDocument_hover()<CR>
   nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
   " nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
