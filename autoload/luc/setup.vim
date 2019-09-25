@@ -16,5 +16,4 @@ function! luc#setup#delfunction(pattern) abort
   for fun in split(functions, "\n")
     execute 'del'.substitute(fun, '(.*)$', '', '')
   endfor
-  let @a = old
 endfunction
