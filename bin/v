@@ -50,9 +50,7 @@ function! s:run(input)
   endtry
 endfunction
 
-if argc() == 0
-  call s:run('')
-elseif s:all_readable(argv())
+if s:all_readable(argv()) " includes argc == 0
   " do nothing
 else
   let s:args = join(argv(), '')
