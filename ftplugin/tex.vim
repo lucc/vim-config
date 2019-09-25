@@ -8,6 +8,7 @@ nnoremap <buffer> gGG :python3 tex_count_vim_wrapper()<CR>
 vnoremap <buffer> gGG :python3 tex_count_vim_wrapper()<CR>
 nnoremap <buffer> gG :python3 tex_count_vim_wrapper(wait=True)<CR>
 vnoremap <buffer> gG :python3 tex_count_vim_wrapper(wait=True)<CR>
+nnoremap <buffer> <F12> :VimtexTocToggle<CR>
 
 setlocal spell
 " This doesn't work

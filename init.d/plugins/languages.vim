@@ -38,32 +38,31 @@ let g:intero_start_immediately = 0
 
 Plug 'Twinside/vim-hoogle'
 
-" plugins: LaTeX {{{1
+" LaTeX {{{1
 
 " original vim settings for latex
 "let g:tex_fold_enabled = 1
 let g:tex_flavor = 'latex'
 
-" async autocompilation
-Plug 'donRaphaco/neotex', { 'for': 'tex' }
-"let g:neotex_enabled = 2 " activate by default
-
 Plug 'lervag/vimtex'
 let g:vimtex_fold_enabled = 1
-let g:vimtex_fold_types = {}
-let g:vimtex_fold_types.comments = {}
-let g:vimtex_fold_types.comments.enabled = 1
+"let g:vimtex_fold_types = {}
+"let g:vimtex_fold_types.comments = {}
+"let g:vimtex_fold_types.comments.enabled = 1
 let g:vimtex_compiler_method = 'latexrun'
 let g:vimtex_compiler_progname = 'nvr'
+let g:vimtex_toc_config = {
+      \ 'split_pos': 'vertical'
+      \ }
 
 
-" plugins: lisp/scheme {{{1
+" lisp/scheme {{{1
 "Plugin 'vim-scripts/slimv.vim'
 "Plugin 'vim-scripts/tslime.vim'
 "Plugin 'davidmfoley/tslime.vim'
 "Plugin 'vim-scripts/Limp'
 
-" plugins: markdown {{{1
+" markdown {{{1
 " unconditionally binds <Leader>f and <Leader>r (also in insert mode=bad for
 " latex)
 "Plugin 'vim-pandoc/vim-markdownfootnotes'
@@ -96,7 +95,7 @@ let g:pandoc#command#autoexec_on_writes = 0
 let g:pandoc#command#autoexec_command = "Pandoc pdf"
 let g:pandoc#formatting#mode = 'h'
 
-" plugins: comma separated values (csv) {{{1
+" comma separated values (csv) {{{1
 Plug 'chrisbra/csv.vim'
 "Plugin 'vim-scripts/csv-reader'
 "Plugin 'vim-scripts/CSVTK'
