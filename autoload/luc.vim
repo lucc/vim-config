@@ -69,6 +69,8 @@ function! luc#capitalize(text) abort
 endfunction
 
 function! luc#capitalize_operator_function(type) abort
+  " This does not work in block moode
+  ""%s/\%'<\_.*\%'>/\=substitute(submatch(0), '\v<(\w)(\w*)>', '\u\1\L\2', 'g')/
   " this function is partly copied from the vim help about g@
   let sel_save = &selection
   let saved_register = @@
@@ -90,7 +92,7 @@ function! luc#find_next_spell_error() abort
   " A function to jump to the next spelling error
   setlocal spell
   "if spellbadword(expand('<cword>')) == ['', '']
-    normal ]s
+    normal! ]s
   "endif
 endfunction
 
