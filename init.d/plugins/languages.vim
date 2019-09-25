@@ -104,7 +104,7 @@ Plug 'chrisbra/csv.vim'
 "Plugin 'vim-scripts/csv-color'
 "Plugin 'vim-scripts/CSV-delimited-field-jumper'
 
-" plugins: python {{{1
+" python {{{1
 
 "Plugin 'sunsol/vim_python_fold_compact'
 "Plugin 'vim-scripts/Python-Syntax-Folding'

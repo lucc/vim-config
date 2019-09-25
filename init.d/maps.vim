@@ -29,7 +29,7 @@ nmap <leader>p :set operatorfunc=luc#prefix<CR>g@
 " backup current buffer
 nnoremap <silent> <F11>
       \ :silent update <BAR>
-      \ call pyeval('backup_current_buffer() or 1') <BAR>
+      \ call py3eval('backup_current_buffer() or 1') <BAR>
       \ redraw <CR>
 
 " moveing around

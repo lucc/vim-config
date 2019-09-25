@@ -1,10 +1,5 @@
 " some generic functions to set up vim
 
-function! luc#setup#python() abort
-  python import vim
-  pyfile ~/.config/nvim/init.py
-endfunction
-
 function! luc#setup#vim_plug() abort
   " https://github.com/junegunn/vim-plug
   let path = stdpath('data').'/plugins'

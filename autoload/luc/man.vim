@@ -39,9 +39,9 @@ function! luc#man#open_tab(type, string) abort "{{{2
   redraw
 endfunction
 
-python import man
+python3 import man
 function! luc#man#complete_topics(ArgLead, CmdLine, CursorPos) abort "{{{2
-  return pyeval('list(man.complete("'.a:ArgLead.'","'.a:CmdLine.'","'.a:CursorPos.'"))')
+  return py3eval('list(man.complete("'.a:ArgLead.'","'.a:CmdLine.'","'.a:CursorPos.'"))')
 endfunction
 
 function! luc#man#help_tags() abort "{{{2
