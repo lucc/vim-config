@@ -79,13 +79,12 @@ set cpoptions+=$ " don't redraw the display while executing c, s, ... cmomands
 " terminal stuff {{{1
 
 set title
-set titleold=shell
 
 if $COLORTERM ==? 'truecolor' || !empty($KONSOLE_DBUS_SERVICE) || $TERM =~? 'st.*'
   set termguicolors
-elseif !has('gui_running')
-  set t_Co=256
 endif
+
+set pumblend=20
 
 " searching {{{1
 set ignorecase
