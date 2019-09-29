@@ -62,7 +62,7 @@ Plug 'jamessan/vim-gnupg'
 Plug 'lucc/VimRepress' " clone of https://bitbucket.org/pentie/vimrepress
 Plug 'pix/vim-known_hosts'
 Plug 'ryanoasis/vim-devicons'
-Plug 'scrooloose/nerdcommenter'
+"Plug 'scrooloose/nerdcommenter'
 Plug 'Shougo/denite.nvim'
 Plug 'Shougo/neomru.vim' " mru for denite
 Plug 'sjl/gundo.vim'
