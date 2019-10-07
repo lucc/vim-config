@@ -18,6 +18,8 @@ runtime init.d/plugins/ui.vim
 Plug 'mhinz/vim-grepper' " {{{1
 let g:grepper = {}
 let g:grepper.quickfix = 0
+let g:grepper.prompt = 0
+let g:grepper.dir = 'filecwd'
 command! Ag GrepperAg <args>
 cnoreabbrev ag Ag
 nnoremap <Leader>g :Grepper<CR>
