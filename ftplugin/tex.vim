@@ -17,6 +17,9 @@ setlocal grepprg=grep\ -nH\ $*
 " This is currently handled by latex-suite
 "setlocal makeprg=latexmk\ -silent\ -pv\ -pdf\ $*
 
+" otherwise I will go crazy with the flickering signcolumn from LC.
+setlocal signcolumn=yes
+
 if py3eval('check_for_english_babel()')
   let b:Tex_SmartQuoteOpen = '“'
   let b:Tex_SmartQuoteClose = '”'
