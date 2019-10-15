@@ -42,6 +42,12 @@ let g:neomake_tex_make_maker = {
       \ 'args': { -> [expand('%:p:t:r') . '.pdf'] },
       \ }
 
+Plug 'janko/vim-test'
+let test#strategy='dispatch_background'
+Plug 'tpope/vim-dispatch'
+let g:dispatch_no_maps = 1
+let g:dispatch_no_tmux_make = 1
+
 " plugins: man and info pages {{{1
 Plug 'alvan/vim-php-manual'
 "Plugin 'info.vim'
