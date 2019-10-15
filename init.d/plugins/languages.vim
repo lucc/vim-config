@@ -108,20 +108,19 @@ Plug 'chrisbra/csv.vim'
 "Plugin 'sunsol/vim_python_fold_compact'
 "Plugin 'vim-scripts/Python-Syntax-Folding'
 Plug 'python-mode/python-mode'
-if has('nvim')
-  let g:pymode_python = 'python3'
-endif
+let g:pymode_python = 'python3'
 let g:pymode_rope = 0
 let g:pymode_rope_completion = 0
 let g:pymode_lint = 0
+let g:pymode_doc = 0
 "let g:pymode_folding = 0
 "let g:pymode_virtualenv = 0
 "let g:pymode_syntax = 0
-let g:pymode_indent = 0
+let g:pymode_indent = 1
 let g:pymode_options_max_line_length = 79
 
 " This is nicer than the pymode version.
-Plug 'fs111/pydoc.vim'
+"Plug 'fs111/pydoc.vim'
 
 " svn checkout http://vimpdb.googlecode.com/svn/trunk/ vimpdb-read-only
 
