@@ -110,10 +110,14 @@ elseif s:choice == 'ncm'
   set completeopt+=noselect
 endif
 
-if s:choice != 'none'
+if s:choice == 'coc'
   inoremap <expr> <Tab>   pumvisible() ? "\<C-N>"      : "\<Tab>"
   inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>"      : "\<Tab>"
   inoremap <expr> <CR>    pumvisible() ? "\<C-Y>\<CR>" : "\<CR>"
+else
+  inoremap <expr> <Tab>   pumvisible() ? {_, x -> x}(LanguageClient#textDocument_hover(), "\<C-N>")      : "\<Tab>"
+  inoremap <expr> <S-Tab> pumvisible() ? {_, x -> x}(LanguageClient#textDocument_hover(), "\<C-P>")      : "\<Tab>"
+  inoremap <expr> <CR>    pumvisible() ? {_, x -> x}(LanguageClient#textDocument_hover(), "\<C-Y>\<CR>") : "\<CR>"
 endif
 
 if s:choice != 'coc'
