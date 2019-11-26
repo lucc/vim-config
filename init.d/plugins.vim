@@ -84,7 +84,8 @@ lua <<EOF
 iron = require("iron")
 iron.core.set_config{
   preferred = {
-    prolog = "swipl"
+    prolog = "swipl",
+    python = "ipython"
   }
 }
 EOF
