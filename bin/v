@@ -34,10 +34,12 @@ function! s:run(input)
   " Save the global settings that we will override
   call s:save('ctrlp_default_input')
   call s:save('ctrlp_match_window')
+  call s:save('ctrlp_open_new_file')
   call s:save('ctrlp_open_single_match')
   " Override the global settings with custom values.
   let g:ctrlp_default_input = a:input
   let g:ctrlp_match_window = 'bottom,order:btt,min:'.(&lines + 1).',max:'.(&lines + 1)
+  let g:ctrlp_open_new_file = 'r'
   let g:ctrlp_open_single_match = ['mru files']
   " Run CtrlP.
   try
@@ -46,6 +48,7 @@ function! s:run(input)
     " restore saved settings
     call s:restore('ctrlp_default_input')
     call s:restore('ctrlp_match_window')
+    call s:restore('ctrlp_open_new_file')
     call s:restore('ctrlp_open_single_match')
   endtry
 endfunction
