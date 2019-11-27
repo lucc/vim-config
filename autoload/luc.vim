@@ -2,7 +2,7 @@
 function! luc#remote_editor(mail) abort
   " a function to be called by a client who wishes to use a vim server as an
   " non forking edior. One can also set the environment variable EDITOR with
-  " EDITOR='vim --remote-tab-wait-silent +call\ LucMiscRemoteEditor()'
+  " EDITOR='vim --remote-tab-wait-silent +call\ luc#remote_editor()'
 
   if has('gui_macvim')
     " use an autocommand to move MacVim to the background when leaving the
