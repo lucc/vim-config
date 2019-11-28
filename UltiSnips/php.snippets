@@ -1,14 +1,10 @@
 snippet fun "function with docblock" b
 /**
- * $3
- * 
  * $4
- * 
- * @return ${5:void}
- * @author ${6:`!v g:snips_author`}
+ *
+ * @return $3 $5
  */
-function ${1:name} (${2:arg1})
-{
+function ${1:name} (${2:arg1}): ${3:void} {
 	$0
 }
 endsnippet
