@@ -53,3 +53,4 @@ endif
 nnoremap gF <CMD>O<CR>
 
 nnoremap <silent> <C-Z> <CMD>call luc#terminal()<CR>
+nnoremap <silent> <leader><C-Z> <CMD>suspend<CR>
