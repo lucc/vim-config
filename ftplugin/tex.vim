@@ -3,7 +3,7 @@
 execute 'py3file ' . expand('<sfile>:h:h') . '/init.py'
 
 nnoremap <buffer> K
-      \ :call py3eval('tex.doc("""'.expand('<cword>').'""") or 1')<CR>
+      \ :call py3eval('lib.tex.doc("""'.expand('<cword>').'""") or 1')<CR>
 nnoremap <buffer> gGG :python3 tex_count_vim_wrapper()<CR>
 vnoremap <buffer> gGG :python3 tex_count_vim_wrapper()<CR>
 nnoremap <buffer> gG :python3 tex_count_vim_wrapper(wait=True)<CR>
