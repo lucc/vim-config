@@ -17,6 +17,8 @@ Plug 'chikamichi/mediawiki.vim'
 Plug 'tbastos/vim-lua'
 Plug 'vim-scripts/luarefvim'
 Plug 'cespare/vim-toml'
+Plug 'LnL7/vim-nix'
+Plug 'derekelkins/agda-vim'
 
 " Rust {{{1
 
