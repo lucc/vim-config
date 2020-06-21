@@ -1,7 +1,7 @@
 " vim: spelllang=en
 " plugins: completion
 
-let s:choice = 'ncm'
+let s:choice = 'coc'
 
 if s:choice == 'coc'
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
