@@ -62,6 +62,10 @@ Plug 'nixprime/cpsm', { 'do': './install.sh' }
 "" cpsm doesn't use 1 as a default if the variable doesn't exist.
 "let g:ctrlp_match_current_file = 0
 
+" {{{1 clap
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
+let g:clap_layout = {'relative': 'editor'}
+
 " {{{1 fzf
 "Plug 'junegunn/fzf'
 "Plug 'junegunn/fzf.vim'
