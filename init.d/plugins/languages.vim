@@ -19,6 +19,7 @@ Plug 'vim-scripts/luarefvim'
 Plug 'cespare/vim-toml'
 Plug 'LnL7/vim-nix'
 Plug 'derekelkins/agda-vim'
+Plug 'nfnty/vim-nftables'
 
 " Rust {{{1
 
