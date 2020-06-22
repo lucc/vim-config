@@ -11,5 +11,5 @@ compiler stack
 function! s:start_intero(a,b,c) abort
   InteroStart
 endfunction
-call jobstart(['stack', 'path', '--config-location'],
-      \ {'on_exit': function('s:start_intero')})
+"call jobstart(['stack', 'path', '--config-location'],
+"      \ {'on_exit': function('s:start_intero')})
