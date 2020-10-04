@@ -65,7 +65,7 @@ elseif s:choice == 'ncm'
   Plug 'ncm2/ncm2-rst-subscope'
 
   Plug 'ncm2/ncm2-github'
-  Plug 'ncm2/ncm2-tmux'
+  "Plug 'ncm2/ncm2-tmux'
   Plug 'ncm2/ncm2-tagprefix'
   Plug 'filipekiss/ncm2-look.vim'
 
@@ -74,7 +74,7 @@ elseif s:choice == 'ncm'
 
   Plug 'ncm2/ncm2-neoinclude'
   Plug 'Shougo/neoinclude.vim'
-  Plug 'wellle/tmux-complete.vim'
+  "Plug 'wellle/tmux-complete.vim'
   " can not handle multible entries in 'dict'
   " Plug 'yuki-ycino/ncm2-dictionary'
 
