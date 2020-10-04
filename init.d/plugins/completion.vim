@@ -45,6 +45,8 @@ elseif s:choice == 'deoplete'
   Plug 'poppyschmo/deoplete-latex'
   Plug 'zchee/deoplete-zsh'
   Plug 'lionawurscht/deoplete-biblatex'
+  Plug 'paretje/deoplete-notmuch', {'for': 'mail'}
+  let g:deoplete#sources#notmuch#command = ['notmuch', 'address', '--format=json', '--deduplicate=address', '*']
   "Plug 'zchee/deoplete-jedi'
   "https://github.com/SevereOverfl0w/deoplete-github
   "https://github.com/lvht/phpcd.vim
