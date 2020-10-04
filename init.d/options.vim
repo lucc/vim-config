@@ -84,7 +84,7 @@ if $COLORTERM ==? 'truecolor' || !empty($KONSOLE_DBUS_SERVICE) || $TERM =~? 'st.
   set termguicolors
 endif
 
-set pumblend=20
+"set pumblend=20
 
 " searching {{{1
 set ignorecase
