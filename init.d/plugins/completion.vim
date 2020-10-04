@@ -136,9 +136,11 @@ if s:choice != 'coc'
 	\ 'java': ['jdtls', '-Dlog.level=ALL', '-data', expand('~/.cache/jdtls-workspace')],
 	\ 'json': ['json-languageserver'],
 	\ 'lua': ['lua-lsp'],
+	\ 'nix': ['rnix-lsp'],
 	\ 'python': ['pyls'],
 	\ 'rust': executable('rustup') ? ['rustup', 'run', 'nightly', 'rls']
 	\                              : ['rls'],
+	\ 'scala': ['metals-vim'],
 	\ 'sh': ['bash-language-server', 'start'],
 	\ 'tex': ['texlab'],
 	\ }
