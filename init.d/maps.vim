@@ -22,6 +22,9 @@ vmap gc  "=luc#capitalize(luc#get_visual_selection())<CR>p
 nmap gc  :set operatorfunc=luc#capitalize_operator_function<CR>g@
 nmap gcc gciw
 
+" try to make the current window as tall as the content
+nnoremap <C-W>. :execute 'resize' nvim_buf_line_count(0) <CR>
+
 " prefix lines with &commentstring
 vmap <leader>p :call luc#prefix(visualmode())<CR>
 nmap <leader>p :set operatorfunc=luc#prefix<CR>g@
@@ -52,6 +55,7 @@ nnoremap ` '
 vmap // y/<C-r>"<CR>
 
 if has('nvim')
+  " Use ESC to leave terminal mode
   tnoremap <Esc> <C-\><C-n>
 endif
 
