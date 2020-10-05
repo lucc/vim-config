@@ -65,6 +65,12 @@ Plug 'nixprime/cpsm', { 'do': './install.sh' }
 " {{{1 clap
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
 let g:clap_layout = {'relative': 'editor'}
+let g:clap_insert_mode_only = v:true
+let g:clap_open_action = {
+      \ 'ctrl-t': 'tab split',
+      \ 'ctrl-s': 'split',
+      \ 'ctrl-v': 'vsplit',
+      \ }
 
 " {{{1 fzf
 "Plug 'junegunn/fzf'
