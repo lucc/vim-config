@@ -8,7 +8,14 @@ if s:choice == 'coc'
   Plug 'neoclide/coc-sources'
   Plug 'Shougo/neco-vim'
   Plug 'neoclide/coc-neco'
-  Plug 'neoclide/coc-snippets'
+  let g:coc_global_extensions = [
+	\ 'coc-git',
+	\ 'coc-json',
+	\ 'coc-snippets',
+	\ 'coc-vimtex',
+	\ 'coc-syntax',
+	\ ]
+  let g:coc_data_home = "~/.local/share/coc"
 elseif s:choice == 'ycm'
   Plug 'Valloric/YouCompleteMe'
   let g:ycm_filetype_blacklist = {}
