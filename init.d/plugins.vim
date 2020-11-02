@@ -10,17 +10,13 @@ runtime init.d/plugins/completion.vim
 runtime init.d/plugins/languages.vim
 runtime init.d/plugins/ui.vim
 
-"Plug 'wsdjeg/FlyGrep.vim'
-"Plug 'scrooloose/nerdtree'
-"Plug 'tpope/vim-vinegar'
-"Plug 'vim-scripts/ZoomWin'
-
 Plug 'mhinz/vim-grepper' " {{{1
 let g:grepper = {}
 let g:grepper.dir = 'filecwd'
 let g:grepper.jump = 1
 let g:grepper.prompt = 0
 let g:grepper.quickfix = 0
+let g:grepper.searchreg = 1
 let g:grepper.tools = ['git', 'rg', 'ag', 'grep']
 command! -nargs=* -complete=file S Grepper -jump -query <args>
 
@@ -63,10 +59,6 @@ Plug 'git://fedorapeople.org/home/fedora/wwoods/public_git/vim-scripts.git'
 Plug 'jamessan/vim-gnupg'
 Plug 'lucc/VimRepress' " clone of https://bitbucket.org/pentie/vimrepress
 Plug 'pix/vim-known_hosts'
-Plug 'ryanoasis/vim-devicons'
-"Plug 'scrooloose/nerdcommenter'
-Plug 'Shougo/denite.nvim'
-Plug 'Shougo/neomru.vim' " mru for denite
 Plug 'sjl/gundo.vim'
 Plug 'ZeroKnight/vim-signjump'
 Plug '~/src/vim-tip'
@@ -89,18 +81,3 @@ iron.core.set_config{
   }
 }
 EOF
-
-call denite#custom#map(
-      \ 'insert',
-      \ '<down>',
-      \ '<denite:move_to_next_line>',
-      \ 'noremap'
-      \)
-call denite#custom#map(
-      \ 'insert',
-      \ '<up>',
-      \ '<denite:move_to_previous_line>',
-      \ 'noremap'
-      \)
-call denite#custom#var('file/rec', 'command',
-      \ ['fd',  '--hidden', '--type',  'f', '""'])
