@@ -1,14 +1,13 @@
 " general plugins for coding
 " vim: foldmethod=marker spelllang=en
-let s:uname = system('uname')[:-2]
-" plugins: snippets {{{1
 
+" plugins: snippets {{{1
 Plug 'SirVer/ultisnips'
 let g:UltiSnipsExpandTrigger = '<C-F>'
 let g:UltiSnipsJumpForwardTrigger = '<C-F>' " <C-J>
 let g:UltiSnipsJumpBackwardTrigger = '<C-G>' " <C-K>
 "let g:UltiSnipsExpandTrigger       = <tab>
-"let g:UltiSnipsListSnippets        = <c-tab>
+let g:UltiSnipsListSnippets        = '<C-L>'
 
 " Snippets are separated from the engine:
 Plug 'honza/vim-snippets'
@@ -44,34 +43,22 @@ let g:neomake_tex_make_maker = {
 
 Plug 'janko/vim-test'
 let test#strategy='dispatch_background'
+
 Plug 'tpope/vim-dispatch'
 let g:dispatch_no_maps = 1
 let g:dispatch_no_tmux_make = 1
 
 " plugins: man and info pages {{{1
 Plug 'alvan/vim-php-manual'
-"Plugin 'info.vim'
 Plug 'alx741/vinfo'
-
-" hints_man
-" http://www.vim.org/scripts/script.php?script_id=1825
-" http://www.vim.org/scripts/script.php?script_id=1826
-"augroup LucManHints
-"  autocmd!
-"  autocmd FileType c,cpp set cmdheight=2
-"augroup END
+"Plug 'info.vim'
 
 " plugins: vcs stuff {{{1
 "Plugin 'tpope/vim-git'
 Plug 'tpope/vim-fugitive'
 Plug 'jreybert/vimagit'
 Plug 'ludovicchabant/vim-lawrencium'
-"Plugin 'mhinz/vim-signify'
-"let g:sygnify_vcs_list = ['git', 'hg', 'svn']
-"let g:signify_disable_by_default = 1
-" use :SignifyToggle to activate
 Plug 'airblade/vim-gitgutter'
-"let g:gitgutter_override_sign_column_highlight = 0
 Plug 'junegunn/gv.vim'  " faster than gitv?  :GV
 Plug 'gregsexton/gitv'  " gitk for vim       :Gitv
 
