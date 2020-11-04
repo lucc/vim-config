@@ -63,7 +63,9 @@ Plug 'nixprime/cpsm', { 'do': './install.sh' }
 "let g:ctrlp_match_current_file = 0
 
 " {{{1 clap
-Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
+Plug 'liuchengxu/vim-clap', { 'do': {-> jobstart([
+      \ 'nix-shell', '--pure', '--run', 'make', '-p', 'openssl.dev', 'cargo',
+      \ 'pkg-config'])} }
 let g:clap_layout = {'relative': 'editor'}
 let g:clap_insert_mode_only = v:true
 let g:clap_open_action = {
