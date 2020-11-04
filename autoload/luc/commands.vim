@@ -42,6 +42,6 @@ function! luc#commands#alot_search_at_cursor()
   set isk=@,:,@-@,-,48-57,.
   let l:cword = expand("<cword>")
   let &isk = l:isk
-  call s:alot('search', l:cword)
+  call luc#commands#alot('search', l:cword)
   return ""
 endfunction
