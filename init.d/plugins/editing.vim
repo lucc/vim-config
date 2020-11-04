@@ -49,18 +49,14 @@ execute 'inoremap' g:ctrlp_map '<C-O>:' g:ctrlp_cmd '<CR>'
 
 " Use the compiled C-version for speed improvements "{{{2
 
-" This needs py2
-Plug 'JazzCore/ctrlp-cmatcher', {'do': './install.sh'}
-let g:ctrlp_match_func = {'match' : 'matcher#cmatch'}
-
 " I don't like this as it either doesn't honor the last used file in MRU mode
 " (it does some "intelligent" matching on the empty query) or it doesn't
 " remove the current file from the results (with cpsm_match_empty_query=0).
-Plug 'nixprime/cpsm', { 'do': './install.sh' }
-"let g:ctrlp_match_func = { 'match': 'cpsm#CtrlPMatch' }
-"let g:cpsm_match_empty_query = 0
+Plug 'nixprime/cpsm', { 'do': 'nix-shell --run ''VIM=nvim bash ./install.sh'' -p cmake boost.dev ncurses.dev' }
+let g:ctrlp_match_func = { 'match': 'cpsm#CtrlPMatch' }
+let g:cpsm_match_empty_query = 0
 "" cpsm doesn't use 1 as a default if the variable doesn't exist.
-"let g:ctrlp_match_current_file = 0
+let g:ctrlp_match_current_file = 0
 
 " {{{1 clap
 Plug 'liuchengxu/vim-clap', { 'do': {-> jobstart([
