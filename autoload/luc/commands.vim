@@ -32,7 +32,8 @@ endfunction
 
 function! luc#commands#alot(...)
   tabnew
-  call termopen([expand('~/src/alot/alot.nix')]+a:000)
+  "call termopen([expand('~/src/alot/alot.nix')]+a:000)
+  call termopen(['alot']+a:000)
   autocmd TermClose <buffer> ++once close!
   startinsert
 endfunction
