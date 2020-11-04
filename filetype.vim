@@ -10,4 +10,6 @@ augroup LucFileType
   autocmd BufRead,BufNewFile *.ics    setfiletype icalendar
   autocmd BufRead,BufNewFile *.vcf    setfiletype icalendar | set fileformat=dos
   autocmd BufRead,BufNewFile *.tmux   setfiletype tmux
+  autocmd BufRead,BufNewFile build.sc setfiletype scala
+  autocmd BufRead,BufNewFile *.u      setfiletype ulang | source ~/uni/master/ulang/ulang.vim
 augroup END
