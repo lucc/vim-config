@@ -16,6 +16,9 @@ let g:airline#extensions#whitespace#mixed_indent_algo = 2
 let g:airline#extensions#whitespace#checks = ['indent', 'trailing', 'long']
 let g:airline#extensions#vimtex#enabled = 1
 
+" icons
+Plug 'ryanoasis/vim-devicons'
+
 " vim options related to the statusline
 set noshowmode   " do not display the current mode in the command line
 set laststatus=2 " always display the statusline
