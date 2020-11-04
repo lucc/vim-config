@@ -5,6 +5,7 @@ execute 'py3file ' . expand('<sfile>:h:h') . '/init.py'
 nnoremap <buffer> K
       \ :call py3eval('lib.tex.doc("""'.expand('<cword>').'""") or 1')<CR>
 nnoremap <buffer> <F12> :VimtexTocToggle<CR>
+map <buffer>  <foobar> <plug>(vimtex-context-menu)
 
 setlocal spell
 " This doesn't work
