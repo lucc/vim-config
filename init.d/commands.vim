@@ -10,3 +10,4 @@ cabbrev man vertical Man
 command! -nargs=* SSH call luc#commands#ssh(<q-args>)
 command! -nargs=* Alot call luc#commands#alot(<f-args>)
 command! -nargs=* AlotSearch call luc#commands#alot_search_at_cursor()
+command! ClearModeToggle call luc#commands#clean_mode_toggle()

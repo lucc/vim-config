@@ -46,3 +46,11 @@ function! luc#commands#alot_search_at_cursor()
   call luc#commands#alot('search', l:cword)
   return ""
 endfunction
+
+function! luc#commands#clean_mode_toggle()
+  " Toggle some settings to put neovim into a clean editing mode
+  let &laststatus = &laststatus == 2 ? 0 : 2
+  let &signcolumn = &signcolumn == "auto" ? "no" : "auto"
+  set ruler! showcmd! number!
+  redraw!
+endfunction
