@@ -54,3 +54,11 @@ function! luc#commands#clean_mode_toggle()
   set ruler! showcmd! number!
   redraw!
 endfunction
+
+function! luc#commands#search_todos(bang)
+  if a:bang == "!"
+    S '\b(todo|fixme|xxx)\b'
+  else
+    S '\b(todo|fixme|xxx)\b' %
+  endif
+endfunction
