@@ -57,7 +57,11 @@ let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_toc_config = {
       \ 'split_pos': 'vertical'
       \ }
-
+let g:vimtex_toc_todo_labels = {
+      \ 'FIXME': 'FIXME: ',
+      \ 'TODO': 'TODO: ',
+      \ 'XXX': 'FIXME: ',
+      \ }
 
 " lisp/scheme {{{1
 "Plugin 'vim-scripts/slimv.vim'
