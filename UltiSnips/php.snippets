@@ -4,11 +4,11 @@ import pathlib
 def find_composer():
     root = pathlib.Path(path)
     while root != pathlib.Path("/"):
-	composer = root / 'composer.json'
-	if composer.exists():
-	    return composer
-	    #json.load(composer.open())['autoload']['psr-4']
-	root = root.parent
+        composer = root / 'composer.json'
+        if composer.exists():
+            return composer
+            #json.load(composer.open())['autoload']['psr-4']
+        root = root.parent
 def find_namespace():
  pass
 endglobal
