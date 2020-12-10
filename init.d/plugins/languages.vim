@@ -49,7 +49,18 @@ let g:tex_flavor = 'latex'
 
 Plug 'lervag/vimtex'
 let g:vimtex_fold_enabled = 1
-"let g:vimtex_fold_types = {}
+let g:vimtex_fold_types = {
+      \ 'sections' : {
+      \   'sections' : [
+      \     'part',
+      \     'chapter',
+      \     'section',
+      \     'subsection',
+      \     'subsubsection',
+      \     'paragraph',
+      \   ],
+      \ }
+      \ }
 "let g:vimtex_fold_types.comments = {}
 "let g:vimtex_fold_types.comments.enabled = 1
 let g:vimtex_compiler_method = 'latexrun'
