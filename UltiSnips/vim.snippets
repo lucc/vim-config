@@ -1,0 +1,27 @@
+global !p
+def autoload_prefix(path):
+    """Generate a function prefix from the file path of a autoload function
+    file.
+
+    :path: the file name of a potential vimscript file in a autoload dir
+    :returns: a function prefix (without the last component) with the '#'
+        delimiters
+    """
+    fullpath = os.path.join(vim.call('getcwd'), path)
+    for rtp in vim.options.get('runtimepath').split(','):
+        autoload = os.path.join(rtp, 'autoload') + os.path.sep
+        if fullpath.startswith(autoload) and fullpath.endswith('.vim'):
+            return '#'.join(fullpath[len(autoload):-4].split(os.path.sep)) + '#'
+endglobal
+
+snippet fun "function with documentation" b
+function! `!p snip.rv = autoload_prefix(path)`${1:Function_name}(${2:arg1})
+	" ${3:documentation}
+	"`!p
+snip >> 1
+for arg in t[2].split(','):
+    snip += '" '+arg.strip()+': TODO'`
+	" returns: TODO
+	$0
+endfunction
+endsnippet

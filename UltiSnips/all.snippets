@@ -6,6 +6,11 @@ snippet t "Zeit" !w
 `!v strftime('%T')`
 endsnippet
 
+snippet jim_treffen_kalender "Kalender und Treffen des JiM e.V." !w
+https://www.jimev.de/index.php/jongliertreffen/
+https://www.jimev.de/index.php/termine/
+endsnippet
+
 snippet bug "try to reach $4" !b
 @bib{ ${1:key},
 field1 = "${2:mangatory}"
@@ -15,4 +20,21 @@ endsnippet
 
 snippet bug2 "expand with tw=something short before that column"
 pretext `!p snip.rv = 'marker' if t[1] != '' else ''` ${1:replacemant} `!p snip.rv = 'marker' if t[1] != '' else ''` posttext
+endsnippet
+
+snippet "\\u[0-9a-fA-F]+" "expand Unicode points" r
+`!p snip.rv = eval('"'+match.group(0)+'"')`
+endsnippet
+
+snippet -> "Right arrow"
+→
+endsnippet
+snippet => "double right arrow"
+⇒
+endsnippet
+snippet forall "math forall symbol"
+∀
+endsnippet
+snippet exists "math exists symbol"
+∃
 endsnippet

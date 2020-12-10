@@ -1,0 +1,34 @@
+snippet script "generte a generic shell script" b
+#!/bin/sh
+
+# ${1:short description}
+
+version=${2:0.1}
+prog="\${0##*/}"
+
+usage () {
+	echo "Usage: $prog [-x] "
+	echo "       $prog -h"
+	echo "       $prog -v"
+}
+
+help () {
+	echo "$1"
+	echo
+	echo "  -h    display help"
+	echo "  -v    display version"
+	echo "  -x    debugging output"
+}
+
+while getopts ${3:hvx} FLAG; do
+	case $FLAG in
+		h) usage; help; exit;;
+		v) echo "$prog -- version $version"; exit;;
+		x) set -x;;
+		*) usage >&2; exit 2;;
+	esac
+done
+shift $((OPTIND - 1))
+
+${0:TODO}
+endsnippet

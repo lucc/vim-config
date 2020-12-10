@@ -1,16 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 # vim: foldmethod=marker
 
 # A script to use gvim as a replacement for different programs like man and
 # info or to call a gvim server.
 
 # variables {{{1
-TMP=`mktemp -t $PROG.$$.XXXXXX`
+TMP=$(mktemp)
 SAVE_STDIN=false
 CMD=tab
+new_args=()
 
 # start gvim in the background if no vim server is running {{{1
-if [ -z "`vim --serverlist`" ]; then
+if [[ -z "$(vim --serverlist)" ]]; then
   gvim &
 fi
 
@@ -19,34 +20,32 @@ fi
 wait_server () {
   # this does not need any other options to silence the process b/c --cmd will
   # execute the code very early
-  vim --cmd 'while serverlist() == "" | sleep 100m | endwhile' "$@"
+  vim --cmd 'while serverlist() == "" | sleep 100m | endwhile' "$@" --cmd quit
 }
 
 # try to put the server vim in the foreground {{{2
 foreground () {
   wait_server \
     --cmd 'let server = split(serverlist())[0]' \
-    --cmd 'call remote_foreground(server)' \
-    --cmd quit
+    --cmd 'call remote_foreground(server)'
 }
 
 # open a new tab in the server {{{2
 tab () {
-  wait_server --cmd quit
+  wait_server
   vim --remote-tab-wait-silent "$@"
 }
 
 # generic function to open documentation {{{2
 doc () {
-  if [ $# -eq 0 ]; then
+  if [[ $# -eq 0 ]]; then
     echo Topic needed >&2
     exit 2
   fi
   wait_server \
     --cmd 'let server = split(serverlist())[0]' \
-    --cmd "call remote_expr(server, 'luc#man#open_tab(\"$1\", \"${@:2}\")')" \
-    --cmd 'call remote_foreground(server)' \
-    --cmd quit
+    --cmd "call remote_expr(server, 'luc#man#open_tab(\"$1\", \"${*:2}\")')" \
+    --cmd 'call remote_foreground(server)'
 }
 
 # wrapper functions for individual help systems {{{2
@@ -57,16 +56,16 @@ php     () { doc php "$@"; }
 pydoc   () { doc py  "$@"; }
 
 # parse the command line {{{1
-if [ $# -eq 0 ]; then
+if [[ $# -eq 0 ]]; then
   CMD=foreground
 else
   # trying to implement long options
   for arg; do
-    case "$arg" in
+    case $arg in
       --editor)
 	# be an editor, to be used with $EDITOR
 	CMD=tab
-	new_args=("${new_args[@]}" '+call luc#remote_editor(0)')
+	new_args+=('+call luc#remote_editor(0)')
 	;;
       --info)
 	# emulate info(1)
@@ -75,7 +74,7 @@ else
       --mail)
 	# like --editor for emails
 	CMD=tab
-	new_args=("${new_args[@]}" '+call luc#remote_editor(1)')
+	new_args+=('+call luc#remote_editor(1)')
 	;;
       --man)
 	# emulate man(1)
@@ -102,7 +101,7 @@ else
 	;;
       *)
 	# pass this argument to vim directly
-	new_args=("${new_args[@]}" "$arg")
+	new_args+=("$arg")
 	;;
     esac
   done
@@ -112,7 +111,7 @@ fi
 if $SAVE_STDIN; then
   # save stdin to a temp file (see :h --remote and :h --)
   cat > "$TMP"
-  new_args=("${new_args[@]}" "$TMP")
+  new_args+=("$TMP")
 fi
 
 $CMD "${new_args[@]}"

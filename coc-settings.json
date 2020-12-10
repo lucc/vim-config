@@ -1,0 +1,39 @@
+{
+  "diagnostic.enable": true,
+
+  "languageserver": {
+    "lua": {
+      "command": "lua-lsp",
+      "filetypes": ["lua"]
+    },
+
+//    "phplang": {
+//      "command": "php-language-server",
+//      "filetypes": ["php"]
+//    },
+
+    "intelephense": {
+      "command": "node",
+      "args": ["/home/luc/node_modules/intelephense/lib/intelephense.js", "--stdio"],
+      "filetypes": ["php"]
+    },
+
+    "bash": {
+      "command": "bash-language-server",
+      "args": ["start"],
+      "filetypes": ["sh"],
+      "ignoredRootPaths": ["~"]
+    },
+    "haskell": {
+      "command": "haskell-language-server-wrapper",
+      "args": ["--lsp"],
+      "filetypes": ["haskell", "lhaskell"]
+    },
+    "html": {
+      "command": "html-languageserver",
+      // "args": ["start"],
+      "filetypes": ["html"]
+    }
+  }
+
+}

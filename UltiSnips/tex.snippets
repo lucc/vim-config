@@ -3,17 +3,10 @@ extends tex_templates
 extends latex_suite_compat
 
 global !p
-import tex
+import lib.tex
 def find_babel_languages():
     '''Return a list of babel languges for the current file.'''
-    return tex.find_babels(vim.current.buffer.name)
-#
-#    for line in vim.current.buffer:
-#        if line.startswith(r'\usepackage['):
-#            match = re.match(r'^\\usepackage\[(.*)\]{babel}$', line)
-#            if match:
-#                return match.group(1).split(',')
-#    return []
+    return lib.tex.find_babels(vim.current.buffer.name)
 def map_lang(lang):
   if lang in ['de', 'german', 'ngerman']:
       return 'gernam'
@@ -30,7 +23,7 @@ def biblatex():
         return line.startswith(r'\usepackage') and endswith('{biblatex}\n')
     def extract(line):
         return True
-    return tex.parse_tex(vim.current.buffer.name, match, extract)
+    return lib.tex.parse_tex(vim.current.buffer.name, match, extract)
 #    for line in vim.current.buffer:
 #	if line.startswith(r'\usepackage'):
 #	    match = re.match(r'^\\usepackage(\[.*\])?{biblatex}$', line)
@@ -40,6 +33,8 @@ def biblatex():
 def cond(index, string):
     if t[index] != '': return string
     else: return ''
+def is_english():
+    return lib.tex.find_babel(vim.current.buffer.name) == 'english'
 endglobal
 
 # the strange python evals are only needed as long as completion of bib keys
@@ -96,4 +91,24 @@ endsnippet
 snippet test "Description" b
 `!p snip.rv=1`
 `!p snip.rv=2`
+endsnippet
+
+snippet "cc( \S+\s*){0,2}" "\command" r
+\\${1:`!p
+if match.group(1) is not None:
+    snip.rv = match.group(1).strip() if match.group(1) else "command"
+if match.group(2) is not None:
+    arg = match.group(2).strip()
+else:
+    arg = False
+`}`!p snip.rv = "{" + arg + "}" if arg else ""`
+endsnippet
+
+
+snippet " "Quotes" A
+`!p snip.rv = '“' if is_english() else '„'`${1}`!p snip.rv = '”' if is_english() else '“'`${0}
+endsnippet
+
+snippet mb "mathbb"
+\mathbb{$1}
 endsnippet

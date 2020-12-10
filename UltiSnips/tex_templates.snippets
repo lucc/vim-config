@@ -10,7 +10,7 @@ snippet article "The default header for an article" !b
 \title{$2}
 
 \begin{document}
-%%fakesection titlepage
+% Fakesection titlepage
 \maketitle
 \renewcommand\abstractname{}
 \begin{abstract}
@@ -23,11 +23,11 @@ snippet article "The default header for an article" !b
 \section{Einleitung}
 $0
 
-%%fakesection Bibliographie
+% Fakesection Bibliographie
 \bibliographystyle{${3:alphadin}}
 \bibliography{${4:main}}
 \end{document}
-%%fakesection Notizen
+% Fakesection Notizen
 endsnippet
 
 snippet handout "A a handout for a short presentation" !b
@@ -84,15 +84,52 @@ snippet rezept "Ein Rezept für mein Kochbuch" !b
 \index{$3}
 
 \begin{zutaten}[${4:reicht für ...}]
-  $5
+	$5
 \end{zutaten}
 
 \zubereitung
 
 \begin{enumerate}
-  \item $6
-  \item $7
+	\item $6
+	\item $7
 \end{enumerate}
 
 \end{rezept}
+endsnippet
+
+snippet brief "Ein halb formaler Brief" !b
+\documentclass[a4paper,12pt]{scrlttr2}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[${1:ngerman}]{babel}
+\usepackage{eurosym}
+\usepackage{graphicx}
+
+\setkomavar{date}{${2:`!p import datetime
+snip.rv = datetime.date.today().strftime('%-d. %B %Y')`}}
+\setkomavar{fromname}{Lucas Hoffmann}
+\setkomavar{fromaddress}{Dachauer Straße 300\\\\80993 München}
+\setkomavar{fromphone}{089 -- 999 488 59}
+\setkomavar{frommobilephone}{0159 -- 050 779 74}
+\setkomavar{fromemail}{l-m-h@web.de}
+\setkomavar{frombank}{DE\,98\,700\,916\,00 000\,250\,6343}
+\setkomavar{signature}{%
+	\includegraphics[scale=.1]{sig.png}\\\usekomavar{fromname}}
+
+%\setkomavar{firstfoot}{\footnotesize\parbox[b]{\linewidth}{\centering
+%  Bankverbindung: \usekomavar{fromname} --- IBAN \usekomavar{frombank}}}
+
+\KOMAoptions{fromemail=true,fromphone=true,frommobilephone=true}
+
+\setkomavar{subject}{${3:Was auch immer}}
+
+\begin{document}
+	\begin{letter}{${4:Empfänger\\\\Adresse}}
+		\opening{${5:Anrede},}
+		\begin{flushleft}
+		$0
+		\end{flushleft}
+		\closing{Mit freundlichen Grüßen}
+	\end{letter}
+\end{document}
 endsnippet

@@ -1,0 +1,49 @@
+global !p
+import subprocess
+author = subprocess.check_output(['git', 'config', '--get', 'user.name']).strip()
+email = subprocess.check_output(['git', 'config', '--get', 'user.email']).strip()
+endglobal
+
+snippet setup "setuptools.setup call for setup.py" b
+setup(
+	name="$1",
+	description="$2",
+	version=${3:".".join(map(str, __version__))},
+	author="${4:`!p snip.rv = author`}",
+	author_email="${5:`!p snip.rv = email`}",
+	packages=${6:find_packages()},
+	entry_points={'console_scripts': ['$7']},
+)
+endsnippet
+
+snippet prop "a property attribut" b
+@property
+def ${1:attribute}(self):
+	"""${2:TODO: Docstring for $1.}"""
+	return self._$1
+
+@$1.setter
+def $1(self, value):
+	"""${3:TODO Docstring for setter of $1.}
+
+	:value: TODO
+	"""
+	self._$1 = value
+
+@$1.deleter
+def $1(self):
+	del self._$1
+endsnippet
+snippet utest "unittest file template" b
+import unittest
+
+
+class ${1:Test}(unittest.TestCase):
+
+	def test_${2:foo}(self):
+		${3:pass}
+
+
+if __name__ == "__main__":
+	unittest.main()
+endsnippet

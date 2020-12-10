@@ -1,0 +1,14 @@
+snippet debug "debug function definition"
+local function ${1:debug}(...)
+	local argc = select('#', ...)
+	local function d(depth, ...)
+		local first = ...
+		if depth == argc then
+			return type(first), first
+		else
+			return type(first), first, d(depth+1, select(2, ...))
+		end
+	end
+	print(d(1, ...))
+end
+endsnippet
