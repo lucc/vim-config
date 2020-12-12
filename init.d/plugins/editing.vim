@@ -51,15 +51,6 @@ if s:choice == 'ctrlp'
   let g:ctrlp_map = '<C-Space>'
   execute 'inoremap' g:ctrlp_map '<C-O>:' g:ctrlp_cmd '<CR>'
 
-  " Use the compiled C-version for speed improvements "{{{2
-
-  " I don't like this as it either doesn't honor the last used file in MRU mode
-  " (it does some "intelligent" matching on the empty query) or it doesn't
-  " remove the current file from the results (with cpsm_match_empty_query=0).
-  Plug 'nixprime/cpsm', { 'do': 'nix-shell --run ''VIM=nvim bash ./install.sh'' -p cmake boost.dev ncurses.dev' }
-  let g:ctrlp_match_func = { 'match': 'cpsm#CtrlPMatch' }
-  let g:cpsm_match_empty_query = 0
-  "" cpsm doesn't use 1 as a default if the variable doesn't exist.
   let g:ctrlp_match_current_file = 0
 
 elseif s:choice == 'clap'
