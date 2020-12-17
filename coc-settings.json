@@ -1,23 +1,6 @@
 {
   "diagnostic.enable": true,
-
   "languageserver": {
-    "lua": {
-      "command": "lua-lsp",
-      "filetypes": ["lua"]
-    },
-
-//    "phplang": {
-//      "command": "php-language-server",
-//      "filetypes": ["php"]
-//    },
-
-    "intelephense": {
-      "command": "node",
-      "args": ["/home/luc/node_modules/intelephense/lib/intelephense.js", "--stdio"],
-      "filetypes": ["php"]
-    },
-
     "bash": {
       "command": "bash-language-server",
       "args": ["start"],
@@ -31,9 +14,32 @@
     },
     "html": {
       "command": "html-languageserver",
-      // "args": ["start"],
       "filetypes": ["html"]
+    },
+    "intelephense": {
+      "command": "node",
+      "args": ["/home/luc/node_modules/intelephense/lib/intelephense.js", "--stdio"],
+      "filetypes": ["php"]
+    },
+    "lua": {
+      "command": "lua-lsp",
+      "filetypes": ["lua"]
+    },
+    "nix": {
+      "command": "rnix-lsp",
+      "filetypes": ["nix"]
+    },
+    "python": {
+      "command": "pyls",
+      "filetypes": ["python"]
+    },
+    "scala": {
+      "command": "metals-vim",
+      "filetypes": ["scala"]
+    },
+    "tex": {
+      "command":"texlab",
+      "filetypes": ["tex"]
     }
   }
-
 }
