@@ -52,7 +52,14 @@ function! s:run(input)
   endtry
 endfunction
 
-if s:all_readable(argv()) " includes argc == 0
+if argc() == 0
+  " undeocumented function from fugitive
+  let s:gitdir = FugitiveGitDir()
+  if s:gitdir != ''
+    " undeocumented behaviour from fugitive: open git status buffer
+    execute "edit" s:gitdir . '/index'
+  endif
+elseif s:all_readable(argv()) " includes argc == 0
   " do nothing
 else
   let s:args = join(argv(), '')
