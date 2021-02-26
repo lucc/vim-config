@@ -279,3 +279,21 @@ function! luc#khard_editor() abort
   map  <buffer> <tab>       /^[^#]/<cr>A
   imap <buffer> <tab> <c-o>:/^[^#]/ normal $<cr>
 endfunction
+
+" create a single terminal.  Calling the function again will open the same
+" buffer.
+function! luc#terminal() abort
+  if s:term_buf_id == 0
+    terminal
+    let s:term_buf_id = nvim_get_current_buf()
+    tmap <silent> <nowait> <buffer> <C-space> <C-\><C-n><C-space>
+    tmap <silent> <nowait> <buffer> <C-o> <C-\><C-n><C-o>
+    tmap <silent> <nowait> <buffer> <C-6> <C-\><C-n><C-6>
+    tmap <silent> <nowait> <buffer> <C-z> <C-\><C-n><C-o>
+    nmap <silent> <nowait> <buffer> <C-z> <C-o>
+  else
+    call nvim_set_current_buf(s:term_buf_id)
+  endif
+  normal A
+endfunction
+let s:term_buf_id = 0
