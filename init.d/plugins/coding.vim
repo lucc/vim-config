@@ -54,13 +54,12 @@ Plug 'alx741/vinfo'
 "Plug 'info.vim'
 
 " plugins: vcs stuff {{{1
-"Plugin 'tpope/vim-git'
-Plug 'tpope/vim-fugitive'
-Plug 'jreybert/vimagit'
-Plug 'ludovicchabant/vim-lawrencium'
-Plug 'airblade/vim-gitgutter'
-Plug 'junegunn/gv.vim'  " faster than gitv?  :GV
-Plug 'gregsexton/gitv'  " gitk for vim       :Gitv
+Plug 'tpope/vim-fugitive'            " git integration
+Plug 'ludovicchabant/vim-lawrencium' " mercurial integration
+Plug 'airblade/vim-gitgutter'        " change indicator in sign column
+Plug 'junegunn/gv.vim'               " faster than gitv?  :GV
+Plug 'gregsexton/gitv'               " gitk for vim       :Gitv
+Plug 'rhysd/git-messenger.vim'       " float win with last commit
 
 " debugging {{{1
 Plug 'vim-vdebug/vdebug', {'on': 'VdebugStart'}
