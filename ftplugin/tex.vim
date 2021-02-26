@@ -29,16 +29,12 @@ let b:neomake_echo_current_error = 0
 
 " TODO we could put this into the status line
 let s:timer = -1
-function! s:count(id)
-  VimtexCountLetters
-endfunction
-
 augroup LucFileTypeTex
   autocmd! * <buffer>
   autocmd BufWritePost,CursorHold,CursorHoldI <buffer> Neomake!
-  autocmd BufWritePost <buffer>
-	\ if timer_info(s:timer) == []
-	\ | let s:timer = timer_start(3000, function('s:count'))
-	\ | endif
+  "autocmd BufWritePost <buffer>
+  "      \ if timer_info(s:timer) == []
+  "      \ | let s:timer = timer_start(3000, {->nvim_command("VimtexCountLetters")})
+  "      \ | endif
   "CursorHold,CursorHoldI,FocusGained,FocusLost
 augroup END
