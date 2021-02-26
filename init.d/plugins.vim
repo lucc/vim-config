@@ -18,7 +18,8 @@ let g:grepper.prompt = 0
 let g:grepper.quickfix = 0
 let g:grepper.searchreg = 1
 let g:grepper.tools = ['git', 'rg', 'ag', 'grep']
-command! -nargs=* -complete=file S Grepper -jump -query <args>
+command! -nargs=* -complete=file S Grepper -jump -query <q-args>
+command! -nargs=* -complete=file SS Grepper -jump -query <args>
 
 Plug 'eugen0329/vim-esearch' " {{{1
 
