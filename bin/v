@@ -1,4 +1,5 @@
 #!/usr/bin/env -S nvim -S
+" vim: ft=vim
 
 " save and restore global variables
 let s:saved = {}
@@ -67,5 +68,3 @@ else
   %bwipeout
   call s:run(s:args)
 endif
-
-" vim: ft=vim

@@ -32,8 +32,6 @@ endif
 let g:ctrlp_extensions = [
       \ 'tag',
       \ 'quickfix',
-      \ 'undo',
-      \ 'changes',
       \]
       "\ 'dir',
       "\ 'buffertag',
@@ -41,6 +39,8 @@ let g:ctrlp_extensions = [
       "\ 'rtscript',
       "\ 'mixed',
       "\ 'bookmarkdir',
+      "\ 'undo',
+      "\ 'changes',
 
 " mappings {{{2
 let g:ctrlp_cmd = 'CtrlPMRU'
@@ -57,22 +57,6 @@ let g:ctrlp_match_func = { 'match': 'cpsm#CtrlPMatch' }
 let g:cpsm_match_empty_query = 0
 "" cpsm doesn't use 1 as a default if the variable doesn't exist.
 let g:ctrlp_match_current_file = 0
-
-" {{{1 clap
-Plug 'liuchengxu/vim-clap', { 'do': {-> jobstart([
-      \ 'nix-shell', '--pure', '--run', 'make', '-p', 'openssl.dev', 'cargo',
-      \ 'pkg-config'])} }
-let g:clap_layout = {'relative': 'editor'}
-let g:clap_insert_mode_only = v:true
-let g:clap_open_action = {
-      \ 'ctrl-t': 'tab split',
-      \ 'ctrl-s': 'split',
-      \ 'ctrl-v': 'vsplit',
-      \ }
-
-" {{{1 fzf
-"Plug 'junegunn/fzf'
-"Plug 'junegunn/fzf.vim'
 
 " plugins: parenthesis, quotes, alignment {{{1
 
