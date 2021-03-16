@@ -62,8 +62,4 @@ endif
 " open the file under the cursor with xdg-open
 nnoremap gF :O<CR>
 
-" if we are not running in a shell but in a terminal directly we do not want
-" to suspend with <C-Z> but instead start a terminal window.
-if nvim_get_proc(nvim_get_proc(getpid()).ppid).name =~ 'term'
-  nnoremap <C-Z> :tabnew +terminal<CR>
-endif
+nnoremap <silent> <C-Z> :call luc#terminal()<CR>
