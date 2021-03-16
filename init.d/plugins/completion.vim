@@ -1,7 +1,7 @@
 " vim: spelllang=en
 " plugins: completion
 
-let s:choice = 'coc'
+let s:choice = 'ncm'
 
 if s:choice == 'coc'
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -146,7 +146,7 @@ else
 	\ 'json': ['json-languageserver'],
 	\ 'lua': ['lua-lsp'],
 	\ 'nix': ['rnix-lsp'],
-	\ 'python': ['pyls'],
+	\ 'python': ['python-language-server'],
 	\ 'rust': executable('rustup') ? ['rustup', 'run', 'nightly', 'rls']
 	\                              : ['rls'],
 	\ 'scala': ['metals-vim'],
