@@ -16,6 +16,14 @@ if s:choice == 'coc'
 	\ 'coc-syntax',
 	\ ]
   let g:coc_data_home = "~/.local/share/coc"
+  xmap if <Plug>(coc-funcobj-i)
+  omap if <Plug>(coc-funcobj-i)
+  xmap af <Plug>(coc-funcobj-a)
+  omap af <Plug>(coc-funcobj-a)
+  xmap ic <Plug>(coc-classobj-i)
+  omap ic <Plug>(coc-classobj-i)
+  xmap ac <Plug>(coc-classobj-a)
+  omap ac <Plug>(coc-classobj-a)
 elseif s:choice == 'ycm'
   Plug 'Valloric/YouCompleteMe'
   let g:ycm_filetype_blacklist = {}
