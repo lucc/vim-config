@@ -129,7 +129,9 @@ else
   inoremap <expr> <CR>    pumvisible() ? {_, x -> x}(LanguageClient#textDocument_hover(), "\<C-Y>\<CR>") : "\<CR>"
 endif
 
-if s:choice != 'coc'
+if s:choice == 'coc'
+  nnoremap <silent> KK :call CocAction("doHover")<CR>
+else
   Plug 'autozimu/LanguageClient-neovim', {
       \ 'branch': 'next',
       \ 'do': 'bash install.sh',

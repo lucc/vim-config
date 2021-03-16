@@ -1,5 +1,6 @@
 {
   "diagnostic.enable": true,
+  "codeLens.enable": true,
   "languageserver": {
     "bash": {
       "command": "bash-language-server",
