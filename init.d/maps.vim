@@ -29,17 +29,7 @@ nnoremap <C-W>. :execute 'resize' nvim_buf_line_count(0) <CR>
 vmap <leader>p :call luc#prefix(visualmode())<CR>
 nmap <leader>p :set operatorfunc=luc#prefix<CR>g@
 
-" backup current buffer
-nnoremap <silent> <F11>
-      \ :silent update <BAR>
-      \ call py3eval('backup_current_buffer() or 1') <BAR>
-      \ redraw <CR>
-
 " moveing around
-nmap <C-Tab>     gt
-imap <C-Tab>     <C-O>gt
-nmap <C-S-Tab>   gT
-imap <C-S-Tab>   <C-O>gT
 nmap <C-W><C-F>  <C-W>f<C-W>L
 nmap <SwipeUp>   gg
 imap <SwipeUp>   gg
