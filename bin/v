@@ -25,6 +25,10 @@ function! s:all_readable(filelist)
   return 1
 endfunction
 
+function! s:runClap(input)
+  Clap history
+  call feedkeys(a:input)
+endfunction
 function! s:run(input)
   " Run CtrlPMRU with the given input and clean up afterwards.
   "
