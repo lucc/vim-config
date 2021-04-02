@@ -291,6 +291,7 @@ function! luc#terminal() abort
     tmap <silent> <nowait> <buffer> <C-6> <C-\><C-n><C-6>
     tmap <silent> <nowait> <buffer> <C-z> <C-\><C-n><C-o>
     nmap <silent> <nowait> <buffer> <C-z> <C-o>
+    autocmd TermClose <buffer> let s:term_buf_id = 0
   else
     call nvim_set_current_buf(s:term_buf_id)
   endif
