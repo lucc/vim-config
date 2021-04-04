@@ -23,7 +23,7 @@ nmap gc  :set operatorfunc=luc#capitalize_operator_function<CR>g@
 nmap gcc gciw
 
 " try to make the current window as tall as the content
-nnoremap <C-W>. :execute 'resize' nvim_buf_line_count(0) <CR>
+nnoremap <C-W>. <CMD>execute 'resize' nvim_buf_line_count(0) <CR>
 
 " prefix lines with &commentstring
 vmap <leader>p :call luc#prefix(visualmode())<CR>
@@ -50,6 +50,6 @@ if has('nvim')
 endif
 
 " open the file under the cursor with xdg-open
-nnoremap gF :O<CR>
+nnoremap gF <CMD>O<CR>
 
-nnoremap <silent> <C-Z> :call luc#terminal()<CR>
+nnoremap <silent> <C-Z> <CMD>call luc#terminal()<CR>

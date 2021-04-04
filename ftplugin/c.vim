@@ -1,5 +1,5 @@
 " custom filetype settings by luc
-nnoremap <buffer> <silent> gd :YcmCompleter GoTo<CR>
+nnoremap <buffer> <silent> gd <CMD>YcmCompleter GoTo<CR>
 
 setlocal path+=/usr/include/
 setlocal path+=/usr/local/include/

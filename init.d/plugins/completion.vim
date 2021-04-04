@@ -138,7 +138,7 @@ else
 endif
 
 if s:choice == 'coc'
-  nnoremap <silent> KK :call CocAction("doHover")<CR>
+  nnoremap <silent> KK <CMD>call CocAction("doHover")<CR>
 else
   Plug 'autozimu/LanguageClient-neovim', {
       \ 'branch': 'next',
@@ -164,14 +164,14 @@ else
   "    \ 'php': ['php', 'php-language-server.php'],
   "    \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
 
-  nnoremap <silent> KK :call LanguageClient_textDocument_hover()<CR>
-  nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-  " nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+  nnoremap <silent> KK <CMD>call LanguageClient_textDocument_hover()<CR>
+  nnoremap <silent> gd <CMD>call LanguageClient_textDocument_definition()<CR>
+  " nnoremap <silent> <F2> <CMD>call LanguageClient_textDocument_rename()<CR>
   Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
-  nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+  nnoremap <F5> <CMD>call LanguageClient_contextMenu()<CR>
 
   " language client mappings for coding
-  nnoremap <leader>* :call LanguageClient_textDocument_documentHighlight()<CR>
+  nnoremap <leader>* <CMD>call LanguageClient_textDocument_documentHighlight()<CR>
 
   "augroup LucLanguageClientPopup
   "  autocmd!

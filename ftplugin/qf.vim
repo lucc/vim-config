@@ -1,12 +1,12 @@
 " custom filetype settings by luc
 
 setlocal nowrap cursorline
-nnoremap <buffer> <ENTER> :call <SID>open_switch()<CR>
-vnoremap <buffer> <ENTER> :<C-U>call <SID>open_switch()<CR>
-nnoremap <buffer> <2-leftmouse> :call <SID>open_switch()<CR>
+nnoremap <buffer> <ENTER> <CMD>call <SID>open_switch()<CR>
+vnoremap <buffer> <ENTER> <CMD>call <SID>open_switch()<CR>
+nnoremap <buffer> <2-leftmouse> <CMD>call <SID>open_switch()<CR>
 
-nnoremap <buffer> <C-v> :call <SID>open_vsplit()<CR>
-nnoremap <buffer> <C-s> :call <SID>open_split()<CR>
+nnoremap <buffer> <C-v> <CMD>call <SID>open_vsplit()<CR>
+nnoremap <buffer> <C-s> <CMD>call <SID>open_split()<CR>
 
 let s:split_no = 0
 let s:split_hor = 1

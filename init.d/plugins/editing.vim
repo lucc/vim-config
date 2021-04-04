@@ -67,9 +67,9 @@ elseif s:choice == 'clap'
   let g:clap_enable_background_shadow = v:false
   let g:clap_insert_mode_only = v:true
   let clap_open_preview = "never"
-  nnoremap <silent> <C-Space> :Clap history<CR>
-  autocmd FileType clap_input inoremap <silent> <buffer> <C-F> <C-O>:call <SID>switch(1)<CR>
-  autocmd FileType clap_input inoremap <silent> <buffer> <C-B> <C-O>:call <SID>switch(-1)<CR>
+  nnoremap <silent> <C-Space> <CMD>Clap history<CR>
+  autocmd FileType clap_input inoremap <silent> <buffer> <C-F> <CMD>call <SID>switch(1)<CR>
+  autocmd FileType clap_input inoremap <silent> <buffer> <C-B> <CMD>call <SID>switch(-1)<CR>
   let s:providers = ["history", "files", "buffers"]
   function! s:switch(index)
     let l:text = nvim_buf_get_lines(0, 0, -1, v:true)
