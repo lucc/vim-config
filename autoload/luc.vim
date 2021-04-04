@@ -69,48 +69,6 @@ function! luc#get_visual_selection() abort
   return return_value
 endfunction
 
-function! s:flatten_list(list) abort
-  " Code from bairui@#vim.freenode
-  " https://gist.github.com/3322468
-  let val = []
-  for elem in a:list
-    if type(elem) == type([])
-      call extend(val, luc#flatten_list(elem))
-    else
-      call add(val, elem)
-    endif
-    unlet elem
-  endfor
-  return val
-endfunction
-
-function! s:goto_definition(string) abort
-  try
-    execute 'cscope find g' string
-  catch
-    try
-      execute 'tags' string
-    catch
-      normal gd
-    endtry
-  endtry
-  " taken from
-  " http://www.artandlogic.com/blog/2013/06/vim-for-python-development/
-  " execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
-  " noautocmd
-endfunction
-
-function! s:select_font(big) abort
-  " Select a font and set it
-  let delim = ''
-  if has('gui_macvim')
-    let s:delim = ':h'
-  elseif has('gui_gtk2')
-    let s:delim = ' '
-  endif
-  " TODO
-endfunction
-
 function! luc#prefix_old() abort
   let sel_save = &selection
   let saved_register = getreg('@', 1, 1)
