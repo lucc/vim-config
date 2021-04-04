@@ -41,8 +41,8 @@ nnoremap ' `
 nnoremap ` '
 
 " https://github.com/javyliu/javy_vimrc/blob/master/_vimrc
-"vmap // :<C-U>execute 'normal /' . luc#get_visual_selection()<CR>
-vmap // y/<C-r>"<CR>
+vmap * y/<C-r>"<CR>
+vmap # y?<C-r>"<CR>
 
 if has('nvim')
   " Use ESC to leave terminal mode
