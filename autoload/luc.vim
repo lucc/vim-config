@@ -151,44 +151,6 @@ function! luc#vcard2null_line() range abort
   redraw
 endfunction
 
-function! luc#nvim_as_terminal() abort
-  " Set up nvim to be usable as a stand alone terminal.
-  if exists('s:terminal')
-    let s:terminal.last_buffer = buffer_number('%')
-    execute 'buffer' s:terminal.buffer
-    startinsert
-  else
-    let s:terminal = {}
-    let s:terminal.last_buffer = buffer_number('%')
-    terminal zsh
-    let s:terminal.buffer = buffer_number('%')
-    let s:terminal.original_options = {}
-    let s:terminal.original_options.laststatus = &laststatus
-    let s:terminal.original_options.cmdheight = &cmdheight
-    let s:terminal.original_options.showmode = &showmode
-  endif
-  set laststatus=0
-  set cmdheight=1
-  set noshowmode
-  tnoremap <buffer> <C-S> <C-\><C-N>:call luc#return_from_terminal()<CR>
-endfunction
-
-function! luc#return_from_terminal() abort
-  " Undo the settings done by luc#nvim_as_terminal.
-  if !exists('s:terminal')
-    echoerr "The terminal was never opened!"
-    return
-  endif
-  for [option, value] in items(s:terminal.original_options)
-    execute 'let &' . option . '=' . string(value)
-  endfor
-  execute 'buffer' s:terminal.last_buffer
-endfunction
-
-function! luc#get_terminal() abort
-  return copy(s:terminal)
-endfunction
-
 function! luc#khard_editor() abort
   " Load options and maps for editing khard yaml files.
   setfiletype yaml
