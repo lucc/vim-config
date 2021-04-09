@@ -154,6 +154,7 @@ else
 	\ 'json': ['json-languageserver'],
 	\ 'lua': ['lua-lsp'],
 	\ 'nix': ['rnix-lsp'],
+	\ 'php': ['intelephense', '--stdio'],
 	\ 'python': ['pyls'],
 	\ 'rust': executable('rustup') ? ['rustup', 'run', 'nightly', 'rls']
 	\                              : ['rls'],
