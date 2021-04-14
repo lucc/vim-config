@@ -2,6 +2,7 @@
 " vim: foldmethod=marker spelllang=en
 
 Plug 'ron89/thesaurus_query.vim'
+Plug 'RRethy/vim-illuminate'
 
 let s:choice = 'ctrlp'
 
