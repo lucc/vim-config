@@ -18,8 +18,8 @@
       "filetypes": ["html"]
     },
     "intelephense": {
-      "command": "node",
-      "args": ["/home/luc/node_modules/intelephense/lib/intelephense.js", "--stdio"],
+      "command": "intelephense",
+      "args": ["--stdio"],
       "filetypes": ["php"]
     },
     "lua": {
