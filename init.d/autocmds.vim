@@ -16,7 +16,7 @@ augroup LucNeoMake
   " FIXME can this check be done dynamically with LSP?
 	"\ if index(['python', 'lua', 'rust', 'haskell', 'sh'], &syntax) == -1 |
   autocmd BufWritePost *
-	\ if ! LanguageClient#isServerRunning() |
+	\ if !exists("*LanguageClient#isServerRunning") || !LanguageClient#isServerRunning() |
 	\   Neomake |
 	\ endif
 augroup END
