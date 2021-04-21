@@ -99,7 +99,7 @@ elseif s:choice == 'ncm'
   Plug 'ncm2/ncm2-vim'
   Plug 'Shougo/neco-vim'
 
-  Plug 'phpactor/phpactor' ,  {'do': 'composer install', 'for': 'php'}
+  Plug 'phpactor/phpactor' ,  {'do': 'nix-shell --run ''composer install'' -p php80Packages.composer php80', 'for': 'php'}
   Plug 'phpactor/ncm2-phpactor'
 
   Plug 'ncm2/ncm2-ultisnips'
