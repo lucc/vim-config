@@ -29,22 +29,22 @@ let g:mediawiki_editor_url = 'asam2'
 let g:mediawiki_editor_path = '/asam_wiki/'
 let g:mediawiki_editor_username = 'LUC'
 
-Plug 'hkupty/iron.nvim' " {{{1
-let g:iron_repl_open_cmd = 'vsplit'
-command! REPL IronRepl
-" load the current file in the REPL.
-command! RF call s:load_current_file_in_repl()
-function! s:load_current_file_in_repl()
-  if &filetype ==# 'haskell'
-    let load = ':load '.bufname('%')
-  elseif &filetype ==# 'prolog'
-    let load = '["'.bufname('%').'"].'
-  else
-    echoerr 'Don''t know how to load files for ' . &filetype . '.'
-    return
-  endif
-  call luaeval('require("iron").core.send(_A[1],_A[2])', [&filetype, load])
-endfunction
+"Plug 'hkupty/iron.nvim' " {{{1
+"let g:iron_repl_open_cmd = 'vsplit'
+"command! REPL IronRepl
+"" load the current file in the REPL.
+"command! RF call s:load_current_file_in_repl()
+"function! s:load_current_file_in_repl()
+"  if &filetype ==# 'haskell'
+"    let load = ':load '.bufname('%')
+"  elseif &filetype ==# 'prolog'
+"    let load = '["'.bufname('%').'"].'
+"  else
+"    echoerr 'Don''t know how to load files for ' . &filetype . '.'
+"    return
+"  endif
+"  call luaeval('require("iron").core.send(_A[1],_A[2])', [&filetype, load])
+"endfunction
 
 Plug 'nathanaelkane/vim-indent-guides' " {{{1
 let g:indent_guides_auto_colors = 0
@@ -73,12 +73,12 @@ call plug#end()
 " https://github.com/autozimu/LanguageClient-neovim/wiki/deoplete
 "call deoplete#custom#source('LanguageClient', 'min_pattern_length', 2)
 
-lua <<EOF
-iron = require("iron")
-iron.core.set_config{
-  preferred = {
-    prolog = "swipl",
-    python = "ipython"
-  }
-}
-EOF
+"lua <<EOF
+"iron = require("iron")
+"iron.core.set_config{
+"  preferred = {
+"    prolog = "swipl",
+"    python = "ipython"
+"  }
+"}
+"EOF
