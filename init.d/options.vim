@@ -225,7 +225,7 @@ let g:netrw_browsex_viewer = 'xdg-open'
 "let g:python3_host_prog = 'python3'
 "let g:python_host_prog = 'python2'
 " Disable python 2 support
-"let g:loaded_python_provider = 1
+let g:loaded_python_provider = 0
 
 " taken from http://stackoverflow.com/a/7490288
 let php_folding = 0        "Set PHP folding of classes and functions.
