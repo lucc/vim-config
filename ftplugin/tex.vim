@@ -31,7 +31,7 @@ let b:neomake_echo_current_error = 0
 let s:timer = -1
 augroup LucFileTypeTex
   autocmd! * <buffer>
-  autocmd BufWritePost,CursorHold,CursorHoldI <buffer> Neomake!
+  autocmd BufWritePost <buffer> Make!
   "autocmd BufWritePost <buffer>
   "      \ if timer_info(s:timer) == []
   "      \ | let s:timer = timer_start(3000, {->nvim_command("VimtexCountLetters")})
