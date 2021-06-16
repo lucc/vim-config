@@ -2,8 +2,12 @@
 setlocal textwidth=72
 setlocal spell
 
+function! s:CleanTrail()
+  $ global/\v^(\> ?)*\s*$/ delete
+  nohlsearch
+endfunction
 " command to delete empty line(s) at the end
-command -buffer CleanTrail $ global/\v^(\> ?)*\s*$/ delete
+command! -buffer CleanTrail call s:CleanTrail()
 
 " unfold interesting stuff
 silent! /^$/,$ foldopen
