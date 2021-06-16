@@ -21,15 +21,6 @@ augroup LucNeoMake
 	\ endif
 augroup END
 
-augroup LucApplications
-  autocmd!
-  autocmd BufWritePost ~/apply/current.tex NeomakeSh make
-  autocmd BufEnter ~/apply/*.tex
-	\ let b:neomake_tex_enabled_makers =
-	\   filter(neomake#makers#ft#tex#EnabledMakers() + ['make'],
-	\          'executable(v:val)')
-augroup END
-
 augroup LucNewScripts
   autocmd!
   " from https://unix.stackexchange.com/a/39995/88313
@@ -42,4 +33,17 @@ augroup END
 augroup LucPrivateFiles
   autocmd!
   autocmd BufWritePre /tmp/*,/dev/shm/* setlocal noundofile
+augroup END
+
+augroup LucApplications
+  autocmd!
+  autocmd BufWritePost ~/apply/current.tex NeomakeSh make
+  autocmd BufEnter ~/apply/*.tex
+	\ let b:neomake_tex_enabled_makers =
+	\   filter(neomake#makers#ft#tex#EnabledMakers() + ['make'],
+	\          'executable(v:val)')
+augroup END
+augroup LucNixOSConfig
+  autocmd!
+  autocmd BufEnter ~/src/nixos/*.nix compiler nixos
 augroup END
