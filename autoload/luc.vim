@@ -154,6 +154,7 @@ endfunction
 function! luc#khard_editor() abort
   " Load options and maps for editing khard yaml files.
   setfiletype yaml
+  set foldlevel=99
   map  <buffer> <tab>       /^[^#]/<cr>A
   imap <buffer> <tab> <c-o>:/^[^#]/ normal $<cr>
 endfunction
