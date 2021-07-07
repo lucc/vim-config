@@ -60,7 +60,7 @@ Plug 'git://fedorapeople.org/home/fedora/wwoods/public_git/vim-scripts.git'
 Plug 'jamessan/vim-gnupg'
 Plug 'lucc/VimRepress' " clone of https://bitbucket.org/pentie/vimrepress
 Plug 'pix/vim-known_hosts'
-Plug 'sjl/gundo.vim'
+Plug 'simnalamburt/vim-mundo'
 Plug 'ZeroKnight/vim-signjump'
 Plug '~/src/vim-tip'
 
