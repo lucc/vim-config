@@ -1,3 +1,11 @@
+
+vim.cmd [[
+  augroup LucPluginSetup
+  autocmd!
+  autocmd BufWritePost ~/.config/nvim/lua/plugins.lua PackerCompile
+  augroup END
+]]
+
 return require('packer').startup(function()
 
   -- Packer can manage itself
