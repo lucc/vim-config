@@ -1,22 +1,6 @@
 " options setup by luc
 " vim: foldmethod=marker spelllang=en
 
-" Some options where removed in neovim or have different default values. For
-" vim we still need to set them.
-if !has('nvim') "{{{1
-  " don't be vi compatible, this has to be first b/c it changes other options
-  set nocompatible
-  set autoindent
-  " allow backspacing over everything in insert mode
-  set backspace=indent,eol,start
-  set encoding=utf-8
-  " highlight the last used search pattern.
-  set hlsearch
-  " incremental search
-  set incsearch
-  set wildmenu
-endif
-
 " Don't load menus.  This has to happen before 'syntax on' and 'filetype ...'
 set guioptions+=M
 set guioptions-=m

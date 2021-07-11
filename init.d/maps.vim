@@ -44,10 +44,8 @@ nnoremap ` '
 vmap * y/<C-r>"<CR>
 vmap # y?<C-r>"<CR>
 
-if has('nvim')
-  " Use ESC to leave terminal mode
-  tnoremap <Esc> <C-\><C-n>
-endif
+" Use ESC to leave terminal mode
+tnoremap <Esc> <C-\><C-n>
 
 " open the file under the cursor with xdg-open
 nnoremap gF <CMD>O<CR>
