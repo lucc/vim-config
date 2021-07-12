@@ -1,7 +1,6 @@
 -- init.vim file by luc
 vim.cmd "runtime init.d/options.vim"
 vim.cmd "runtime init.d/autocmds.vim"
-vim.cmd "runtime init.d/plugins.vim"
 
 require "plugins"
 require "maps"

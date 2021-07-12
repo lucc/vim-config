@@ -19,6 +19,5 @@ let g:airline#extensions#vimtex#enabled = 1
 " icons
 Plug 'ryanoasis/vim-devicons'
 
-" vim options related to the statusline
+" options related to the statusline
 set noshowmode   " do not display the current mode in the command line
-set laststatus=2 " always display the statusline

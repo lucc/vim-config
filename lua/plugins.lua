@@ -26,8 +26,7 @@ require('packer').startup(function()
 
   -- special new stuff since neovim 0.5
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-  use {
-    'nvim-telescope/telescope.nvim',
+  use { 'nvim-telescope/telescope.nvim',
     requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
   }
 
@@ -43,7 +42,16 @@ require('packer').startup(function()
   vim.cmd "command! -nargs=* -complete=file S Grepper -jump -query <q-args>"
   vim.cmd "command! -nargs=* -complete=file SS Grepper -jump -query <args>"
 
-  use 'hkupty/iron.nvim'
+  use { 'hkupty/iron.nvim',
+    config = function()
+      require("iron").core.set_config {
+	preferred = {
+	  prolog = "swipl",
+	  python = "ipython"
+	}
+      }
+    end
+  }
   vim.g.iron_repl_open_cmd = 'vsplit'
   command("REPL", "IronRepl")
   -- load the current file in the REPL.
@@ -62,6 +70,13 @@ require('packer').startup(function()
     require("iron").core.send(ft, load)
   end
 
+  -- plugins: vcs stuff
+  use 'tpope/vim-fugitive'            -- git integration
+  use 'ludovicchabant/vim-lawrencium' -- mercurial integration
+  use 'airblade/vim-gitgutter'        -- change indicator in sign column
+  use 'rbong/vim-flog'                -- git history browser
+  use 'rhysd/git-messenger.vim'       -- float win with last commit
+
   -- unsorted plugins
   use 'eugen0329/vim-esearch'
   use 'AndrewRadev/linediff.vim'
@@ -76,13 +91,6 @@ require('packer').startup(function()
   use '~/src/vim-tip'
 
 end)
-
-require("iron").core.set_config {
-  preferred = {
-    prolog = "swipl",
-    python = "ipython"
-  }
-}
 
 -- For very short ultisnips triggers to be usable with deoplete:
 -- https://github.com/SirVer/ultisnips/issues/517#issuecomment-268518251
