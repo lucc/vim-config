@@ -1,12 +1,6 @@
 -- user defined maps by lucc
 
--- This map function is copied from
--- https://oroques.dev/notes/neovim-init/#mappings
-local function map(mode, lhs, rhs, opts)
-  local options = {noremap = true}
-  if opts then options = vim.tbl_extend('force', options, opts) end
-  vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-end
+local map = require("helpers").map
 
 -- Don't use Ex mode, use Q for formatting (from the example file)
 map("n", "Q", "gq")
