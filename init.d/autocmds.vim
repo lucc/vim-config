@@ -13,8 +13,6 @@ augroup END
 
 augroup LucNeoMake
   autocmd!
-  " FIXME can this check be done dynamically with LSP?
-	"\ if index(['python', 'lua', 'rust', 'haskell', 'sh'], &syntax) == -1 |
   autocmd BufWritePost *
 	\ if ! LanguageClient#isServerRunning() |
 	\   Neomake |
