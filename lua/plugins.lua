@@ -46,6 +46,8 @@ require('packer').startup(function()
   use { 'nvim-telescope/telescope.nvim',
     requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
   }
+  -- use 'romgrk/nvim-treesitter-context' -- does not work stale yet
+  use 'wellle/context.vim'
 
   use 'mhinz/vim-grepper'
   vim.g.grepper = {
