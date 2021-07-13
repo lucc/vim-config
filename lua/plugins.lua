@@ -25,7 +25,24 @@ require('packer').startup(function()
   use 'wbthomason/packer.nvim'
 
   -- special new stuff since neovim 0.5
-  use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+  use { 'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate',
+    config = function()
+      require'nvim-treesitter.configs'.setup {
+	ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+	--ignore_install = { "javascript" }, -- List of parsers to ignore installing
+	highlight = {
+	  enable = true,              -- false will disable the whole extension
+	  --disable = { "c", "rust" },  -- list of language that will be disabled
+	},
+	indent = {
+	  enable = true
+	},
+      }
+      vim.opt.foldmethod = "expr"
+      vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+    end,
+  }
   use { 'nvim-telescope/telescope.nvim',
     requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
   }
