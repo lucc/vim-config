@@ -72,7 +72,7 @@ require('packer').startup(function()
 
   -- plugins: vcs stuff
   use 'tpope/vim-fugitive'            -- git integration
-  use 'ludovicchabant/vim-lawrencium' -- mercurial integration
+  --use 'ludovicchabant/vim-lawrencium' -- mercurial integration
   use 'airblade/vim-gitgutter'        -- change indicator in sign column
   use 'rbong/vim-flog'                -- git history browser
   use 'rhysd/git-messenger.vim'       -- float win with last commit
