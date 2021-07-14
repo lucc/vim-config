@@ -55,17 +55,20 @@ require('packer').startup(function()
   --  end,
   --}
 
-  use 'mhinz/vim-grepper'
-  vim.g.grepper = {
-    dir = 'filecwd',
-    jump = 1,
-    prompt = 0,
-    quickfix = 0,
-    searchreg = 1,
-    tools = {'git', 'rg', 'ag', 'grep'},
+  use { 'mhinz/vim-grepper',
+    config = function()
+      vim.cmd "command! -nargs=* -complete=file S Grepper -jump -query <q-args>"
+      vim.cmd "command! -nargs=* -complete=file SS Grepper -jump -query <args>"
+      vim.g.grepper = {
+	dir = 'filecwd',
+	jump = 1,
+	prompt = 0,
+	quickfix = 0,
+	searchreg = 1,
+	tools = {'git', 'rg', 'ag', 'grep'},
+      }
+    end,
   }
-  vim.cmd "command! -nargs=* -complete=file S Grepper -jump -query <q-args>"
-  vim.cmd "command! -nargs=* -complete=file SS Grepper -jump -query <args>"
 
   use { 'hkupty/iron.nvim',
     config = function()
@@ -75,20 +78,22 @@ require('packer').startup(function()
 	  python = "ipython"
 	}
       }
-    end
+      vim.g.iron_repl_open_cmd = 'vsplit'
+      vim.cmd[[
+	command! REPL IronRepl
+	-- load the current file in the REPL.
+	command! RF   call v:lua.load_current_file_in_repl()
+      ]]
+    end,
   }
-  vim.g.iron_repl_open_cmd = 'vsplit'
-  command("REPL", "IronRepl")
-  -- load the current file in the REPL.
-  command("RF", "call v:lua.load_current_file_in_repl()")
   -- helper function for iron repl stuff (global function)
   function load_current_file_in_repl()
     local ft = vim.bo.filetype
     local load
     if ft == 'haskell' then
-      load = ':load ' .. bufname('%')
+      load = ':load ' .. vim.fn.bufname('%')
     elseif ft == 'prolog' then
-      load = '["' .. bufname('%') .. '"].'
+      load = '["' .. vim.fn.bufname('%') .. '"].'
     else
       error("Don't know how to load files for " .. ft)
     end
