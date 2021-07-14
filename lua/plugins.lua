@@ -173,7 +173,7 @@ require('packer').startup{
   }
   use { 'neomake/neomake',
     config = function()
-      if not vim.fn.exists('g:neomake') then
+      if vim.fn.exists('g:neomake') == 0 then
 	vim.g.neomake = vim.empty_dict()
       end
       vim.g.neomake_verbose = 1
@@ -267,7 +267,7 @@ require('packer').startup{
       vim.g.ctrlp_max_files = 0
       vim.g.ctrlp_root_markers = { '.git', 'makefile', 'Makefile' }
       -- asynchronous file cache update
-      if vim.fn.executable("fd") then
+      if vim.fn.executable("fd") == 1 then
 	vim.g.user_command_async = 1
 	vim.g.ctrlp_user_command = 'fd --hidden --type f "" %s'
 	vim.g.ctrlp_use_caching = 0
@@ -525,10 +525,10 @@ require('packer').startup{
       vim.g['pandoc#folding#fold_yaml'] = 1
       vim.g['pandoc#folding#fdc'] = 0
       --vim.g['pandoc#folding#fold_fenced_codeblocks'] = 1
-      if vim.fn.exists('g:pandoc#biblio#bibs') then
-	vim.fn.insert(vim.g['pandoc#biblio#bibs'], '~/bib/main.bib')
-      else
+      if vim.fn.exists('g:pandoc#biblio#bibs') == 0 then
 	vim.g['pandoc#biblio#bibs'] = {'~/bib/main.bib'}
+      else
+	vim.fn.insert(vim.g['pandoc#biblio#bibs'], '~/bib/main.bib')
       end
       vim.g['pandoc#command#autoexec_on_writes'] = 0
       vim.g['pandoc#command#autoexec_command'] = "Pandoc pdf"
