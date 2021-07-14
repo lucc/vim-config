@@ -76,15 +76,13 @@ require('packer').startup{
       require("iron").core.set_config {
 	preferred = {
 	  prolog = "swipl",
-	  python = "ipython"
+	  python = "ipython",
 	}
       }
       vim.g.iron_repl_open_cmd = 'vsplit'
-      vim.cmd[[
-	command! REPL IronRepl
-	-- load the current file in the REPL.
-	command! RF   call v:lua.load_current_file_in_repl()
-      ]]
+      vim.cmd "command! REPL IronRepl"
+      -- load the current file in the REPL.
+      vim.cmd "command! RF call v:lua.load_current_file_in_repl()"
     end,
   }
   -- helper function for iron repl stuff (global function)
