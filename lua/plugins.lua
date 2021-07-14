@@ -19,7 +19,8 @@ vim.cmd [[
   augroup END
 ]]
 
-require('packer').startup(function()
+require('packer').startup{
+  function()
 
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
@@ -120,7 +121,14 @@ require('packer').startup(function()
   use 'ZeroKnight/vim-signjump'
   use '~/src/vim-tip'
 
-end)
+  end,
+  config = {
+    profile = {
+      enable = true,
+      --threshold = 1,
+    },
+  },
+}
 
 -- For very short ultisnips triggers to be usable with deoplete:
 -- https://github.com/SirVer/ultisnips/issues/517#issuecomment-268518251
