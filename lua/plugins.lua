@@ -118,8 +118,21 @@ require('packer').startup{
   }
 
   use { 'hkupty/iron.nvim',
-    --cmd = {"IronRepl", "REPL", "RF"},
-    config = function()
+    cmd = {"IronRepl", "REPL", "RF"},
+    config = [[
+      -- helper function for iron repl stuff (global function)
+      function load_current_file_in_repl()
+	local ft = vim.bo.filetype
+	local load
+	if ft == 'haskell' then
+	  load = ':load ' .. vim.fn.bufname('%')
+	elseif ft == 'prolog' then
+	  load = '["' .. vim.fn.bufname('%') .. '"].'
+	else
+	  error("Don't know how to load files for " .. ft)
+	end
+	require("iron").core.send(ft, load)
+      end
       require("iron").core.set_config {
 	preferred = {
 	  prolog = "swipl",
@@ -130,21 +143,8 @@ require('packer').startup{
       vim.cmd "command! REPL IronRepl"
       -- load the current file in the REPL.
       vim.cmd "command! RF call v:lua.load_current_file_in_repl()"
-    end,
+    ]]
   }
-  -- helper function for iron repl stuff (global function)
-  function load_current_file_in_repl()
-    local ft = vim.bo.filetype
-    local load
-    if ft == 'haskell' then
-      load = ':load ' .. vim.fn.bufname('%')
-    elseif ft == 'prolog' then
-      load = '["' .. vim.fn.bufname('%') .. '"].'
-    else
-      error("Don't know how to load files for " .. ft)
-    end
-    require("iron").core.send(ft, load)
-  end
 
   -- snippets
   use { 'SirVer/ultisnips',
@@ -301,7 +301,7 @@ require('packer').startup{
       vim.g.clap_insert_mode_only = true
       vim.g.clap_open_preview = "never"
       vim.cmd "nnoremap <silent> <C-Space> <CMD>Clap history<CR>"
-      vim.vmd "autocmd FileType clap_input inoremap <silent> <buffer> <C-F> <CMD>call <SID>switch(1)<CR>"
+      vim.cmd "autocmd FileType clap_input inoremap <silent> <buffer> <C-F> <CMD>call <SID>switch(1)<CR>"
       vim.cmd "autocmd FileType clap_input inoremap <silent> <buffer> <C-B> <CMD>call <SID>switch(-1)<CR>"
       local function switch(index)
         local providers = {"history", "files", "buffers"}
