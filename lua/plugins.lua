@@ -584,7 +584,7 @@ require('packer').startup{
   use 'RRethy/vim-illuminate'
   use 'Lokaltog/vim-easymotion'
   use 'Raimondi/delimitMate'
-  use 'vim-scripts/paredit.vim'
+  use 'kovisoft/paredit'
   use 'tpope/vim-surround'
   --use 'kana/vim-textobj-indent.git'
   use 'michaeljsmith/vim-indent-object'
