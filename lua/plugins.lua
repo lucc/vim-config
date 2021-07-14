@@ -6,17 +6,23 @@ vim.cmd [[
   augroup END
 ]]
 
--- Take a list of plugin specifications and make them lazy loading and lock
--- them for updates.
-local function opt(specs)
-  return vim.tbl_map(function(spec)
-    if type(spec) == "string" then
-      spec = {spec}
+-- Take a requires specification (string, table with one plugin or list of
+-- plugins) and make them lazy loading and lock them for updates (including
+-- recursively all requires).
+local function opt(spec)
+  if type(spec) == "string" then
+      return { spec, opt = true, lock = true }
+  elseif type(spec) == "table" then
+    if #spec == 1 then
+      local new_spec = { opt = true, lock = true }
+      if spec.requires ~= nil then
+        new_spec.requires = opt(spec.requires)
+      end
+      return vim.tbl_extend("keep", new_spec, spec)
+    else
+      return vim.tbl_map(opt, spec)
     end
-    spec.opt = true
-    spec.lock = true
-    return spec
-  end, specs)
+  end
 end
 
 local language_client = {
