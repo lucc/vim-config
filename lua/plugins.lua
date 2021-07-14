@@ -33,11 +33,10 @@ require('packer').startup(function()
 	--ignore_install = { "javascript" }, -- List of parsers to ignore installing
 	highlight = {
 	  enable = true,              -- false will disable the whole extension
-	  --disable = { "c", "rust" },  -- list of language that will be disabled
+	  disable = { "latex" },  -- list of language that will be disabled (ts language not &ft!)
 	},
-	indent = {
-	  enable = true
-	},
+	indent = { enable = true },
+	matchup = { enable = true },
       }
       vim.opt.foldmethod = "expr"
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
@@ -46,8 +45,15 @@ require('packer').startup(function()
   use { 'nvim-telescope/telescope.nvim',
     requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
   }
-  -- use 'romgrk/nvim-treesitter-context' -- does not work stale yet
-  use 'wellle/context.vim'
+  use { 'romgrk/nvim-treesitter-context', -- not very stable yet
+    config = "vim.cmd[[highlight link TreesitterContext CursorLine]]",
+  }
+  --use { 'wellle/context.vim',
+  --  config = function()
+  --    vim.g.context_filetype_blacklist = { "help" }
+  --    vim.g.context_nvim_no_redraw = 1
+  --  end,
+  --}
 
   use 'mhinz/vim-grepper'
   vim.g.grepper = {
