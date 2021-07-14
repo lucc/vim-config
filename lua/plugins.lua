@@ -1,10 +1,3 @@
--- legacy, plug stuff
-vim.cmd[[
-call luc#setup#vim_plug()
-runtime init.d/plugins/languages.vim
-call plug#end()
-]]
-
 -- recmpile the packer file on each change to this file
 vim.cmd [[
   augroup LucPluginSetup
@@ -438,6 +431,128 @@ require('packer').startup{
   use 'airblade/vim-gitgutter'        -- change indicator in sign column
   use 'rbong/vim-flog'                -- git history browser
   use 'rhysd/git-messenger.vim'       -- float win with last commit
+
+  -- language support
+  use 'Shougo/context_filetype.vim'
+  use 'chrisbra/vim-zsh' -- devel version of the official syntax file
+  use 'tpope/vim-scriptease'
+  use 'vim-scripts/applescript.vim'
+  use 'vim-scripts/icalendar.vim'
+  use 'aliva/vim-fish'
+  use 'vim-scripts/VCard-syntax'
+  use 'vimperator/vimperator.vim'
+  use 'tkztmk/vim-vala'
+  use 'rosstimson/bats.vim'
+  use 'chikamichi/mediawiki.vim'
+  use 'tbastos/vim-lua'
+  use 'vim-scripts/luarefvim'
+  use 'cespare/vim-toml'
+  use 'LnL7/vim-nix'
+  use 'derekelkins/agda-vim'
+  use 'nfnty/vim-nftables'
+  use 'chrisbra/csv.vim'
+
+  -- rust
+  use 'rust-lang/rust.vim'
+  use { 'rhysd/rust-doc.vim',
+    config = function()
+      vim.g['rust_doc#downloaded_rust_doc_dir'] = '/usr/share/doc/rust'
+    end,
+  }
+
+  -- Haskell
+  use 'neovimhaskell/haskell-vim'
+  use 'Twinside/vim-hoogle'
+  --use 'itchyny/vim-haskell-indent' -- to be tested
+
+  -- LaTeX
+  -- original vim settings for latex
+  -- vim.g.tex_fold_enabled = 1
+  vim.g.tex_flavor = 'latex'
+
+  use { 'lervag/vimtex',
+    config = function()
+      vim.g.vimtex_fold_enabled = 1
+      vim.g.vimtex_fold_types = {
+	sections = {
+	  sections = {
+	    'part',
+	    'chapter',
+	    'section',
+	    'subsection',
+	    'subsubsection',
+	    'paragraph',
+	  },
+	}
+      }
+      --vim.g.vimtex_fold_types.comments = {}
+      --vim.g.vimtex_fold_types.comments.enabled = 1
+      vim.g.vimtex_compiler_method = 'latexrun'
+      vim.g.vimtex_compiler_progname = 'nvr'
+      vim.g.vimtex_toc_config = { split_pos = 'vertical' }
+      vim.g.vimtex_toc_todo_labels = {
+	FIXME = 'FIXME: ',
+	TODO = 'TODO: ',
+	XXX = 'FIXME: ',
+      }
+    end,
+  }
+
+  -- markdown
+  use { 'nelstrom/vim-markdown-folding', -- good folding uses expr
+    config = function()
+      vim.g.markdown_fold_style = 'nested'
+    end,
+  }
+  use { 'vim-pandoc/vim-pandoc',
+    requires = 'vim-pandoc/vim-pandoc-syntax',
+    config = function()
+      vim.g['pandoc#modules#disabled'] = {"menu"}
+      vim.g['pandoc#command#latex_engine'] = 'pdflatex'
+      vim.g['pandoc#folding#fold_yaml'] = 1
+      vim.g['pandoc#folding#fdc'] = 0
+      --vim.g['pandoc#folding#fold_fenced_codeblocks'] = 1
+      if vim.fn.exists('g:pandoc#biblio#bibs') then
+	vim.fn.insert(vim.g['pandoc#biblio#bibs'], '~/bib/main.bib')
+      else
+	vim.g['pandoc#biblio#bibs'] = {'~/bib/main.bib'}
+      end
+      vim.g['pandoc#command#autoexec_on_writes'] = 0
+      vim.g['pandoc#command#autoexec_command'] = "Pandoc pdf"
+      vim.g['pandoc#formatting#mode'] = 'h'
+    end,
+  }
+
+  -- python
+  use { 'python-mode/python-mode',
+    ft = 'python',
+    config = function()
+      vim.g.pymode_python = 'python3'
+      vim.g.pymode_rope = 0
+      vim.g.pymode_rope_completion = 0
+      vim.g.pymode_lint = 0
+      vim.g.pymode_doc = 0
+      --vim.g.pymode_folding = 0
+      --vim.g.pymode_virtualenv = 0
+      --vim.g.pymode_syntax = 0
+      vim.g.pymode_indent = 1
+      vim.g.pymode_options_max_line_length = 79
+    end,
+  }
+
+  -- PHP
+  use { 'swekaj/php-foldexpr.vim',
+    ft = 'php',
+    config = function()
+      -- These are not actually settings for the plugin but get leazy loading
+      -- like this.
+      -- taken from http://stackoverflow.com/a/7490288
+      vim.g.php_folding = 0        -- Set PHP folding of classes and functions.
+      --vim.g.php_htmlInStrings = 1 -- Syntax highlight HTML code inside PHP strings.
+      --vim.g.php_sql_query = 1     -- Syntax highlight SQL code inside PHP strings.
+      --vim.g.php_noShortTags = 1   -- Disable PHP short tags.
+    end,
+  }
 
   -- unsorted plugins
   use 'eugen0329/vim-esearch'
