@@ -112,6 +112,37 @@ require('packer').startup{
     end,
   }
 
+  -- async make
+  use { 'tpope/vim-dispatch',
+    config = function()
+      vim.g.dispatch_no_maps = 1
+      vim.g.dispatch_no_tmux_make = 1
+    end,
+  }
+  use { 'janko/vim-test',
+    config = function()
+      vim.g["test#strategy"] = 'dispatch_background'
+    end,
+  }
+  use { 'neomake/neomake',
+    config = function()
+      if not vim.fn.exists('g:neomake') then
+	vim.g.neomake = vim.empty_dict()
+      end
+      vim.g.neomake_verbose = 1
+      --vim.g.neomake.open_list = 2 -- also preserve cursor position
+      vim.g.neomake_list_height = 5
+      --vim.g.neomake_php_enabled_makers = ['php', 'phpcs', 'phpmd']
+      vim.g.neomake_tex_enabled_makers = {'chktex', 'lacheck', 'rubberinfo', 'proselint', 'latexrun'}
+      vim.g.neomake_bib_enabled_makers = {'bibtex'}
+      -- A maker to build a pdf file from a tex file if a makefile is afailable.
+      vim.g.neomake_tex_make_maker = {
+	exe = function() return vim.fn.filereadable(vim.fn.getcwd() .. '/makefile') and 'make' or '' end,
+	args = function() return {vim.fn.expand('%:p:t:r') .. '.pdf'} end,
+      }
+    end,
+  }
+
   -- plugins: vcs stuff
   use 'tpope/vim-fugitive'            -- git integration
   --use 'ludovicchabant/vim-lawrencium' -- mercurial integration
