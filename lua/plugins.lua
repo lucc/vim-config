@@ -1,7 +1,6 @@
 -- legacy, plug stuff
 vim.cmd[[
 call luc#setup#vim_plug()
-runtime init.d/plugins/completion.vim
 runtime init.d/plugins/languages.vim
 call plug#end()
 ]]
@@ -13,6 +12,52 @@ vim.cmd [[
   autocmd BufWritePost ~/.config/nvim/lua/plugins.lua PackerCompile
   augroup END
 ]]
+
+local language_client = {
+  'autozimu/LanguageClient-neovim',
+  branch = 'next',
+  run = 'bash install.sh',
+  requires = {
+    'roxma/LanguageServer-php-neovim',
+    run = 'composer install && composer run-script parse-stubs',
+  },
+  config = function()
+    vim.g.LanguageClient_serverCommands = {
+      c = {'cquery'} ,
+      css = {'css-languageserver'},
+      docker = {'docker-languageserver'},
+      haskell = {'hie-wrapper'},
+      html = {'html-languageserver'},
+      java = {'jdtls', '-Dlog.level=ALL', '-data', vim.fn.expand('~/.cache/jdtls-workspace')},
+      --javascript = {'/opt/javascript-typescript-langserver/lib/language-server-stdio.js'},
+      json = {'json-languageserver'},
+      lua = {'lua-lsp'},
+      nix = {'rnix-lsp'},
+      --php = {'php', 'php-language-server.php'},
+      python = {'pyls'},
+      rust = vim.fn.executable('rustup') and {'rustup', 'run', 'nightly', 'rls'} or {'rls'},
+      scala = {'metals-vim'},
+      sh = {'bash-language-server', 'start'},
+      tex = {'texlab'},
+    }
+    vim.cmd[[nnoremap <silent> KK <CMD>call LanguageClient_textDocument_hover()<CR>]]
+    vim.cmd[[nnoremap <silent> gd <CMD>call LanguageClient_textDocument_definition()<CR>]]
+    -- nnoremap <silent> <F2> <CMD>call LanguageClient_textDocument_rename()<CR>
+    vim.cmd[[nnoremap <F5> <CMD>call LanguageClient_contextMenu()<CR>]]
+    -- language client mappings for coding
+    vim.cmd[[nnoremap <leader>* <CMD>call LanguageClient_textDocument_documentHighlight()<CR>]]
+    -- augroup LucLanguageClientPopup
+    -- autocmd!
+    -- autocmd CursorHold,CursorHoldI *
+    -- \ if &buftype != 'nofile' |
+    -- \   call LanguageClient#textDocument_hover() |
+    -- \ endif
+    -- augroup END
+    vim.cmd[[inoremap <expr> <Tab>   pumvisible() ? {_, x -> x}(LanguageClient#textDocument_hover(), "\<C-N>")      : "\<Tab>"]]
+    vim.cmd[[inoremap <expr> <S-Tab> pumvisible() ? {_, x -> x}(LanguageClient#textDocument_hover(), "\<C-P>")      : "\<Tab>"]]
+    vim.cmd[[inoremap <expr> <CR>    pumvisible() ? {_, x -> x}(LanguageClient#textDocument_hover(), "\<C-Y>\<CR>") : "\<CR>"]]
+  end,
+}
 
 require('packer').startup{
   function()
@@ -270,6 +315,7 @@ require('packer').startup{
   -- completion
   use { 'ncm2/ncm2',
     requires = {
+      language_client,
       'roxma/nvim-yarp',
       'ncm2/ncm2-bufword',
       'ncm2/ncm2-path',
@@ -298,28 +344,27 @@ require('packer').startup{
       'ncm2/ncm2-ultisnips',
       },
       config = function()
-	vim.cmd[[
-	  autocmd BufEnter * call ncm2#enable_for_buffer()
-	  autocmd User Ncm2Plugin call ncm2#register_source({
-		      \ 'name' : 'vimtex',
-		      \ 'priority': 1,
-		      \ 'subscope_enable': 1,
-		      \ 'complete_length': 1,
-		      \ 'scope': ['tex'],
-		      \ 'matcher': {'name': 'combine',
-		      \           'matchers': [
-		      \               {'name': 'abbrfuzzy', 'key': 'menu'},
-		      \               {'name': 'prefix', 'key': 'word'},
-		      \           ]},
-		      \ 'mark': 'tex',
-		      \ 'word_pattern': '\w+',
-		      \ 'complete_pattern': g:vimtex#re#ncm,
-		      \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
-		      \ })
-	]]
 	vim.opt.completeopt:append("noinsert")
 	vim.opt.completeopt:append("menuone")
 	vim.opt.completeopt:append("noselect")
+	vim.cmd "autocmd BufEnter * call ncm2#enable_for_buffer()"
+	vim.fn['ncm2#register_source']({
+	  name = 'vimtex',
+	  priority = 1,
+	  subscope_enable = 1,
+	  complete_length = 1,
+	  scope = {'tex'},
+	  matcher = {
+	    name = 'combine',
+	    matchers = {
+	      {name = 'abbrfuzzy', key = 'menu'},
+	      {name = 'prefix', key = 'word'},
+	    }},
+	  mark = 'tex',
+	  word_pattern = [[\w+]],
+	  complete_pattern = vim.g['vimtex#re#ncm'],
+	  on_complete = {'ncm2#on_complete#omni', 'vimtex#complete#omnifunc'},
+	})
       end,
   }
   use { 'neoclide/coc.nvim',
@@ -359,6 +404,7 @@ require('packer').startup{
     -- A list of possible source for completion is at
     -- https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
     requires = {
+      language_client,
       'Shougo/neco-syntax',
       'Shougo/neco-vim',
       'fszymanski/deoplete-emoji',
