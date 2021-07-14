@@ -3,7 +3,6 @@ local command = require("helpers").command
 -- legacy, plug stuff
 vim.cmd[[
 call luc#setup#vim_plug()
-runtime init.d/plugins/coding.vim
 runtime init.d/plugins/editing.vim
 runtime init.d/plugins/completion.vim
 runtime init.d/plugins/languages.vim
@@ -143,6 +142,24 @@ require('packer').startup{
     end,
   }
 
+  -- debugging
+  use { 'vim-vdebug/vdebug',
+    cmd = {'VdebugStart'},
+    config = function()
+      vim.g.vdebug_options = {
+	break_on_open = 0,
+	continuous_mode = 1,
+	watch_window_style = 'compact',
+	window_commands = {
+	  DebuggerWatch = 'vertical belowright new',
+	  DebuggerStack = 'belowright new +res5',
+	  DebuggerStatus = 'belowright new +res5'
+	},
+	--debug_window_level = 2,
+      }
+    end,
+  }
+
   -- plugins: vcs stuff
   use 'tpope/vim-fugitive'            -- git integration
   --use 'ludovicchabant/vim-lawrencium' -- mercurial integration
@@ -162,6 +179,7 @@ require('packer').startup{
   use 'simnalamburt/vim-mundo'
   use 'ZeroKnight/vim-signjump'
   use '~/src/vim-tip'
+  use 'alvan/vim-php-manual'
 
   end,
   config = {
