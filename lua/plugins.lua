@@ -6,7 +6,6 @@ call luc#setup#vim_plug()
 runtime init.d/plugins/editing.vim
 runtime init.d/plugins/completion.vim
 runtime init.d/plugins/languages.vim
-runtime init.d/plugins/ui.vim
 call plug#end()
 ]]
 
@@ -160,6 +159,41 @@ require('packer').startup{
     end,
   }
 
+  -- colors
+  use 'iCyMind/NeoSolarized'
+  use { 'altercation/vim-colors-solarized',
+    config = function() vim.g.solarized_menu = 0 end,
+  }
+  -- statusline
+  use { 'bling/vim-airline',
+    requires = {
+      'vim-airline/vim-airline-themes', -- solarized theme
+      'ryanoasis/vim-devicons',         -- icons
+    },
+    config = function()
+      vim.g.airline_theme = 'solarized'
+      vim.g.airline_powerline_fonts = 1
+      vim.g['airline#extensions#whitespace#mixed_indent_algo'] = 2
+      vim.g['airline#extensions#whitespace#checks'] = {'indent', 'trailing', 'long'}
+      vim.g['airline#extensions#vimtex#enabled'] = 1
+      -- do not display the current mode in the command line
+      vim.opt.showmode = false
+    end,
+  }
+
+  use { 'junegunn/vim-easy-align',
+    config = function()
+      vim.cmd "vmap <Enter> <Plug>(EasyAlign)"
+      vim.cmd "nmap <Leader>a <Plug>(EasyAlign)"
+    end,
+  }
+  use { 'Shougo/echodoc.vim',
+    config = function()
+      vim.g['echodoc#enable_at_startup'] = 1
+      vim.g['echodoc#type'] = 'floating'
+    end,
+  }
+
   -- plugins: vcs stuff
   use 'tpope/vim-fugitive'            -- git integration
   --use 'ludovicchabant/vim-lawrencium' -- mercurial integration
@@ -180,6 +214,14 @@ require('packer').startup{
   use 'ZeroKnight/vim-signjump'
   use '~/src/vim-tip'
   use 'alvan/vim-php-manual'
+  use 'ron89/thesaurus_query.vim'
+  use 'RRethy/vim-illuminate'
+  use 'Lokaltog/vim-easymotion'
+  use 'Raimondi/delimitMate'
+  use 'vim-scripts/paredit.vim'
+  use 'tpope/vim-surround'
+  --use 'kana/vim-textobj-indent.git'
+  use 'michaeljsmith/vim-indent-object'
 
   end,
   config = {

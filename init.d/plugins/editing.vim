@@ -1,9 +1,6 @@
 " general plugins for editing
 " vim: foldmethod=marker spelllang=en
 
-Plug 'ron89/thesaurus_query.vim'
-Plug 'RRethy/vim-illuminate'
-
 let s:choice = 'ctrlp'
 
 " plugins: buffer and file management {{{1
@@ -84,17 +81,3 @@ elseif s:choice == 'clap'
     call feedkeys(join(l:text, "\n"))
   endfunction
 endif
-
-" plugins: parenthesis, quotes, alignment {{{1
-
-Plug 'Raimondi/delimitMate'
-Plug 'vim-scripts/paredit.vim'
-Plug 'tpope/vim-surround'
-"Plugin 'kana/vim-textobj-indent.git'
-Plug 'michaeljsmith/vim-indent-object'
-Plug 'junegunn/vim-easy-align'
-vmap <Enter> <Plug>(EasyAlign)
-nmap <Leader>a <Plug>(EasyAlign)
-
-" plugins: motion {{{1
-Plug 'Lokaltog/vim-easymotion'
