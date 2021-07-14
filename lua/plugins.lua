@@ -99,6 +99,19 @@ require('packer').startup{
     require("iron").core.send(ft, load)
   end
 
+  -- snippets
+  use { 'SirVer/ultisnips',
+    -- Snippets are separated from the engine:
+    requires = {'honza/vim-snippets', 'rbonvall/snipmate-snippets-bib'},
+    config = function()
+      vim.g.UltiSnipsExpandTrigger = '<C-F>'
+      vim.g.UltiSnipsJumpForwardTrigger = '<C-F>' -- <C-J>
+      vim.g.UltiSnipsJumpBackwardTrigger = '<C-G>' -- <C-K>
+      --vim.g.UltiSnipsExpandTrigger = '<tab>'
+      vim.g.UltiSnipsListSnippets = '<C-L>'
+    end,
+  }
+
   -- plugins: vcs stuff
   use 'tpope/vim-fugitive'            -- git integration
   --use 'ludovicchabant/vim-lawrencium' -- mercurial integration

@@ -2,16 +2,6 @@
 " vim: foldmethod=marker spelllang=en
 
 " plugins: snippets {{{1
-Plug 'SirVer/ultisnips'
-let g:UltiSnipsExpandTrigger = '<C-F>'
-let g:UltiSnipsJumpForwardTrigger = '<C-F>' " <C-J>
-let g:UltiSnipsJumpBackwardTrigger = '<C-G>' " <C-K>
-"let g:UltiSnipsExpandTrigger       = <tab>
-let g:UltiSnipsListSnippets        = '<C-L>'
-
-" Snippets are separated from the engine:
-Plug 'honza/vim-snippets'
-Plug 'rbonvall/snipmate-snippets-bib'
 
 " plugins: compilation and linting {{{1
 
