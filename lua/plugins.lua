@@ -240,7 +240,6 @@ require('packer').startup{
       vim.g.ctrlp_match_current_file = 0
     end,
   }
-
   use { 'liuchengxu/vim-clap',
     cmd = "Clap",
     lock = true,
@@ -265,6 +264,125 @@ require('packer').startup{
         end
         vim.fn.feedkeys(vim.fn.join(text, "\n"))
       end
+    end,
+  }
+
+  -- completion
+  use { 'ncm2/ncm2',
+    requires = {
+      'roxma/nvim-yarp',
+      'ncm2/ncm2-bufword',
+      'ncm2/ncm2-path',
+      -- 'ncm2/ncm2-jedi'
+      'ncm2/ncm2-html-subscope',
+      'ncm2/ncm2-markdown-subscope',
+      'ncm2/ncm2-rst-subscope',
+      'ncm2/ncm2-github',
+      -- 'ncm2/ncm2-tmux',
+      'ncm2/ncm2-tagprefix',
+      'filipekiss/ncm2-look.vim',
+      'Shougo/neco-syntax',
+      'ncm2/ncm2-syntax',
+      'ncm2/ncm2-neoinclude',
+      'Shougo/neoinclude.vim',
+      -- 'wellle/tmux-complete.vim',
+      -- 'yuki-ycino/ncm2-dictionary', -- can not handle multible entries in 'dict'
+      'ncm2/ncm2-racer',
+      'ncm2/ncm2-go',
+      'ncm2/ncm2-vim',
+      'Shougo/neco-vim',
+      { 'phpactor/phpactor',
+	run = [[nix-shell --run 'composer install' -p php80Packages.composer php80]],
+        ft = 'php' },
+      'phpactor/ncm2-phpactor',
+      'ncm2/ncm2-ultisnips',
+      },
+      config = function()
+	vim.cmd[[
+	  autocmd BufEnter * call ncm2#enable_for_buffer()
+	  autocmd User Ncm2Plugin call ncm2#register_source({
+		      \ 'name' : 'vimtex',
+		      \ 'priority': 1,
+		      \ 'subscope_enable': 1,
+		      \ 'complete_length': 1,
+		      \ 'scope': ['tex'],
+		      \ 'matcher': {'name': 'combine',
+		      \           'matchers': [
+		      \               {'name': 'abbrfuzzy', 'key': 'menu'},
+		      \               {'name': 'prefix', 'key': 'word'},
+		      \           ]},
+		      \ 'mark': 'tex',
+		      \ 'word_pattern': '\w+',
+		      \ 'complete_pattern': g:vimtex#re#ncm,
+		      \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
+		      \ })
+	]]
+	vim.opt.completeopt:append("noinsert")
+	vim.opt.completeopt:append("menuone")
+	vim.opt.completeopt:append("noselect")
+      end,
+  }
+  use { 'neoclide/coc.nvim',
+    opt = true,
+    lock = true,
+    branch = 'release',
+    requires = { 'neoclide/coc-sources', 'Shougo/neco-vim', 'neoclide/coc-neco' },
+    config = function()
+      vim.g.coc_global_extensions = {
+	'coc-git',
+	'coc-json',
+	'coc-snippets',
+	'coc-vimtex',
+	'coc-syntax',
+      }
+      vim.g.coc_data_home = "~/.local/share/coc"
+      vim.cmd[[
+	xmap if <Plug>(coc-funcobj-i)
+	omap if <Plug>(coc-funcobj-i)
+	xmap af <Plug>(coc-funcobj-a)
+	omap af <Plug>(coc-funcobj-a)
+	xmap ic <Plug>(coc-classobj-i)
+	omap ic <Plug>(coc-classobj-i)
+	xmap ac <Plug>(coc-classobj-a)
+	omap ac <Plug>(coc-classobj-a)
+	inoremap <expr> <Tab>   pumvisible() ? "\<C-N>"      : "\<Tab>"
+	inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>"      : "\<Tab>"
+	inoremap <expr> <CR>    pumvisible() ? "\<C-Y>\<CR>" : "\<CR>"
+	nnoremap <silent> KK <CMD>call CocAction("doHover")<CR>
+      ]]
+    end,
+  }
+  use { 'Shougo/deoplete.nvim',
+    opt = true,
+    lock = true,
+    run = ':UpdateRemotePlugins',
+    -- A list of possible source for completion is at
+    -- https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
+    requires = {
+      'Shougo/neco-syntax',
+      'Shougo/neco-vim',
+      'fszymanski/deoplete-emoji',
+      'nicoe/deoplete-khard',
+      'padawan-php/deoplete-padawan',
+      'poppyschmo/deoplete-latex',
+      'zchee/deoplete-zsh',
+      'lionawurscht/deoplete-biblatex',
+      {'paretje/deoplete-notmuch', ft = 'mail'}
+      -- 'zchee/deoplete-jedi',
+      -- https://github.com/SevereOverfl0w/deoplete-github
+      -- https://github.com/lvht/phpcd.vim
+      -- https://github.com/tpope/vim-rhubarb
+      },
+    config = function()
+      vim.g['deoplete#enable_at_startup'] = 1
+      vim.g['deoplete#sources#notmuch#command'] = {
+	'notmuch', 'address', '--format=json', '--deduplicate=address', '*'
+      }
+      -- For very short ultisnips triggers to be usable with deoplete:
+      -- https://github.com/SirVer/ultisnips/issues/517#issuecomment-268518251
+      vim.fn['deoplete#custom#source']('ultisnips', 'matchers', {'matcher_fuzzy'})
+      -- https://github.com/autozimu/LanguageClient-neovim/wiki/deoplete
+      vim.fn['deoplete#custom#source']('LanguageClient', 'min_pattern_length', 2)
     end,
   }
 
@@ -305,9 +423,3 @@ require('packer').startup{
     },
   },
 }
-
--- For very short ultisnips triggers to be usable with deoplete:
--- https://github.com/SirVer/ultisnips/issues/517#issuecomment-268518251
---call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
--- https://github.com/autozimu/LanguageClient-neovim/wiki/deoplete
---call deoplete#custom#source('LanguageClient', 'min_pattern_length', 2)
