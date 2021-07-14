@@ -6,6 +6,19 @@ vim.cmd [[
   augroup END
 ]]
 
+-- Take a list of plugin specifications and make them lazy loading and lock
+-- them for updates.
+local function opt(specs)
+  return vim.tbl_map(function(spec)
+    if type(spec) == "string" then
+      spec = {spec}
+    end
+    spec.opt = true
+    spec.lock = true
+    return spec
+  end, specs)
+end
+
 local language_client = {
   'autozimu/LanguageClient-neovim',
   branch = 'next',
@@ -364,7 +377,7 @@ require('packer').startup{
     opt = true,
     lock = true,
     branch = 'release',
-    requires = { 'neoclide/coc-sources', 'Shougo/neco-vim', 'neoclide/coc-neco' },
+    requires = opt{ 'neoclide/coc-sources', 'Shougo/neco-vim', 'neoclide/coc-neco' },
     config = function()
       vim.g.coc_global_extensions = {
 	'coc-git',
@@ -396,7 +409,7 @@ require('packer').startup{
     run = ':UpdateRemotePlugins',
     -- A list of possible source for completion is at
     -- https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
-    requires = {
+    requires = opt{
       language_client,
       'Shougo/neco-syntax',
       'Shougo/neco-vim',
