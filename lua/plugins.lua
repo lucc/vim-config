@@ -241,31 +241,32 @@ require('packer').startup{
     end,
   }
 
-  --use { 'liuchengxu/vim-clap',
-  --  opt = true,
-  --  run = 'nix-shell --run make -p cargo',
-  --  config = function()
-  --    vim.g.clap_layout = { relative = 'editor' }
-  --    vim.g.clap_enable_background_shadow = false
-  --    vim.g.clap_insert_mode_only = true
-  --    vim.g.clap_open_preview = "never"
-  --    vim.cmd "nnoremap <silent> <C-Space> <CMD>Clap history<CR>"
-  --    vim.vmd "autocmd FileType clap_input inoremap <silent> <buffer> <C-F> <CMD>call <SID>switch(1)<CR>"
-  --    vim.cmd "autocmd FileType clap_input inoremap <silent> <buffer> <C-B> <CMD>call <SID>switch(-1)<CR>"
-  --    local function switch(index)
-  --      local providers = {"history", "files", "buffers"}
-  --      local text = vim.api.nvim_buf_get_lines(0, 0, -1, true)
-  --      vim.fn["clap#exit"]()
-  --      local cur = vim.fn.index(providers, vim.g.clap.provider.id)
-  --      if cur == -1 then
-  --        vim.cmd("Clap " .. providers[0])
-  --      else
-  --        vim.cmd("Clap " .. providers[(cur + index) % vim.fn.len(providers)])
-  --      end
-  --      vim.fn.feedkeys(vim.fn.join(text, "\n"))
-  --    end
-  --  end,
-  --}
+  use { 'liuchengxu/vim-clap',
+    cmd = "Clap",
+    lock = true,
+    run = 'nix-shell --run make -p cargo',
+    config = function()
+      vim.g.clap_layout = { relative = 'editor' }
+      vim.g.clap_enable_background_shadow = false
+      vim.g.clap_insert_mode_only = true
+      vim.g.clap_open_preview = "never"
+      vim.cmd "nnoremap <silent> <C-Space> <CMD>Clap history<CR>"
+      vim.vmd "autocmd FileType clap_input inoremap <silent> <buffer> <C-F> <CMD>call <SID>switch(1)<CR>"
+      vim.cmd "autocmd FileType clap_input inoremap <silent> <buffer> <C-B> <CMD>call <SID>switch(-1)<CR>"
+      local function switch(index)
+        local providers = {"history", "files", "buffers"}
+        local text = vim.api.nvim_buf_get_lines(0, 0, -1, true)
+        vim.fn["clap#exit"]()
+        local cur = vim.fn.index(providers, vim.g.clap.provider.id)
+        if cur == -1 then
+          vim.cmd("Clap " .. providers[0])
+        else
+          vim.cmd("Clap " .. providers[(cur + index) % vim.fn.len(providers)])
+        end
+        vim.fn.feedkeys(vim.fn.join(text, "\n"))
+      end
+    end,
+  }
 
   -- plugins: vcs stuff
   use 'tpope/vim-fugitive'            -- git integration
