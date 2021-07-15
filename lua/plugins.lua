@@ -29,10 +29,13 @@ local language_client = {
   'autozimu/LanguageClient-neovim',
   branch = 'next',
   run = 'bash install.sh',
-  requires = {
+  requires = {{
     'roxma/LanguageServer-php-neovim',
-    run = 'composer install && composer run-script parse-stubs',
-  },
+    run = [[
+      nix-shell --run 'composer install && composer run-script parse-stubs' \
+		-p php80Packages.composer php80
+    ]],
+  }},
   config = function()
     vim.g.LanguageClient_serverCommands = {
       c = {'cquery'} ,
@@ -96,7 +99,7 @@ require('packer').startup{
     end,
   }
   use { 'nvim-telescope/telescope.nvim',
-    requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
+    requires = {'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim'}
   }
   use { 'romgrk/nvim-treesitter-context', -- not very stable yet
     config = "vim.cmd[[highlight link TreesitterContext CursorLine]]",
