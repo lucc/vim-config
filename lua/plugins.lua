@@ -85,14 +85,19 @@ require('packer').startup{
     run = ':TSUpdate',
     config = function()
       require'nvim-treesitter.configs'.setup {
-	ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-	--ignore_install = { "javascript" }, -- List of parsers to ignore installing
-	highlight = {
-	  enable = true,              -- false will disable the whole extension
-	  disable = { "latex" },  -- list of language that will be disabled (ts language not &ft!)
+	-- one of "all", "maintained" (parsers with maintainers), or a list of
+	-- languages
+	ensure_installed = {
+	  "lua",
+	  "python",
+	  "scala",
 	},
+	--ignore_install = { "javascript" }, -- List of parsers to ignore installing
+	highlight = { enable = true, disable = { "latex" } },
 	indent = { enable = true },
 	matchup = { enable = true },
+	incremental_selection = { enable = true },
+	textobjects = { enable = true },
       }
       vim.opt.foldmethod = "expr"
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
