@@ -636,6 +636,15 @@ require('packer').startup{
     end,
   }
 
+  -- commenting
+  use { 'b3nj5m1n/kommentary',
+    config = function()
+      require('kommentary.config').configure_language("default", {
+          prefer_single_line_comments = true,
+	})
+    end,
+  }
+
   -- unsorted plugins
   use 'eugen0329/vim-esearch'
   use 'AndrewRadev/linediff.vim'
