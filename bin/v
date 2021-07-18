@@ -69,6 +69,6 @@ elseif s:all_readable(argv()) " includes argc == 0
 else
   let s:args = join(argv(), '')
   %argdelete
-  %bwipeout
+  "%bwipeout
   call s:run(s:args)
 endif
