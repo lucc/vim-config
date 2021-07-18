@@ -25,7 +25,7 @@ local function opt(spec)
   end
 end
 
-local language_client = {
+local language_client_old = {
   'autozimu/LanguageClient-neovim',
   branch = 'next',
   run = 'bash install.sh',
@@ -73,9 +73,64 @@ local language_client = {
     vim.cmd[[inoremap <expr> <CR>    pumvisible() ? {_, x -> x}(LanguageClient#textDocument_hover(), "\<C-Y>\<CR>") : "\<CR>"]]
   end,
 }
+local language_client_new = {
+  'neovim/nvim-lspconfig',
+  requires = { 'scalameta/nvim-metals' },
+  config = function()
+    local l = require'lspconfig'
+    local servers = {
+      "bashls",
+      "hls",
+      "html",
+      "intelephense", "phpactor",
+      "java_language_server",
+      "jedi_language_server",
+      "jsonls",
+      "lua-lsp", "sumneko_lua",
+      "pylsp", "pyright",
+      "rls",
+      "rnix",
+      "sqlls",
+      "sqls",
+      "texlab",
+      "vimls",
+      "yamlls",
+    }
+    for _, server in ipairs(servers) do
+      l[server].setup {
+	on_attach = function(client, bufnr)
+	  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+	  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+	  --Enable completion triggered by <c-x><c-o>
+	  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+	  -- Mappings.
+	  local opts = { noremap=true, silent=true }
+
+	  -- See `:help vim.lsp.*` for documentation on any of the below functions
+	  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+	  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+	  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+	  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+	  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+	  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+	  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+	  buf_set_keymap('n', '<F5>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+	end
+      }
+    end
+    local opts = { noremap=true, expr=true }
+    vim.api.nvim_set_keymap('i', '<Tab>', [[pumvisible() ? {_, x -> x}(v:lua.vim.lsp.buf.hover(), "\<C-N>") : "\<Tab>"]], opts)
+    vim.api.nvim_set_keymap('i', '<S-Tab>', [[pumvisible() ? {_, x -> x}(v:lua.vim.lsp.buf.hover(), "\<C-P>") : "\<Tab>"]], opts)
+    vim.api.nvim_set_keymap('i', '<CR>', [[pumvisible() ? {_, x -> x}(v:lua.vim.lsp.buf.hover(), "\<C-Y><CR>") : "\<CR>"]], opts)
+  end,
+}
+local language_client = language_client_new
 
 require('packer').startup{
   function()
+  use(opt(language_client_old))
 
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
@@ -417,40 +472,40 @@ require('packer').startup{
       ]]
     end,
   }
-  use { 'Shougo/deoplete.nvim',
-    opt = true,
-    lock = true,
-    run = ':UpdateRemotePlugins',
-    -- A list of possible source for completion is at
-    -- https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
-    requires = opt{
-      language_client,
-      'Shougo/neco-syntax',
-      'Shougo/neco-vim',
-      'fszymanski/deoplete-emoji',
-      'nicoe/deoplete-khard',
-      'padawan-php/deoplete-padawan',
-      'poppyschmo/deoplete-latex',
-      'zchee/deoplete-zsh',
-      'lionawurscht/deoplete-biblatex',
-      {'paretje/deoplete-notmuch', ft = 'mail'}
-      -- 'zchee/deoplete-jedi',
-      -- https://github.com/SevereOverfl0w/deoplete-github
-      -- https://github.com/lvht/phpcd.vim
-      -- https://github.com/tpope/vim-rhubarb
-      },
-    config = function()
-      vim.g['deoplete#enable_at_startup'] = 1
-      vim.g['deoplete#sources#notmuch#command'] = {
-	'notmuch', 'address', '--format=json', '--deduplicate=address', '*'
-      }
-      -- For very short ultisnips triggers to be usable with deoplete:
-      -- https://github.com/SirVer/ultisnips/issues/517#issuecomment-268518251
-      vim.fn['deoplete#custom#source']('ultisnips', 'matchers', {'matcher_fuzzy'})
-      -- https://github.com/autozimu/LanguageClient-neovim/wiki/deoplete
-      vim.fn['deoplete#custom#source']('LanguageClient', 'min_pattern_length', 2)
-    end,
-  }
+  ---use { 'Shougo/deoplete.nvim',
+  ---  opt = true,
+  ---  lock = true,
+  ---  run = ':UpdateRemotePlugins',
+  ---  -- A list of possible source for completion is at
+  ---  -- https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
+  ---  requires = opt{
+  ---    language_client,
+  ---    'Shougo/neco-syntax',
+  ---    'Shougo/neco-vim',
+  ---    'fszymanski/deoplete-emoji',
+  ---    'nicoe/deoplete-khard',
+  ---    'padawan-php/deoplete-padawan',
+  ---    'poppyschmo/deoplete-latex',
+  ---    'zchee/deoplete-zsh',
+  ---    'lionawurscht/deoplete-biblatex',
+  ---    {'paretje/deoplete-notmuch', ft = 'mail'}
+  ---    -- 'zchee/deoplete-jedi',
+  ---    -- https://github.com/SevereOverfl0w/deoplete-github
+  ---    -- https://github.com/lvht/phpcd.vim
+  ---    -- https://github.com/tpope/vim-rhubarb
+  ---    },
+  ---  config = function()
+  ---    vim.g['deoplete#enable_at_startup'] = 1
+  ---    vim.g['deoplete#sources#notmuch#command'] = {
+  ---      'notmuch', 'address', '--format=json', '--deduplicate=address', '*'
+  ---    }
+  ---    -- For very short ultisnips triggers to be usable with deoplete:
+  ---    -- https://github.com/SirVer/ultisnips/issues/517#issuecomment-268518251
+  ---    vim.fn['deoplete#custom#source']('ultisnips', 'matchers', {'matcher_fuzzy'})
+  ---    -- https://github.com/autozimu/LanguageClient-neovim/wiki/deoplete
+  ---    vim.fn['deoplete#custom#source']('LanguageClient', 'min_pattern_length', 2)
+  ---  end,
+  ---}
 
   -- plugins: vcs stuff
   use 'tpope/vim-fugitive'            -- git integration

@@ -14,7 +14,7 @@ augroup END
 augroup LucNeoMake
   autocmd!
   autocmd BufWritePost *
-	\ if ! LanguageClient#isServerRunning() |
+	\ if ! v:lua.vim.lsp.buf.server_ready() |
 	\   Neomake |
 	\ endif
 augroup END
