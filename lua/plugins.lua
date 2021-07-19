@@ -77,49 +77,71 @@ local language_client_new = {
   'neovim/nvim-lspconfig',
   requires = { 'scalameta/nvim-metals' },
   config = function()
-    local l = require'lspconfig'
+    local lspconfig = require'lspconfig'
+    local function on_attach(client, bufnr)
+      local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+      local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+      --Enable completion triggered by <c-x><c-o>
+      buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+      -- Mappings.
+      local opts = { noremap=true, silent=true }
+
+      -- See `:help vim.lsp.*` for documentation on any of the below functions
+      buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+      buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+      buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+      buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+      buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+      buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+      buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+      buf_set_keymap('n', '<F5>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+    end
     local servers = {
-      "bashls",
+      --"bashls",
       "hls",
-      "html",
-      "intelephense", "phpactor",
-      "java_language_server",
+      --"html",
+      --"intelephense", "phpactor",
+      --"java_language_server",
       "jedi_language_server",
       "jsonls",
-      "lua-lsp", "sumneko_lua",
+      --"lua-lsp",
       "pylsp", "pyright",
       "rls",
       "rnix",
-      "sqlls",
-      "sqls",
+      --"sqlls", "sqls",
       "texlab",
-      "vimls",
+      --"vimls",
       "yamlls",
     }
     for _, server in ipairs(servers) do
-      l[server].setup {
-	on_attach = function(client, bufnr)
-	  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-	  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-	  --Enable completion triggered by <c-x><c-o>
-	  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-	  -- Mappings.
-	  local opts = { noremap=true, silent=true }
-
-	  -- See `:help vim.lsp.*` for documentation on any of the below functions
-	  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-	  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-	  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-	  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-	  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-	  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-	  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-	  buf_set_keymap('n', '<F5>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-	end
-      }
+      lspconfig[server].setup { on_attach = on_attach }
     end
+    local sumneko_root_path = vim.fn.stdpath('cache')..'/lspconfig/sumneko_lua/lua-language-server'
+    local runtime_path = vim.split(package.path, ';')
+    table.insert(runtime_path, "lua/?.lua")
+    table.insert(runtime_path, "lua/?/init.lua")
+    lspconfig.sumneko_lua.setup {
+      on_attach = on_attach,
+      cmd = { "/etc/profiles/per-user/luc/bin/lua-language-server", "-E", sumneko_root_path },
+      settings = {
+	Lua = {
+	  runtime = {
+	    -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+	    version = 'LuaJIT',
+	    -- Setup your lua path
+	    path = runtime_path,
+	  },
+	  -- Get the language server to recognize the `vim` global
+	  diagnostics = { globals = {'vim'} },
+	  -- Make the server aware of Neovim runtime files
+	  workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+	  -- Do not send telemetry data containing a randomized but unique identifier
+	  telemetry = { enable = false },
+	},
+      },
+    }
     local opts = { noremap=true, expr=true }
     vim.api.nvim_set_keymap('i', '<Tab>', [[pumvisible() ? {_, x -> x}(v:lua.vim.lsp.buf.hover(), "\<C-N>") : "\<Tab>"]], opts)
     vim.api.nvim_set_keymap('i', '<S-Tab>', [[pumvisible() ? {_, x -> x}(v:lua.vim.lsp.buf.hover(), "\<C-P>") : "\<Tab>"]], opts)
