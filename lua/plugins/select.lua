@@ -58,10 +58,11 @@ local clap = { 'liuchengxu/vim-clap',
     vim.g.clap_open_preview = "never"
     vim.cmd[[
     nnoremap <silent> <C-Space> <CMD>Clap history<CR>
-    autocmd FileType clap_input inoremap <silent> <buffer> <C-F> <CMD>call <SID>switch(1)<CR>
-    autocmd FileType clap_input inoremap <silent> <buffer> <C-B> <CMD>call <SID>switch(-1)<CR>
+    autocmd FileType clap_input inoremap <silent> <buffer> <C-F> <CMD>lua Clap_switch_helper(1)<CR>
+    autocmd FileType clap_input inoremap <silent> <buffer> <C-B> <CMD>lua Clap_switch_helper(-1)<CR>
     ]]
-    local function switch(index)
+    -- Global function!
+    function Clap_switch_helper(index)
       local providers = {"history", "files", "buffers"}
       local text = vim.api.nvim_buf_get_lines(0, 0, -1, true)
       vim.fn["clap#exit"]()

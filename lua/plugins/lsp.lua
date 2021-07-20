@@ -6,24 +6,23 @@ local builtin_lsp = {
   config = function()
     local lspconfig = require'lspconfig'
     local function on_attach(client, bufnr)
-      local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-      local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+      local function map(...)
+	vim.api.nvim_buf_set_keymap(bufnr, "n", ..., { noremap=true,
+						       silent=true })
+      end
 
       --Enable completion triggered by <c-x><c-o>
-      buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-      -- Mappings.
-      local opts = { noremap=true, silent=true }
+      vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
       -- See `:help vim.lsp.*` for documentation on any of the below functions
-      buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-      buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-      buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-      buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-      buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-      buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-      buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-      buf_set_keymap('n', '<F5>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+      map('gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>')
+      map('gd', '<Cmd>lua vim.lsp.buf.definition()<CR>')
+      map('K', '<Cmd>lua vim.lsp.buf.hover()<CR>')
+      map('gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
+      map('<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
+      map('[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>')
+      map(']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>')
+      map('<F5>', '<cmd>lua vim.lsp.buf.code_action()<CR>')
     end
     local servers = {
       --"bashls",
@@ -44,17 +43,22 @@ local builtin_lsp = {
     for _, server in ipairs(servers) do
       lspconfig[server].setup { on_attach = on_attach }
     end
-    local sumneko_root_path = vim.fn.stdpath('cache')..'/lspconfig/sumneko_lua/lua-language-server'
+    local sumneko_root_path = vim.fn.stdpath('cache') ..
+      '/lspconfig/sumneko_lua/lua-language-server'
     local runtime_path = vim.split(package.path, ';')
     table.insert(runtime_path, "lua/?.lua")
     table.insert(runtime_path, "lua/?/init.lua")
     lspconfig.sumneko_lua.setup {
       on_attach = on_attach,
-      cmd = { "/etc/profiles/per-user/luc/bin/lua-language-server", "-E", sumneko_root_path },
+      cmd = {
+	"/etc/profiles/per-user/luc/bin/lua-language-server", "-E",
+	sumneko_root_path
+      },
       settings = {
 	Lua = {
 	  runtime = {
-	    -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+	    -- Tell the language server which version of Lua you're using
+	    -- (most likely LuaJIT in the case of Neovim)
 	    version = 'LuaJIT',
 	    -- Setup your lua path
 	    path = runtime_path,
@@ -63,7 +67,8 @@ local builtin_lsp = {
 	  diagnostics = { globals = {'vim'} },
 	  -- Make the server aware of Neovim runtime files
 	  workspace = { library = vim.api.nvim_get_runtime_file("", true) },
-	  -- Do not send telemetry data containing a randomized but unique identifier
+	  -- Do not send telemetry data containing a randomized but unique
+	  -- identifier
 	  telemetry = { enable = false },
 	},
       },
