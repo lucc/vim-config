@@ -3,7 +3,6 @@
 require "options"
 require "plugins"
 require "maps"
-require "commands"
 require "colors"
 
 -- Arch linux compatibility: makes it possible to load plugins installed via
