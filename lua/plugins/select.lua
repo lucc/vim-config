@@ -41,7 +41,7 @@ local ctrlp = { 'ctrlpvim/ctrlp.vim',
     -- MRU mode (it does some "intelligent" matching on the empty query)
     -- or it doesn't remove the current file from the results (with
     -- cpsm_match_empty_query=0).
-    vim.g.ctrlp_match_func = { match = 'cpsm#CtrlPMatch' }
+    --vim.g.ctrlp_match_func = { match = 'cpsm#CtrlPMatch' }
     vim.g.cpsm_match_empty_query = 0
     -- cpsm doesn't use 1 as a default if the variable doesn't exist.
     vim.g.ctrlp_match_current_file = 0
