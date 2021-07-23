@@ -311,21 +311,21 @@ require('packer').startup{
     }
 
     -- python
-    use { 'python-mode/python-mode',
-      ft = 'python',
-      config = function()
-	vim.g.pymode_python = 'python3'
-	vim.g.pymode_rope = 0
-	vim.g.pymode_rope_completion = 0
-	vim.g.pymode_lint = 0
-	vim.g.pymode_doc = 0
-	--vim.g.pymode_folding = 0
-	--vim.g.pymode_virtualenv = 0
-	--vim.g.pymode_syntax = 0
-	vim.g.pymode_indent = 1
-	vim.g.pymode_options_max_line_length = 79
-      end,
-    }
+    --use { 'python-mode/python-mode',
+    --  ft = 'python',
+    --  config = function()
+    --    vim.g.pymode_python = 'python3'
+    --    vim.g.pymode_rope = 0
+    --    vim.g.pymode_rope_completion = 0
+    --    vim.g.pymode_lint = 0
+    --    vim.g.pymode_doc = 0
+    --    --vim.g.pymode_folding = 0
+    --    --vim.g.pymode_virtualenv = 0
+    --    --vim.g.pymode_syntax = 0
+    --    vim.g.pymode_indent = 1
+    --    vim.g.pymode_options_max_line_length = 79
+    --  end,
+    --}
 
     -- PHP
     use { 'swekaj/php-foldexpr.vim',
@@ -344,6 +344,7 @@ require('packer').startup{
       config = function()
 	require('kommentary.config').configure_language("default", {
 	  prefer_single_line_comments = true,
+	  use_consistent_indentation = true,
 	})
       end,
     }
@@ -372,6 +373,7 @@ require('packer').startup{
 
   end,
   config = {
+    log = { level = "debug" },
     profile = {
       enable = true,
       --threshold = 1,
