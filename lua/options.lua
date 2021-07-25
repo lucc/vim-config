@@ -76,9 +76,9 @@ vim.opt.smartcase = true
 vim.opt.spelllang = { "de", "en" }
 if #vim.opt.spellfile == 0 then
   vim.opt.spellfile = {
-    "~/.config/nvim/spell/de.utf-8.add",
-    "~/.config/nvim/spell/en.utf-8.add",
-    "~/.config/nvim/spell/names.utf-8.add",
+    vim.fn.stdpath("config").."/spell/de.utf-8.add",
+    vim.fn.stdpath("config").."/spell/en.utf-8.add",
+    vim.fn.stdpath("config").."/spell/names.utf-8.add",
   }
 end
 vim.opt.spell = false
