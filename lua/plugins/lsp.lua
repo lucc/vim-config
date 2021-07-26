@@ -2,7 +2,10 @@
 
 local builtin_lsp = {
   'neovim/nvim-lspconfig',
-  requires = { 'scalameta/nvim-metals' },
+  requires = {
+    'scalameta/nvim-metals',
+    'simrat39/symbols-outline.nvim',
+  },
   config = function()
     local lspconfig = require'lspconfig'
     local function on_attach(client, bufnr)
@@ -23,6 +26,10 @@ local builtin_lsp = {
       map('[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>')
       map(']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>')
       map('<F5>', '<cmd>lua vim.lsp.buf.code_action()<CR>')
+      -- mapping for the symbols-outline plugin
+      if vim.fn.maparg('gO') == "" then
+        map('gO', '<CMD>SymbolsOutline<CR>')
+      end
     end
     local servers = {
       --"bashls",
