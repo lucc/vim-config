@@ -54,9 +54,9 @@ require('packer').startup{
 	vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
       end,
     }
-    use { 'romgrk/nvim-treesitter-context', -- not very stable yet
-      config = "vim.cmd[[highlight link TreesitterContext CursorLine]]",
-    }
+    --use { 'romgrk/nvim-treesitter-context', -- not very stable yet
+    --  config = "vim.cmd[[highlight link TreesitterContext CursorLine]]",
+    --}
 
     use { 'mhinz/vim-grepper',
       config = function()
