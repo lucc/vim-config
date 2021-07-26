@@ -9,9 +9,9 @@ local builtin_lsp = {
   config = function()
     local lspconfig = require'lspconfig'
     local function on_attach(client, bufnr)
-      local function map(...)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", ..., { noremap=true,
-						       silent=true })
+      local function map(left, right)
+	vim.api.nvim_buf_set_keymap(bufnr, "n", left, right, { noremap=true,
+							       silent=true })
       end
 
       --Enable completion triggered by <c-x><c-o>
