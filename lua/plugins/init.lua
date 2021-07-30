@@ -25,7 +25,11 @@ require('packer').startup{
 	    "scala",
 	  },
 	  --ignore_install = { "javascript" },
-	  highlight = { enable = true, disable = { "latex" } },
+	  highlight = {
+	    enable = true,
+	    disable = { "latex" },
+	    additional_vim_regex_highlighting = { "lua" },
+	  },
 	  indent = { enable = true },
 	  matchup = { enable = true },
 	  incremental_selection = { enable = true },
