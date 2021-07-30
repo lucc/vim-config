@@ -6,25 +6,6 @@ vim.cmd [[
   augroup END
 ]]
 
--- Take a requires specification (string, table with one plugin or list of
--- plugins) and make them lazy loading and lock them for updates (including
--- recursively all requires).
-local function opt(spec)
-  if type(spec) == "string" then
-      return { spec, opt = true, lock = true }
-  elseif type(spec) == "table" then
-    if #spec == 1 then
-      local new_spec = { opt = true, lock = true }
-      if spec.requires ~= nil then
-        new_spec.requires = opt(spec.requires)
-      end
-      return vim.tbl_extend("keep", new_spec, spec)
-    else
-      return vim.tbl_map(opt, spec)
-    end
-  end
-end
-
 require('packer').startup{
   function(use)
 
@@ -119,12 +100,14 @@ require('packer').startup{
 
     -- async make
     use { 'tpope/vim-dispatch',
+      cmd = { "Make" },
       config = function()
 	vim.g.dispatch_no_maps = 1
 	vim.g.dispatch_no_tmux_make = 1
       end,
     }
     use { 'janko/vim-test',
+      cmd = { "TestFile", "TestSuite" },
       config = function()
 	vim.g["test#strategy"] = 'dispatch_background'
       end,
@@ -236,8 +219,12 @@ require('packer').startup{
     use 'tpope/vim-fugitive'            -- git integration
     --use 'ludovicchabant/vim-lawrencium' -- mercurial integration
     use 'airblade/vim-gitgutter'        -- change indicator in sign column
-    use 'rbong/vim-flog'                -- git history browser
-    use 'rhysd/git-messenger.vim'       -- float win with last commit
+    use { 'rbong/vim-flog',             -- git history browser
+      cmd = { "Flog", "Flogsplit" },
+    }
+    use { 'rhysd/git-messenger.vim',    -- float win with last commit
+      cmd = { "GitMessanger" },
+    }
 
     -- language support
     use 'Shougo/context_filetype.vim'
@@ -251,8 +238,8 @@ require('packer').startup{
     use 'tkztmk/vim-vala'
     use 'rosstimson/bats.vim'
     use 'chikamichi/mediawiki.vim'
-    use 'tbastos/vim-lua'
-    use 'vim-scripts/luarefvim'
+    --use 'tbastos/vim-lua'
+    --use 'vim-scripts/luarefvim'
     use 'cespare/vim-toml'
     use 'LnL7/vim-nix'
     use 'derekelkins/agda-vim'
@@ -261,15 +248,12 @@ require('packer').startup{
 
     -- rust
     use 'rust-lang/rust.vim'
-    use { 'rhysd/rust-doc.vim',
-      config = function()
-	vim.g['rust_doc#downloaded_rust_doc_dir'] = '/usr/share/doc/rust'
-      end,
-    }
 
     -- Haskell
     use 'neovimhaskell/haskell-vim'
-    use 'Twinside/vim-hoogle'
+    use { 'Twinside/vim-hoogle',
+      cmd = { "Hoogle" },
+    }
     --use 'itchyny/vim-haskell-indent' -- to be tested
 
     -- LaTeX
@@ -278,6 +262,7 @@ require('packer').startup{
     vim.g.tex_flavor = 'latex'
 
     use { 'lervag/vimtex',
+      ft = "tex",
       config = function()
 	vim.g.vimtex_fold_enabled = 1
 	vim.g.vimtex_fold_types = {
@@ -380,7 +365,6 @@ require('packer').startup{
     use 'pix/vim-known_hosts'
     use 'simnalamburt/vim-mundo'
     use 'ZeroKnight/vim-signjump'
-    use '~/src/vim-tip'
     use 'alvan/vim-php-manual'
     use 'ron89/thesaurus_query.vim'
     use 'RRethy/vim-illuminate'
