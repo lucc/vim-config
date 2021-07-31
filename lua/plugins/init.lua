@@ -12,3 +12,9 @@ vim.cmd [[
   command! PackerCompile packadd packer.nvim | lua require('plugins.all').compile('~/.config/nvim/plugin/packer_load.vim')
   command! -nargs=+ -complete=customlist,v:lua.require'packer'.loader_complete PackerLoad | lua require('packer').loader(<q-args>)
 ]]
+
+-- Disable some buildin plugins
+vim.g.loaded_matchit = 1
+vim.g.loaded_matchparen = 1
+vim.g.loaded_2html_plugin = 1
+vim.g.loaded_tutor_mode_plugin = 1
