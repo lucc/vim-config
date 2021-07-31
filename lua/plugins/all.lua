@@ -158,29 +158,22 @@ return require('packer').startup{
 
     -- colors
     use { 'iCyMind/NeoSolarized',
-      cond = function() return vim.opt.termguicolors:get() end,
       config = function()
-	-- FIXME it is currently very slow to do this is lua directly and it yields
-	-- false results for me
-	vim.opt.background = "dark"
-	vim.cmd[[
-	colorscheme NeoSolarized
-	highlight! VertSplit guifg=#657b83 guibg=#657b83
-	highlight! MatchParen gui=italic,bold guibg=none
-	]]
+        vim.opt.background = "dark"
+	-- FIXME it is currently very slow to do this is lua directly and it
+	-- yields false results for me, see known bug at :h nvim_set_hl
+	--vim.api.nvim_set_hl(0, "VertSplit",
+	--  {guifg=0x657b83, guibg=0x657b83})
+        --vim.api.nvim_set_hl(0, "MatchParen",
+	--  {italic=true, bold=true, guibg="none"})
+        vim.cmd[[
+        colorscheme NeoSolarized
+        highlight! VertSplit  guifg=#657b83 guibg=#657b83
+        highlight! MatchParen gui=italic,bold guibg=none
+        ]]
       end,
     }
-    use { 'altercation/vim-colors-solarized',
-      cond = function() return not vim.opt.termguicolors:get() end,
-      config = function()
-	vim.g.solarized_menu = 0
-	vim.opt.background = "dark"
-	vim.cmd[[
-	colorscheme solarized
-	highlight! SignColumn ctermfg=10 ctermbg=0
-	]]
-      end,
-    }
+
     -- statusline
     use { 'bling/vim-airline',
       requires = {
