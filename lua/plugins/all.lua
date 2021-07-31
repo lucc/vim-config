@@ -12,9 +12,14 @@ return require('packer').startup{
 	  -- one of "all", "maintained" (parsers with maintainers), or a list
 	  -- of languages
 	  ensure_installed = {
+	    "bash",
+	    "bibtex",
+	    "latex",
 	    "lua",
+	    "nix",
 	    "python",
 	    "scala",
+	    "yaml",
 	  },
 	  --ignore_install = { "javascript" },
 	  highlight = {
@@ -380,4 +385,3 @@ return require('packer').startup{
     },
   },
 }
-
