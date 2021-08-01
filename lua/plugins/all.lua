@@ -158,8 +158,12 @@ return require('packer').startup{
 
     -- colors
     use { 'iCyMind/NeoSolarized',
-      config = function()
+      setup = function()
         vim.opt.background = "dark"
+	vim.g.neosolarized_italic = 1
+	vim.g.neosolarized_termBoldAsBright = 0
+      end,
+      config = function()
 	-- FIXME it is currently very slow to do this is lua directly and it
 	-- yields false results for me, see known bug at :h nvim_set_hl
 	--vim.api.nvim_set_hl(0, "VertSplit",
