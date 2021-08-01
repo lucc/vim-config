@@ -25,7 +25,7 @@ return require('packer').startup{
 	  highlight = {
 	    enable = true,
 	    disable = { "latex" },
-	    additional_vim_regex_highlighting = { "lua" },
+	    additional_vim_regex_highlighting = { "lua", "latex" },
 	  },
 	  indent = { enable = true },
 	  matchup = { enable = true },
