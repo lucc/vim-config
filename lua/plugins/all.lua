@@ -41,11 +41,7 @@ return require('packer').startup{
     --}
 
     use { 'mhinz/vim-grepper',
-      config = function()
-	vim.cmd [[
-	command! -nargs=* -complete=file S Grepper -jump -query <q-args>
-	command! -nargs=* -complete=file SS Grepper -jump -query <args>
-	]]
+      setup = function()
 	vim.g.grepper = {
 	  dir = 'filecwd',
 	  jump = 1,
@@ -55,31 +51,39 @@ return require('packer').startup{
 	  tools = {'git', 'rg', 'ag', 'grep'},
 	}
       end,
+      config = function()
+	vim.cmd [[
+	command! -nargs=* -complete=file S Grepper -jump -query <q-args>
+	command! -nargs=* -complete=file SS Grepper -jump -query <args>
+	]]
+      end,
     }
 
     use { 'hkupty/iron.nvim',
       cmd = {"IronRepl", "REPL", "RF"},
+      setup = function()
+	vim.g.iron_repl_open_cmd = 'vsplit'
+      end,
       config = [[
       -- helper function for iron repl stuff (global function)
       function load_current_file_in_repl()
-      local ft = vim.bo.filetype
-      local load
-      if ft == 'haskell' then
-      load = ':load ' .. vim.fn.bufname('%')
-      elseif ft == 'prolog' then
-      load = '["' .. vim.fn.bufname('%') .. '"].'
-      else
-      error("Don't know how to load files for " .. ft)
-      end
-      require("iron").core.send(ft, load)
+	local ft = vim.bo.filetype
+	local load
+	if ft == 'haskell' then
+	  load = ':load ' .. vim.fn.bufname('%')
+	elseif ft == 'prolog' then
+	  load = '["' .. vim.fn.bufname('%') .. '"].'
+	else
+	  error("Don't know how to load files for " .. ft)
+	end
+	require("iron").core.send(ft, load)
       end
       require("iron").core.set_config {
-      preferred = {
-      prolog = "swipl",
-      python = "ipython",
+	preferred = {
+	  prolog = "swipl",
+	  python = "ipython",
+	}
       }
-      }
-      vim.g.iron_repl_open_cmd = 'vsplit'
       vim.cmd "command! REPL IronRepl"
       -- load the current file in the REPL.
       vim.cmd "command! RF call v:lua.load_current_file_in_repl()"
@@ -90,7 +94,7 @@ return require('packer').startup{
     use { 'SirVer/ultisnips',
       -- Snippets are separated from the engine:
       requires = {'honza/vim-snippets', 'rbonvall/snipmate-snippets-bib'},
-      config = function()
+      setup = function()
 	vim.g.UltiSnipsExpandTrigger = '<C-F>'
 	vim.g.UltiSnipsJumpForwardTrigger = '<C-F>' -- <C-J>
 	vim.g.UltiSnipsJumpBackwardTrigger = '<C-G>' -- <C-K>
@@ -102,19 +106,19 @@ return require('packer').startup{
     -- async make
     use { 'tpope/vim-dispatch',
       cmd = { "Make" },
-      config = function()
+      setup = function()
 	vim.g.dispatch_no_maps = 1
 	vim.g.dispatch_no_tmux_make = 1
       end,
     }
     use { 'janko/vim-test',
       cmd = { "TestFile", "TestSuite" },
-      config = function()
+      setup = function()
 	vim.g["test#strategy"] = 'dispatch_background'
       end,
     }
     use { 'neomake/neomake',
-      config = function()
+      setup = function()
 	if vim.fn.exists('g:neomake') == 0 then
 	  vim.g.neomake = vim.empty_dict()
 	end
@@ -141,7 +145,7 @@ return require('packer').startup{
     -- debugging
     use { 'vim-vdebug/vdebug',
       cmd = {'VdebugStart'},
-      config = function()
+      setup = function()
 	vim.g.vdebug_options = {
 	  break_on_open = 0,
 	  continuous_mode = 1,
@@ -184,7 +188,7 @@ return require('packer').startup{
 	'vim-airline/vim-airline-themes', -- solarized theme
 	'ryanoasis/vim-devicons',         -- icons
       },
-      config = function()
+      setup = function()
 	vim.g.airline_theme = 'solarized'
 	vim.g.airline_powerline_fonts = 1
 	vim.g['airline#extensions#whitespace#mixed_indent_algo'] = 2
@@ -204,7 +208,7 @@ return require('packer').startup{
       end,
     }
     use { 'Shougo/echodoc.vim',
-      config = function()
+      setup = function()
 	vim.g['echodoc#enable_at_startup'] = 1
 	vim.g['echodoc#type'] = 'floating'
       end,
@@ -261,7 +265,7 @@ return require('packer').startup{
 
     use { 'lervag/vimtex',
       ft = "tex",
-      config = function()
+      setup = function()
 	vim.g.vimtex_fold_enabled = 1
 	vim.g.vimtex_fold_types = {
 	  sections = {
@@ -290,13 +294,13 @@ return require('packer').startup{
 
     -- markdown
     use { 'nelstrom/vim-markdown-folding', -- good folding uses expr
-      config = function()
+      setup = function()
 	vim.g.markdown_fold_style = 'nested'
       end,
     }
     use { 'vim-pandoc/vim-pandoc',
       requires = 'vim-pandoc/vim-pandoc-syntax',
-      config = function()
+      setup = function()
 	vim.g['pandoc#modules#disabled'] = {"menu"}
 	vim.g['pandoc#command#latex_engine'] = 'pdflatex'
 	vim.g['pandoc#folding#fold_yaml'] = 1
@@ -316,7 +320,7 @@ return require('packer').startup{
     -- python
     --use { 'python-mode/python-mode',
     --  ft = 'python',
-    --  config = function()
+    --  setup = function()
     --    vim.g.pymode_python = 'python3'
     --    vim.g.pymode_rope = 0
     --    vim.g.pymode_rope_completion = 0
@@ -333,7 +337,7 @@ return require('packer').startup{
     -- PHP
     use { 'swekaj/php-foldexpr.vim',
       ft = 'php',
-      config = function()
+      setup = function()
 	-- These are not actually settings for the plugin but get leazy
 	-- loading like this.
 	-- taken from http://stackoverflow.com/a/7490288
