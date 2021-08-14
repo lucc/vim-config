@@ -52,5 +52,5 @@ map("t", "<Esc>", "<C-\\><C-n>")
 -- open the file under the cursor with xdg-open
 map("n", "gF", "<CMD>O<CR>")
 
-map("n", "<silent>", "<C-Z> <CMD>call luc#terminal()<CR>")
-map("n", "<silent>", "<leader><C-Z> <CMD>suspend<CR>")
+map("n", "<C-Z>",         "<CMD>call luc#terminal()<CR>", { silent=true })
+map("n", "<leader><C-Z>", "<CMD>suspend<CR>",             { silent=true })
