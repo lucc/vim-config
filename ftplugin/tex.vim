@@ -27,11 +27,11 @@ let b:surround_99 = "\\\1command\1{\r}"
 let b:delimitMate_quotes = "' ` *"
 let b:neomake_echo_current_error = 0
 
-" TODO we could put this into the status line
-let s:timer = -1
 augroup LucFileTypeTex
   autocmd! * <buffer>
   autocmd BufWritePost <buffer> Make!
+  " TODO we could put this into the status line
+  "let s:timer = -1
   "autocmd BufWritePost <buffer>
   "      \ if timer_info(s:timer) == []
   "      \ | let s:timer = timer_start(3000, {->nvim_command("VimtexCountLetters")})
