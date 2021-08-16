@@ -163,7 +163,6 @@ return require('packer').startup{
     -- colors
     use { 'iCyMind/NeoSolarized',
       setup = function()
-        vim.opt.background = "dark"
 	vim.g.neosolarized_italic = 1
 	vim.g.neosolarized_termBoldAsBright = 0
       end,
