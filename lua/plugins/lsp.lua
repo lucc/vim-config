@@ -45,7 +45,6 @@ local builtin_lsp = {
       "rls",
       "rnix",
       --"sqlls", "sqls",
-      --"vimls",
       "yamlls",
     }
     for _, server in ipairs(servers) do
@@ -90,6 +89,13 @@ local builtin_lsp = {
 	},
       },
     }
+    lspconfig.vimls.setup {
+      cmd = {
+	vim.fn.stdpath("config").."/../yarn/global/node_modules/.bin/vim-language-server",
+	"--stdio"
+      }
+    }
+
     local opts = { noremap=true, expr=true }
     vim.api.nvim_set_keymap('i', '<Tab>', [[pumvisible() ? {_, x -> x}(v:lua.vim.lsp.buf.hover(), "\<C-N>") : "\<Tab>"]], opts)
     vim.api.nvim_set_keymap('i', '<S-Tab>', [[pumvisible() ? {_, x -> x}(v:lua.vim.lsp.buf.hover(), "\<C-P>") : "\<Tab>"]], opts)
