@@ -1,7 +1,5 @@
 " custom filetype settings by luc
 
-execute 'py3file ' . expand('<sfile>:h:h') . '/init.py'
-
 nmap <buffer> go <plug>(vimtex-toc-open)
 nmap <buffer> gO <plug>(vimtex-toc-toggle)
 " deactivate the default mapping
@@ -19,11 +17,6 @@ setlocal signcolumn=yes
 
 " inccmd is very slow in tex files for some reason
 setlocal inccommand=
-
-if py3eval('check_for_english_babel()')
-  let b:Tex_SmartQuoteOpen = '“'
-  let b:Tex_SmartQuoteClose = '”'
-endif
 
 let b:surround_99 = "\\\1command\1{\r}"
 
