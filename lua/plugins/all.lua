@@ -263,7 +263,6 @@ return require('packer').startup{
     vim.g.tex_flavor = 'latex'
 
     use { 'lervag/vimtex',
-      ft = "tex",
       setup = function()
 	vim.g.vimtex_fold_enabled = 1
 	vim.g.vimtex_fold_types = {
