@@ -77,7 +77,23 @@ local clap = { 'liuchengxu/vim-clap',
   end,
 }
 local telescope = { 'nvim-telescope/telescope.nvim',
-  requires = {'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim'}
+  requires = {
+    'nvim-lua/popup.nvim',
+    'nvim-lua/plenary.nvim',
+    { "nvim-telescope/telescope-frecency.nvim", requires = {"tami5/sql.nvim"} },
+  },
+  config = function()
+    require'telescope'.setup {
+      mappings = {
+	i = {
+	  ["<esc>"] = require('telescope.actions').close,
+	},
+      },
+    }
+    require"telescope".load_extension("frecency")
+    vim.api.nvim_set_keymap("n", "<C-Space>", "<CMD>Telescope oldfiles<CR>",
+      {silent = true})
+  end,
 }
 
 return ctrlp
