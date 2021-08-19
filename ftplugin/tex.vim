@@ -17,6 +17,9 @@ setlocal grepprg=grep\ -nH\ $*
 " otherwise I will go crazy with the flickering signcolumn from LC.
 setlocal signcolumn=yes
 
+" inccmd is very slow in tex files for some reason
+setlocal inccommand=
+
 if py3eval('check_for_english_babel()')
   let b:Tex_SmartQuoteOpen = '“'
   let b:Tex_SmartQuoteClose = '”'
