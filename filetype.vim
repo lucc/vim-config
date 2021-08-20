@@ -14,3 +14,7 @@ augroup LucFileType
   autocmd BufRead,BufNewFile *.u      setfiletype ulang | source ~/uni/master/ulang/misc/ulang.vim
   autocmd BufRead,BufNewFile *.blade.php setfiletype php.blade
 augroup END
+
+augroup AsamFileType
+  autocmd BufRead,BufNewFile *.inc,*.func setfiletype php
+augroup END

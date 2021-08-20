@@ -19,13 +19,6 @@ augroup LucNeoMake
 	\ endif
 augroup END
 
-augroup LucAsamSettings
-  autocmd!
-  autocmd BufReadPost *.php,*.inc,*.func setlocal tw=85 sw=4 ts=4 et
-  "autocmd BufWritePost    *.php,*.inc,*.func Neomake php
-  autocmd BufWritePre    *.php,*.inc,*.func set fileencoding=utf8
-augroup END
-
 augroup LucNewScripts
   autocmd!
   " from https://unix.stackexchange.com/a/39995/88313
