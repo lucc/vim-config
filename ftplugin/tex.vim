@@ -25,7 +25,8 @@ let b:neomake_echo_current_error = 0
 
 augroup LucFileTypeTex
   autocmd! * <buffer>
-  autocmd BufWritePost <buffer> Make!
+  "autocmd BufWritePost <buffer> silent VimtexCompile
+  autocmd BufWritePost <buffer> silent Make!
   " TODO we could put this into the status line
   "let s:timer = -1
   "autocmd BufWritePost <buffer>

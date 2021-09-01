@@ -33,14 +33,6 @@ augroup LucPrivateFiles
   autocmd BufWritePre /tmp/*,/dev/shm/* setlocal noundofile
 augroup END
 
-augroup LucApplications
-  autocmd!
-  autocmd BufWritePost ~/apply/current.tex NeomakeSh make
-  autocmd BufEnter ~/apply/*.tex
-	\ let b:neomake_tex_enabled_makers =
-	\   filter(neomake#makers#ft#tex#EnabledMakers() + ['make'],
-	\          'executable(v:val)')
-augroup END
 augroup LucNixOSConfig
   autocmd!
   autocmd BufEnter ~/src/nixos/*.nix compiler nixos
