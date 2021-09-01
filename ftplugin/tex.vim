@@ -18,6 +18,9 @@ setlocal signcolumn=yes
 " inccmd is very slow in tex files for some reason
 setlocal inccommand=
 
+" vimtex supports some conceals
+setlocal conceallevel=2
+
 let b:surround_99 = "\\\1command\1{\r}"
 
 let b:delimitMate_quotes = "' ` *"
@@ -35,3 +38,9 @@ augroup LucFileTypeTex
   "      \ | endif
   "CursorHold,CursorHoldI,FocusGained,FocusLost
 augroup END
+
+
+"let g:vimtex_compiler_latexrun  = {'options': ['--verbose-cmds', '--latex-args="-synctex=1 -shell-escape"', '--bibtex-cmd=biber'], 'build_dir': 'latex.out'}
+let g:vimtex_compiler_method = "generic"
+let g:vimtex_compiler_generic  = {"command":"make"}
+map <buffer> <leader>v <plug>(vimtex-view)

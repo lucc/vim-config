@@ -281,6 +281,7 @@ return require('packer').startup{
 	--vim.g.vimtex_fold_types.comments.enabled = 1
 	vim.g.vimtex_compiler_method = 'latexrun'
 	vim.g.vimtex_compiler_progname = 'nvr'
+	vim.g.vimtex_view_method = 'zathura'
 	vim.g.vimtex_toc_config = { split_pos = 'vertical' }
 	vim.g.vimtex_toc_todo_labels = {
 	  FIXME = 'FIXME: ',
