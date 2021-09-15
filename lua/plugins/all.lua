@@ -241,7 +241,7 @@ return require('packer').startup{
     use 'chikamichi/mediawiki.vim'
     --use 'tbastos/vim-lua'
     --use 'vim-scripts/luarefvim'
-    use 'cespare/vim-toml'
+    use { 'cespare/vim-toml', branch = "main" }
     use 'LnL7/vim-nix'
     use 'derekelkins/agda-vim'
     use 'nfnty/vim-nftables'
