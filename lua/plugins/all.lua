@@ -375,6 +375,7 @@ return require('packer').startup{
     use 'tpope/vim-surround'
     --use 'kana/vim-textobj-indent.git'
     use 'michaeljsmith/vim-indent-object'
+    use 'fourjay/vim-password-store'
 
   end,
   config = {
