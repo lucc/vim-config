@@ -13,6 +13,7 @@ return require('packer').startup{
 	  ensure_installed = {
 	    "bash",
 	    "bibtex",
+	    "comment",
 	    "latex",
 	    "lua",
 	    "nix",
