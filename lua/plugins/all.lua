@@ -376,6 +376,10 @@ return require('packer').startup{
     --use 'kana/vim-textobj-indent.git'
     use 'michaeljsmith/vim-indent-object'
     use 'fourjay/vim-password-store'
+    use { 'norcalli/nvim-colorizer.lua',
+      config = function() require'colorizer'.setup() end,
+    }
+
 
   end,
   config = {
