@@ -246,6 +246,9 @@ return require('packer').startup{
     use 'derekelkins/agda-vim'
     use 'nfnty/vim-nftables'
     use 'chrisbra/csv.vim'
+    use { 'https://gist.github.com/jettero/4a619004fb23ada1e5cf302211eee8ae',
+      as = "jettero-pycfg-gist/syntax",
+    }
 
     -- rust
     use 'rust-lang/rust.vim'
