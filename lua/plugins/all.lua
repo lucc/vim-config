@@ -382,6 +382,9 @@ return require('packer').startup{
     use { 'norcalli/nvim-colorizer.lua',
       config = function() require'colorizer'.setup() end,
     }
+    use { 'dstein64/vim-startuptime',
+      cmd = { "StartupTime" },
+    }
 
 
   end,
