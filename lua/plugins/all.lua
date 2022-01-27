@@ -385,8 +385,18 @@ return require('packer').startup{
     use { 'dstein64/vim-startuptime',
       cmd = { "StartupTime" },
     }
-
-
+    use { 'numToStr/FTerm.nvim',
+      config = function()
+	local toggle = "<CMD>lua require('FTerm').toggle()<CR>"
+	vim.api.nvim_set_keymap("n", "<C-Z>", toggle, { noremap=true, silent=true })
+	vim.api.nvim_set_keymap("n", "<leader><C-Z>", "<CMD>suspend<CR>", { noremap=true, silent=true })
+	vim.cmd 'augroup LucFtermConfig'
+	vim.cmd 'autocmd!'
+	vim.cmd('autocmd FileType FTerm tmap <silent> <nowait> <buffer> <C-space> '..toggle..'<C-space>')
+	vim.cmd('autocmd FileType FTerm tmap <silent> <nowait> <buffer> <C-z> '..toggle)
+	vim.cmd 'augroup END'
+      end,
+    }
   end,
   config = {
     log = { level = "debug" },
