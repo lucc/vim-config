@@ -1,6 +1,5 @@
 return require('packer').startup{
   function(use)
-
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
@@ -247,7 +246,8 @@ return require('packer').startup{
     use 'nfnty/vim-nftables'
     use 'chrisbra/csv.vim'
     use { 'https://gist.github.com/jettero/4a619004fb23ada1e5cf302211eee8ae',
-      as = "jettero-pycfg-gist/syntax",
+      as = "jettero-pycfg-gist",
+      run = "mkdir syntax && ln -s pycfg.vim syntax/"
     }
 
     -- rust
