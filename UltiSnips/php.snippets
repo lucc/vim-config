@@ -3,14 +3,23 @@ import json
 import pathlib
 def find_composer():
     root = pathlib.Path(path)
+    print(path)
     while root != pathlib.Path("/"):
         composer = root / 'composer.json'
         if composer.exists():
             return composer
-            #json.load(composer.open())['autoload']['psr-4']
         root = root.parent
 def find_namespace():
- pass
+    composer = find_composer()
+    cwd = pathlib.Path.cwd()
+    file = pathlib.Path(path).absolute()
+    if composer is None:
+        return ""
+    namespaces = json.load(composer.open())['autoload']['psr-4']
+    for n, p in namespaces.items():
+        if cwd / p in file.parents:
+            return n + '\\'.join(file.parent.relative_to(cwd/p).parts)
+    return path
 endglobal
 
 snippet fun "function with docblock" b
@@ -31,9 +40,10 @@ snippet php "A basic php class file" b
  */
 declare(strict_types=1);
 
-namespace $2;
+namespace `!p snip.rv = find_namespace()`;
 
-class `!v fnamemodify(bufname(), ':t:r')` {
+class `!v fnamemodify(bufname(), ':t:r')`
+{
 	$0
 }
 endsnippet
