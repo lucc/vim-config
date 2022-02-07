@@ -394,6 +394,7 @@ return require('packer').startup{
 	vim.cmd 'augroup LucFtermConfig'
 	vim.cmd 'autocmd!'
 	vim.cmd('autocmd FileType FTerm tmap <silent> <nowait> <buffer> <C-space> '..toggle..'<C-space>')
+	vim.cmd('autocmd FileType FTerm nmap <silent> <nowait> <buffer> <C-space> '..toggle..'<C-space>')
 	vim.cmd('autocmd FileType FTerm tmap <silent> <nowait> <buffer> <C-z> '..toggle)
 	vim.cmd 'augroup END'
       end,
