@@ -400,6 +400,7 @@ return require('packer').startup{
       end,
     }
     use 'rickhowe/diffchar.vim'
+    use 'editorconfig/editorconfig-vim'
   end,
   config = {
     log = { level = "debug" },
