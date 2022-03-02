@@ -409,6 +409,7 @@ return require('packer').startup{
     }
     use 'rickhowe/diffchar.vim'
     use 'editorconfig/editorconfig-vim'
+    use 'tpope/vim-dadbod'
     use 'jghauser/mkdir.nvim'
   end,
   config = {
