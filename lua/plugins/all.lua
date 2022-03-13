@@ -397,6 +397,7 @@ return require('packer').startup{
 	vim.cmd 'augroup END'
       end,
     }
+    use 'rickhowe/diffchar.vim'
   end,
   config = {
     log = { level = "debug" },
