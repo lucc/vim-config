@@ -5,8 +5,8 @@ local ctrlp = { 'ctrlpvim/ctrlp.vim',
     'ryanoasis/vim-devicons', -- icons
     { 'nixprime/cpsm',
       run = [[
-      nix-shell --run 'VIM=nvim bash ./install.sh' \
-      -p cmake boost.dev ncurses.dev
+      nix shell --command 'VIM=nvim bash ./install.sh' \
+      sys#cmake sys#boost.dev sys#ncurses.dev
       ]],
     },
   },
@@ -50,7 +50,7 @@ local ctrlp = { 'ctrlpvim/ctrlp.vim',
 local clap = { 'liuchengxu/vim-clap',
   cmd = "Clap",
   lock = true,
-  run = 'nix-shell --run make -p cargo',
+  run = 'nix shell --command make sys#cargo',
   config = function()
     vim.g.clap_layout = { relative = 'editor' }
     vim.g.clap_enable_background_shadow = false
