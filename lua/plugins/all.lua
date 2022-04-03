@@ -182,7 +182,7 @@ return require('packer').startup{
     }
 
     -- statusline
-    use { 'bling/vim-airline',
+    use { 'vim-airline/vim-airline',
       requires = {
 	'vim-airline/vim-airline-themes', -- solarized theme
 	'ryanoasis/vim-devicons',         -- icons
