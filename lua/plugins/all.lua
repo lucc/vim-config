@@ -250,6 +250,7 @@ return require('packer').startup{
       as = "jettero-pycfg-gist",
       run = "mkdir syntax && ln -s pycfg.vim syntax/"
     }
+    use 'pearofducks/ansible-vim'
 
     -- rust
     use 'rust-lang/rust.vim'
