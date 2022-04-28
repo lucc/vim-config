@@ -58,7 +58,7 @@ local builtin_lsp = {
     lspconfig.sumneko_lua.setup {
       on_attach = on_attach,
       cmd = {
-	"/etc/profiles/per-user/luc/bin/lua-language-server", "-E",
+	"lua-language-server", "-E",
 	sumneko_root_path
       },
       settings = {
