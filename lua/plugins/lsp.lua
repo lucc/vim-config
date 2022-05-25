@@ -38,7 +38,6 @@ local builtin_lsp = {
       --"intelephense", "phpactor",
       --"java_language_server",
       --"jedi_language_server",
-      "jsonls",
       --"lua-lsp",
       --"pylsp",
       "pyright",
@@ -55,6 +54,7 @@ local builtin_lsp = {
     local runtime_path = vim.split(package.path, ';')
     table.insert(runtime_path, "lua/?.lua")
     table.insert(runtime_path, "lua/?/init.lua")
+    lspconfig.jsonls.setup { cmd = {"vscode-json-languageserver", "--stdio"} }
     lspconfig.sumneko_lua.setup {
       on_attach = on_attach,
       cmd = {
