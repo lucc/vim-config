@@ -15,11 +15,17 @@ def find_namespace():
     file = pathlib.Path(path).absolute()
     if composer is None:
         return ""
-    namespaces = json.load(composer.open())['autoload']['psr-4']
-    for n, p in namespaces.items():
-        if cwd / p in file.parents:
-            return n + '\\'.join(file.parent.relative_to(cwd/p).parts)
-    return path
+    data = json.load(composer.open())
+    for key in ["autoload", "autoload-dev"]:
+        #try:
+        namespaces = data[key]['psr-4']
+        #except KeyError:
+        #    continue
+        for n, p in namespaces.items():
+            if cwd / p in file.parents:
+                return (n +
+		'\\'.join(file.parent.relative_to(cwd/p).parts)).rstrip("\\")
+    return ""
 endglobal
 
 snippet fun "function with docblock" b
@@ -28,20 +34,22 @@ snippet fun "function with docblock" b
  *
  * @return $3 $5
  */
-function ${1:name} (${2:arg1}): ${3:void} {
+function ${1:name} (${2:arg1}): ${3:void}
+{
 	$0
 }
 endsnippet
 
 snippet php "A basic php class file" b
 <?php
-/**
- * $1
- */
+
 declare(strict_types=1);
 
 namespace `!p snip.rv = find_namespace()`;
 
+/**
+ * $1
+ */
 class `!v fnamemodify(bufname(), ':t:r')`
 {
 	$0
