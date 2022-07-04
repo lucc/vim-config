@@ -55,3 +55,11 @@ class `!v fnamemodify(bufname(), ':t:r')`
 	$0
 }
 endsnippet
+
+snippet test "test function with @test annotation" b
+/** @test */
+public function ${1}(): void
+{
+	${0:${VISUAL}}
+}
+endsnippet
