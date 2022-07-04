@@ -36,7 +36,7 @@ local builtin_lsp = {
       --"bashls",
       "hls",
       --"html",
-      "intelephense", --"phpactor",
+      "intelephense", "phpactor",
       --"java_language_server",
       --"jedi_language_server",
       --"lua-lsp",
