@@ -36,7 +36,7 @@ local builtin_lsp = {
       --"bashls",
       "hls",
       --"html",
-      "intelephense", "phpactor",
+      "intelephense",
       --"java_language_server",
       --"jedi_language_server",
       --"lua-lsp",
@@ -58,6 +58,12 @@ local builtin_lsp = {
     table.insert(runtime_path, "lua/?.lua")
     table.insert(runtime_path, "lua/?/init.lua")
     lspconfig.jsonls.setup { cmd = {"vscode-json-languageserver", "--stdio"} }
+    lspconfig.phpactor.setup {
+      cmd = {
+	vim.fn.stdpath("data").."/site/pack/packer/opt/phpactor/bin/phpactor",
+	"language-server"
+      },
+    }
     lspconfig.lua_ls.setup {
       on_attach = on_attach,
       cmd = {
