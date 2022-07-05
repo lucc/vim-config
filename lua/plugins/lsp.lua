@@ -109,8 +109,8 @@ local language_client = {
   requires = {{
     'roxma/LanguageServer-php-neovim',
     run = [[
-    nix shell --command 'composer install && composer run-script parse-stubs' \
-    sys#phpPackages.composer sys#php
+      nix shell sys#phpPackages.composer sys#php --command \
+      sh -c 'composer install && composer run-script parse-stubs'
     ]],
   }},
   config = function()
@@ -176,7 +176,7 @@ local ncm = { 'ncm2/ncm2',
     'ncm2/ncm2-vim',
     'Shougo/neco-vim',
     { 'phpactor/phpactor',
-      run = [[nix shell --command 'composer install' sys#phpPackages.composer sys#php]],
+      run = [[nix shell sys#phpPackages.composer sys#php --command composer install]],
       ft = 'php' },
     'phpactor/ncm2-phpactor',
     'ncm2/ncm2-ultisnips',
