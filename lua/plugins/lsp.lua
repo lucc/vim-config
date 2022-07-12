@@ -155,6 +155,8 @@ local ncm = { 'ncm2/ncm2',
   requires = {
     builtin_lsp,
     'roxma/nvim-yarp',
+    'ncm2/float-preview.nvim',
+
     'ncm2/ncm2-bufword',
     'ncm2/ncm2-path',
     -- 'ncm2/ncm2-jedi'
@@ -185,6 +187,8 @@ local ncm = { 'ncm2/ncm2',
     vim.opt.completeopt:append("noinsert")
     vim.opt.completeopt:append("menuone")
     vim.opt.completeopt:append("noselect")
+    vim.opt.completeopt:remove("preview")
+    vim.g['float_preview#docked'] = 0
     vim.cmd "autocmd BufEnter * call ncm2#enable_for_buffer()"
     vim.fn['ncm2#register_source']({
       name = 'vimtex',
