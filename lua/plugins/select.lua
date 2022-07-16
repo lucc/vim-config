@@ -83,10 +83,9 @@ local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
     'nvim-telescope/telescope-frecency.nvim', 'tami5/sqlite.nvim',
   },
   config = function()
-    local builtin = require "telescope.builtin"
     local pickers = {
-      builtin.oldfiles,
-      builtin.find_files,
+      require 'telescope'.extensions.frecency.frecency,
+      require "telescope.builtin".find_files,
       index = 1,
     }
     pickers.cycle = function()
@@ -111,8 +110,8 @@ local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
       },
     }
     local opts = {silent = true, noremap = true} --, callback = function() pickers.index = 1 end}
-    vim.api.nvim_set_keymap("n", "<C-Space>", "<CMD>Telescope oldfiles<CR>", opts)
-    vim.api.nvim_set_keymap("i", "<C-Space>", "<CMD>Telescope oldfiles<CR>", opts)
+    vim.api.nvim_set_keymap("n", "<C-Space>", "<CMD>Telescope frecency<CR>", opts)
+    vim.api.nvim_set_keymap("i", "<C-Space>", "<CMD>Telescope frecency<CR>", opts)
     require"telescope".load_extension("frecency")
   end,
 }
