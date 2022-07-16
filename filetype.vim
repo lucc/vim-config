@@ -17,4 +17,5 @@ augroup END
 
 augroup AsamFileType
   autocmd BufRead,BufNewFile *.inc,*.func setfiletype php
+  autocmd BufRead,BufNewFile *.blade.php setfiletype php.blade
 augroup END
