@@ -78,8 +78,8 @@ local clap = { 'liuchengxu/vim-clap',
 }
 local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
   requires = {
-    'nvim-lua/popup.nvim',
     'nvim-lua/plenary.nvim',
+    'nvim-telescope/telescope-ui-select.nvim',
     'nvim-telescope/telescope-frecency.nvim', 'tami5/sqlite.nvim',
   },
   config = function()
