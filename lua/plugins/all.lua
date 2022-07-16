@@ -250,6 +250,7 @@ return require('packer').startup{
       run = "mkdir syntax && ln -s pycfg.vim syntax/"
     }
     use 'pearofducks/ansible-vim'
+    use 'jwalton512/vim-blade'
 
     -- rust
     use 'rust-lang/rust.vim'

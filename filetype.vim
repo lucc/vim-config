@@ -12,4 +12,5 @@ augroup LucFileType
   autocmd BufRead,BufNewFile *.tmux   setfiletype tmux
   autocmd BufRead,BufNewFile build.sc setfiletype scala
   autocmd BufRead,BufNewFile *.u      setfiletype ulang | source ~/uni/master/ulang/misc/ulang.vim
+  autocmd BufRead,BufNewFile *.blade.php setfiletype php.blade
 augroup END
