@@ -83,30 +83,20 @@ local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
     'nvim-telescope/telescope-frecency.nvim', 'tami5/sqlite.nvim',
   },
   config = function()
-    local pickers = {
+    local cycle = require "telescope.cycle"(
       function()
-	require 'telescope'.extensions.frecency.frecency {
-	  sorter = require('telescope.config').values.file_sorter()
-	}
+	local sorter = require 'telescope.config'.values.file_sorter()
+	require 'telescope'.extensions.frecency.frecency { sorter = sorter }
       end,
-      require "telescope.builtin".find_files,
-      index = 1,
-    }
-    pickers.cycle = function()
-      if pickers.index >= #pickers then
-        pickers.index = 1
-      else
-	pickers.index = pickers.index + 1
-      end
-      pickers[pickers.index] { default_text = require "telescope.actions.state".get_current_line() }
-    end
+      require "telescope.builtin".find_files
+    )
     local actions = require 'telescope.actions'
     require'telescope'.setup {
       defaults = {
 	mappings = {
 	  i = {
 	    ["<esc>"] = actions.close,
-	    ["<C-Space>"] = pickers.cycle,
+	    ["<C-Space>"] = function() cycle.next() end,
 	    ["<C-h>"] = actions.which_key,
 	    ["<C-s>"] = actions.select_horizontal,
 	    ["<C-Down>"] = require('telescope.actions').cycle_history_next,
@@ -114,11 +104,16 @@ local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
 	  },
 	},
       },
+      pickers = {
+	find_files = {
+	  root = require "telescope.utils".buffer_dir(),
+	},
+      },
     }
-    require"telescope".load_extension("frecency")
+    require "telescope".load_extension("frecency")
 
     local opts = {silent = true}
-    vim.keymap.set({"n", "i"}, "<C-Space>", "<CMD>Telescope frecency<CR>", opts)
+    vim.keymap.set({"n", "i"}, "<C-Space>", function() cycle() end, opts)
     vim.keymap.set({"n", "i"}, "<C-S>", function()
       local cwd = vim.fn.FugitiveGitDir(vim.fn.bufnr(""))
       if cwd == "" then
