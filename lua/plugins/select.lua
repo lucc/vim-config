@@ -5,8 +5,8 @@ local ctrlp = { 'ctrlpvim/ctrlp.vim',
     'ryanoasis/vim-devicons', -- icons
     { 'nixprime/cpsm',
       run = [[
-	nix shell sys#cmake sys#boost.dev sys#ncurses.dev \
-	--command env VIM=nvim bash ./install.sh
+        nix shell sys#cmake sys#boost.dev sys#ncurses.dev \
+        --command env VIM=nvim bash ./install.sh
       ]],
     },
   },
@@ -76,24 +76,45 @@ local clap = { 'liuchengxu/vim-clap',
     end
   end,
 }
-local telescope = { 'nvim-telescope/telescope.nvim',
+local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
   requires = {
     'nvim-lua/popup.nvim',
     'nvim-lua/plenary.nvim',
-    { "nvim-telescope/telescope-frecency.nvim", requires = {"tami5/sql.nvim"} },
+    'nvim-telescope/telescope-frecency.nvim', 'tami5/sqlite.nvim',
   },
   config = function()
+    local builtin = require "telescope.builtin"
+    local pickers = {
+      builtin.oldfiles,
+      builtin.find_files,
+      index = 1,
+    }
+    pickers.cycle = function()
+      if pickers.index >= #pickers then
+        pickers.index = 1
+      else
+	pickers.index = pickers.index + 1
+      end
+      pickers[pickers.index] { default_text = require "telescope.actions.state".get_current_line() }
+    end
+    local actions = require 'telescope.actions'
     require'telescope'.setup {
-      mappings = {
-	i = {
-	  ["<esc>"] = require('telescope.actions').close,
+      defaults = {
+	--layout_strategy = "center",
+	mappings = {
+	  i = {
+	    ["<esc>"] = actions.close,
+	    ["<C-Space>"] = pickers.cycle,
+	    ["<C-h>"] = actions.which_key,
+	  },
 	},
       },
     }
+    local opts = {silent = true, noremap = true} --, callback = function() pickers.index = 1 end}
+    vim.api.nvim_set_keymap("n", "<C-Space>", "<CMD>Telescope oldfiles<CR>", opts)
+    vim.api.nvim_set_keymap("i", "<C-Space>", "<CMD>Telescope oldfiles<CR>", opts)
     require"telescope".load_extension("frecency")
-    vim.api.nvim_set_keymap("n", "<C-Space>", "<CMD>Telescope oldfiles<CR>",
-      {silent = true})
   end,
 }
 
-return ctrlp
+return telescope
