@@ -25,6 +25,9 @@ function! s:all_readable(filelist)
   return 1
 endfunction
 
+function! s:runTelescope(input)
+  call v:lua.require'telescope.builtin'.oldfiles({"default_text": a:input})
+endfunction
 function! s:runClap(input)
   Clap history
   call feedkeys(a:input)
@@ -70,5 +73,5 @@ else
   let s:args = join(argv(), '')
   %argdelete
   "%bwipeout
-  call s:run(s:args)
+  call s:runTelescope(s:args)
 endif
