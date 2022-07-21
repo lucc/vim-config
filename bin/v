@@ -1,21 +1,6 @@
 #!/usr/bin/env -S nvim -S
 " vim: ft=vim
 
-" save and restore global variables
-let s:saved = {}
-function! s:save(name)
-  if has_key(g:, a:name)
-    let s:saved[a:name] = g:[a:name]
-  endif
-endfunction
-function! s:restore(name)
-  unlet! g:{a:name}
-  if has_key(s:saved, a:name)
-    let g:[a:name] = s:saved[a:name]
-    unlet s:saved[a:name]
-  endif
-endfunction
-
 function! s:all_readable(filelist)
   for l:file in a:filelist
     if !filereadable(l:file)
@@ -27,37 +12,6 @@ endfunction
 
 function! s:runTelescope(input)
   call v:lua.require'telescope.builtin'.oldfiles({"default_text": a:input})
-endfunction
-function! s:runClap(input)
-  Clap history
-  call feedkeys(a:input)
-endfunction
-function! s:run(input)
-  " Run CtrlPMRU with the given input and clean up afterwards.
-  "
-  " input: the input to feed to CtrlP initially
-  " returns: 0
-
-  " Save the global settings that we will override
-  call s:save('ctrlp_default_input')
-  call s:save('ctrlp_match_window')
-  call s:save('ctrlp_open_new_file')
-  call s:save('ctrlp_open_single_match')
-  " Override the global settings with custom values.
-  let g:ctrlp_default_input = a:input
-  let g:ctrlp_match_window = 'bottom,order:btt,min:'.(&lines + 1).',max:'.(&lines + 1)
-  let g:ctrlp_open_new_file = 'r'
-  let g:ctrlp_open_single_match = ['mru files']
-  " Run CtrlP.
-  try
-    CtrlPMRU
-  finally
-    " restore saved settings
-    call s:restore('ctrlp_default_input')
-    call s:restore('ctrlp_match_window')
-    call s:restore('ctrlp_open_new_file')
-    call s:restore('ctrlp_open_single_match')
-  endtry
 endfunction
 
 if argc() == 0
