@@ -1,31 +1,42 @@
 #!/usr/bin/env -S nvim -S
 " vim: ft=vim
 
-function! s:all_readable(filelist)
-  for l:file in a:filelist
-    if !filereadable(l:file)
-      return 0
-    endif
-  endfor
-  return 1
-endfunction
+lua <<EOF
+local function all_readable(filelist)
+  for _, file in ipairs(filelist) do
+    if vim.fn.filereadable(file) == 0 then
+      return false
+    end
+  end
+  return true
+end
 
-function! s:runTelescope(input)
-  call v:lua.require'telescope.builtin'.oldfiles({"default_text": a:input})
-endfunction
-
-if argc() == 0
-  " undeocumented function from fugitive
-  let s:gitdir = FugitiveGitDir()
-  if s:gitdir != ''
-    " undeocumented behaviour from fugitive: open git status buffer
-    execute "edit" s:gitdir . '/index'
-  endif
-elseif s:all_readable(argv()) " includes argc == 0
-  " do nothing
+if vim.fn.argc() == 0 then
+  -- undeocumented function from fugitive
+  local gitdir = vim.fn.FugitiveGitDir()
+  if gitdir ~= '' then
+    -- undeocumented behaviour from fugitive: open git status buffer
+    vim.cmd("edit " .. gitdir .. '/index')
+  end
+elseif all_readable(vim.fn.argv()) then -- includes argc == 0
+  -- do nothing
 else
-  let s:args = join(argv(), '')
-  %argdelete
-  "%bwipeout
-  call s:runTelescope(s:args)
-endif
+  -- save the argumments before deleting them
+  local args = vim.fn.join(vim.fn.argv(), '')
+  vim.cmd "%argdelete"
+  print(args)
+  require'telescope.builtin'.oldfiles{
+    default_text = args,
+    on_complete = {
+      function(picker)
+        -- remove this on_complete callback
+	picker:clear_completion_callbacks()
+	-- if we have exactly one match, select it
+	if picker.manager.linked_states.size == 1 then
+	  require("telescope.actions").select_default(picker.prompt_bufnr)
+	end
+      end,
+    },
+  }
+end
+EOF
