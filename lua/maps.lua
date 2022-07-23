@@ -14,8 +14,6 @@ map("i", "<C-U>", "<C-G>u<C-U>")
 map("i", "<C-W>", "<C-G>u<C-W>")
 
 -- easy spell checking
-map("i", "<C-s>", "<cmd>call luc#find_next_spell_error()<CR><C-x><C-s>")
-map("n", "<C-s>", "<cmd>call luc#find_next_spell_error()<CR>z=")
 map("n", "<leader>s", "<cmd>call luc#find_next_spell_error()<CR>zv")
 map("n", "<leader>k", "1z=")
 

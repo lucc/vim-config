@@ -99,20 +99,27 @@ local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
     local actions = require 'telescope.actions'
     require'telescope'.setup {
       defaults = {
-	--layout_strategy = "center",
 	mappings = {
 	  i = {
 	    ["<esc>"] = actions.close,
 	    ["<C-Space>"] = pickers.cycle,
 	    ["<C-h>"] = actions.which_key,
+	    ["<C-s>"] = actions.select_horizontal,
+	    ["<C-Down>"] = require('telescope.actions').cycle_history_next,
+	    ["<C-Up>"] = require('telescope.actions').cycle_history_prev,
 	  },
 	},
       },
     }
-    local opts = {silent = true, noremap = true} --, callback = function() pickers.index = 1 end}
-    vim.api.nvim_set_keymap("n", "<C-Space>", "<CMD>Telescope frecency<CR>", opts)
-    vim.api.nvim_set_keymap("i", "<C-Space>", "<CMD>Telescope frecency<CR>", opts)
     require"telescope".load_extension("frecency")
+
+    local opts = {silent = true}
+    vim.keymap.set({"n", "i"}, "<C-Space>", "<CMD>Telescope frecency<CR>", opts)
+    vim.keymap.set({"n", "i"}, "<C-S>", function()
+      require"telescope.builtin".live_grep{
+	default_text = vim.fn.expand("<cword>")
+      }
+    end, opts)
   end,
 }
 
