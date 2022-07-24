@@ -116,8 +116,15 @@ local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
     local opts = {silent = true}
     vim.keymap.set({"n", "i"}, "<C-Space>", "<CMD>Telescope frecency<CR>", opts)
     vim.keymap.set({"n", "i"}, "<C-S>", function()
+      local cwd = vim.fn.FugitiveGitDir(vim.fn.bufnr(""))
+      if cwd == "" then
+	cwd = require"telescope.utils".buffer_dir()
+      else
+	cwd = cwd:sub(1, -5)  -- remove the .git suffix
+      end
       require"telescope.builtin".live_grep{
-	default_text = vim.fn.expand("<cword>")
+	default_text = vim.fn.expand("<cword>"),
+	cwd = cwd,
       }
     end, opts)
   end,
