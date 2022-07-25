@@ -106,11 +106,18 @@ local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
       },
       pickers = {
 	find_files = {
-	  root = require "telescope.utils".buffer_dir(),
+	  root = require "telescope.utils".buffer_dir,
+	},
+      },
+      extensions = {
+	["ui-select"] = {
+	  require "telescope.themes".get_dropdown(),
 	},
       },
     }
-    require "telescope".load_extension("frecency")
+
+    require "telescope".load_extension "frecency"
+    require "telescope".load_extension "ui-select"
 
     local opts = {silent = true}
     vim.keymap.set({"n", "i"}, "<C-Space>", function() cycle() end, opts)
