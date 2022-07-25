@@ -58,11 +58,14 @@ local builtin_lsp = {
     table.insert(runtime_path, "lua/?.lua")
     table.insert(runtime_path, "lua/?/init.lua")
     lspconfig.jsonls.setup { cmd = {"vscode-json-languageserver", "--stdio"} }
-    lspconfig.phpactor.setup {
-      cmd = {
-	vim.fn.stdpath("data").."/site/pack/packer/opt/phpactor/bin/phpactor",
-	"language-server"
-      },
+    --lspconfig.phpactor.setup {
+    --  cmd = {
+    --    vim.fn.stdpath("data").."/site/pack/packer/opt/phpactor/bin/phpactor",
+    --    "language-server"
+    --  },
+    --}
+    lspconfig.psalm.setup {
+      cmd = {"psalm", "--language-server"},
     }
     lspconfig.lua_ls.setup {
       on_attach = on_attach,
@@ -194,9 +197,9 @@ local ncm = { 'ncm2/ncm2',
     'ncm2/ncm2-go',
     'ncm2/ncm2-vim',
     'Shougo/neco-vim',
-    { 'phpactor/phpactor',
-      run = [[nix shell sys#phpPackages.composer sys#php --command composer install]],
-      ft = 'php' },
+    --{ 'phpactor/phpactor',
+    --  run = [[nix shell sys#phpPackages.composer sys#php --command composer install]],
+    --  ft = 'php' },
     'phpactor/ncm2-phpactor',
     'ncm2/ncm2-ultisnips',
   },
