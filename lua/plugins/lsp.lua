@@ -43,7 +43,8 @@ local builtin_lsp = {
       "pyright",
       "rls",
       "rnix",
-      --"sqlls", "sqls",
+      --"sqlls",
+      "sqls",
       "yamlls",
     }
     for _, server in ipairs(servers) do
