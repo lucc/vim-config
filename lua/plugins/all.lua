@@ -235,13 +235,11 @@ return require('packer').startup{
     use 'vim-scripts/icalendar.vim'
     use 'aliva/vim-fish'
     use 'vim-scripts/VCard-syntax'
-    use 'vimperator/vimperator.vim'
     use 'tkztmk/vim-vala'
     use 'rosstimson/bats.vim'
     use 'chikamichi/mediawiki.vim'
     --use 'tbastos/vim-lua'
     --use 'vim-scripts/luarefvim'
-    use { 'cespare/vim-toml', branch = "main" }
     use 'LnL7/vim-nix'
     use 'derekelkins/agda-vim'
     use 'nfnty/vim-nftables'
