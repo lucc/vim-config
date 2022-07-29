@@ -84,7 +84,11 @@ local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
   },
   config = function()
     local pickers = {
-      require 'telescope'.extensions.frecency.frecency,
+      function()
+	require 'telescope'.extensions.frecency.frecency {
+	  sorter = require('telescope.config').values.file_sorter()
+	}
+      end,
       require "telescope.builtin".find_files,
       index = 1,
     }
