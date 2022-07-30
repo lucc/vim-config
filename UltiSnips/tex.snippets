@@ -3,7 +3,7 @@ extends tex_templates
 extends latex_suite_compat
 
 global !p
-import lib.tex
+import tex
 def find_babel_languages():
     '''Return a list of babel languges for the current file.'''
     return lib.tex.find_babels(vim.current.buffer.name)
