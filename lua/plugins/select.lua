@@ -80,7 +80,7 @@ local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
   requires = {
     'nvim-lua/plenary.nvim',
     'nvim-telescope/telescope-ui-select.nvim',
-    'nvim-telescope/telescope-frecency.nvim', 'tami5/sqlite.nvim',
+    'nvim-telescope/telescope-frecency.nvim', 'kkharji/sqlite.lua',
   },
   config = function()
     local cycle = require "telescope.cycle"(
