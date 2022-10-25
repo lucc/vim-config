@@ -112,9 +112,10 @@ return require('packer').startup{
       end,
     }
     use { 'janko/vim-test',
-      cmd = { "TestFile", "TestSuite" },
+      cmd = { "TestFile", "TestSuite", "TestNearest" },
       setup = function()
-	vim.g["test#strategy"] = 'dispatch_background'
+	vim.g["test#strategy"] = 'neovim'
+	vim.g["test#neovim#term_position"] = "vertical"
       end,
     }
     use { 'neomake/neomake',
