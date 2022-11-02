@@ -83,12 +83,23 @@ local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
     'nvim-telescope/telescope-frecency.nvim', 'kkharji/sqlite.lua',
   },
   config = function()
+    local get_root_dir = function()
+      local cwd = vim.fn.FugitiveGitDir(vim.fn.bufnr(""))
+      if cwd == "" then
+	return require"telescope.utils".buffer_dir()
+      end
+      return cwd:sub(1, -5)  -- remove the .git suffix
+    end
     local cycle = require "telescope.cycle"(
-      function()
+      function(opts)
 	local sorter = require 'telescope.config'.values.file_sorter()
-	require 'telescope'.extensions.frecency.frecency { sorter = sorter }
+	opts = vim.tbl_extend("force", { sorter = sorter }, opts)
+	require 'telescope'.extensions.frecency.frecency(opts)
       end,
-      require "telescope.builtin".find_files
+      function(opts)
+	opts = vim.tbl_extend("force", { cwd = get_root_dir() }, opts)
+	require "telescope.builtin".find_files(opts)
+      end
     )
     local actions = require 'telescope.actions'
     require'telescope'.setup {
@@ -106,7 +117,7 @@ local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
       },
       pickers = {
 	find_files = {
-	  root = require "telescope.utils".buffer_dir,
+	  root = get_root_dir,
 	},
       },
       extensions = {
@@ -122,15 +133,9 @@ local telescope = { 'nvim-telescope/telescope.nvim', tag = '0.1.0',
     local opts = {silent = true}
     vim.keymap.set({"n", "i"}, "<C-Space>", function() cycle() end, opts)
     vim.keymap.set({"n", "i"}, "<C-S>", function()
-      local cwd = vim.fn.FugitiveGitDir(vim.fn.bufnr(""))
-      if cwd == "" then
-	cwd = require"telescope.utils".buffer_dir()
-      else
-	cwd = cwd:sub(1, -5)  -- remove the .git suffix
-      end
       require"telescope.builtin".live_grep{
 	default_text = vim.fn.expand("<cword>"),
-	cwd = cwd,
+	cwd = get_root_dir(),
       }
     end, opts)
   end,
