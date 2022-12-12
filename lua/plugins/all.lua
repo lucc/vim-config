@@ -406,6 +406,7 @@ return require('packer').startup{
     }
     use 'rickhowe/diffchar.vim'
     use 'editorconfig/editorconfig-vim'
+    use 'jghauser/mkdir.nvim'
   end,
   config = {
     profile = {
