@@ -21,18 +21,7 @@ def biblatex():
     buffer.''',
     def match(line):
         return line.startswith(r'\usepackage') and endswith('{biblatex}\n')
-    def extract(line):
-        return True
-    return lib.tex.parse_tex(vim.current.buffer.name, match, extract)
-#    for line in vim.current.buffer:
-#	if line.startswith(r'\usepackage'):
-#	    match = re.match(r'^\\usepackage(\[.*\])?{biblatex}$', line)
-#	    if match:
-#		return True
-#    return False
-def cond(index, string):
-    if t[index] != '': return string
-    else: return ''
+    return lib.tex.parse_tex(vim.current.buffer.name, match, lambda line: True)
 def is_english():
     return lib.tex.find_babel(vim.current.buffer.name) == 'english'
 endglobal
@@ -48,7 +37,7 @@ if not b:
     except IndexError: lang = get_spellangs[1]
     lang = map_lang(lang)
     if lang == 'german': snip.rv = 'S.~'
-    elif lang == 'english': snip.rv ='p.~'
+    elif lang == 'english': snip.rv = 'p.~'
     else: snip.rv = 'S.~'`${2:pages}${2/.+/]/}{${3:`!p
 snip.rv = match.group(3) if match.group(2) is not None else "bibkey"`}}$0
 endsnippet
