@@ -56,7 +56,7 @@ local builtin_lsp = {
     table.insert(runtime_path, "lua/?.lua")
     table.insert(runtime_path, "lua/?/init.lua")
     lspconfig.jsonls.setup { cmd = {"vscode-json-languageserver", "--stdio"} }
-    lspconfig.sumneko_lua.setup {
+    lspconfig.lua_ls.setup {
       on_attach = on_attach,
       cmd = {
 	"lua-language-server", "-E",
