@@ -403,7 +403,6 @@ return require('packer').startup{
     use 'editorconfig/editorconfig-vim'
   end,
   config = {
-    log = { level = "debug" },
     profile = {
       enable = true,
       --threshold = 1,
