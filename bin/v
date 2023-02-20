@@ -15,8 +15,8 @@ if vim.fn.argc() == 0 then
   -- undeocumented function from fugitive
   local gitdir = vim.fn.FugitiveGitDir()
   if gitdir ~= '' then
-    -- undeocumented behaviour from fugitive: open git status buffer
-    vim.cmd("edit " .. gitdir .. '/index')
+    -- open the fugitive status buffer
+    vim.cmd("Gedit :")
   end
 elseif all_readable(vim.fn.argv()) then -- includes argc == 0
   -- do nothing
