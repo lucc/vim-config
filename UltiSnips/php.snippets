@@ -30,11 +30,11 @@ endglobal
 
 snippet fun "function with docblock" b
 /**
- * $4
- *
+ * ${4:undocumented function}
+ * ${2/([\\a-zA-Z0-9_$ ]+)(, |$)/\n     * \@param $1/g}
  * @return $3 $5
  */
-function ${1:name} (${2:arg1}): ${3:void}
+function ${1:name}(${2:$arg}): ${3:void}
 {
 	$0
 }
@@ -62,4 +62,30 @@ public function ${1}(): void
 {
 	${0:${VISUAL}}
 }
+endsnippet
+
+snippet pub "Public function" b
+/**
+ * ${4:undocumented function}
+ * ${2/([\\a-zA-Z0-9_$ ]+)(, |$)/\n     * \@param $1/g}
+ * @return $3 $5
+ */
+public function ${1:name}(${2:$param}): ${3:void}
+{
+	${VISUAL}${6:return null;}
+}
+$0
+endsnippet
+
+snippet pubs "Public static function" b
+/**
+ * ${4:undocumented function}
+ * ${2/([\\a-zA-Z0-9_$ ]+)(, |$)/\n     * \@param $1/g}
+ * @return $3 $5
+ */
+public static function ${1:name}(${2:$param}): ${3:void}
+{
+	${VISUAL}${6:return null;}
+}
+$0
 endsnippet
