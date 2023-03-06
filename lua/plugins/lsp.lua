@@ -43,6 +43,7 @@ local builtin_lsp = {
       "pyright",
       "rls",
       "rnix",
+      "nil_ls",
       --"sqlls",
       "sqls",
       "yamlls",
