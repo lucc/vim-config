@@ -362,7 +362,11 @@ return require('packer').startup{
     -- unsorted plugins
     use 'eugen0329/vim-esearch'
     use 'AndrewRadev/linediff.vim'
-    use 'andymass/vim-matchup'
+    use { 'andymass/vim-matchup',
+      setup = function()
+	vim.g.matchup_matchparen_offscreen = {method="popup"}
+      end
+    }
     use 'chrisbra/unicode.vim'
     use 'git://fedorapeople.org/home/fedora/wwoods/public_git/vim-scripts.git'
     use 'jamessan/vim-gnupg'
