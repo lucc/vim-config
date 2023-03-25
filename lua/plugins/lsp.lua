@@ -46,7 +46,7 @@ local builtin_lsp = {
       "nil_ls",
       --"sqlls",
       "sqls",
-      "yamlls",
+      --"yamlls",
     }
     for _, server in ipairs(servers) do
       lspconfig[server].setup { on_attach = on_attach }
@@ -95,6 +95,13 @@ local builtin_lsp = {
       cmd = {
 	vim.fn.stdpath("config").."/../yarn/global/node_modules/.bin/vim-language-server",
 	"--stdio"
+      }
+    }
+    lspconfig.yamlls.setup {
+      settings = {
+	yaml = {
+	  keyOrdering = false
+	}
       }
     }
 
