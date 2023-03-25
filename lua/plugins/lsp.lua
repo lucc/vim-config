@@ -32,6 +32,7 @@ local builtin_lsp = {
       end
     end
     local servers = {
+      "ansiblels",
       --"bashls",
       "hls",
       --"html",
