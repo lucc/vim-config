@@ -1,18 +1,18 @@
 global !p
 import json
-import pathlib
-def find_composer():
-    root = pathlib.Path(path)
+from pathlib import Path
+def find_composer() -> Path:
+    root = Path(path)
     print(path)
-    while root != pathlib.Path("/"):
+    while root != Path("/"):
         composer = root / 'composer.json'
         if composer.exists():
             return composer
         root = root.parent
 def find_namespace():
     composer = find_composer()
-    cwd = pathlib.Path.cwd()
-    file = pathlib.Path(path).absolute()
+    cwd = Path.cwd()
+    file = Path(path).absolute()
     if composer is None:
         return ""
     data = json.load(composer.open())
