@@ -121,54 +121,6 @@ local builtin_lsp = {
     vim.api.nvim_create_user_command("CodeAction", vim.lsp.buf.code_action, {})
   end,
 }
-local language_client = {
-  'autozimu/LanguageClient-neovim',
-  branch = 'next',
-  run = 'bash install.sh',
-  requires = {{
-    'roxma/LanguageServer-php-neovim',
-    run = [[
-      nix shell sys#phpPackages.composer sys#php --command \
-      sh -c 'composer install && composer run-script parse-stubs'
-    ]],
-  }},
-  config = function()
-    vim.g.LanguageClient_serverCommands = {
-      c = {'cquery'} ,
-      css = {'css-languageserver'},
-      docker = {'docker-languageserver'},
-      haskell = {'hie-wrapper'},
-      html = {'html-languageserver'},
-      java = {'jdtls', '-Dlog.level=ALL', '-data', vim.fn.expand('~/.cache/jdtls-workspace')},
-      --javascript = {'/opt/javascript-typescript-langserver/lib/language-server-stdio.js'},
-      json = {'json-languageserver'},
-      lua = {'lua-lsp'},
-      nix = {'rnix-lsp'},
-      --php = {'php', 'php-language-server.php'},
-      python = {'pyls'},
-      rust = vim.fn.executable('rustup') and {'rustup', 'run', 'nightly', 'rls'} or {'rls'},
-      scala = {'metals-vim'},
-      sh = {'bash-language-server', 'start'},
-      tex = {'texlab'},
-    }
-    vim.cmd[[nnoremap <silent> KK <CMD>call LanguageClient_textDocument_hover()<CR>]]
-    vim.cmd[[nnoremap <silent> gd <CMD>call LanguageClient_textDocument_definition()<CR>]]
-    -- nnoremap <silent> <F2> <CMD>call LanguageClient_textDocument_rename()<CR>
-    vim.cmd[[nnoremap <F5> <CMD>call LanguageClient_contextMenu()<CR>]]
-    -- language client mappings for coding
-    vim.cmd[[nnoremap <leader>* <CMD>call LanguageClient_textDocument_documentHighlight()<CR>]]
-    -- augroup LucLanguageClientPopup
-    -- autocmd!
-    -- autocmd CursorHold,CursorHoldI *
-    -- \ if &buftype != 'nofile' |
-    -- \   call LanguageClient#textDocument_hover() |
-    -- \ endif
-    -- augroup END
-    vim.cmd[[inoremap <expr> <Tab>   pumvisible() ? {_, x -> x}(LanguageClient#textDocument_hover(), "\<C-N>")      : "\<Tab>"]]
-    vim.cmd[[inoremap <expr> <S-Tab> pumvisible() ? {_, x -> x}(LanguageClient#textDocument_hover(), "\<C-P>")      : "\<Tab>"]]
-    vim.cmd[[inoremap <expr> <CR>    pumvisible() ? {_, x -> x}(LanguageClient#textDocument_hover(), "\<C-Y>\<CR>") : "\<CR>"]]
-  end,
-}
 
 local ncm = { 'ncm2/ncm2',
   requires = {
@@ -226,65 +178,6 @@ local ncm = { 'ncm2/ncm2',
       complete_pattern = vim.g['vimtex#re#ncm'],
       on_complete = {'ncm2#on_complete#omni', 'vimtex#complete#omnifunc'},
     })
-  end,
-}
-local coc = { 'neoclide/coc.nvim',
-  branch = 'release',
-  requires = { 'neoclide/coc-sources', 'Shougo/neco-vim', 'neoclide/coc-neco' },
-  config = function()
-    vim.g.coc_global_extensions = {
-      'coc-git',
-      'coc-json',
-      'coc-snippets',
-      'coc-vimtex',
-      'coc-syntax',
-    }
-    vim.g.coc_data_home = "~/.local/share/coc"
-    vim.cmd[[
-    xmap if <Plug>(coc-funcobj-i)
-    omap if <Plug>(coc-funcobj-i)
-    xmap af <Plug>(coc-funcobj-a)
-    omap af <Plug>(coc-funcobj-a)
-    xmap ic <Plug>(coc-classobj-i)
-    omap ic <Plug>(coc-classobj-i)
-    xmap ac <Plug>(coc-classobj-a)
-    omap ac <Plug>(coc-classobj-a)
-    inoremap <expr> <Tab>   pumvisible() ? "\<C-N>"      : "\<Tab>"
-    inoremap <expr> <S-Tab> pumvisible() ? "\<C-P>"      : "\<Tab>"
-    inoremap <expr> <CR>    pumvisible() ? "\<C-Y>\<CR>" : "\<CR>"
-    nnoremap <silent> KK <CMD>call CocAction("doHover")<CR>
-    ]]
-  end,
-}
-local deoplete = { 'Shougo/deoplete.nvim',
-  run = ':UpdateRemotePlugins',
-  -- A list of possible source for completion is at
-  -- https://github.com/Shougo/deoplete.nvim/wiki/Completion-Sources
-  requires = {
-    'Shougo/neco-syntax',
-    'Shougo/neco-vim',
-    'fszymanski/deoplete-emoji',
-    'nicoe/deoplete-khard',
-    'padawan-php/deoplete-padawan',
-    'poppyschmo/deoplete-latex',
-    'zchee/deoplete-zsh',
-    'lionawurscht/deoplete-biblatex',
-    {'paretje/deoplete-notmuch', ft = 'mail'}
-    -- 'zchee/deoplete-jedi',
-    -- https://github.com/SevereOverfl0w/deoplete-github
-    -- https://github.com/lvht/phpcd.vim
-    -- https://github.com/tpope/vim-rhubarb
-  },
-  config = function()
-    vim.g['deoplete#enable_at_startup'] = 1
-    vim.g['deoplete#sources#notmuch#command'] = {
-      'notmuch', 'address', '--format=json', '--deduplicate=address', '*'
-    }
-    -- For very short ultisnips triggers to be usable with deoplete:
-    -- https://github.com/SirVer/ultisnips/issues/517#issuecomment-268518251
-    vim.fn['deoplete#custom#source']('ultisnips', 'matchers', {'matcher_fuzzy'})
-    -- https://github.com/autozimu/LanguageClient-neovim/wiki/deoplete
-    vim.fn['deoplete#custom#source']('LanguageClient', 'min_pattern_length', 2)
   end,
 }
 
