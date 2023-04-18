@@ -46,7 +46,6 @@ local builtin_lsp = {
       "rnix",
       "nil_ls",
       --"sqlls",
-      "sqls",
       --"yamlls",
     }
     for _, server in ipairs(servers) do
