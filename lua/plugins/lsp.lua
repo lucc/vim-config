@@ -119,6 +119,8 @@ local builtin_lsp = {
     vim.api.nvim_set_keymap('i', '<S-Tab>', [[pumvisible() ? {_, x -> x}(v:lua.vim.lsp.buf.hover(), "\<C-P>") : "\<Tab>"]], opts)
     vim.api.nvim_set_keymap('i', '<CR>', [[pumvisible() ? {_, x -> x}(v:lua.vim.lsp.buf.hover(), "\<C-Y><CR>") : "\<CR>"]], opts)
     vim.api.nvim_create_user_command("CodeAction", vim.lsp.buf.code_action, {})
+
+    require("symbols-outline").setup()
   end,
 }
 
